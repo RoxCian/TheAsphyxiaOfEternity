@@ -1,0 +1,23 @@
+# Editor configs
+.vscode
+
+# External modules
+node_modules
+
+# Project files
+asphyxia-core.d.ts
+package.json
+package-lock.json
+tsconfig.json
+
+# npm & git
+.npmignore
+.gitignore
+
+# Debugging
+bin
+obj
+
+# Package
+*.tgz
+*.zip
