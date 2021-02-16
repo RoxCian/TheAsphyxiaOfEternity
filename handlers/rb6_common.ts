@@ -1,16 +1,17 @@
-import { generateRb6CharactorCard, IRb6CharactorCard } from "../models/rb6/charactor_card"
+import { generateRb6CharactorCard, IRb6CharacterCard } from "../models/rb6/character_card"
 import { generateRb6ClasscheckRecord, IRb6ClasscheckRecord } from "../models/rb6/classcheck_record"
 import { getExampleCourse, Rb6CourseMappingRecord } from "../models/rb6/course"
 import { getExampleEventControl, Rb6EventControlMappingRecord } from "../models/rb6/event_control"
-import { initializePlayer } from "../models/rb6/initialize_player"
+import { initializePlayer } from "./initialize_player"
 import { IRb6JustCollectionElement, Rb6JustCollectionElementMappingRecord } from "../models/rb6/just_collection"
 import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMappingRecord } from "../models/rb6/music_record"
 import { IRb6Mylist } from "../models/rb6/mylist"
-import { generateRb6PlayerConfig, generateRb6PlayerCustom, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, Rb6PlayerReadMappingRecord, Rb6PlayerWriteMappingRecord } from "../models/rb6/profile"
+import { generateRb6PlayerConfig, generateRb6PlayerCustom, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6PlayerReadMappingRecord, Rb6PlayerWriteMappingRecord } from "../models/rb6/profile"
 import { KRb6ShopInfo } from "../models/rb6/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../utility/mapping"
+import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 
-export namespace Rb6Handlers {
+export namespace Rb6Common {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
         switch (info.method) {
 
@@ -57,10 +58,11 @@ export namespace Rb6Handlers {
         let playerConfig: Doc<IRb6PlayerConfig> = await DB.FindOne<IRb6PlayerConfig>(readParam.rid, { collection: "rb.rb6.player.config" })
         let playerCustom: Doc<IRb6PlayerCustom> = await DB.FindOne<IRb6PlayerCustom>(readParam.rid, { collection: "rb.rb6.player.custom" })
         let classcheckRecords: Doc<IRb6ClasscheckRecord>[] = await DB.Find<IRb6ClasscheckRecord>(readParam.rid, { collection: "rb.rb6.playData.classcheck" })
-        let characterCards: Doc<IRb6CharactorCard>[] = await DB.Find<IRb6CharactorCard>(readParam.rid, { collection: "rb.rb6.player.charactorCard" })
+        let characterCards: Doc<IRb6CharacterCard>[] = await DB.Find<IRb6CharacterCard>(readParam.rid, { collection: "rb.rb6.player.characterCard" })
         let releasedInfos = (await DB.Find<IRb6PlayerReleasedInfo>(readParam.rid, { collection: "rb.rb6.player.releasedInfo" }))
         let playerParam = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
         let mylist = await DB.FindOne<IRb6Mylist>(readParam.rid, { collection: "rb.rb6.player.mylist" })
+        let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, { collection: "rb.rb6.playData.quest" })
         if (mylist?.index < 0) mylist.index = 0
 
         if (!playerAccount) {
@@ -112,7 +114,7 @@ export namespace Rb6Handlers {
                 config: playerConfig,
                 custom: playerCustom,
                 classcheck: (classcheckRecords?.length == 0) ? <any>{} : { rec: classcheckRecords },
-                charactorCards: (characterCards?.length == 0) ? <any>{} : { list: characterCards },
+                characterCards: (characterCards?.length == 0) ? <any>{} : { list: characterCards },
                 released: (releasedInfos?.length == 0) ? <any>{} : { info: releasedInfos },
                 rival: {},
                 pickupRival: {},
@@ -120,13 +122,14 @@ export namespace Rb6Handlers {
                 playerParam: (playerParam?.length == 0) ? <any>{} : { item: playerParam },
                 mylist: (mylist == null) ? {} : { list: mylist },
                 musicRankPoint: {},
-                quest: {},
+                quest: (questRecords?.length == 0) ? {} : { list: questRecords },
                 ghost: {},
                 ghostWinCount: {},
                 purpose: {}
             }
         }
         let k = mapKObject(player, Rb6PlayerReadMappingRecord)
+        k = readPlayerPostTask(k)
         send.object(k)
     }
 
@@ -150,7 +153,7 @@ export namespace Rb6Handlers {
             let ridqueries: Query<any>[] = [
                 { collection: "rb.rb6.player.account" },
                 { collection: "rb.rb6.player.base" },
-                { collection: "rb.rb6.player.charactorCard" },
+                { collection: "rb.rb6.player.characterCard" },
                 { collection: "rb.rb6.player.config" },
                 { collection: "rb.rb6.player.custom" },
                 { collection: "rb.rb6.playData.musicRecord" },
@@ -178,6 +181,7 @@ export namespace Rb6Handlers {
 
     export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb6Player>, send: EamuseSend) => {
         // try {
+        data = writePlayerPredecessor(data)
         let player: IRb6Player = mapBackKObject(data, Rb6PlayerWriteMappingRecord)[0]
         let playCountQuery: Query<IRb6PlayerAccount> = { collection: "rb.rb6.player.account" }
         let playerAccountForPlayCountQuery: IRb6PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
@@ -205,7 +209,7 @@ export namespace Rb6Handlers {
             }
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
             if (player.pdata.justCollections?.list?.length > 0) for (let i of player.pdata.justCollections.list) await updateJustCollection(player.pdata.account.userId, i)
-            if (player.pdata.charactorCards?.list?.length > 0) for (let i of player.pdata.charactorCards.list) await DB.Upsert<IRb6CharactorCard>(rid, { collection: "rb.rb6.player.charactorCard", charactorCardId: i.charactorCardId }, i)
+            if (player.pdata.characterCards?.list?.length > 0) for (let i of player.pdata.characterCards.list) await DB.Upsert<IRb6CharacterCard>(rid, { collection: "rb.rb6.player.characterCard", charactorCardId: i.charactorCardId }, i)
             if (player.pdata.base) {
                 let init = (v, i) => (v == null) ? i : v
 
@@ -217,10 +221,14 @@ export namespace Rb6Handlers {
             }
             if (player.pdata.config) await DB.Upsert<IRb6PlayerConfig>(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
             if (player.pdata.custom) await DB.Upsert<IRb6PlayerCustom>(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
-            if ((<IRb6PlayerClasscheckLog>player.pdata.classcheck)?.class) await updateClasscheckRecordFromLog(rid, <IRb6PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
+            if ((<IRb6PlayerClasscheckLog>player.pdata.classcheck)?.class) {
+                (player.pdata.classcheck as IRb6PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + player.pdata.stageLogs.log[1]?.score + player.pdata.stageLogs.log[2]?.score
+                await updateClasscheckRecordFromLog(rid, <IRb6PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
+            }
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
             if (player.pdata.playerParam?.item?.length > 0) await updatePlayerParameters(rid, player.pdata.playerParam)
             if (player.pdata.mylist?.list != null) await DB.Upsert<IRb6Mylist>(rid, { collection: "rb.rb6.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
+            if (player.pdata.quest?.list?.length > 0) for (let q of player.pdata.quest.list) await DB.Upsert<IRb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade }, q)
         }
         send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
         // }
@@ -276,8 +284,7 @@ export namespace Rb6Handlers {
         Object.assign(m, Rb6JustCollectionElementMappingRecord)
         m.userId.$type = "kignore"
         let k = mapKObject({ justcollection: { list: element } }, { justcollection: { list: m } })
-        log("// k:", "./k.txt")
-        log(k, "./k.txt")
+
         let k2
         k2 = {
             justcollection: {
@@ -289,8 +296,7 @@ export namespace Rb6Handlers {
         }
         if (element.blueDataArray != null) k2.justcollection.list.item_blue_data_bin = K.ITEM("bin", Buffer.from(element.blueDataArray))
         if (element.redDataArray != null) k2.justcollection.list.item_red_data_bin = K.ITEM("bin", Buffer.from(element.redDataArray))
-        log("// k2:", "./k2.txt")
-        log(k2, "./k2.txt")
+
         send.object(k2)
     }
 
@@ -324,14 +330,18 @@ export namespace Rb6Handlers {
         let query: Query<IRb6MusicRecord> = { $and: [{ collection: "rb.rb6.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
         let musicRecord = await DB.FindOne<IRb6MusicRecord>(rid, query)
 
+        let newFlag = getClearTypeIndex(stageLog)
+        if (newFlag < 0) return
+
         if (musicRecord == null) {
+
             musicRecord = generateRb6MusicRecord(stageLog.musicId, stageLog.chartType)
             musicRecord.clearType = stageLog.clearType
             musicRecord.achievementRateTimes100 = stageLog.achievementRateTimes100
             musicRecord.score = stageLog.score
             musicRecord.combo = stageLog.combo
             musicRecord.missCount = stageLog.missCount
-            musicRecord.fullComboOrExcellentParam = stageLog.fullComboOrExcellentParam
+            musicRecord.param = stageLog.param
             musicRecord.time = stageLog.time
             musicRecord.justCollectionRateTimes100Red = (stageLog.color == 0) ? stageLog.justCollectionRateTimes100 : null
             musicRecord.justCollectionRateTimes100Blue = (stageLog.color == 1) ? stageLog.justCollectionRateTimes100 : null
@@ -340,8 +350,8 @@ export namespace Rb6Handlers {
             musicRecord.bestAchievementRateUpdateTime = stageLog.time
             musicRecord.bestComboUpdateTime = stageLog.time
         } else {
-            if ((musicRecord.fullComboOrExcellentParam < stageLog.fullComboOrExcellentParam) || (musicRecord.clearType < stageLog.clearType)) {
-                if (musicRecord.fullComboOrExcellentParam < stageLog.fullComboOrExcellentParam) musicRecord.fullComboOrExcellentParam = stageLog.fullComboOrExcellentParam
+            if ((musicRecord.param < stageLog.param) || (musicRecord.clearType < stageLog.clearType)) {
+                if (musicRecord.param < stageLog.param) musicRecord.param = stageLog.param
                 if (musicRecord.clearType < stageLog.clearType) musicRecord.clearType = stageLog.clearType
             }
             if (musicRecord.achievementRateTimes100 < stageLog.achievementRateTimes100) {
@@ -356,7 +366,7 @@ export namespace Rb6Handlers {
                 musicRecord.bestComboUpdateTime = stageLog.time
                 musicRecord.combo = stageLog.combo
             }
-            if (musicRecord.missCount > stageLog.missCount) {
+            if ((stageLog.missCount >= 0) && ((musicRecord.missCount > stageLog.missCount) || (musicRecord.missCount < 0))) {
                 musicRecord.bestMissCountUpdateTime = stageLog.time
                 musicRecord.missCount = stageLog.missCount
             }
@@ -368,12 +378,13 @@ export namespace Rb6Handlers {
             }
         }
 
-        musicRecord.playCounts++
+        musicRecord.playCount++
         await DB.Upsert(rid, query, musicRecord)
+        await DB.Insert(rid, stageLog)
     }
 
     async function updateClasscheckRecordFromLog(rid: string, log: IRb6PlayerClasscheckLog, time: number): Promise<void> {
-        let query: Query<IRb6ClasscheckRecord> = { $and: [{ collection: "rb.rb6.playData.classcheck" }, { musicId: log.class }] }
+        let query: Query<IRb6ClasscheckRecord> = { collection: "rb.rb6.playData.classcheck", class: log.class }
         let classRecord = (await DB.Find<IRb6ClasscheckRecord>(rid, query))[0]
         let isNeedUpdate = false
         let isInitial = false
@@ -383,19 +394,19 @@ export namespace Rb6Handlers {
             isNeedUpdate = true
             isInitial = true
         }
-        if (isInitial || log.clearType > classRecord.clearType) {
+        if (isInitial || (log.clearType > classRecord.clearType)) {
             isNeedUpdate = true
             classRecord.clearType = log.clearType
         }
-        if (isInitial || log.rank > classRecord.rank) {
+        if (isInitial || (log.rank > classRecord.rank)) {
             isNeedUpdate = true
             classRecord.rank = log.rank
         }
-        if (isInitial || log.totalScore > classRecord.totalScore) {
+        if (isInitial || (log.totalScore > classRecord.totalScore)) {
             isNeedUpdate = true
             classRecord.totalScore = log.totalScore
         }
-        if (isInitial || log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100) {
+        if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
             isNeedUpdate = true
             classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
         }
@@ -427,5 +438,16 @@ export namespace Rb6Handlers {
 
     async function updatePlayerParameters(rid: string, params: { item: IRb6PlayerParameters[] }) {
         for (let i of params.item) await DB.Upsert<IRb6PlayerParameters>(rid, { collection: "rb.rb6.player.parameters", type: i.type, bank: i.bank }, i)
+    }
+
+    function getClearTypeIndex(record: IRb6PlayerStageLog | IRb6MusicRecord): number {
+        let excFlag = record.achievementRateTimes100 == 10000
+        let fcFlag = record.missCount == 0
+        if (excFlag && !fcFlag) return -1
+        else if (excFlag) return 0
+        else if (fcFlag) return 1
+        else if (record.clearType == 4) return 2
+        else if (record.clearType == 3) return 3
+        else return 4
     }
 }

@@ -1,0 +1,674 @@
+[
+    {
+        "id": "0",
+        "byword": "普通の",
+        "position": "left",
+        "unlockTips": "（初めから選択可能）"
+    },
+    {
+        "id": "1",
+        "byword": "冒険者",
+        "position": "right",
+        "unlockTips": "（初めから選択可能）"
+    },
+    {
+        "id": "2",
+        "byword": "始まりの",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが2に到達する"
+    },
+    {
+        "id": "3",
+        "byword": "希望",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが5に到達する"
+    },
+    {
+        "id": "4",
+        "byword": "これからの",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが10に到達する"
+    },
+    {
+        "id": "5",
+        "byword": "達人",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが15に到達する"
+    },
+    {
+        "id": "6",
+        "byword": "さすがの",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが20に到達する"
+    },
+    {
+        "id": "7",
+        "byword": "ねずみ",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが30に到達する"
+    },
+    {
+        "id": "8",
+        "byword": "強そうな",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが40に到達する"
+    },
+    {
+        "id": "9",
+        "byword": "ハンター",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが50に到達する"
+    },
+    {
+        "id": "10",
+        "byword": "紡がれし",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが60に到達する"
+    },
+    {
+        "id": "11",
+        "byword": "光",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが70に到達する"
+    },
+    {
+        "id": "12",
+        "byword": "蘇った",
+        "position": "left",
+        "unlockTips": "パステルくんのレベルが80に到達する"
+    },
+    {
+        "id": "13",
+        "byword": "ドラゴン",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが90に到達する"
+    },
+    {
+        "id": "14",
+        "byword": "パステルくん",
+        "position": "right",
+        "unlockTips": "パステルくんのレベルが99に到達する"
+    },
+    {
+        "id": "15",
+        "byword": "駆け抜けた",
+        "position": "left",
+        "unlockTips": "ノーマルモードで5回クリアする"
+    },
+    {
+        "id": "16",
+        "byword": "戦い",
+        "position": "right",
+        "unlockTips": "ノーマルモードで10回クリアする"
+    },
+    {
+        "id": "17",
+        "byword": "遠い日の",
+        "position": "left",
+        "unlockTips": "ノーマルモードで20回クリアする"
+    },
+    {
+        "id": "18",
+        "byword": "挑戦",
+        "position": "right",
+        "unlockTips": "ノーマルモードで40回クリアする"
+    },
+    {
+        "id": "19",
+        "byword": "飛び越えた",
+        "position": "left",
+        "unlockTips": "ノーマルモードで70回クリアする"
+    },
+    {
+        "id": "20",
+        "byword": "英雄",
+        "position": "right",
+        "unlockTips": "ノーマルモードで100回クリアする"
+    },
+    {
+        "id": "21",
+        "byword": "千の",
+        "position": "left",
+        "unlockTips": "ノーマルモードで1000回クリアする"
+    },
+    {
+        "id": "22",
+        "byword": "一緒に",
+        "position": "left",
+        "unlockTips": "店内モードをプレーする"
+    },
+    {
+        "id": "23",
+        "byword": "負けられない",
+        "position": "left",
+        "unlockTips": "店内モードを5回プレーする"
+    },
+    {
+        "id": "24",
+        "byword": "遊び",
+        "position": "right",
+        "unlockTips": "店内モードを10回プレーする"
+    },
+    {
+        "id": "25",
+        "byword": "噂の",
+        "position": "left",
+        "unlockTips": "店内モードを20回プレーする"
+    },
+    {
+        "id": "26",
+        "byword": "伝説の",
+        "position": "left",
+        "unlockTips": "リフレシアモードを1回プレーする"
+    },
+    {
+        "id": "27",
+        "byword": "戦士",
+        "position": "right",
+        "unlockTips": "リフレシアモードを5回プレーする"
+    },
+    {
+        "id": "28",
+        "byword": "漆黒の",
+        "position": "left",
+        "unlockTips": "リフレシアモードを10回プレーする"
+    },
+    {
+        "id": "29",
+        "byword": "放蕩者",
+        "position": "right",
+        "unlockTips": "リフレシアモードを30回プレーする"
+    },
+    {
+        "id": "30",
+        "byword": "悠久の",
+        "position": "left",
+        "unlockTips": "リフレシアモードを50回プレーする"
+    },
+    {
+        "id": "31",
+        "byword": "リフレシア",
+        "position": "right",
+        "unlockTips": "リフレシアモードを100回プレーする"
+    },
+    {
+        "id": "32",
+        "byword": "影",
+        "position": "right",
+        "unlockTips": "ベーシック譜面を100回プレーする"
+    },
+    {
+        "id": "33",
+        "byword": "やんちゃな",
+        "position": "left",
+        "unlockTips": "ミディアム譜面を100回プレーする"
+    },
+    {
+        "id": "34",
+        "byword": "強者",
+        "position": "right",
+        "unlockTips": "ハード譜面を100回プレーする"
+    },
+    {
+        "id": "35",
+        "byword": "豪傑",
+        "position": "right",
+        "unlockTips": "ホワイトハード譜面を100回プレーする"
+    },
+    {
+        "id": "36",
+        "byword": "不死鳥",
+        "position": "right",
+        "unlockTips": "ランクCを10回獲得する"
+    },
+    {
+        "id": "37",
+        "byword": "大器晩成",
+        "position": "right",
+        "unlockTips": "ランクBを獲得する"
+    },
+    {
+        "id": "38",
+        "byword": "要塞",
+        "position": "right",
+        "unlockTips": "ランクAを5回獲得する"
+    },
+    {
+        "id": "39",
+        "byword": "まあまあ",
+        "position": "left",
+        "unlockTips": "ランクAAを獲得する"
+    },
+    {
+        "id": "40",
+        "byword": "小さな",
+        "position": "left",
+        "unlockTips": "ランクAAを10回獲得する"
+    },
+    {
+        "id": "41",
+        "byword": "栄光の",
+        "position": "left",
+        "unlockTips": "ランクAAを50回獲得する"
+    },
+    {
+        "id": "42",
+        "byword": "伝説",
+        "position": "right",
+        "unlockTips": "ランクAAAを獲得する"
+    },
+    {
+        "id": "43",
+        "byword": "祝福",
+        "position": "right",
+        "unlockTips": "ランクAAAを10回獲得する"
+    },
+    {
+        "id": "44",
+        "byword": "神々の",
+        "position": "left",
+        "unlockTips": "ランクAAAを50回獲得する"
+    },
+    {
+        "id": "45",
+        "byword": "風神",
+        "position": "right",
+        "unlockTips": "ランクAAA+を獲得する"
+    },
+    {
+        "id": "46",
+        "byword": "雷神",
+        "position": "right",
+        "unlockTips": "ランクAAA+を10回獲得する"
+    },
+    {
+        "id": "47",
+        "byword": "修羅",
+        "position": "right",
+        "unlockTips": "ランクAAA+を50回獲得する"
+    },
+    {
+        "id": "48",
+        "byword": "一歩目",
+        "position": "right",
+        "unlockTips": "ランクSを1回獲得する"
+    },
+    {
+        "id": "49",
+        "byword": "狂気の",
+        "position": "left",
+        "unlockTips": "ランクSを10回獲得する"
+    },
+    {
+        "id": "50",
+        "byword": "前人未到の",
+        "position": "left",
+        "unlockTips": "ランクSを50回獲得する"
+    },
+    {
+        "id": "51",
+        "byword": "極神",
+        "position": "right",
+        "unlockTips": "ランクSを100回獲得する"
+    },
+    {
+        "id": "52",
+        "byword": "目覚めし",
+        "position": "left",
+        "unlockTips": "レベル14以上の楽曲でAAA+を1回達成する"
+    },
+    {
+        "id": "53",
+        "byword": "覚醒者",
+        "position": "right",
+        "unlockTips": "レベル14以上の楽曲でAAA+を10回達成する"
+    },
+    {
+        "id": "54",
+        "byword": "深淵の",
+        "position": "left",
+        "unlockTips": "レベル14以上の楽曲でAAA+を50回達成する"
+    },
+    {
+        "id": "55",
+        "byword": "水流",
+        "position": "right",
+        "unlockTips": "フルコンボを5回達成する"
+    },
+    {
+        "id": "56",
+        "byword": "大地",
+        "position": "right",
+        "unlockTips": "フルコンボを10回達成する"
+    },
+    {
+        "id": "57",
+        "byword": "氷雪",
+        "position": "right",
+        "unlockTips": "フルコンボを20回達成する"
+    },
+    {
+        "id": "58",
+        "byword": "風",
+        "position": "right",
+        "unlockTips": "フルコンボを40回達成する"
+    },
+    {
+        "id": "59",
+        "byword": "業火",
+        "position": "right",
+        "unlockTips": "フルコンボを70回達成する"
+    },
+    {
+        "id": "60",
+        "byword": "虚空",
+        "position": "right",
+        "unlockTips": "フルコンボを100回達成する"
+    },
+    {
+        "id": "61",
+        "byword": "完璧な",
+        "position": "left",
+        "unlockTips": "ALL JUST REFLEC フルコンボを達成する"
+    },
+    {
+        "id": "62",
+        "byword": "精密機械",
+        "position": "right",
+        "unlockTips": "ALL JUST REFLEC フルコンボを10回達成する"
+    },
+    {
+        "id": "63",
+        "byword": "アンドロイド",
+        "position": "right",
+        "unlockTips": "ALL JUST REFLEC フルコンボを100回達成する"
+    },
+    {
+        "id": "64",
+        "byword": "華麗なる",
+        "position": "left",
+        "unlockTips": "エクセレントを1回達成する"
+    },
+    {
+        "id": "65",
+        "byword": "新星",
+        "position": "right",
+        "unlockTips": "エクセレントを5回達成する"
+    },
+    {
+        "id": "66",
+        "byword": "高尚な",
+        "position": "left",
+        "unlockTips": "エクセレントを10回達成する"
+    },
+    {
+        "id": "67",
+        "byword": "偉人",
+        "position": "right",
+        "unlockTips": "エクセレントを20回達成する"
+    },
+    {
+        "id": "68",
+        "byword": "選ばれし",
+        "position": "left",
+        "unlockTips": "エクストララウンドに行く"
+    },
+    {
+        "id": "69",
+        "byword": "新たな",
+        "position": "left",
+        "unlockTips": "クリアゲージハードで5回クリアする"
+    },
+    {
+        "id": "70",
+        "byword": "境地",
+        "position": "right",
+        "unlockTips": "クリアゲージハードで10回クリアする"
+    },
+    {
+        "id": "71",
+        "byword": "未だ見ぬ",
+        "position": "right",
+        "unlockTips": "クリアゲージハードで20回クリアする"
+    },
+    {
+        "id": "72",
+        "byword": "世界",
+        "position": "right",
+        "unlockTips": "クリアゲージハードで40回クリアする"
+    },
+    {
+        "id": "73",
+        "byword": "こだわりの",
+        "position": "left",
+        "unlockTips": "JUSTコレクションを1曲達成する"
+    },
+    {
+        "id": "74",
+        "byword": "到達点",
+        "position": "right",
+        "unlockTips": "JUSTコレクションを10曲達成する"
+    },
+    {
+        "id": "75",
+        "byword": "揺るぎない",
+        "position": "left",
+        "unlockTips": "JUSTコレクションを20曲達成する"
+    },
+    {
+        "id": "76",
+        "byword": "頂点",
+        "position": "right",
+        "unlockTips": "JUSTコレクションを40曲達成する"
+    },
+    {
+        "id": "77",
+        "byword": "満たされた",
+        "position": "left",
+        "unlockTips": "キャラクターカードを1枚ランクマックスにする"
+    },
+    {
+        "id": "78",
+        "byword": "コンプ好き",
+        "position": "right",
+        "unlockTips": "キャラクターカードを3枚ランクマックスにする"
+    },
+    {
+        "id": "79",
+        "byword": "熱心な",
+        "position": "left",
+        "unlockTips": "キャラクターカードを5枚ランクマックスにする"
+    },
+    {
+        "id": "80",
+        "byword": "ハードコア",
+        "position": "right",
+        "unlockTips": "キャラクターカードを10枚ランクマックスにする"
+    },
+    {
+        "id": "81",
+        "byword": "スターター",
+        "position": "right",
+        "unlockTips": "キャラクターカードを3枚集める"
+    },
+    {
+        "id": "82",
+        "byword": "カード好きな",
+        "position": "left",
+        "unlockTips": "キャラクターカードを7枚集める"
+    },
+    {
+        "id": "83",
+        "byword": "伝道師",
+        "position": "right",
+        "unlockTips": "キャラクターカードを10枚集める"
+    },
+    {
+        "id": "84",
+        "byword": "コレクター",
+        "position": "right",
+        "unlockTips": "キャラクターカードを15枚集める"
+    },
+    {
+        "id": "85",
+        "byword": "継承者",
+        "position": "right",
+        "unlockTips": "コンティニューを10回する"
+    },
+    {
+        "id": "86",
+        "byword": "焼き鳥",
+        "position": "right",
+        "unlockTips": "累計10日プレーする"
+    },
+    {
+        "id": "87",
+        "byword": "おにぎり",
+        "position": "right",
+        "unlockTips": "累計20日プレーする"
+    },
+    {
+        "id": "88",
+        "byword": "むぎ茶",
+        "position": "right",
+        "unlockTips": "累計40日プレーする"
+    },
+    {
+        "id": "89",
+        "byword": "みかん",
+        "position": "right",
+        "unlockTips": "累計80日プレーする"
+    },
+    {
+        "id": "90",
+        "byword": "今日も",
+        "position": "left",
+        "unlockTips": "2日連続でプレーする"
+    },
+    {
+        "id": "91",
+        "byword": "日々",
+        "position": "right",
+        "unlockTips": "7日連続でプレーする"
+    },
+    {
+        "id": "92",
+        "byword": "親愛なる",
+        "position": "left",
+        "unlockTips": "フレンドを登録する"
+    },
+    {
+        "id": "93",
+        "byword": "友好的な",
+        "position": "left",
+        "unlockTips": "フレンドを5人登録する"
+    },
+    {
+        "id": "94",
+        "byword": "盟友",
+        "position": "right",
+        "unlockTips": "フレンドを10人登録する"
+    },
+    {
+        "id": "95",
+        "byword": "真紅の",
+        "position": "left",
+        "unlockTips": "3回マッチングする"
+    },
+    {
+        "id": "96",
+        "byword": "天使",
+        "position": "right",
+        "unlockTips": "10回マッチングする"
+    },
+    {
+        "id": "97",
+        "byword": "堕ちた",
+        "position": "left",
+        "unlockTips": "25回マッチングする"
+    },
+    {
+        "id": "98",
+        "byword": "カリスマ",
+        "position": "right",
+        "unlockTips": "50回マッチングする"
+    },
+    {
+        "id": "99",
+        "byword": "覇道",
+        "position": "right",
+        "unlockTips": "100回マッチングする"
+    },
+    {
+        "id": "100",
+        "byword": "命知らずな",
+        "position": "left",
+        "unlockTips": "200回マッチングする"
+    },
+    {
+        "id": "101",
+        "byword": "仲良きことは",
+        "position": "right",
+        "unlockTips": "相互フレンドとマッチングする"
+    },
+    {
+        "id": "102",
+        "byword": "数奇な",
+        "position": "left",
+        "unlockTips": "相互フレンドと5回マッチングする"
+    },
+    {
+        "id": "103",
+        "byword": "ともだち",
+        "position": "right",
+        "unlockTips": "相互フレンドと10回マッチングする"
+    },
+    {
+        "id": "104",
+        "byword": "折れない心",
+        "position": "right",
+        "unlockTips": "マッチングで10敗する"
+    },
+    {
+        "id": "105",
+        "byword": "古き良き",
+        "position": "left",
+        "unlockTips": "COINで5回プレーする"
+    },
+    {
+        "id": "106",
+        "byword": "形のない",
+        "position": "left",
+        "unlockTips": "PASELIで5回プレーする"
+    },
+    {
+        "id": "107",
+        "byword": "遅れてきた",
+        "position": "left",
+        "unlockTips": "PASELIで10回プレーする"
+    },
+    {
+        "id": "108",
+        "byword": "カメラマン",
+        "position": "right",
+        "unlockTips": "画像投稿を20回行う"
+    },
+    {
+        "id": "109",
+        "byword": "マイロード",
+        "position": "right",
+        "unlockTips": "マイリストから10回選曲する"
+    },
+    {
+        "id": "110",
+        "byword": "ぐへへ",
+        "position": "right",
+        "unlockTips": "戦いの記憶イベントでDes-ROWの記憶を全て討伐"
+    },
+    {
+        "id": "111",
+        "byword": "ＤＪ",
+        "position": "left",
+        "unlockTips": "戦いの記憶イベントでDJ TOTTOの記憶を全て討伐"
+    }
+]

@@ -4,13 +4,13 @@ import { getCollectionMappingElement, KObjectMappingRecord, NumberGroup } from "
 export interface IRb6MusicRecord extends ICollection<"rb.rb6.playData.musicRecord"> {
     musicId: number
     chartType: number
-    playCounts: number
+    playCount: number
     clearType: number
     achievementRateTimes100: number
     score: number
     combo: number
     missCount: number
-    fullComboOrExcellentParam: number
+    param: number
     time: number
     bestScoreUpdateTime: number
     bestAchievementRateUpdateTime: number
@@ -26,13 +26,13 @@ export const Rb6MusicRecordMappingRecord: KObjectMappingRecord<IRb6MusicRecord> 
     collection: getCollectionMappingElement<IRb6MusicRecord>("rb.rb6.playData.musicRecord"),
     musicId: { $type: "s16", $targetKey: "mid" },
     chartType: { $type: "s8", $targetKey: "ntgrd" },
-    playCounts: { $type: "s32", $targetKey: "pc" },
+    playCount: { $type: "s32", $targetKey: "pc" },
     clearType: { $type: "s8", $targetKey: "ct" },
     achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
     score: { $type: "s16", $targetKey: "scr" },
     combo: { $type: "s16" },
     missCount: { $type: "s16", $targetKey: "ms" },
-    fullComboOrExcellentParam: { $type: "s16", $targetKey: "param" },
+    param: { $type: "s16" },
     time: { $type: "s32" },
     bestScoreUpdateTime: { $type: "s32", $targetKey: "bscrt" },
     bestAchievementRateUpdateTime: { $type: "s32", $targetKey: "bart" },
@@ -49,13 +49,13 @@ export function generateRb6MusicRecord(musicId: number, chartType: number): IRb6
         collection: "rb.rb6.playData.musicRecord",
         musicId: musicId,
         chartType: chartType,
-        playCounts: 0,
+        playCount: 0,
         clearType: 0,
         achievementRateTimes100: 0,
         score: 0,
         combo: 0,
         missCount: 0,
-        fullComboOrExcellentParam: 0,
+        param: 0,
         time: Date.now(),
         bestScoreUpdateTime: Date.now(),
         bestAchievementRateUpdateTime: Date.now(),
