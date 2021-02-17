@@ -95,8 +95,7 @@ export function ITEM2<T>(ktype: KTypeConvert<T>, value: T, attr?: KAttrMap2<T>):
     if ((ktype == "bool") && (typeof value == "boolean")) {
         result["@content"] = <any>(value ? [1] : [0])
     } else if ((ktype == "bin") && value instanceof Buffer) {
-        result["@content"] = <any>value.toJSON()
-        result["@attr"].__size = <any>value.byteLength
+        result = <any>K.ITEM("bin", value, result["@attr"])
     } else if (((ktype == "s8") || (ktype == "u8")) && (value instanceof BufferArray)) {
         result["@content"] = <any>value.value
     } else if (isNumericKType(ktype) && !Array.isArray(value)) {
@@ -202,8 +201,7 @@ export function mapKObject<T>(data: T, kMapRecord: KObjectMappingRecord<T>, kAtt
                     if ((tt == "bool") && (typeof targetValue == "boolean")) {
                         target["@content"] = <any>(targetValue ? [1] : [0])
                     } else if ((tt == "bin") && targetValue instanceof Buffer) {
-                        target["@content"] = <any>targetValue.toJSON()
-                        target["@attr"].__size = <any>targetValue.byteLength
+                        target = <any>K.ITEM("bin", targetValue, target["@attr"])
                     } else if (((tt == "s8") || (tt == "u8")) && (targetValue instanceof BufferArray)) {
                         target["@content"] = <any>targetValue.value
                     } else if (isNumericKType(tt) && !Array.isArray(targetValue)) {

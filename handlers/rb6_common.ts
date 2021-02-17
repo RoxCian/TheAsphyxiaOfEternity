@@ -2,14 +2,14 @@ import { generateRb6CharactorCard, IRb6CharacterCard } from "../models/rb6/chara
 import { generateRb6ClasscheckRecord, IRb6ClasscheckRecord } from "../models/rb6/classcheck_record"
 import { getExampleCourse, Rb6CourseMappingRecord } from "../models/rb6/course"
 import { getExampleEventControl, Rb6EventControlMappingRecord } from "../models/rb6/event_control"
-import { initializePlayer } from "./initialize_player"
-import { IRb6JustCollectionElement, Rb6JustCollectionElementMappingRecord } from "../models/rb6/just_collection"
+import { initializePlayer } from "./rb6_initialize_player"
+import { IRb6JustCollectionElement, IRb6ReadJustCollection, Rb6ReadJustCollectionElementMap } from "../models/rb6/just_collection"
 import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMappingRecord } from "../models/rb6/music_record"
 import { IRb6Mylist } from "../models/rb6/mylist"
 import { generateRb6PlayerConfig, generateRb6PlayerCustom, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6PlayerReadMappingRecord, Rb6PlayerWriteMappingRecord } from "../models/rb6/profile"
 import { KRb6ShopInfo } from "../models/rb6/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../utility/mapping"
-import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
+import { readPlayerPostTask, writePlayerPredecessor } from "./rb6_system_parameter_controller"
 
 export namespace Rb6Common {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -107,6 +107,11 @@ export namespace Rb6Common {
         playerConfig.randomEntryWork = init(playerConfig.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
         playerConfig.customFolderWork = init(playerConfig.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
+        // Twitter support test
+        playerConfig.isTwitterLinked = true
+        playerConfig.isTweet = true
+        //
+
         let player: IRb6Player = {
             pdata: {
                 account: playerAccount,
@@ -157,9 +162,11 @@ export namespace Rb6Common {
                 { collection: "rb.rb6.player.config" },
                 { collection: "rb.rb6.player.custom" },
                 { collection: "rb.rb6.playData.musicRecord" },
+                { collection: "rb.rb6.playData.stageLog" },
                 { collection: "rb.rb6.playData.classcheck" },
                 { collection: "rb.rb6.player.mylist" },
                 { collection: "rb.rb6.player.parameters" },
+                { collection: "rb.rb6.player.releasedInfo" },
             ]
             let uid = ridqueries[0].userId
             let uidqueries: Query<any>[] = [
@@ -280,24 +287,17 @@ export namespace Rb6Common {
             if (element.redDataArray != null) element.redData = Buffer.from(element.redDataArray)
             log(element)
         }
-        let m = <KObjectMappingRecord<IRb6JustCollectionElement>>{}
-        Object.assign(m, Rb6JustCollectionElementMappingRecord)
-        m.userId.$type = "kignore"
-        let k = mapKObject({ justcollection: { list: element } }, { justcollection: { list: m } })
 
-        let k2
-        k2 = {
-            justcollection: {
-                list: {
-                    music_id: K.ITEM("s32", element.musicId),
-                    note_grade: K.ITEM("s32", element.chartType)
-                }
-            }
-        }
-        if (element.blueDataArray != null) k2.justcollection.list.item_blue_data_bin = K.ITEM("bin", Buffer.from(element.blueDataArray))
-        if (element.redDataArray != null) k2.justcollection.list.item_red_data_bin = K.ITEM("bin", Buffer.from(element.redDataArray))
+        let j = <{ justcollection: IRb6ReadJustCollection }>{ justcollection: {} }
 
-        send.object(k2)
+        if (element.blueDataArray != null) j.justcollection.blueData = Buffer.from(element.blueDataArray)
+        if (element.redDataArray != null) j.justcollection.redData = Buffer.from(element.redDataArray)
+
+        send.object(mapKObject(j, { justcollection: Rb6ReadJustCollectionElementMap }))
+    }
+
+    export const WriteComment: EPR = async (req, data, send) => {
+
     }
 
     interface IPlayerReadParameters {
