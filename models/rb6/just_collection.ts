@@ -1,7 +1,7 @@
 import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
-import { ICollection } from "../../utility/definitions"
+import { ICollection } from "../utility/definitions"
 
-export interface IRb6JustCollectionElement extends ICollection<"rb.rb6.playData.justCollection"> {
+export interface IRb6JustCollection extends ICollection<"rb.rb6.playData.justCollection#userId"> {
     userId?: number
     musicId: number
     chartType: number
@@ -10,8 +10,8 @@ export interface IRb6JustCollectionElement extends ICollection<"rb.rb6.playData.
     blueDataArray?: number[]
     redDataArray?: number[]
 }
-export const Rb6JustCollectionElementMappingRecord: KObjectMappingRecord<IRb6JustCollectionElement> = {
-    collection: getCollectionMappingElement<IRb6JustCollectionElement>("rb.rb6.playData.justCollection"),
+export const Rb6JustCollectionMap: KObjectMappingRecord<IRb6JustCollection> = {
+    collection: getCollectionMappingElement<IRb6JustCollection>("rb.rb6.playData.justCollection#userId"),
     userId: { $type: "s32", $targetKey: "user_id" },
     musicId: { $type: "s32", $targetKey: "music_id" },
     chartType: { $type: "s8", $targetKey: "note_grade" },
@@ -29,7 +29,7 @@ export interface IRb6ReadJustCollection {
         chartType: number
     }
 }
-export const Rb6ReadJustCollectionElementMap: KObjectMappingRecord<IRb6ReadJustCollection> = {
+export const Rb6ReadJustCollectionMap: KObjectMappingRecord<IRb6ReadJustCollection> = {
     list: {
         musicId: { $type: "s32", $targetKey: "music_id" },
         chartType: { $type: "s8", $targetKey: "note_grade" },

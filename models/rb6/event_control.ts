@@ -1,4 +1,4 @@
-import { KObjectMappingRecord } from "../../utility/mapping";
+import { KObjectMappingRecord } from "../../utility/mapping"
 
 export interface IRb6EventControl {
     type: number
@@ -8,7 +8,7 @@ export interface IRb6EventControl {
     startTime: number
     endTime: number
 }
-export const Rb6EventControlMappingRecord: KObjectMappingRecord<IRb6EventControl> = {
+export const Rb6EventControlMap: KObjectMappingRecord<IRb6EventControl> = {
     type: { $type: "s32" },
     index: { $type: "s32" },
     value: { $type: "s32" },

@@ -1,5 +1,5 @@
 import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
-import { ICollection } from "../../utility/definitions"
+import { ICollection } from "../utility/definitions"
 
 export interface IRb6Mylist extends ICollection<"rb.rb6.player.mylist"> {
     index: number

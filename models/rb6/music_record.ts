@@ -1,4 +1,4 @@
-import { ICollection } from "../../utility/definitions"
+import { ICollection } from "../utility/definitions"
 import { getCollectionMappingElement, KObjectMappingRecord, NumberGroup } from "../../utility/mapping"
 
 export interface IRb6MusicRecord extends ICollection<"rb.rb6.playData.musicRecord"> {
@@ -22,7 +22,7 @@ export interface IRb6MusicRecord extends ICollection<"rb.rb6.playData.musicRecor
     isHasGhostRed: boolean
     isHasGhostBlue: boolean
 }
-export const Rb6MusicRecordMappingRecord: KObjectMappingRecord<IRb6MusicRecord> = {
+export const Rb6MusicRecordMap: KObjectMappingRecord<IRb6MusicRecord> = {
     collection: getCollectionMappingElement<IRb6MusicRecord>("rb.rb6.playData.musicRecord"),
     musicId: { $type: "s16", $targetKey: "mid" },
     chartType: { $type: "s8", $targetKey: "ntgrd" },

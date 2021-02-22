@@ -7,7 +7,6 @@ node_modules
 # Project files
 asphyxia-core.d.ts
 package-lock.json
-tsconfig.json
 
 # Debugging
 bin
@@ -16,3 +15,4 @@ obj
 # Package
 *.tgz
 *.zip
+dist

@@ -1,3 +1,5 @@
+
+
 let getTabs = () => document.querySelectorAll("#tabs li")
 let getTabContents = () => document.querySelectorAll("#tab-content #tab-content-body")
 function initializeTabs() {
@@ -53,7 +55,7 @@ function initializeModals() {
     for (let t of modaltriggers) {
         let m = t.querySelector(".modal")
         let c = m.querySelectorAll("#close")
-        t.addEventListener("click", (e) => { m.style.display = "block" })
+        t.addEventListener("click", (e) => { m.style.display = "flex" })
         for (let v of c) v.addEventListener("click", (e) => {
             m.style.display = "none"
             e.stopPropagation()
@@ -80,6 +82,7 @@ function initializeFormSelects() {
                 let o = options[i]
                 if (o.selected) {
                     input.value = (o.getAttribute("value") == null) ? i : o.getAttribute("value")
+                    input.dispatchEvent(new Event("change"))
                     break
                 }
             }
@@ -244,7 +247,11 @@ function initializeMultiSelectTables() {
                 if (value.includes(lvalue)) {
                     if (!l.classList.contains("is-selected")) l.classList.add("is-selected")
                     title[value.indexOf(lvalue)] = l.getAttribute("multi-select-title")
-                } else l.classList.remove("is-selected")
+                    l.style.fontWeight = "bold"
+                } else {
+                    l.classList.remove("is-selected")
+                    l.style.fontWeight = ""
+                }
             }
             titleInput.value = JSON.stringify(title)
         }
@@ -304,6 +311,120 @@ function initializeFormNumerics() {
     }
 }
 
+function initializeUploader() {
+    let uploaders = document.querySelectorAll("div#uploader")
+    for (let uploader of uploaders) {
+        let input = uploader.querySelector("input#uploader-input")
+        let text = uploader.querySelector("input#uploader-text")
+        let placeholder = uploader.querySelector("#uploader-placeholder")
+        let remove = uploader.querySelector("#uploader-delete")
+        let reader = new FileReader()
+        input.addEventListener("change", () => {
+            if (input.files.length > 0) {
+                remove.style.display = "block"
+                placeholder.innerText = input.files[0].name
+                reader.readAsText(input.files[0])
+                reader.onload = () => text.value = reader.result
+            } else {
+                placeholder.innerText = ""
+                remove.style.display = "none"
+                text.value = null
+            }
+        })
+        remove.addEventListener("click", (e) => {
+            e.stopPropagation()
+            input.value = null
+            input.dispatchEvent(new Event("change"))
+        })
+
+        remove.style.display = "none"
+    }
+}
+
+function checkImg() {
+    let imgs = document.querySelectorAll("#exist-or-not")
+    for (let img of imgs) {
+        let general = img.querySelector("img#general")
+        let specified = img.querySelector("img#specified")
+
+        if (specified.width == 0) specified.style.display = "none"
+        else general.style.display = "none"
+    }
+}
+
+function initializePastel() {
+    let pastel = document.querySelector(".pastel")
+    let body = pastel.querySelector(".pastel-body")
+    let headInput = pastel.querySelector("input.pastel-head-input")
+    let topInput = pastel.querySelector("input.pastel-top-input")
+    let underInput = pastel.querySelector("input.pastel-under-input")
+    let armInput = pastel.querySelector("input.pastel-arm-input")
+
+    let refresh = () => {
+        let headPath = "url(\"static/img/pastel_equips/head_" + headInput.getAttribute("value") + ".webp\")"
+        let topPath = "url(\"static/img/pastel_equips/top_" + topInput.getAttribute("value") + ".webp\")"
+        let underPath = "url(\"static/img/pastel_equips/under_" + underInput.getAttribute("value") + ".webp\")"
+        let leftArmPath = "url(\"static/img/pastel_equips/arm_l_" + armInput.getAttribute("value") + ".webp\")"
+        let rightArmPath = "url(\"static/img/pastel_equips/arm_r_" + armInput.getAttribute("value") + ".webp\")"
+        let pastelPath = "url(\"static/img/pastel_equips/pastel.webp\")"
+
+        body.style.backgroundImage = rightArmPath + ", " + leftArmPath + ", " + underPath + ", " + topPath + ", " + headPath + ", " + pastelPath
+    }
+
+    headInput.addEventListener("change", refresh)
+    topInput.addEventListener("change", refresh)
+    underInput.addEventListener("change", refresh)
+    armInput.addEventListener("change", refresh)
+
+    refresh()
+}
+
+function initializeMarqueeLabels() {
+    let marquees = document.querySelectorAll(".marquee-label")
+    for (let marquee of marquees) {
+        let refresh = () => {
+            if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > marquee.parentElement.offsetWidth - 10)) {
+                marquee.animate([
+                    { transform: "translateX(0)", offset: 0 },
+                    { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.1 },
+                    { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.9 },
+                    { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", offset: 1 }
+                ],
+                    { duration: Math.max(20 * (marquee.offsetWidth - marquee.parentElement.offsetWidth), 2000), direction: "alternate-reverse", iterations: Infinity })
+            } else marquee.style.animation = "none"
+        }
+        let o = new ResizeObserver(refresh)
+        o.observe(marquee.parentElement)
+    }
+}
+
+function initializeNotificatioAnimation() {
+    let notifications = document.querySelectorAll(".notification.temporary")
+    for (let n of notifications) {
+        let remove = n.querySelector(".delete")
+        let startSubmitter = n.querySelector("form.start")
+        let startPath = startSubmitter.getAttribute("action")
+        let startRequest = new XMLHttpRequest()
+        startRequest.open("POST", startPath, true)
+        startRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+        let endSubmitter = n.querySelector("form.end")
+        let endPath = startSubmitter.getAttribute("action")
+        let endRequest = new XMLHttpRequest()
+        endRequest.open("POST", endPath, true)
+        endRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+        if (startSubmitter != null) startRequest.send()
+        let end = () => {
+            n.style.display = "none"
+            if (endSubmitter != null) endRequest.send()
+        }
+        remove.addEventListener("click", end)
+        n.addEventListener("animationend", end)
+        n.addEventListener("webkitAnimationEnd", end)
+    }
+}
+
 $(document).ready(() => {
     initializeTabs()
     initializeToggles()
@@ -314,4 +435,9 @@ $(document).ready(() => {
     initializeFormValidation()
     initializeFormCollections()
     initializeMultiSelectTables()
+    initializeUploader()
+    checkImg()
+    initializePastel()
+    initializeMarqueeLabels()
+    initializeNotificatioAnimation()
 })

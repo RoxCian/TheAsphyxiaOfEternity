@@ -1,5 +1,5 @@
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping";
-import { ICollection } from "../../utility/definitions";
+import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { ICollection } from "../utility/definitions"
 
 export interface IRb6ClasscheckRecord extends ICollection<"rb.rb6.playData.classcheck"> {
     class: number
@@ -11,7 +11,7 @@ export interface IRb6ClasscheckRecord extends ICollection<"rb.rb6.playData.class
     recordUpdateTime: number
     rank: number
 }
-export const Rb6ClasscheckRecordMappingRecord: KObjectMappingRecord<IRb6ClasscheckRecord> = {
+export const Rb6ClasscheckRecordMap: KObjectMappingRecord<IRb6ClasscheckRecord> = {
     collection: getCollectionMappingElement<IRb6ClasscheckRecord>("rb.rb6.playData.classcheck"),
     class: { $type: "s32" },
     clearType: { $type: "s32", $targetKey: "clear_type" },

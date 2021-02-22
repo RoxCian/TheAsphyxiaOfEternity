@@ -1,10 +1,10 @@
-import { readFile, writeFile } from "fs";
-import { IRb6JustCollectionElement, Rb6JustCollectionElementMappingRecord } from "../models/rb6/just_collection";
-import { IRb6Player, Rb6PlayerWriteMappingRecord } from "../models/rb6/profile";
-import { KRb6ShopInfo, KRb6ShopInfoOriginal } from "../models/rb6/shop_info";
-import { Ea3Config, Ea3ConfigMap } from "./ea3_config";
-import { BufferArray, getCollectionMappingElement, KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "./mapping";
-import { ICollection } from "./definitions";
+import { readFile, writeFile } from "fs"
+import { IRb6JustCollection, Rb6JustCollectionMap } from "../models/rb6/just_collection"
+import { IRb6Player, Rb6PlayerWriteMap } from "../models/rb6/profile"
+import { KRb6ShopInfo, KRb6ShopInfoOriginal } from "../models/rb6/shop_info"
+import { Ea3Config, Ea3ConfigMap } from "./ea3_config"
+import { BufferArray, getCollectionMappingElement, KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "./mapping"
+import { ICollection } from "../models/utility/definitions"
 
 export let test0 = () => {
     let j: { ea3: Ea3Config }
@@ -27,7 +27,7 @@ export let test2 = async () => {
     let p
     readFile("rb@asphyxia/xmltest2_k.json", { encoding: "utf8" }, (e, d) => {
         k = JSON.parse(d)
-        p = mapBackKObject(k, { call: { player: Rb6PlayerWriteMappingRecord } })
+        p = mapBackKObject(k, { call: { player: Rb6PlayerWriteMap } })
         writeFile("rb@asphyxia/xmltest2.json", JSON.stringify(p, null, 4), () => { })
     })
 }
@@ -35,9 +35,9 @@ export let test2 = async () => {
 export let test2_2 = async () => {
     if (!IO.Exists("./xmltest2_2.xml")) throw new Error("xmltest2 not exist")
     let x = await IO.ReadFile("./xmltest2_2.xml", "utf8")
-    let j: KITEM2<{ list: IRb6JustCollectionElement }> = U.parseXML(x, false)
+    let j: KITEM2<{ list: IRb6JustCollection }> = U.parseXML(x, false)
     await IO.WriteFile("./xmltest2_2_k.json", JSON.stringify(j))
-    let p = mapBackKObject(j, { list: Rb6JustCollectionElementMappingRecord })
+    let p = mapBackKObject(j, { list: Rb6JustCollectionMap })
     if ((p[0].list.blueData instanceof Buffer) || (p[0].list.redData instanceof Buffer)) await IO.WriteFile("./xmltest2_2.json", JSON.stringify(p))
     else await IO.WriteFile("./xmltest2_2.json", "?")
 }
@@ -60,9 +60,9 @@ export const Rb6JustCollectionElement2MappingRecord: KObjectMappingRecord<IRb6Ju
 export let test2_3 = async () => {
     if (!IO.Exists("./xmltest2_3.xml")) throw new Error("xmltest2 not exist")
     let x = await IO.ReadFile("./xmltest2_3.xml", "utf8")
-    let j: KITEM2<{ list: IRb6JustCollectionElement }> = U.parseXML(x, false)
+    let j: KITEM2<{ list: IRb6JustCollection }> = U.parseXML(x, false)
     await IO.WriteFile("./xmltest2_3_k.json", JSON.stringify(j))
-    let p = mapBackKObject(j, { list: Rb6JustCollectionElementMappingRecord })
+    let p = mapBackKObject(j, { list: Rb6JustCollectionMap })
     await IO.WriteFile("./xmltest2_2.json", JSON.stringify(p))
 }
 

@@ -1,3 +1,19 @@
+- v0.3.0-beta
+
+  Added data import/export feature. You can import your Asphyxia save data now.
+
+  Added more features into webui.
+
+  Fixed a bug about no Great count in stage logs.
+
+  Breaking changes:
+  - Database entry changes
+    - rb.rb6.playData.justCollection -> rb.rb6.playData.justCollection#userId
+    - stageColorRandom -> stageRandom
+    - charactorCardId -> characterCardId
+    - justReflectCount -> justReflecCount
+  - Changed name of some files, you can repair it by using TSLint.
+
 - v0.2.1-alpha
 
   Fixed bug about Just Collection loading. All the Just Collection data saved by old version plugins can be loaded properly.

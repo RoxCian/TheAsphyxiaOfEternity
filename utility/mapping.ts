@@ -1,4 +1,4 @@
-import { ICollection } from "./definitions"
+import { ICollection } from "../models/utility/definitions"
 
 export type KArrayType = KNumberType | KBigIntType
 export type KGroupType = KNumberGroupType | KBigIntGroupType

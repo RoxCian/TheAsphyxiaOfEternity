@@ -2,11 +2,9 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v0.2.1-alpha** 
+Plugin Version: **v0.3.0-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
-
-Cannot ensure stablility and may introduce breaking changes in later versions, so please do not use it in serious game playing.
 
 ---
 
@@ -22,3 +20,4 @@ Supported versions:
     - Character cards saving
     - Quest progress saving
     - Web UI
+    - Asphyxia savedata importing

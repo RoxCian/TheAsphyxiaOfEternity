@@ -1,8 +1,8 @@
-import { ICollection } from "../../utility/definitions"
+import { ICollection } from "../utility/definitions"
 import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
-import { IRb6JustCollectionElement, Rb6JustCollectionElementMappingRecord } from "./just_collection"
-import { IRb6ClasscheckRecord, Rb6ClasscheckRecordMappingRecord } from "./classcheck_record"
-import { Rb6CharacterCardMappingRecord, IRb6CharacterCard } from "./character_card"
+import { IRb6JustCollection, Rb6JustCollectionMap } from "./just_collection"
+import { IRb6ClasscheckRecord, Rb6ClasscheckRecordMap } from "./classcheck_record"
+import { Rb6CharacterCardMap, IRb6CharacterCard } from "./character_card"
 import { IRb6Mylist, Rb6MylistMap } from "./mylist"
 
 export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> {
@@ -34,7 +34,7 @@ export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> 
     mpc: number
     playCount: number
 }
-export const Rb6PlayerAccountWriteMappingRecord: KObjectMappingRecord<IRb6PlayerAccount> = {
+export const Rb6PlayerAccountWriteMap: KObjectMappingRecord<IRb6PlayerAccount> = {
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "s32", $targetKey: "plyid" },
@@ -64,7 +64,7 @@ export const Rb6PlayerAccountWriteMappingRecord: KObjectMappingRecord<IRb6Player
     mpc: { $type: "s32" },
     playCount: { $type: "kignore", $fallbackValue: 0 }
 }
-export const Rb6PlayerAccountReadMappingRecord: KObjectMappingRecord<IRb6PlayerAccount> = {
+export const Rb6PlayerAccountReadMap: KObjectMappingRecord<IRb6PlayerAccount> = {
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "kignore" },
@@ -146,7 +146,7 @@ export interface IRb6PlayerBase extends ICollection<"rb.rb6.player.base"> {
     mLog: number[]
     ghostWinCount: number
 }
-export const Rb6PlayerBaseMappingRecord: KObjectMappingRecord<IRb6PlayerBase> = {
+export const Rb6PlayerBaseMap: KObjectMappingRecord<IRb6PlayerBase> = {
     collection: getCollectionMappingElement<IRb6PlayerBase>("rb.rb6.player.base"),
     comment: { $type: "str", $targetKey: "cmnt" },
     totalBestScore: { $type: "s32", $targetKey: "tbs" },
@@ -213,7 +213,7 @@ export interface IRb6PlayerConfig extends ICollection<"rb.rb6.player.config"> {
     isTweet: boolean
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />
 }
-export const Rb6PlayerConfigMappingRecord: KObjectMappingRecord<IRb6PlayerConfig> = {
+export const Rb6PlayerConfigMap: KObjectMappingRecord<IRb6PlayerConfig> = {
     collection: getCollectionMappingElement("rb.rb6.player.config"),
     musicSelectBgm: { $type: "u8", $targetKey: "msel_bgm" },
     narrowDownType: { $type: "u8", $targetKey: "narrowdown_type" },
@@ -294,12 +294,12 @@ export interface IRb6PlayerCustom extends ICollection<"rb.rb6.player.custom"> {
     stageScoreDisplayingType: number
     stageBonusType: number
     stageHighSpeed: number
-    stageColorRandom: number
+    stageRandom: number
     stageColorSpecified: number
     stageJustCollectionDisplayingType: number
     stageClearCondition: number // ?
 }
-export const Rb6PlayerCustomMappingRecord: KObjectMappingRecord<IRb6PlayerCustom> = {
+export const Rb6PlayerCustomMap: KObjectMappingRecord<IRb6PlayerCustom> = {
     collection: getCollectionMappingElement<IRb6PlayerCustom>("rb.rb6.player.custom"),
     stageShotSound: { $type: "u8", $targetKey: "st_shot" },
     stageFrameType: { $type: "u8", $targetKey: "st_frame" },
@@ -309,7 +309,7 @@ export const Rb6PlayerCustomMappingRecord: KObjectMappingRecord<IRb6PlayerCustom
     stageBackgroundBrightness: { $type: "u8", $targetKey: "st_bg_bri" },
     stageObjectSize: { $type: "u8", $targetKey: "st_obj_size" },
     stageClearGaugeType: { $type: "u8", $targetKey: "st_clr_gauge" },
-    stageColorRandom: { $type: "u8", $targetKey: "st_rnd" },
+    stageRandom: { $type: "u8", $targetKey: "st_rnd" },
     stageSameTimeObjectsDisplayingType: { $type: "u8", $targetKey: "same_time_note_disp" },
     stageScoreDisplayingType: { $type: "u8", $targetKey: "st_score_disp_type" },
     stageBonusType: { $type: "u8", $targetKey: "st_bonus_type" },
@@ -350,7 +350,7 @@ export function generateRb6PlayerCustom(): IRb6PlayerCustom {
         stageScoreDisplayingType: 0,
         stageBonusType: 0,
         stageHighSpeed: 0,
-        stageColorRandom: 0,
+        stageRandom: 0,
         stageColorSpecified: 0,
         stageJustCollectionDisplayingType: 0,
         stageClearCondition: 0 // ?
@@ -376,7 +376,7 @@ export interface IRb6PlayerStageLog extends ICollection<"rb.rb6.playData.stageLo
     goodCount: number
     keepCount: number
     missCount: number
-    justReflectCount: number
+    justReflecCount: number
     justCollectionRateTimes100: number
     rivalUserId: number
     rivalPlayerId: number
@@ -390,7 +390,7 @@ export interface IRb6PlayerStageLog extends ICollection<"rb.rb6.playData.stageLo
     time: number
     decide: number
 }
-export const Rb6PlayerStageLogMappingRecord: KObjectMappingRecord<IRb6PlayerStageLog> = {
+export const Rb6PlayerStageLogMap: KObjectMappingRecord<IRb6PlayerStageLog> = {
     collection: getCollectionMappingElement<IRb6PlayerStageLog>("rb.rb6.playData.stageLog"),
     stageIndex: { $type: "s8", $targetKey: "stg" },
     musicId: { $type: "s16", $targetKey: "mid" },
@@ -406,11 +406,11 @@ export const Rb6PlayerStageLogMappingRecord: KObjectMappingRecord<IRb6PlayerStag
     score: { $type: "s16", $targetKey: "sc" },
     combo: { $type: "s16" },
     justCount: { $type: "s16", $targetKey: "jt_jst" },
-    greatCount: { $type: "s16", $targetKey: "jt_jrt" },
+    greatCount: { $type: "s16", $targetKey: "jt_grt" },
     goodCount: { $type: "s16", $targetKey: "jt_gd" },
     keepCount: { $type: "s16", $targetKey: "jt_keep" },
     missCount: { $type: "s16", $targetKey: "jt_ms" },
-    justReflectCount: { $type: "s16", $targetKey: "jt_jr" },
+    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
     justCollectionRateTimes100: { $type: "s16", $targetKey: "justcoll" },
     rivalUserId: { $type: "s32", $targetKey: "r_uid" },
     rivalPlayerId: { $type: "s32", $targetKey: "r_plyid" },
@@ -434,7 +434,7 @@ export interface IRb6PlayerClasscheckLog {
     totalScore: number
     rank: number
 }
-export const Rb6PlayerClasscheckLogMappingRecord: KObjectMappingRecord<IRb6PlayerClasscheckLog> = {
+export const Rb6PlayerClasscheckLogMap: KObjectMappingRecord<IRb6PlayerClasscheckLog> = {
     class: { $type: "s32" },
     clearType: { $type: "s32", $targetKey: "clear_type" },
     seperateAchievementRateTimes100: { $type: "s32", $targetKey: "s_ar" },
@@ -477,7 +477,7 @@ export interface IRb6QuestRecord extends ICollection<"rb.rb6.playData.quest"> {
     playCount: number
     isCleared: boolean
 }
-export let Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
+export const Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
     collection: getCollectionMappingElement<IRb6QuestRecord>("rb.rb6.playData.quest"),
     dungeonId: { $type: "s32", $targetKey: "dungeon_id" },
     dungeonGrade: { $type: "s8", $targetKey: "dungeon_grade" },
@@ -494,7 +494,7 @@ interface IRb6PlayerData {
     rival: {}
     pickupRival: {}
     stageLogs?: { log: IRb6PlayerStageLog[] }
-    justCollections?: { list: IRb6JustCollectionElement[] }
+    justCollections?: { list: IRb6JustCollection[] }
     classcheck?: { rec: IRb6ClasscheckRecord[] } | IRb6PlayerClasscheckLog
     characterCards: { list: IRb6CharacterCard[] }
     released: { info: IRb6PlayerReleasedInfo[] }
@@ -510,26 +510,26 @@ interface IRb6PlayerData {
 export interface IRb6Player {
     pdata: IRb6PlayerData
 }
-export const Rb6PlayerReadMappingRecord: KObjectMappingRecord<IRb6Player> = {
+export const Rb6PlayerReadMap: KObjectMappingRecord<IRb6Player> = {
     pdata: {
-        account: Rb6PlayerAccountReadMappingRecord,
-        base: Rb6PlayerBaseMappingRecord,
-        config: Rb6PlayerConfigMappingRecord,
-        custom: Rb6PlayerCustomMappingRecord,
+        account: Rb6PlayerAccountReadMap,
+        base: Rb6PlayerBaseMap,
+        config: Rb6PlayerConfigMap,
+        custom: Rb6PlayerCustomMap,
         justCollections: {
-            list: { 0: Rb6JustCollectionElementMappingRecord },
+            list: { 0: Rb6JustCollectionMap },
             $type: "kignore"
         },
         classcheck: <KObjectMappingRecord<{ rec: IRb6ClasscheckRecord[]; }>>{
-            rec: { 0: Rb6ClasscheckRecordMappingRecord },
+            rec: { 0: Rb6ClasscheckRecordMap },
             $targetKey: "dojo"
         },
         characterCards: {
-            list: { 0: Rb6CharacterCardMappingRecord },
+            list: { 0: Rb6CharacterCardMap },
             $targetKey: "chara_card"
         },
         stageLogs: {
-            log: { 0: Rb6PlayerStageLogMappingRecord },
+            log: { 0: Rb6PlayerStageLogMap },
             $targetKey: "kignore"
         },
         released: {
@@ -552,23 +552,23 @@ export const Rb6PlayerReadMappingRecord: KObjectMappingRecord<IRb6Player> = {
         purpose: {}
     }
 }
-export const Rb6PlayerWriteMappingRecord: KObjectMappingRecord<IRb6Player> = {
+export const Rb6PlayerWriteMap: KObjectMappingRecord<IRb6Player> = {
     pdata: {
-        account: Rb6PlayerAccountWriteMappingRecord,
-        base: Rb6PlayerBaseMappingRecord,
-        config: Rb6PlayerConfigMappingRecord,
-        custom: Rb6PlayerCustomMappingRecord,
+        account: Rb6PlayerAccountWriteMap,
+        base: Rb6PlayerBaseMap,
+        config: Rb6PlayerConfigMap,
+        custom: Rb6PlayerCustomMap,
         justCollections: {
-            list: { 0: Rb6JustCollectionElementMappingRecord },
+            list: { 0: Rb6JustCollectionMap },
             $targetKey: "justcollection"
         },
-        classcheck: appendMappingElement(Rb6PlayerClasscheckLogMappingRecord, { $targetKey: "dojo" }),
+        classcheck: appendMappingElement(Rb6PlayerClasscheckLogMap, { $targetKey: "dojo" }),
         characterCards: {
-            list: { 0: Rb6CharacterCardMappingRecord },
+            list: { 0: Rb6CharacterCardMap },
             $targetKey: "chara_card"
         },
         stageLogs: {
-            log: { 0: Rb6PlayerStageLogMappingRecord },
+            log: { 0: Rb6PlayerStageLogMap },
             $targetKey: "stglog"
         },
         released: {

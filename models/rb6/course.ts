@@ -1,4 +1,4 @@
-import { KObjectMappingRecord } from "../../utility/mapping";
+import { KObjectMappingRecord } from "../../utility/mapping"
 
 export interface IRb6Course {
     questId: number
@@ -15,7 +15,7 @@ export interface IRb6Course {
     chartType1: number
     chartType2: number
 }
-export const Rb6CourseMappingRecord: KObjectMappingRecord<IRb6Course> = {
+export const Rb6CourseMap: KObjectMappingRecord<IRb6Course> = {
     questId: { $type: "s32", $targetKey: "quest_id" },
     dungeonId: { $type: "s32", $targetKey: "dungeon_id" },
     questType: { $type: "s32", $targetKey: "quest_type" },

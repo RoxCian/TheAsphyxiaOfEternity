@@ -1,8 +1,8 @@
 {
   "name": "the-asphyxia-of-eternity",
-  "version": "v0.1.0-alpha",
+  "version": "v0.3.0-beta",
   "description": "A plugin for RB supporting run on Asphyxia CORE.",
-  "main": "app.js",
+  "main": "index.ts",
   "author": {
     "name": "Rox Cian"
   },
