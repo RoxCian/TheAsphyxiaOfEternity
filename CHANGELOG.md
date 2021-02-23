@@ -1,3 +1,7 @@
+- v0.4.0-beta
+
+  Added RB VOLZZA 2 support.
+
 - v0.3.0-beta
 
   Added data import/export feature. You can import your Asphyxia save data now.

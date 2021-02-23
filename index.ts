@@ -37,4 +37,9 @@ function routeRb5() {
     R.Route("pcb.rb5_pcb_boot", Rb5HandlersCommon.BootPcb)
     R.Route("player.rb5_player_start", Rb5HandlersCommon.StartPlayer)
     R.Route("player.rb5_player_read", Rb5HandlersCommon.ReadPlayer)
+    R.Route("player.rb5_player_read_score_5", Rb5HandlersCommon.ReadPlayerScore)
+    R.Route("player.rb5_player_read_score_old_5", Rb5HandlersCommon.ReadPlayerScoreOldVersion)
+    R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer)
+    R.Route("lobby.rb5_lobby_read", Rb5HandlersCommon.ReadLobby)
+    R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.ReadLobby)
 }

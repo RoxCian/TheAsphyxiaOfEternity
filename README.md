@@ -1,8 +1,8 @@
-<img src="icon.svg" />
+<img src="icon.svg">
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v0.3.0-beta** 
+Plugin Version: **v0.4.0-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -20,4 +20,11 @@ Supported versions:
     - Character cards saving
     - Quest progress saving
     - Web UI
-    - Asphyxia savedata importing
+    - Asphyxia savedata importing<br/><br/>
+
+- **REFLEC BEAT VOLZZA 2**
+
+    Supported features:
+
+    - Account & settings saving
+    - Score saving

@@ -1,6 +1,6 @@
 {
   "name": "the-asphyxia-of-eternity",
-  "version": "v0.3.0-beta",
+  "version": "v0.4.0-beta",
   "description": "A plugin for RB supporting run on Asphyxia CORE.",
   "main": "index.ts",
   "author": {

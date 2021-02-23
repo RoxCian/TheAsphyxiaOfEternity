@@ -310,22 +310,22 @@ div
                     span.is-size-7(style = "color: #c0c0c0; margin-top: 0.32em") [#{(rb6Bywords[rb6Config.bywordLeft]) ? rb6Bywords[rb6Config.bywordLeft].byword : ""}#{(rb6Bywords[rb6Config.bywordRight]) ? rb6Bywords[rb6Config.bywordRight].byword : ""}]
                 .field.is-horizontal
                   .field-label
-                    label.label Play count
+                    label.label Play Count
                   .field-body
                     span #{rb6Account.playCount}
                 .field.is-horizontal
                   .field-label
-                    label.label Total score
+                    label.label Total Score
                   .field-body
                     span #{rb6TotalBestScore}
                 .field.is-horizontal
                   .field-label
-                    label.label Average precision
+                    label.label Average Precision
                   .field-body
                     span #{(rb6Base.averagePrecisionTimes100 / 100).toFixed(2)}%
                 .field.is-horizontal
                   .field-label
-                    label.label Matching grade
+                    label.label Matching Grade
                   .field-body
                     span(style = "color: " + getMGColor()) #{getMG()}
                 .field.is-horizontal
@@ -335,12 +335,12 @@ div
                     span #{classcheckTitle[rb6Base.class]}　(#{(rb6Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
                 .field.is-horizontal
                   .field-label
-                    label.label Skill points
+                    label.label Skill Points
                   .field-body
                     span(style = "color: " + getRb6SkillLevelColor(rb6Base.skillPointTimes10 / 10)) #{(rb6Base.skillPointTimes10 / 10).toFixed(1)}
                 .field.is-horizontal
                   .field-label
-                    label.label Pastel experiences
+                    label.label Pastel Experiences
                   .field-body
                     span #{rb6Base.pastelExperiences}
                     //- .column
@@ -1409,7 +1409,7 @@ div
                                   span.file-label Export...
                                 span.file-name
                                   span.is-size-7 #{"rb6-savedata-" + refid + "-" + rb6Base.name + ".asphyxiacore"}
-                          p.help Will save in json format.
+                          p.help Will save as json format.
                     //- .field.is-horizontal
                     //-   .field-label.is-normal
                     //-     label.label Override Save Data

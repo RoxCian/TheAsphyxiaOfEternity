@@ -92,10 +92,10 @@ export const Rb5PlayerAccountReadMap: KObjectMappingRecord<IRb5PlayerAccount> = 
     mpc: { $type: "s32" },
     playCount: { $type: "kignore", $fallbackValue: 0 }
 }
-export function generateRb5PlayerAccount(rid: string): IRb5PlayerAccount {
+export function generateRb5PlayerAccount(rid: string, userId?: number): IRb5PlayerAccount {
     return {
         collection: "rb.rb5.player.account",
-        userId: -1,
+        userId: (userId != null) ? userId : -1,
         playerId: 0,
         tpc: 1000,
         dpc: 1,
@@ -138,6 +138,7 @@ export interface IRb5PlayerBase extends ICollection<"rb.rb5.player.base"> {
     class: number
     classAchievrementRateTimes100: number // <class_ar />
     skillPointTimes10: number // <skill_point />
+    mlog: number[]
 }
 export const Rb5PlayerBaseMap: KObjectMappingRecord<IRb5PlayerBase> = {
     collection: getCollectionMappingElement<IRb5PlayerBase>("rb.rb5.player.base"),
@@ -152,12 +153,13 @@ export const Rb5PlayerBaseMap: KObjectMappingRecord<IRb5PlayerBase> = {
     isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
     class: { $type: "s32" },
     classAchievrementRateTimes100: { $type: "s32", $targetKey: "class_ar" },
-    skillPointTimes10: { $type: "s32", $targetKey: "skill_point" }
+    skillPointTimes10: { $type: "s32", $targetKey: "skill_point" },
+    mlog: { $type: "s16" }
 }
 export function generateRb5PlayerBase(): IRb5PlayerBase {
     return {
         collection: "rb.rb5.player.base",
-        money: 88888,
+        money: 0,
         comment: "",
         totalBestScore: 0,
         totalBestScoreEachChartType: [0, 0, 0, 0],
@@ -166,9 +168,10 @@ export function generateRb5PlayerBase(): IRb5PlayerBase {
         averagePrecisionTimes100: 0,
         uattr: 0,
         isTutorialEnabled: true,
-        class: 0,
+        class: -1,
         classAchievrementRateTimes100: 0,
-        skillPointTimes10: 0
+        skillPointTimes10: 0,
+        mlog: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
 }
 
@@ -243,15 +246,15 @@ export function generateRb5PlayerConfig(): IRb5PlayerConfig {
         // Second page of customization
         musicSelectBgm: 0,
 
-        narrowDownType: 0,
+        narrowDownType: 39,
         musicLevelDisplayingType: 0,
         characterCardId: 0,
         bywordLeft: 0,
-        bywordRight: 0,
+        bywordRight: 1,
         isAutoBywordLeft: true,
         isAutoBywordRight: true,
         latestSymbolChatId: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-        memoryRecordingType: 0,
+        memoryRecordingType: 2,
         cardDisplay: 0,
         scoreTabDisplay: 0,
         lastMusicId: 0,
@@ -379,7 +382,6 @@ export interface IRb5PlayerStageLog extends ICollection<"rb.rb5.playData.stageLo
     keepCount: number
     missCount: number
     justReflectCount: number
-    justCollectionRateTimes100: number
     rivalUserId: number
     rivalPlayerId: number
     rivalStageIndex: number
@@ -413,7 +415,6 @@ export const Rb5PlayerStageLogMap: KObjectMappingRecord<IRb5PlayerStageLog> = {
     keepCount: { $type: "s16", $targetKey: "jt_keep" },
     missCount: { $type: "s16", $targetKey: "jt_ms" },
     justReflectCount: { $type: "s16", $targetKey: "jt_jr" },
-    justCollectionRateTimes100: { $type: "s16", $targetKey: "justcoll" },
     rivalUserId: { $type: "s32", $targetKey: "r_uid" },
     rivalPlayerId: { $type: "s32", $targetKey: "r_plyid" },
     rivalStageIndex: { $type: "s8", $targetKey: "r_stg" },
@@ -472,21 +473,146 @@ export const Rb5PlayerParametersMap: KObjectMappingRecord<IRb5PlayerParameters> 
     data: { $type: "s32" }
 }
 
-export interface IRb5QuestRecord extends ICollection<"rb.rb5.playData.quest"> {
-    dungeonId: number
-    dungeonGrade: number
-    clearCount: number
+export interface IRb5Minigame extends ICollection<"rb.rb5.playData.minigame"> {
+    minigameId: number
+    sc: number
     playCount: number
-    isCleared: boolean
 }
-export let Rb5QuestRecordMap: KObjectMappingRecord<IRb5QuestRecord> = {
-    collection: getCollectionMappingElement<IRb5QuestRecord>("rb.rb5.playData.quest"),
-    dungeonId: { $type: "s32", $targetKey: "dungeon_id" },
-    dungeonGrade: { $type: "s8", $targetKey: "dungeon_grade" },
-    clearCount: { $type: "s32", $targetKey: "clear_num" },
-    playCount: { $type: "s32", $targetKey: "play_num" },
-    isCleared: { $type: "bool", $targetKey: "clear_flag" }
+export const Rb5MinigameMap: KObjectMappingRecord<IRb5Minigame> = {
+    collection: getCollectionMappingElement<IRb5Minigame>("rb.rb5.playData.minigame"),
+    minigameId: { $type: "s8", $targetKey: "mgid" },
+    sc: { $type: "s32", $targetKey: "sc" },
+    playCount: { $type: "s32", $targetKey: "pc" }
 }
+export function generateRb5Minigame(): IRb5Minigame {
+    return {
+        collection: "rb.rb5.playData.minigame",
+        minigameId: 0,
+        sc: 0,
+        playCount: 0
+    }
+}
+
+export interface IRb5Derby extends ICollection<"rb.rb5.player.derby"> {
+    value1: number
+    value2: number
+}
+export const Rb5DerbyMap: KObjectMappingRecord<IRb5Derby> = {
+    collection: getCollectionMappingElement<IRb5Derby>("rb.rb5.player.derby"),
+    value1: { $type: "s32" },
+    value2: { $type: "s32" }
+}
+export function generateRb5Derby(): IRb5Derby {
+    return {
+        collection: "rb.rb5.player.derby",
+        value1: 0,
+        value2: 0
+    }
+}
+
+export interface IRb5BattleRoyale extends ICollection<"rb.rb5.playData.battleRoyale"> {
+    battleId: number
+    phase: number
+    border: number
+    max: number
+    remainDays: number
+}
+export const Rb5BattleRoyaleMap: KObjectMappingRecord<IRb5BattleRoyale> = {
+    collection: getCollectionMappingElement<IRb5BattleRoyale>("rb.rb5.playData.battleRoyale"),
+    battleId: { $type: "s32", $targetKey: "battle_id" },
+    phase: { $type: "s32" },
+    border: { $type: "s32" },
+    max: { $type: "s32" },
+    remainDays: { $type: "s32", $targetKey: "remain_days" }
+}
+export function generateRb5BattleRoyale(): IRb5BattleRoyale {
+    return {
+        collection: "rb.rb5.playData.battleRoyale",
+        battleId: 0,
+        phase: 0,
+        border: 0,
+        max: 0,
+        remainDays: 999
+    }
+}
+
+export interface IRb5MyCourseLog extends ICollection<"rb.rb5.playData.myCourse"> {
+    courseId: number
+    musicId1: number
+    musicId2: number
+    musicId3: number
+    musicId4: number
+    chartType1: number
+    chartType2: number
+    chartType3: number
+    chartType4: number
+    score1: number
+    score2: number
+    score3: number
+    score4: number
+    defaultMusicId1: number
+    defaultMusicId2: number
+    defaultMusicId3: number
+    defaultMusicId4: number
+    defaultChartType1: number
+    defaultChartType2: number
+    defaultChartType3: number
+    defaultChartType4: number
+    insertTime: number
+}
+export const Rb5MyCourseLogMap: KObjectMappingRecord<IRb5MyCourseLog> = {
+    collection: getCollectionMappingElement<IRb5MyCourseLog>("rb.rb5.playData.myCourse"),
+    courseId: { $type: "s16", $targetKey: "mycourse_id" },
+    musicId1: { $type: "s32", $targetKey: "music_id_1" },
+    musicId2: { $type: "s32", $targetKey: "music_id_2" },
+    musicId3: { $type: "s32", $targetKey: "music_id_3" },
+    musicId4: { $type: "s32", $targetKey: "music_id_4" },
+    chartType1: { $type: "s16", $targetKey: "note_grade_1" },
+    chartType2: { $type: "s16", $targetKey: "note_grade_2" },
+    chartType3: { $type: "s16", $targetKey: "note_grade_3" },
+    chartType4: { $type: "s16", $targetKey: "note_grade_4" },
+    score1: { $type: "s32", $targetKey: "score_1" },
+    score2: { $type: "s32", $targetKey: "score_2" },
+    score3: { $type: "s32", $targetKey: "score_3" },
+    score4: { $type: "s32", $targetKey: "score_4" },
+    defaultMusicId1: { $type: "s32", $targetKey: "def_music_id_1" },
+    defaultMusicId2: { $type: "s32", $targetKey: "def_music_id_2" },
+    defaultMusicId3: { $type: "s32", $targetKey: "def_music_id_3" },
+    defaultMusicId4: { $type: "s32", $targetKey: "def_music_id_4" },
+    defaultChartType1: { $type: "s16", $targetKey: "def_note_grade_1" },
+    defaultChartType2: { $type: "s16", $targetKey: "def_note_grade_2" },
+    defaultChartType3: { $type: "s16", $targetKey: "def_note_grade_3" },
+    defaultChartType4: { $type: "s16", $targetKey: "def_note_grade_4" },
+    insertTime: { $type: "s32", $targetKey: "insert_time" }
+}
+export function generateRb5MyCourseLog(): IRb5MyCourseLog {
+    return {
+        collection: "rb.rb5.playData.myCourse",
+        courseId: -1,
+        musicId1: -1,
+        musicId2: -1,
+        musicId3: -1,
+        musicId4: -1,
+        chartType1: -1,
+        chartType2: -1,
+        chartType3: -1,
+        chartType4: -1,
+        score1: -1,
+        score2: -1,
+        score3: -1,
+        score4: -1,
+        defaultMusicId1: -1,
+        defaultMusicId2: -1,
+        defaultMusicId3: -1,
+        defaultMusicId4: -1,
+        defaultChartType1: -1,
+        defaultChartType2: -1,
+        defaultChartType3: -1,
+        defaultChartType4: -1,
+        insertTime: -1
+    }
+}
+
 
 interface IRb5PlayerData {
     account: IRb5PlayerAccount
@@ -502,22 +628,19 @@ interface IRb5PlayerData {
     playerParam: { item: IRb5PlayerParameters[] }
     mylist: { list?: IRb5Mylist }
     musicRankPoint: {}
-    quest: { list?: IRb5QuestRecord[] }
     ghost: {}
     ghostWinCount: {}
     purpose: {}
-    list: {}
-    item: {}
-    minigame: {
-        minigameId: number
-        sc: number
-    },
+    minigame: IRb5Minigame
     share: {}
-    battleRoyale: {}
-    derby: {}
-    point: {}
+    battleRoyale: IRb5BattleRoyale
+    derby: IRb5Derby
     yurukomeList: [number, number, number, number]
-
+    myCourse: IRb5MyCourseLog
+    myCourseF: IRb5MyCourseLog
+    challengeEventCard: {
+        setId: number
+    }
 }
 export interface IRb5Player {
     pdata: IRb5PlayerData
@@ -548,24 +671,17 @@ export const Rb5PlayerReadMap: KObjectMappingRecord<IRb5Player> = {
         },
         mylist: { list: Rb5MylistMap },
         musicRankPoint: { $targetKey: "music_rank_point" },
-        quest: {
-            list: { 0: Rb5QuestRecordMap }
-        },
         ghost: {},
         ghostWinCount: { $targetKey: "ghost_win_count" },
         purpose: {},
-        list: {},
-        item: {},
-        minigame: {
-            minigameId: { $type: "s8", $targetKey: "mgid" },
-            sc: { $type: "s32" },
-        },
+        minigame: Rb5MinigameMap,
         share: {},
-        battleRoyale: {},
-        derby: {},
-        point: {},
-        yurukomeList: { $type: "s32", $targetKey: "yurukome_list" }
-
+        battleRoyale: appendMappingElement(Rb5BattleRoyaleMap, { $targetKey: "battle_royale" }),
+        derby: Rb5DerbyMap,
+        yurukomeList: { $type: "s32", $targetKey: "yurukome_list" },
+        myCourse: appendMappingElement(Rb5MyCourseLogMap, { $targetKey: "mycourse" }),
+        myCourseF: appendMappingElement(Rb5MyCourseLogMap, { $targetKey: "mycourse_f" }),
+        challengeEventCard: { setId: { $type: "s32", $targetKey: "set_id" }, $targetKey: "challenge_event_card" }
     }
 }
 export const Rb5PlayerWriteMap: KObjectMappingRecord<IRb5Player> = {
@@ -591,30 +707,24 @@ export const Rb5PlayerWriteMap: KObjectMappingRecord<IRb5Player> = {
         },
         mylist: { list: Rb5MylistMap },
         musicRankPoint: { $targetKey: "music_rank_point" },
-        quest: {
-            list: { 0: Rb5QuestRecordMap }
-        },
         ghost: {},
         ghostWinCount: { $targetKey: "ghost_win_count" },
         purpose: {},
-        list: {},
-        item: {},
-        minigame: {
-            minigameId: { $type: "s8", $targetKey: "mgid" },
-            sc: { $type: "s32" },
-        },
+        minigame: Rb5MinigameMap,
         share: {},
-        battleRoyale: {},
-        derby: {},
-        point: {},
-        yurukomeList: { $type: "s32", $targetKey: "yurukome_list" }
+        battleRoyale: appendMappingElement(Rb5BattleRoyaleMap, { $targetKey: "battle_royale" }),
+        derby: Rb5DerbyMap,
+        yurukomeList: { $type: "s32", $targetKey: "yurukome_list" },
+        myCourse: appendMappingElement(Rb5MyCourseLogMap, { $targetKey: "mycourse" }),
+        myCourseF: appendMappingElement(Rb5MyCourseLogMap, { $targetKey: "mycourse_f" }),
+        challengeEventCard: { setId: { $type: "s32", $targetKey: "set_id" }, $targetKey: "challenge_event_card" }
     }
 }
 
-export function generateRb5Profile(rid: string): IRb5Player {
+export function generateRb5Profile(rid: string, userId?: number): IRb5Player {
     return {
         pdata: {
-            account: generateRb5PlayerAccount(rid),
+            account: generateRb5PlayerAccount(rid, userId),
             base: generateRb5PlayerBase(),
             config: generateRb5PlayerConfig(),
             custom: generateRb5PlayerCustom(),
@@ -624,24 +734,19 @@ export function generateRb5Profile(rid: string): IRb5Player {
             playerParam: <any>{},
             mylist: {},
             released: <any>{},
-            quest: {},
             musicRankPoint: {},
             ghost: {},
             ghostWinCount: {},
             purpose: {},
             classcheck: <any>{},
-            list: {},
-            item: {},
-            minigame: {
-                minigameId: 0,
-                sc: 0,
-            },
+            minigame: generateRb5Minigame(),
             share: {},
-            battleRoyale: {},
-            derby: {},
-            point: {},
-            yurukomeList: [0, 0, 0, 0]
-
+            battleRoyale: generateRb5BattleRoyale(),
+            derby: generateRb5Derby(),
+            yurukomeList: [0, 0, 0, 0],
+            myCourse: generateRb5MyCourseLog(),
+            myCourseF: generateRb5MyCourseLog(),
+            challengeEventCard: { setId: 0 }
         }
     }
 }
