@@ -1,3 +1,9 @@
+- v0.5.1-beta
+
+  Fixed a webui issue.
+
+  Fixed a bug about save mylist on webui. If you have the issue, modifying mylist through the webui should resolve it. (Thanks to @Xiao_ku)
+
 - v0.5.0-beta
 
   Added webui for RB VOLZZA 2. You can view your VOLZZA play data on browser.

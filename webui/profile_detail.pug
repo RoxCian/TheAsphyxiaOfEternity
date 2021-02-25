@@ -381,19 +381,19 @@ div
         span.icon
           i.mdi.mdi-account-circle
         | Play Data
-        a.card-header-icon.card-toggle(card = "rb6-play-data")
+        a.card-header-icon.card-toggle(card = "play-data")
           span.icon
             i.mdi.mdi-chevron-down
-    .card-content(card = "rb6-play-data")
-      if rb6Account == null
-        .has-text-grey.has-text-centered
-          p
-            span.icon.is-large
-              i.mdi.mdi-emoticon-happy.mdi-48px
-          p Nothing's here yet. Let's play!
-      else
-        #tab-content
-          #tab-content-body.is-active(tab-group = "version", tab-index = "6")
+    .card-content(card = "play-data")
+      #tab-content
+        #tab-content-body.is-active(tab-group = "version", tab-index = "6")
+          if rb6Account == null
+            .has-text-grey.has-text-centered
+              p
+                span.icon.is-large
+                  i.mdi.mdi-emoticon-happy.mdi-48px
+              p Nothing's here yet. Let's play!
+          else
             .tabs#tabs
               ul
                 li.is-active(tab-group = "rb6-play-data", tab-index = "0")
@@ -442,7 +442,10 @@ div
                   .field-label
                     label.label Class
                   .field-body
-                    span #{rb6ClasscheckTitle[rb6Base.class]}　(#{(rb6Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
+                    if rb6Base.class < 0
+                      span -
+                    else
+                      span #{rb6ClasscheckTitle[rb6Base.class]}　(#{(rb6Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
                 .field.is-horizontal
                   .field-label
                     label.label Skill Points
@@ -1061,16 +1064,16 @@ div
                               b
                                 span(style = "color: " + getMGColor(s.rivalMatchingGrade)) #{getMG(s.rivalMatchingGrade)} 
                             td.has-text-right 
-                              b #{((s.rivalCpuId != null) && (s.rivalCpuId >= 0)) ? ("CPU " + s.rivalCpuId) : s.rivalUserId}
-      if rb5Account == null
-        .has-text-grey.has-text-centered
-          p
-            span.icon.is-large
-              i.mdi.mdi-emoticon-happy.mdi-48px
-          p Nothing's here yet. Let's play!
-      else
-        #tab-content
-          #tab-content-body(tab-group = "version", tab-index = "5")
+                              b #{((s.rivalCpuId != null) && (s.rivalCpuId >= 0)) ? ("CPU " + s.rivalCpuId) : s.rivalUserId}  
+      #tab-content
+        #tab-content-body(tab-group = "version", tab-index = "5")
+          if rb5Account == null
+            .has-text-grey.has-text-centered
+              p
+                span.icon.is-large
+                  i.mdi.mdi-emoticon-happy.mdi-48px
+              p Nothing's here yet. Let's play!
+          else
             .tabs#tabs
               ul
                 li.is-active(tab-group = "rb5-play-data", tab-index = "0")
@@ -1119,7 +1122,10 @@ div
                   .field-label
                     label.label Class
                   .field-body
-                    span #{rb5ClasscheckTitle[rb5Base.class]}　(#{(rb5Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
+                    if rb5Base.class < 0
+                      span -
+                    else 
+                      span #{rb5ClasscheckTitle[rb5Base.class]}　(#{(rb5Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
                 .field.is-horizontal
                   .field-label
                     label.label Skill Points
@@ -1675,19 +1681,19 @@ div
         span.icon 
           i.mdi.mdi-account-edit
         | Player Settings
-        a.card-header-icon.card-toggle(card = "rb6-edit-settings")
+        a.card-header-icon.card-toggle(card = "edit-settings")
           span.icon 
             i.mdi.mdi-chevron-down
-    .card-content(card = "rb6-edit-settings")
-      if rb6Account == null
-        .has-text-grey.has-text-centered
-          p
-            span.icon.is-large
-              i.mdi.mdi-emoticon-happy.mdi-48px
-          p Nothing's here yet. Let's play!
-      else    
-        #tab-content
-          #tab-content-body.is-active(tab-group = "version", tab-index = "6")
+    .card-content(card = "edit-settings")
+      #tab-content
+        #tab-content-body.is-active(tab-group = "version", tab-index = "6")
+          if rb6Account == null
+            .has-text-grey.has-text-centered
+              p
+                span.icon.is-large
+                  i.mdi.mdi-emoticon-happy.mdi-48px
+              p Nothing's here yet. Let's play!
+          else    
             form#validatable(method="post", action="/emit/rb6UpdateSettings")
               input(type = "hidden", name = "refid", value = refid)
               .tabs#tabs

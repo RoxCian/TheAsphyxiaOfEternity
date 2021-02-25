@@ -121,7 +121,7 @@ export namespace Rb6HandlersWebUI {
             await DBM.update<IRb6PlayerBase>(data.refid, { collection: "rb.rb6.player.base" }, rb6Base)
             await DBM.update<IRb6PlayerConfig>(data.refid, { collection: "rb.rb6.player.config" }, rb6Config)
             await DBM.update<IRb6PlayerCustom>(data.refid, { collection: "rb.rb6.player.custom" }, rb6Custom)
-            await DBM.update<IRb6Mylist>(data.refid, { collection: "rb.rb6.player.mylist" }, rb6Mylist)
+            await DBM.upsert<IRb6Mylist>(data.refid, { collection: "rb.rb6.player.mylist" }, rb6Mylist)
             UtilityHandlersWebUI.pushMessage("Save settings succeeded!", WebUIMessageType.success, data.refid)
         } catch (e) {
             UtilityHandlersWebUI.pushMessage("Error while save settings: " + e.message, WebUIMessageType.error, data.refid)

@@ -234,7 +234,7 @@ function initializeMultiSelectTables() {
         }
         let fillValues = (values, fallback) => {
             let maxLength = (valueInput.getAttribute("max-length") == null) ? -1 : parseInt(valueInput.getAttribute("max-length"))
-            if (values.length < maxLength) for (let i = values.length; i <= maxLength; i++) values.push(fallback)
+            while (values.length < maxLength) values.push(fallback)
             return values
         }
         let lines = table.querySelectorAll("tbody tr")
