@@ -1,3 +1,13 @@
+- v0.5.0-beta
+
+  Added webui for RB VOLZZA 2. You can view your VOLZZA play data on browser.
+
+  Fixed a bug about no Great count in VOLZZA stage logs (again).
+
+  Database entry changes
+    - justReflectCount -> justReflecCount (again, breaking change)
+    - averagePrecisionTimes100 -> abilityPointTimes100
+
 - v0.4.0-beta
 
   Added RB VOLZZA 2 support.

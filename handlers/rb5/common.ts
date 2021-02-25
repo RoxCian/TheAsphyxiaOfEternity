@@ -88,7 +88,8 @@ export namespace Rb5HandlersCommon {
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
             if (account.mpc == null) account.mpc = 0
-            if (base.comment == null) base.comment = "Welcome to REFLEC BEAT VOLZZA 2."
+            if (base.comment == null) base.comment = "Welcome to REFLEC BEAT VOLZZA!"
+            if (base.abilityPointTimes100 == null) base.abilityPointTimes100 = base["averagePrecisionTimes100"] // For compatibility
             if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             if (battleRoyale == null) battleRoyale = generateRb5BattleRoyale()
             if (myCourse == null) myCourse = generateRb5MyCourseLog()
@@ -115,9 +116,9 @@ export namespace Rb5HandlersCommon {
                     rival: {},
                     pickupRival: {},
                     classcheck: (classcheck.length > 0) ? { rec: classcheck } : <any>{},
-                    released: { info: released },
+                    released: (released.length > 0) ? { info: released } : <any>{},
                     announce: {},
-                    playerParam: { item: playerParam },
+                    playerParam: (playerParam.length > 0) ? { item: playerParam } : <any>{},
                     mylist: { list: mylist },
                     musicRankPoint: {},
                     ghost: {},
@@ -134,7 +135,7 @@ export namespace Rb5HandlersCommon {
                 }
             }
         }
-        send.object(mapKObject(result, Rb5PlayerReadMap))
+        send.object(readPlayerPostTask(mapKObject(result, Rb5PlayerReadMap)))
     }
 
     export async function log(data: any, file?: string) {
@@ -291,7 +292,6 @@ export namespace Rb5HandlersCommon {
             musicRecord.clearType = stageLog.clearType
             musicRecord.achievementRateTimes100 = stageLog.achievementRateTimes100
             musicRecord.score = stageLog.score
-            musicRecord.combo = stageLog.combo
             musicRecord.missCount = stageLog.missCount
             musicRecord.param = stageLog.param
             musicRecord.time = stageLog.time
@@ -311,10 +311,6 @@ export namespace Rb5HandlersCommon {
             if (musicRecord.score < stageLog.score) {
                 musicRecord.bestScoreUpdateTime = stageLog.time
                 musicRecord.score = stageLog.score
-            }
-            if (musicRecord.combo < stageLog.combo) {
-                musicRecord.bestComboUpdateTime = stageLog.time
-                musicRecord.combo = stageLog.combo
             }
             if ((stageLog.missCount >= 0) && ((musicRecord.missCount > stageLog.missCount) || (musicRecord.missCount < 0))) {
                 musicRecord.bestMissCountUpdateTime = stageLog.time

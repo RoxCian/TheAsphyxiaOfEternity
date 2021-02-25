@@ -14,6 +14,7 @@ export namespace Rb6HandlersWebUI {
     export const updateSettings = async (data: {
         refid: string
         name: string
+        comment: string
         gaugeType: number
         achievementRateDisplayingType: number
         objectSize: number
@@ -83,6 +84,7 @@ export namespace Rb6HandlersWebUI {
             }
 
             rb6Base.name = mapCharacters(data.name.trim())
+            rb6Base.comment = data.comment
             // Customize page 1
             rb6Custom.stageClearGaugeType = data.gaugeType
             rb6Custom.stageAchievementRateDisplayingType = data.achievementRateDisplayingType
@@ -285,7 +287,7 @@ export namespace Rb6HandlersWebUI {
             let newEntryCount = musicRecords.length
 
 
-            rb6Base.averagePrecisionTimes100 = Math.trunc((rb6Base.averagePrecisionTimes100 * oldEntryCount + profile.ap * (newEntryCount - oldEntryCount)) / newEntryCount)
+            rb6Base.abilityPointTimes100 = Math.trunc((rb6Base.abilityPointTimes100 * oldEntryCount + profile.ap * (newEntryCount - oldEntryCount)) / newEntryCount)
             rb6Base.matchingGrade = Math.max(rb6Base.matchingGrade, profile.mg)
             rb6Base.skillPointTimes10 = Math.max(rb6Base.skillPointTimes10, profile.skillPoint)
             rb6Base.pastelExperiences += profile.pastelExp

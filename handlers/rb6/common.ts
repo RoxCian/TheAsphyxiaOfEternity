@@ -108,7 +108,10 @@ export namespace Rb6HandlersCommon {
         if (playerAccount.lpc == null) playerAccount.lpc = 0
         if (playerAccount.cpc == null) playerAccount.cpc = 0
         if (playerAccount.mpc == null) playerAccount.mpc = 0
-        if (playerBase.comment == null) playerBase.comment = ""
+        if ((playerBase.comment == null) || (playerBase?.comment == "")) playerBase.comment = "Welcome to the land of Reflecia!"
+        if (playerBase.abilityPointTimes100 == null) playerBase.abilityPointTimes100 = playerBase["averagePrecisionTimes100"]  // For compatibility
+        for (let c of characterCards) if (c.level == null) c.level = 0
+
         let scores: IRb6MusicRecord[] = await DB.Find<IRb6MusicRecord>(readParam.rid, { collection: "rb.rb6.playData.musicRecord" })
 
         playerBase.totalBestScore = 0
@@ -259,7 +262,7 @@ export namespace Rb6HandlersCommon {
     }
     export const ReadPlayerJustCollections: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadJustCollectionParameters>, send: EamuseSend) => {
         let param = mapBackKObject(data, PlayerReadJustCollectioParametersMap)[0]
-        if (param.userId == 15000008 && param.musicId == 1 && param.chartType == 2) {
+        if (param.userId == 1500008 && param.musicId == 1 && param.chartType == 2) {
             let k = {
                 justcollection: {
                     list: {
@@ -272,19 +275,14 @@ export namespace Rb6HandlersCommon {
             return
         }
         let element: IRb6JustCollection = await DB.FindOne<IRb6JustCollection>({ collection: "rb.rb6.playData.justCollection#userId", userId: param.userId, musicId: param.musicId, chartType: param.chartType })
-        if (element == null) element = { collection: "rb.rb6.playData.justCollection#userId", musicId: param.musicId, chartType: param.chartType }
+        let result = <IRb6ReadJustCollection>{}
+        if (element == null) result.list = { musicId: param.musicId, chartType: param.chartType }
         else {
-            if (element.blueDataArray != null) element.blueData = Buffer.from(element.blueDataArray)
-            if (element.redDataArray != null) element.redData = Buffer.from(element.redDataArray)
+            if (element.blueDataArray != null) result.blueData = Buffer.from(element.blueDataArray)
+            if (element.redDataArray != null) result.redData = Buffer.from(element.redDataArray)
             log(element)
         }
-
-        let j = <{ justcollection: IRb6ReadJustCollection }>{ justcollection: {} }
-
-        if (element.blueDataArray != null) j.justcollection.blueData = Buffer.from(element.blueDataArray)
-        if (element.redDataArray != null) j.justcollection.redData = Buffer.from(element.redDataArray)
-
-        send.object(mapKObject(j, { justcollection: Rb6ReadJustCollectionMap }))
+        send.object(mapKObject({ justcollection: result }, { justcollection: Rb6ReadJustCollectionMap }))
     }
 
     export const WriteComment: EPR = async (req, data, send) => {

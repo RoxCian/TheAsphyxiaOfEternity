@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v0.4.0-beta** 
+Plugin Version: **v0.5.0-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -26,5 +26,6 @@ Supported versions:
 
     Supported features:
 
-    - Account & settings saving
+    - Account & settings & mylist saving
     - Score saving
+    - Web UI

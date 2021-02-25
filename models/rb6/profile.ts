@@ -133,7 +133,7 @@ export interface IRb6PlayerBase extends ICollection<"rb.rb6.player.base"> {
     totalBestScoreEachChartType: number[]
     name: string
     matchingGrade: number // <mg />
-    averagePrecisionTimes100: number // <ap />
+    abilityPointTimes100: number // <ap />
     uattr: number
     isTutorialEnabled: boolean // <is_tut />
     class: number
@@ -153,7 +153,7 @@ export const Rb6PlayerBaseMap: KObjectMappingRecord<IRb6PlayerBase> = {
     totalBestScoreEachChartType: { $type: "s32", $targetKey: "tbgs" },
     name: { $type: "str" },
     matchingGrade: { $type: "s32", $targetKey: "mg" },
-    averagePrecisionTimes100: { $type: "s32", $targetKey: "ap" },
+    abilityPointTimes100: { $type: "s32", $targetKey: "ap" },
     uattr: { $type: "s32" },
     isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
     class: { $type: "s32" },
@@ -174,7 +174,7 @@ export function generateRb6PlayerBase(): IRb6PlayerBase {
         totalBestScoreEachChartType: [0, 0, 0, 0],
         name: "",
         matchingGrade: 0,
-        averagePrecisionTimes100: 0,
+        abilityPointTimes100: 0,
         uattr: 0,
         isTutorialEnabled: true,
         class: 0,

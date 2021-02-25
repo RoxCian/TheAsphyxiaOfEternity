@@ -131,7 +131,7 @@ export interface IRb5PlayerBase extends ICollection<"rb.rb5.player.base"> {
     totalBestScoreEachChartType: number[]
     name: string
     matchingGrade: number // <mg />
-    averagePrecisionTimes100: number // <ap />
+    abilityPointTimes100: number // <ap />
     uattr: number
     money: number
     isTutorialEnabled: boolean // <is_tut />
@@ -148,7 +148,7 @@ export const Rb5PlayerBaseMap: KObjectMappingRecord<IRb5PlayerBase> = {
     totalBestScoreEachChartType: { $type: "s32", $targetKey: "tbgs_5" },
     name: { $type: "str" },
     matchingGrade: { $type: "s32", $targetKey: "mg" },
-    averagePrecisionTimes100: { $type: "s32", $targetKey: "ap" },
+    abilityPointTimes100: { $type: "s32", $targetKey: "ap" },
     uattr: { $type: "s32" },
     isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
     class: { $type: "s32" },
@@ -165,7 +165,7 @@ export function generateRb5PlayerBase(): IRb5PlayerBase {
         totalBestScoreEachChartType: [0, 0, 0, 0],
         name: "",
         matchingGrade: 0,
-        averagePrecisionTimes100: 0,
+        abilityPointTimes100: 0,
         uattr: 0,
         isTutorialEnabled: true,
         class: -1,
@@ -369,19 +369,17 @@ export interface IRb5PlayerStageLog extends ICollection<"rb.rb5.playData.stageLo
     color: number
     mt: number
     rt: number
-    clearType: number // 1: played, 2: played (hard gauge), 3: cleared, 4: hard clear
+    clearType: number // 1: played, 9: C, 10: HC, 11: S-HC
     param: number
     matchingGrade: number
     clearGaugeTimes100: number
     achievementRateTimes100: number
     score: number
-    combo: number
     justCount: number
     greatCount: number
     goodCount: number
-    keepCount: number
     missCount: number
-    justReflectCount: number
+    justReflecCount: number
     rivalUserId: number
     rivalPlayerId: number
     rivalStageIndex: number
@@ -408,13 +406,11 @@ export const Rb5PlayerStageLogMap: KObjectMappingRecord<IRb5PlayerStageLog> = {
     clearGaugeTimes100: { $type: "s16", $targetKey: "cl_gauge" },
     achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
     score: { $type: "s16", $targetKey: "sc" },
-    combo: { $type: "s16" },
     justCount: { $type: "s16", $targetKey: "jt_jst" },
-    greatCount: { $type: "s16", $targetKey: "jt_jrt" },
+    greatCount: { $type: "s16", $targetKey: "jt_grt" },
     goodCount: { $type: "s16", $targetKey: "jt_gd" },
-    keepCount: { $type: "s16", $targetKey: "jt_keep" },
     missCount: { $type: "s16", $targetKey: "jt_ms" },
-    justReflectCount: { $type: "s16", $targetKey: "jt_jr" },
+    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
     rivalUserId: { $type: "s32", $targetKey: "r_uid" },
     rivalPlayerId: { $type: "s32", $targetKey: "r_plyid" },
     rivalStageIndex: { $type: "s8", $targetKey: "r_stg" },
