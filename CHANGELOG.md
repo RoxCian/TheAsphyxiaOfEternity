@@ -1,8 +1,12 @@
+- v0.6.0-beta
+
+  Added RB1 support.
+
 - v0.5.1-beta
 
   Fixed a webui issue.
 
-  Fixed a bug about save mylist on webui. If you have the issue, modifying mylist through the webui should resolve it. (Thanks to @Xiao_ku)
+  Fixed a bug about saving mylist on webui. If you have the issue, modifying mylist through the webui should resolve it. (Thanks to @Xiao_ku)
 
 - v0.5.0-beta
 

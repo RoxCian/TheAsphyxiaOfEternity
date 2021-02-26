@@ -459,7 +459,7 @@ div
                     //- .column
                     //-   img.title(src = "static/img/characards/characard_" + rb6Config.characterCardId + ".webp")
             #tab-content
-              #tab-content-body(tab-group = "rb6-play-data", tab-index = "1", style = "overflow-x: auto")
+              #tab-content-body(tab-group = "rb6-play-data", tab-index = "1", style = "overflow-x: auto; overflow-y: hidden")
                 if rb6MusicRecordsOrganizedLength == 0
                   .has-text-grey.has-text-centered
                     p
@@ -472,7 +472,7 @@ div
                       tr 
                         th ID
                         th(stye = "max-width: 200px") Title
-                        th(colspan = "4") Scores
+                        th Scores
                     tbody
                       each r in rb6MusicRecordsOrganized
                         if r != null
@@ -627,134 +627,137 @@ div
                                               else 
                                                 td
                                     footer.modal-card-foot(style = "margin-bottom: 65px")
-
-                            each i in [0, 1, 2, 3]
-                              if (r[i] != null) && (getRb6ClearTypeDetails(r[i]) != null)
-                                - let c = r[i]
-                                - let d = getRb6ClearTypeDetails(c)
-                                - let t = rb6ChartTypeDetails[c.chartType]
-                                td.modal-trigger(style = "vertical-align: middle", modal = "detail-" + c.musicId + "-" + c.chartType)
-                                  style.
-                                    #forwide {
-                                      display: block;
-                                    }
-                                    #fornarrow {
-                                      display: none;
-                                    }
-                                    @media only screen and (max-width: 1000px) {
-                                      #forwide {
-                                        display: none;
-                                      }
-                                      #fornarrow {
-                                        display: block;
-                                      }
-                                    }
-                                  a#forwide 
-                                    .heading.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{t.title}
-                                    .title.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
-                                  a.has-text-centered#fornarrow(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
-                                  .modal.is-mobile
-                                    .modal-background.is-mobile#close
-                                    .modal-card.is-mobile(style = "vertical-align: middle; margin-top: 65px")
-                                      header.modal-card-head
-                                        p.modal-card-title(style = "margin-bottom: 0") Details
-                                        button.delete#close
-                                      section.modal-card-body
-                                        .form 
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Jacket
-                                            .field-body 
-                                              .field#exist-or-not
-                                                img#general(src = getGeneralJacketPath())
-                                                img#specified(src = getSpecifiedJacketPath(i))
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Music ID 
-                                            .field-body 
-                                              span #{c.musicId}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Music Title
-                                            .field-body 
-                                              span #{ta.titleArtist.title}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Artist
-                                            .field-body 
-                                              span #{ta.titleArtist.artist}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label BPM
-                                            .field-body 
-                                              span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Chart
-                                            .field-body
-                                              .level.is-mobile 
-                                                .level-left 
-                                                  .level-item
-                                                    span(style = "color: " + t.color) #{t.title}
-                                                  .level-item
-                                                    p(style = "border-radius: 50%; color: white; width: 24px!important; height: 24px!important; text-align: center; background-color: " + t.color) #{ta.info.chartsInfo[t.title.toLowerCase()].level}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label State
-                                            .field-body 
-                                              span #{d.title}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Rank
-                                            .field-body 
-                                              span #{getRank(c.achievementRateTimes100 / 100, true)}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;") 
-                                                abbr(title = "Achievement Rate") AR
-                                            .field-body 
-                                              span #{(c.achievementRateTimes100 / 100).toFixed(2)}%
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Score
-                                            .field-body 
-                                              span #{c.score}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Combo
-                                            .field-body 
-                                              span #{c.combo}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Miss Count
-                                            .field-body 
-                                              span #{(c.missCount < 0) ? "×" : c.missCount}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label
-                                                abbr(title = "Just Collections Rate") JC
-                                            .field-body 
-                                              .level.is-mobile(style = "width: 150px")
-                                                .level-left 
-                                                  .level-item
-                                                    span.has-text-danger #{(c.justCollectionRateTimes100Red / 100).toFixed(2)}%
-                                                .level-right 
-                                                  .level-item
-                                                    span.has-text-info.has-text-right #{(c.justCollectionRateTimes100Blue / 100).toFixed(2)}%
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; vertical-align: middle;") Update Time
-                                            .field-body 
-                                              span #{new Date(Math.max(c.bestScoreUpdateTime, c.bestAchievementRateUpdateTime, c.bestComboUpdateTime, c.bestMissCountUpdateTime) * 1000).toLocaleString()}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; vertical-align: middle;") Last Play
-                                            .field-body 
-                                              span #{new Date(c.time * 1000).toLocaleString()}
-                                      footer.modal-card-foot(style = "margin-bottom: 65px")
-                              else 
-                                td
-                            
+                            td
+                              .columns.is-mobile
+                                each i in [0, 1, 2, 3]
+                                  if (r[i] != null) && (getRb6ClearTypeDetails(r[i]) != null)
+                                    - let c = r[i]
+                                    - let d = getRb6ClearTypeDetails(c)
+                                    - let t = rb6ChartTypeDetails[c.chartType]
+                                    .column.is-one-quarter.modal-trigger(style = "vertical-align: middle", modal = "detail-" + c.musicId + "-" + c.chartType)
+                                      style.
+                                        #forwide {
+                                          display: block;
+                                          min-width: 100px;
+                                        }
+                                        #fornarrow {
+                                          display: none;
+                                          min-width: 50px;
+                                        }
+                                        @media only screen and (max-width: 1000px) {
+                                          #forwide {
+                                            display: none;
+                                          }
+                                          #fornarrow {
+                                            display: block;
+                                          }
+                                        }
+                                      a#forwide 
+                                        .heading.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{t.title}
+                                        .title.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
+                                      a.has-text-centered#fornarrow(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
+                                      .modal.is-mobile
+                                        .modal-background.is-mobile#close
+                                        .modal-card.is-mobile(style = "vertical-align: middle; margin-top: 65px")
+                                          header.modal-card-head
+                                            p.modal-card-title(style = "margin-bottom: 0") Details
+                                            button.delete#close
+                                          section.modal-card-body
+                                            .form 
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Jacket
+                                                .field-body 
+                                                  .field#exist-or-not
+                                                    img#general(src = getGeneralJacketPath())
+                                                    img#specified(src = getSpecifiedJacketPath(i))
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Music ID 
+                                                .field-body 
+                                                  span #{c.musicId}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Music Title
+                                                .field-body 
+                                                  span #{ta.titleArtist.title}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Artist
+                                                .field-body 
+                                                  span #{ta.titleArtist.artist}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label BPM
+                                                .field-body 
+                                                  span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Chart
+                                                .field-body
+                                                  .level.is-mobile 
+                                                    .level-left 
+                                                      .level-item
+                                                        span(style = "color: " + t.color) #{t.title}
+                                                      .level-item
+                                                        p(style = "border-radius: 50%; color: white; width: 24px!important; height: 24px!important; text-align: center; background-color: " + t.color) #{ta.info.chartsInfo[t.title.toLowerCase()].level}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label State
+                                                .field-body 
+                                                  span #{d.title}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Rank
+                                                .field-body 
+                                                  span #{getRank(c.achievementRateTimes100 / 100, true)}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;") 
+                                                    abbr(title = "Achievement Rate") AR
+                                                .field-body 
+                                                  span #{(c.achievementRateTimes100 / 100).toFixed(2)}%
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Score
+                                                .field-body 
+                                                  span #{c.score}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Combo
+                                                .field-body 
+                                                  span #{c.combo}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Miss Count
+                                                .field-body 
+                                                  span #{(c.missCount < 0) ? "×" : c.missCount}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label
+                                                    abbr(title = "Just Collections Rate") JC
+                                                .field-body 
+                                                  .level.is-mobile(style = "width: 150px")
+                                                    .level-left 
+                                                      .level-item
+                                                        span.has-text-danger #{(c.justCollectionRateTimes100Red / 100).toFixed(2)}%
+                                                    .level-right 
+                                                      .level-item
+                                                        span.has-text-info.has-text-right #{(c.justCollectionRateTimes100Blue / 100).toFixed(2)}%
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; vertical-align: middle;") Update Time
+                                                .field-body 
+                                                  span #{new Date(Math.max(c.bestScoreUpdateTime, c.bestAchievementRateUpdateTime, c.bestComboUpdateTime, c.bestMissCountUpdateTime) * 1000).toLocaleString()}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; vertical-align: middle;") Last Play
+                                                .field-body 
+                                                  span #{new Date(c.time * 1000).toLocaleString()}
+                                          footer.modal-card-foot(style = "margin-bottom: 65px")
+                                  else 
+                                    .column.is-one-quarter
+                                
                   //- table.table.is-vcentered
                   //-   thead 
                   //-     tr 
@@ -1132,7 +1135,7 @@ div
                   .field-body
                     span(style = "color: " + getRb5SkillLevelColor(rb5Base.skillPointTimes10 / 10)) #{(rb5Base.skillPointTimes10 / 10).toFixed(1)}
             #tab-content
-              #tab-content-body(tab-group = "rb5-play-data", tab-index = "1", style = "overflow-x: auto")
+              #tab-content-body(tab-group = "rb5-play-data", tab-index = "1", style = "overflow-x: auto; overflow-y: hidden")
                 if rb5MusicRecordsOrganizedLength == 0
                   .has-text-grey.has-text-centered
                     p
@@ -1145,7 +1148,7 @@ div
                       tr 
                         th ID
                         th(stye = "max-width: 200px") Title
-                        th(colspan = "4") Scores
+                        th Scores
                     tbody
                       each r in rb5MusicRecordsOrganized
                         if r != null
@@ -1293,101 +1296,104 @@ div
                                               else 
                                                 td
                                     footer.modal-card-foot(style = "margin-bottom: 65px")
-
-                            each i in [0, 1, 2, 3]
-                              if (r[i] != null) && (getRb5ClearTypeDetails(r[i]) != null)
-                                - let c = r[i]
-                                - let d = getRb5ClearTypeDetails(c)
-                                - let t = rbChartTypeDetails[c.chartType]
-                                td.modal-trigger(style = "vertical-align: middle", modal = "detail-" + c.musicId + "-" + c.chartType)
-                                  style.
-                                    #forwide {
-                                      display: block;
-                                    }
-                                    #fornarrow {
-                                      display: none;
-                                    }
-                                    @media only screen and (max-width: 1000px) {
-                                      #forwide {
-                                        display: none;
-                                      }
-                                      #fornarrow {
-                                        display: block;
-                                      }
-                                    }
-                                  a#forwide 
-                                    .heading.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{t.title}
-                                    .title.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
-                                  a.has-text-centered#fornarrow(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
-                                  .modal.is-mobile
-                                    .modal-background.is-mobile#close
-                                    .modal-card.is-mobile(style = "vertical-align: middle; margin-top: 65px")
-                                      header.modal-card-head
-                                        p.modal-card-title(style = "margin-bottom: 0") Details
-                                        button.delete#close
-                                      section.modal-card-body
-                                        .form 
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Jacket
-                                            .field-body 
-                                              .field#exist-or-not
-                                                img#general(src = getGeneralJacketPath(), style = "width: 214px; height: 214px")
-                                                img#specified(src = getSpecifiedJacketPath(i), style = "width: 214px; height: 214px")
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Music ID 
-                                            .field-body 
-                                              span #{c.musicId}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Chart
-                                            .field-body
-                                              .level.is-mobile 
-                                                .level-left 
-                                                  .level-item
-                                                    span(style = "color: " + t.color) #{t.title}
-                                                  .level-item
-                                                    p(style = "font-weight: bold; color: " + t.color) #{ta.info.chartsInfo[t.title.toLowerCase()].level}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label State
-                                            .field-body 
-                                              span #{d.title}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Rank
-                                            .field-body 
-                                              span #{getRank(c.achievementRateTimes100 / 100, true)}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;") 
-                                                abbr(title = "Achievement Rate") AR
-                                            .field-body 
-                                              span #{(c.achievementRateTimes100 / 100).toFixed(2)}%
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Score
-                                            .field-body 
-                                              span #{c.score}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label Miss Count
-                                            .field-body 
-                                              span #{(c.missCount < 0) ? "×" : c.missCount}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; vertical-align: middle;") Update Time
-                                            .field-body 
-                                              span #{new Date(Math.max(c.bestScoreUpdateTime, c.bestAchievementRateUpdateTime, c.bestComboUpdateTime, c.bestMissCountUpdateTime) * 1000).toLocaleString()}
-                                          .field.is-horizontal
-                                            .field-label 
-                                              label.label(style = "white-space: nowrap; vertical-align: middle;") Last Play
-                                            .field-body 
-                                              span #{new Date(c.time * 1000).toLocaleString()}
-                                      footer.modal-card-foot(style = "margin-bottom: 65px")
-                              else 
-                                td
+                            td
+                              .columns.is-mobile
+                                each i in [0, 1, 2, 3]
+                                  if (r[i] != null) && (getRb5ClearTypeDetails(r[i]) != null)
+                                    - let c = r[i]
+                                    - let d = getRb5ClearTypeDetails(c)
+                                    - let t = rbChartTypeDetails[c.chartType]
+                                    .column.is-one-quarter.modal-trigger(style = "vertical-align: middle", modal = "detail-" + c.musicId + "-" + c.chartType)
+                                      style.
+                                        #forwide {
+                                          display: block;
+                                          min-width: 100px;
+                                        }
+                                        #fornarrow {
+                                          display: none;
+                                          min-width: 50px;
+                                        }
+                                        @media only screen and (max-width: 1000px) {
+                                          #forwide {
+                                            display: none;
+                                          }
+                                          #fornarrow {
+                                            display: block;
+                                          }
+                                        }
+                                      a#forwide 
+                                        .heading.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{t.title}
+                                        .title.has-text-centered(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
+                                      a.has-text-centered#fornarrow(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: center; color: " + t.color) #{c.score}
+                                      .modal.is-mobile
+                                        .modal-background.is-mobile#close
+                                        .modal-card.is-mobile(style = "vertical-align: middle; margin-top: 65px")
+                                          header.modal-card-head
+                                            p.modal-card-title(style = "margin-bottom: 0") Details
+                                            button.delete#close
+                                          section.modal-card-body
+                                            .form 
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Jacket
+                                                .field-body 
+                                                  .field#exist-or-not
+                                                    img#general(src = getGeneralJacketPath(), style = "width: 214px; height: 214px")
+                                                    img#specified(src = getSpecifiedJacketPath(i), style = "width: 214px; height: 214px")
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Music ID 
+                                                .field-body 
+                                                  span #{c.musicId}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Chart
+                                                .field-body
+                                                  .level.is-mobile 
+                                                    .level-left 
+                                                      .level-item
+                                                        span(style = "color: " + t.color) #{t.title}
+                                                      .level-item
+                                                        p(style = "font-weight: bold; color: " + t.color) #{ta.info.chartsInfo[t.title.toLowerCase()].level}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label State
+                                                .field-body 
+                                                  span #{d.title}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Rank
+                                                .field-body 
+                                                  span #{getRank(c.achievementRateTimes100 / 100, true)}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;") 
+                                                    abbr(title = "Achievement Rate") AR
+                                                .field-body 
+                                                  span #{(c.achievementRateTimes100 / 100).toFixed(2)}%
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Score
+                                                .field-body 
+                                                  span #{c.score}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label Miss Count
+                                                .field-body 
+                                                  span #{(c.missCount < 0) ? "×" : c.missCount}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; vertical-align: middle;") Update Time
+                                                .field-body 
+                                                  span #{new Date(Math.max(c.bestScoreUpdateTime, c.bestAchievementRateUpdateTime, c.bestComboUpdateTime, c.bestMissCountUpdateTime) * 1000).toLocaleString()}
+                                              .field.is-horizontal
+                                                .field-label 
+                                                  label.label(style = "white-space: nowrap; vertical-align: middle;") Last Play
+                                                .field-body 
+                                                  span #{new Date(c.time * 1000).toLocaleString()}
+                                          footer.modal-card-foot(style = "margin-bottom: 65px")
+                                  else 
+                                    .column.is-one-quarter
                             
                   //- table.table.is-vcentered
                   //-   thead 

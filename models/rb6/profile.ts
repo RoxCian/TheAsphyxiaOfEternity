@@ -94,10 +94,10 @@ export const Rb6PlayerAccountReadMap: KObjectMappingRecord<IRb6PlayerAccount> = 
     mpc: { $type: "s32" },
     playCount: { $type: "kignore", $fallbackValue: 0 }
 }
-export function generateRb6PlayerAccount(rid: string): IRb6PlayerAccount {
+export function generateRb6PlayerAccount(rid: string, userId: number): IRb6PlayerAccount {
     return {
         collection: "rb.rb6.player.account",
-        userId: Math.random() * 99999999,
+        userId: userId,
         playerId: 0,
         tpc: 1000,
         dpc: 1,
@@ -589,5 +589,29 @@ export const Rb6PlayerWriteMap: KObjectMappingRecord<IRb6Player> = {
         ghost: {},
         ghostWinCount: { $targetKey: "ghost_win_count" },
         purpose: {}
+    }
+}
+
+export function generateRb6Profile(rid: string, userId: number): IRb6Player {
+    return {
+        pdata: {
+            account: generateRb6PlayerAccount(rid, userId),
+            base: generateRb6PlayerBase(),
+            config: generateRb6PlayerConfig(),
+            custom: generateRb6PlayerCustom(),
+            classcheck: <any>{},
+            characterCards: <any>{},
+            released: <any>{},
+            rival: {},
+            pickupRival: {},
+            announce: {},
+            playerParam: <any>{},
+            mylist: {},
+            musicRankPoint: {},
+            quest: {},
+            ghost: {},
+            ghostWinCount: {},
+            purpose: {}
+        }
     }
 }

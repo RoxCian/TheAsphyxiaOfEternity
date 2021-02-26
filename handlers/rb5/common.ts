@@ -11,6 +11,7 @@ import { generateRb5Profile } from "../../models/rb5/profile"
 import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
 import { DBM } from "../../utility/db_manager"
 import { generateKRb5LobbyController } from "../../models/rb5/lobby_entry_controller"
+import { tryFindPlayer } from "../utility/try_find_player"
 
 export namespace Rb5HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -59,11 +60,20 @@ export namespace Rb5HandlersCommon {
         let result: IRb5Player
         let account: IRb5PlayerAccount = await DB.FindOne<IRb5PlayerAccount>(readParam.rid, { collection: "rb.rb5.player.account" })
         if (account == null) {
-            let rb6Account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
-            if (rb6Account != null) {
-                result = generateRb5Profile(readParam.rid, rb6Account.userId)
-                let rb6Base = await DB.FindOne<IRb6PlayerBase>(readParam.rid, { collection: "rb.rb6.player.base" })
-                result.pdata.base.name = rb6Base.name
+            let rbPlayer = await tryFindPlayer(readParam.rid, 5)
+            if (rbPlayer != null) {
+                result = generateRb5Profile(readParam.rid, rbPlayer.userId)
+                result.pdata.base.name = rbPlayer.name
+            } else {
+                let userId
+
+                do userId = Math.trunc(Math.random() * 99999999)
+                while ((await DB.Find<IRb5PlayerAccount>({ collection: "rb.rb5.player.account", userId: userId })).length > 0)
+
+                result = generateRb5Profile(readParam.rid, rbPlayer.userId)
+                result.pdata.account.isFirstFree = true
+                result.pdata.base.name = "RBPlayer"
+                initializePlayer(result)
             }
         } else {
             let base: IRb5PlayerBase = await DB.FindOne<IRb5PlayerBase>(readParam.rid, { collection: "rb.rb5.player.base" })

@@ -62,6 +62,9 @@ function routeRb4() {
 }
 
 function routeRb1() {
-    R.Route("pcb.rb1boot", Rb1HandlersCommon.BootPcb)
+    R.Route("pcbinfo.get", Rb1HandlersCommon.BootPcb)
     R.Route("player.start", Rb1HandlersCommon.StartPlayer)
+    R.Route("player.write", Rb1HandlersCommon.WritePlayer)
+    R.Route("player.read", Rb1HandlersCommon.ReadPlayer)
+    R.Route("log.play", Rb1HandlersCommon.LogPlayer)
 }
