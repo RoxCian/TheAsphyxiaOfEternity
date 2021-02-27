@@ -354,6 +354,7 @@ function checkImg() {
 
 function initializePastel() {
     let pastel = document.querySelector(".pastel")
+    if (pastel == null) return
     let body = pastel.querySelector(".pastel-body")
     let headInput = pastel.querySelector("input.pastel-head-input")
     let topInput = pastel.querySelector("input.pastel-top-input")

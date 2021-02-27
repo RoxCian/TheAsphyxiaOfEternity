@@ -127,7 +127,7 @@ export namespace Rb6HandlersCommon {
             if (playerAccount.lpc == null) playerAccount.lpc = 0
             if (playerAccount.cpc == null) playerAccount.cpc = 0
             if (playerAccount.mpc == null) playerAccount.mpc = 0
-            if ((playerBase.comment == null) || (playerBase?.comment == "")) playerBase.comment = "Welcome to the land of Reflecia!"
+            if ((playerBase.comment == null) || (playerBase?.comment == "")) playerBase.comment = "Welcome to the land of Reflesia!"
             if (playerBase.abilityPointTimes100 == null) playerBase.abilityPointTimes100 = playerBase["averagePrecisionTimes100"]  // For compatibility
             for (let c of characterCards) if (c.level == null) c.level = 0
 

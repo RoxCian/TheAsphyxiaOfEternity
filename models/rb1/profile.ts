@@ -10,6 +10,7 @@ export interface IRb1PlayerBase extends ICollection<"rb.rb1.player.base"> {
     matchingGrade: number
     abilityPointTimes10: number
     tutorialFlag: number
+    playCount: number
 }
 export const Rb1PlayerBaseMap: KObjectMappingRecord<IRb1PlayerBase> = {
     collection: getCollectionMappingElement<IRb1PlayerBase>("rb.rb1.player.base"),
@@ -19,7 +20,8 @@ export const Rb1PlayerBaseMap: KObjectMappingRecord<IRb1PlayerBase> = {
     experience: { $type: "s32", $targetKey: "exp" },
     matchingGrade: { $type: "s16", $targetKey: "mg" },
     abilityPointTimes10: { $type: "s16", $targetKey: "ap" },
-    tutorialFlag: { $type: "s32", $targetKey: "flag" }
+    tutorialFlag: { $type: "s32", $targetKey: "flag" },
+    playCount: { $type: "kignore" }
 }
 export function generateRb1PlayerBase(userId: number): IRb1PlayerBase {
     return {
@@ -30,7 +32,8 @@ export function generateRb1PlayerBase(userId: number): IRb1PlayerBase {
         experience: 0,
         matchingGrade: 0,
         abilityPointTimes10: 0,
-        tutorialFlag: 1
+        tutorialFlag: 1,
+        playCount: 0
     }
 }
 

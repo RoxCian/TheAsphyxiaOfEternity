@@ -7,6 +7,7 @@ import { DBM } from "../../utility/db_manager"
 import { generateRb1MusicRecord, generateRb1Profile, IRb1MusicRecord, IRb1Player, IRb1PlayerBase, IRb1PlayerCustom, IRb1PlayerReleasedInfo, IRb1PlayerStat, IRb1StageLog, Rb1PlayerMap } from "../../models/rb1/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb1StageLogStandalone, IRb1StageLogStandaloneElement, Rb1StageLogStandaloneMap } from "../../models/rb1/stage_log_standalone"
+import { Rb6HandlersCommon } from "../rb6/common"
 
 export namespace Rb1HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -160,11 +161,15 @@ export namespace Rb1HandlersCommon {
                     // initializePlayer(player)
                 }
             }
-            // else {
-            //     playerBaseForPlayCountQuery.playCount++
-            //     await DBM.update(rid, { collection: "rb.rb5.player.account" }, playerBaseForPlayCountQuery)
-            // }
-            if (player.pdata.base) await DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, player.pdata.base)
+            else {
+                if (playerBaseForPlayCountQuery.playCount == null) playerBaseForPlayCountQuery.playCount = 1
+                else playerBaseForPlayCountQuery.playCount++
+                DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, playerBaseForPlayCountQuery)
+            }
+            if (player.pdata.base) {
+                player.pdata.base.playCount = playerBaseForPlayCountQuery.playCount
+                await DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, player.pdata.base)
+            }
             if (player.pdata.custom) await DBM.upsert<IRb1PlayerCustom>(rid, { collection: "rb.rb1.player.custom" }, player.pdata.custom)
             if (player.pdata.stat) await DBM.upsert<IRb1PlayerStat>(rid, { collection: "rb.rb1.player.stat" }, player.pdata.stat)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, i)
@@ -183,6 +188,7 @@ export namespace Rb1HandlersCommon {
         if (!info.model.startsWith("KBR")) return send.deny()
         let log = mapBackKObject(data, Rb1StageLogStandaloneMap)[0]
         StageLogManager.pushStandaloneStageLog(log)
+        StageLogManager.update()
         send.success()
     }
 
@@ -225,50 +231,54 @@ export namespace Rb1HandlersCommon {
 }
 
 class StageLogManager {
-    private static subscriberList = <{ userId: number, rid: string, log: IRb1StageLog }[]>[]
-    private static triggerList = <{ userId: number, log: IRb1StageLogStandalone, triggeredIndex: number[] }[]>[]
+    private static subscriberList = <{ userId: number, rid: string, log: IRb1StageLog, state: "pending" | "default" }[]>[]
+    private static triggerList = <{ userId: number, log: IRb1StageLogStandalone, triggeredIndex: number[], state: "pending" | "default" }[]>[]
 
     private constructor() { }
 
     public static pushStageLog(rid: string, userId: number, log: IRb1StageLog) {
-        for (let i = 0; i < this.triggerList.length; i++) {
-            let t = this.triggerList[i]
-            if (t.userId == userId) {
-                for (let e = 0; e < t.log.rec.length; e++) if (!t.triggeredIndex.includes(e) && this.checkLog(log, t.log.rec[e])) {
-                    t.triggeredIndex.push(e)
-                    log.standalone = t.log.rec[e]
-                    DBM.insert(rid, log)
-                    if (t.triggeredIndex.length == t.log.play.stageCount) this.triggerList.splice(i, 1)
-                    return
-                }
-            }
-        }
-        this.subscriberList.push({ userId: userId, rid: rid, log: log })
+        this.subscriberList.push({ userId: userId, rid: rid, log: log, state: "default" })
     }
     public static pushStandaloneStageLog(log: IRb1StageLogStandalone) {
-        let trigger = { userId: log.userId, log: log, triggeredIndex: <number[]>[] }
-        let removeIndex: number[] = []
-        for (let i = 0; i < this.subscriberList.length; i++) {
-            let s = this.subscriberList[i]
-            if (s.userId == log.userId) {
-                for (let e = 0; e < log.rec.length; e++) if (!trigger.triggeredIndex.includes(e) && this.checkLog(s.log, log.rec[e])) {
-                    trigger.triggeredIndex.push(e)
-                    s.log.standalone = log.rec[e]
-                    DBM.insert(s.rid, s.log)
-                    removeIndex.push(i)
+        this.triggerList.push({ userId: log.userId, log: log, triggeredIndex: <number[]>[], state: "default" })
+    }
+
+    public static update() {
+        let triggerRemoveIndex = []
+        let subscriberRemoveIndex = []
+        for (let i = 0; i < this.triggerList.length; i++) {
+            let t = this.triggerList[i]
+            if (t.state == "pending") continue
+            for (let j = 0; j < this.subscriberList.length; j++) {
+                let s = this.subscriberList[j]
+                if (s.state == "pending") continue
+                if (s.userId == t.userId) {
+                    for (let e = 0; e < t.log.rec.length; e++) if (!t.triggeredIndex.includes(e) && this.checkLog(s.log, t.log.rec[e], t.log.play.stageCount)) {
+                        s.state = "pending"
+                        t.triggeredIndex.push(e)
+                        s.log.stageIndex = t.log.play.stageCount - s.log.stageIndex - 1 // The stage indexes in play logs saved by player.write and the indexes saved by log.play are reversed.
+                        s.log.standalone = t.log.rec[e]
+                        DBM.insert(s.rid, s.log)
+                        subscriberRemoveIndex.push(j)
+                        break
+                    }
+                }
+                if (t.triggeredIndex.length == t.log.play.stageCount) {
+                    t.state = "pending"
+                    triggerRemoveIndex.push(i)
                     break
                 }
             }
-            if (trigger.triggeredIndex.length == log.play.stageCount) return
         }
-        this.triggerList.push(trigger)
+
+        for (let i of triggerRemoveIndex) this.triggerList.splice(i, 1)
+        for (let j of subscriberRemoveIndex) this.subscriberList.splice(j, 1)
     }
 
-    private static checkLog(subscriber: IRb1StageLog, triggerElement: IRb1StageLogStandaloneElement): boolean {
+    private static checkLog(subscriber: IRb1StageLog, triggerElement: IRb1StageLogStandaloneElement, stageCount: number): boolean {
         if (subscriber.musicId != triggerElement.musicId) return false
         if (subscriber.chartType != triggerElement.chartType) return false
-        if (subscriber.stageIndex != triggerElement.stageIndex) return false
-        if (subscriber.log.score != triggerElement.score) return false
+        if ((stageCount - subscriber.stageIndex - 1) != triggerElement.stageIndex) return false // The stage indexes in play logs saved by player.write and the indexes saved by log.play are reversed.
         return true
     }
 }

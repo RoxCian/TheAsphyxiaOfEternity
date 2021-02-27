@@ -1,8 +1,10 @@
 import { IRb1Player, IRb1PlayerBase } from "../../models/rb1/profile"
 import { KITEM2 } from "../../utility/mapping"
 // player.pdata.released.info.type == 0 -> song
-// player.pdata.released.info.type == 6 -> character card
-// player.pdata.released.info.type == 7 -> byword
+// player.pdata.released.info.type == 1 -> sfx
+// player.pdata.released.info.type == 2 -> bgm (2: Qrispy)
+// player.pdata.released.info.type == 3 -> frame
+// player.pdata.released.info.type == 5 -> bg (5: Black)
 
 export function readPlayerPostTask(player: KITEM2<IRb1Player>): KITEM2<IRb1Player> {
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")

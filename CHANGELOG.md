@@ -1,3 +1,11 @@
+- v0.7.0-beta
+
+  Added webui for RB1. You can view your REFLEC BEAT play data on browser.
+
+  Fixed bugs about RB1 play history.
+
+  Fixed some webui bugs.
+
 - v0.6.0-beta
 
   Added RB1 support.

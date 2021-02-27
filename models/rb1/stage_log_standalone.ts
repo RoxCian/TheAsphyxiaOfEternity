@@ -25,11 +25,11 @@ export const Rb1StageLogStandaloneElementMap: KObjectMappingRecord<IRb1StageLogS
     result: { $type: "s16", $targetKey: "res" },
     score: { $type: "s16" },
     combo: { $type: "s16", $targetKey: "mc" },
-    justReflecCount: { $type: "s16", $targetKey: "jc_jr" },
-    justCount: { $type: "s16", $targetKey: "jc_ju" },
-    greatCount: { $type: "s16", $targetKey: "jc_gr" },
-    goodCount: { $type: "s16", $targetKey: "jc_gd" },
-    missCount: { $type: "s16", $targetKey: "jc_ms" },
+    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
+    justCount: { $type: "s16", $targetKey: "jt_ju" },
+    greatCount: { $type: "s16", $targetKey: "jt_gr" },
+    goodCount: { $type: "s16", $targetKey: "jt_gd" },
+    missCount: { $type: "s16", $targetKey: "jt_ms" },
     sec: { $type: "s32" },
 }
 
