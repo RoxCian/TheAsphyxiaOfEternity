@@ -12,6 +12,9 @@ import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
 import { DBM } from "../../utility/db_manager"
 import { generateKRb5LobbyController } from "../../models/rb5/lobby_entry_controller"
 import { tryFindPlayer } from "../utility/try_find_player"
+import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
+import { getMusicId } from "../../data/musicinfo/rb_music_info"
+import { networkInterfaces } from "os"
 
 export namespace Rb5HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -261,13 +264,77 @@ export namespace Rb5HandlersCommon {
         }))
     }
     export const ReadPlayerScoreOldVersion: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
+        let rid: string = $(data).str("rid")
+        let metas = await findMusicRecordMetadatas(rid)
+
         let result = {
-            pdata: { record: {} }
+            pdata: { record: { rec: <IRb5MusicRecord[]>[] } }
         }
 
+        for (let mk of metas) {
+            let midstr = mk.split(":")[0]
+            let chart = parseInt(mk.split(":")[1])
+            let mid = getMusicId(midstr, 5)
+            let bestRecord = await findBestMusicRecord(rid, midstr, chart, 5)
+            if (bestRecord == null) continue
+            result.pdata.record.rec.push({
+                collection: "rb.rb5.playData.musicRecord",
+                musicId: mid,
+                chartType: chart,
+                playCount: bestRecord.playCount,
+                param: bestRecord.param,
+                clearType: translateRb5ClearType(bestRecord.clearType, bestRecord.gaugeType),
+                achievementRateTimes100: bestRecord.achievementRateTimes100,
+                score: bestRecord.score,
+                missCount: bestRecord.missCount,
+                combo: bestRecord.combo,
+                time: Math.trunc(Date.now() / 1000),
+                bestAchievementRateUpdateTime: Math.trunc(Date.now() / 1000),
+                bestComboUpdateTime: Math.trunc(Date.now() / 1000),
+                bestMissCountUpdateTime: Math.trunc(Date.now() / 1000),
+                bestScoreUpdateTime: Math.trunc(Date.now() / 1000),
+                kFlag: 0,
+                isHasGhostBlue: false,
+                isHasGhostRed: false
+            })
+        }
+        if (result.pdata.record.rec.length == 0) delete result.pdata.record.rec
         send.object(mapKObject(result, {
-            pdata: { record: { rec: { 0: Rb5MusicRecordMap } } }
+            pdata: { record: { rec: { 0: Rb5MusicRecordMap }, $targetKey: "record_old" } }
         }))
+    }
+
+    function translateRb5ClearType(clearType: ClearType, gaugeType: GaugeType): number {
+        switch (clearType) {
+            case ClearType.notPlayed: return 0
+            case ClearType.failed:
+                switch (gaugeType) {
+                    case GaugeType.normal: return 1
+                    case GaugeType.hard: return 2
+                    case GaugeType.sHard: return 3
+                }
+            case ClearType.cleared: return 9
+            case ClearType.hardCleared: return 10
+            case ClearType.sHardCleared: return 11
+            case ClearType.fullCombo:
+                switch (gaugeType) {
+                    case GaugeType.normal: return 9
+                    case GaugeType.hard: return 10
+                    case GaugeType.sHard: return 11
+                }
+            case ClearType.excellent:
+                switch (gaugeType) {
+                    case GaugeType.normal: return 9
+                    case GaugeType.hard: return 10
+                    case GaugeType.sHard: return 11
+                }
+            case ClearType.allJustReflecFullCombo:
+                switch (gaugeType) {
+                    case GaugeType.normal: return 9
+                    case GaugeType.hard: return 10
+                    case GaugeType.sHard: return 11
+                }
+        }
     }
 
     export const WriteComment: EPR = async (req, data, send) => {

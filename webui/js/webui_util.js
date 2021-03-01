@@ -442,3 +442,4 @@ $(document).ready(() => {
     initializeMarqueeLabels()
     initializeNotificatioAnimation()
 })
+

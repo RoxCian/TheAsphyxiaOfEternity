@@ -7,7 +7,6 @@ import { DBM } from "../../utility/db_manager"
 import { generateRb1MusicRecord, generateRb1Profile, IRb1MusicRecord, IRb1Player, IRb1PlayerBase, IRb1PlayerCustom, IRb1PlayerReleasedInfo, IRb1PlayerStat, IRb1StageLog, Rb1PlayerMap } from "../../models/rb1/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb1StageLogStandalone, IRb1StageLogStandaloneElement, Rb1StageLogStandaloneMap } from "../../models/rb1/stage_log_standalone"
-import { Rb6HandlersCommon } from "../rb6/common"
 
 export namespace Rb1HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -159,17 +158,18 @@ export namespace Rb1HandlersCommon {
 
                     player.pdata.base.userId = userId
                     // initializePlayer(player)
+                    playerBaseForPlayCountQuery = player.pdata.base
                 }
             }
             else {
                 if (playerBaseForPlayCountQuery.playCount == null) playerBaseForPlayCountQuery.playCount = 1
                 else playerBaseForPlayCountQuery.playCount++
-                DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, playerBaseForPlayCountQuery)
             }
             if (player.pdata.base) {
-                player.pdata.base.playCount = playerBaseForPlayCountQuery.playCount
+                player.pdata.base.playCount = (playerBaseForPlayCountQuery?.playCount != null) ? playerBaseForPlayCountQuery.playCount : 1
                 await DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, player.pdata.base)
-            }
+            } else DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, playerBaseForPlayCountQuery)
+
             if (player.pdata.custom) await DBM.upsert<IRb1PlayerCustom>(rid, { collection: "rb.rb1.player.custom" }, player.pdata.custom)
             if (player.pdata.stat) await DBM.upsert<IRb1PlayerStat>(rid, { collection: "rb.rb1.player.stat" }, player.pdata.stat)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, i)

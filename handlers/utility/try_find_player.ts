@@ -1,9 +1,10 @@
 import { IRb1PlayerBase } from "../../models/rb1/profile"
+import { IRb2PlayerBase } from "../../models/rb2/profile"
 import { IRb5PlayerAccount, IRb5PlayerBase } from "../../models/rb5/profile"
 import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
 
 export type IRbPlayerAccount = IRb6PlayerAccount | IRb5PlayerAccount
-export type IRbPlayerBase = IRb6PlayerBase | IRb5PlayerBase | IRb1PlayerBase
+export type IRbPlayerBase = IRb6PlayerBase | IRb5PlayerBase | IRb2PlayerBase | IRb1PlayerBase
 
 export type FindPlayerResult = {
     account?: IRbPlayerAccount
@@ -33,6 +34,15 @@ export async function tryFindPlayer(rid: string, forVersion?: number): Promise<F
         result.base = await DB.FindOne<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
         result.name = result.base.name
         result.userId = result.account.userId
+        return result
+    }
+
+    // RB2
+    let base = await DB.FindOne<IRb2PlayerBase>(rid, { collection: "rb.rb2.player.base" })
+    if ((base != null) && (forVersion != 2)) {
+        result.base = base
+        result.name = base.name
+        result.userId = base.userId
         return result
     }
 

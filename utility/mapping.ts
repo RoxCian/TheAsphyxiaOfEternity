@@ -4,7 +4,7 @@ export type KArrayType = KNumberType | KBigIntType
 export type KGroupType = KNumberGroupType | KBigIntGroupType
 export type KType = KArrayType | KGroupType | "str" | "bin" | "ip4" | "bool"
 export type KTypeExtended = KType | null | "kignore"
-export type TypeForKItem = number | string | bigint | boolean | Buffer | number[] | bigint[] | BufferArray | NumberGroup<number[] | bigint[]>
+export type TypeForKItem = number | string | bigint | boolean | Buffer | number[] | bigint[] | boolean[] | BufferArray | NumberGroup<number[] | bigint[]>
 export type TypeForKObject<T> = T extends TypeForKItem ? never : T
 export type TypeForKArray = number[] | bigint[] | BufferArray
 
@@ -25,7 +25,7 @@ export type KTypeConvert<T extends string | Buffer | number | bigint | boolean |
     T extends Buffer ? "bin" :
     T extends number ? KNumberType | "ip4" | "bool" :
     T extends bigint ? KBigIntType :
-    T extends boolean ? "bool" :
+    T extends boolean | boolean[] ? "bool" :
     T extends number[] ? KNumberType : // KARRAY 
     T extends bigint[] ? KBigIntType : // KARRAY 
     T extends NumberGroup<number[]> ? KNumberGroupType :

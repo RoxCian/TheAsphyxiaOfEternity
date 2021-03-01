@@ -1,13 +1,14 @@
-import { Rb1HandlersCommon } from "./handlers/rb1/common"
+import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
 import { Rb4HandlersCommon } from "./handlers/rb4/common"
 import { Rb5HandlersCommon } from "./handlers/rb5/common"
 import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
+import { Rb1Rb2HandlersDispatcher } from "./handlers/utility/rb1rb2_dispatcher"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 
 export function register() {
     R.GameCode("KBR")
-    // R.GameCode("LBR")
+    R.GameCode("LBR")
     R.GameCode("MBR")
 
     R.Contributor("Rox Cian", "https://github.com/RoxCian")
@@ -16,12 +17,13 @@ export function register() {
     R.Config("unlock_all_character_cards", { type: "boolean", default: false });
 
     R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
+    R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
     R.WebUIEvent("removeWebUIMessage", UtilityHandlersWebUI.removeWebUIMessage)
 
     routeRb6()
     routeRb5()
     routeRb4()
-    routeRb1()
+    routeRb1Rb2()
 
     R.Unhandled()
 }
@@ -61,10 +63,10 @@ function routeRb4() {
     // R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.ReadLobby)
 }
 
-function routeRb1() {
-    R.Route("pcbinfo.get", Rb1HandlersCommon.BootPcb)
-    R.Route("player.start", Rb1HandlersCommon.StartPlayer)
-    R.Route("player.write", Rb1HandlersCommon.WritePlayer)
-    R.Route("player.read", Rb1HandlersCommon.ReadPlayer)
-    R.Route("log.play", Rb1HandlersCommon.LogPlayer)
+function routeRb1Rb2() {
+    R.Route("pcbinfo.get", Rb1Rb2HandlersDispatcher.DispatchBootPcb)
+    R.Route("player.start", Rb1Rb2HandlersDispatcher.DispatchStartPlayer)
+    R.Route("player.write", Rb1Rb2HandlersDispatcher.DispatchWritePlayer)
+    R.Route("player.read", Rb1Rb2HandlersDispatcher.DispatchReadPlayer)
+    R.Route("log.play", Rb1Rb2HandlersDispatcher.DispatchLogPlayer)
 }

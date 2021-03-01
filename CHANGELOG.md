@@ -1,3 +1,13 @@
+- v0.8.0-beta
+
+  Added RB limelight support.
+
+  Added settings for RB1.
+
+  Added feature of view old scores for limelight. You can view your highest score of RB1 and RB VOLZZA (and other versions to be supported in future) for each played charts.
+
+  Fixed bugs.
+
 - v0.7.0-beta
 
   Added webui for RB1. You can view your REFLEC BEAT play data on browser.
