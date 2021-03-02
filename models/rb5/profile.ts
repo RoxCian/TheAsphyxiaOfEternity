@@ -301,8 +301,8 @@ export interface IRb5PlayerCustom extends ICollection<"rb.rb5.player.custom"> {
     stageColorSpecified: number
     stageClearCondition: number // ?
 
-    // voiceMessageSet: number
-    // voiceMessageVolume: number
+    voiceMessageSet: number
+    voiceMessageVolume: number
 }
 export const Rb5PlayerCustomMap: KObjectMappingRecord<IRb5PlayerCustom> = {
     collection: getCollectionMappingElement<IRb5PlayerCustom>("rb.rb5.player.custom"),
@@ -326,7 +326,9 @@ export const Rb5PlayerCustomMap: KObjectMappingRecord<IRb5PlayerCustom> = {
     stageHighSpeed: { $type: "u8", $targetKey: "high_speed" },//
     stageColorSpecified: { $type: "u8", $targetKey: "color_type" },
     stageAchievementRateDisplayingType: { $type: "u8", $targetKey: "st_hazard" },//
-    stageClearCondition: { $type: "u8", $targetKey: "st_clr_cond" }//
+    stageClearCondition: { $type: "u8", $targetKey: "st_clr_cond" },//
+    voiceMessageSet: { $type: "s16", $targetKey: "voice_message_set" },
+    voiceMessageVolume: { $type: "u8", $targetKey: "voice_message_volume" }
 }
 export function generateRb5PlayerCustom(): IRb5PlayerCustom {
     return {
@@ -339,6 +341,8 @@ export function generateRb5PlayerCustom(): IRb5PlayerCustom {
         stageAchievementRateDisplayingType: 0,
         stageObjectSize: 3,
         stageSameTimeObjectsDisplayingType: 0,
+        voiceMessageSet: 0,
+        voiceMessageVolume: 100,
 
         // Second page of customization
         stageShotSound: 0,

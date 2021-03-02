@@ -372,11 +372,21 @@ export function generateRb2LincleLink(): IRb2LincleLink {
         rbParam4: false
     }
 }
-export interface IRb2Mylist {
+export interface IRb2Mylist extends ICollection<"rb.rb2.player.mylist"> {
+    slot?: {
+        slotId: number
+        musicId: number
+    }[]
+}
+export const Rb2MylistMap: KObjectMappingRecord<IRb2Mylist> = {
+    collection: getCollectionMappingElement<IRb2Mylist>("rb.rb2.player.mylist"),
     slot: {
-        index: number
-        slot: number[]
-    }
+        0: {
+            slotId: { $type: "u8", $targetKey: "slot_id" },
+            musicId: { $type: "s16", $targetKey: "music_id" }
+        }
+    },
+    $targetKey: "fav_music_slot"
 }
 
 export interface IRb2Player {
@@ -394,7 +404,7 @@ export interface IRb2Player {
         stageLogs: { log?: IRb2StageLog[] }
         rival: {}
         glass: { g?: IRb2Glass[] }
-        mylist: {}
+        mylist: IRb2Mylist
         lincleLink: IRb2LincleLink
     }
 }
@@ -413,7 +423,7 @@ export const Rb2PlayerMap: KObjectMappingRecord<IRb2Player> = {
         stageLogs: { log: { 0: Rb2StageLogMap }, $targetKey: "blog" },
         rival: {},
         glass: { g: { 0: Rb2GlassMap } },
-        mylist: { $targetKey: "fav_music_slot" },
+        mylist: Rb2MylistMap,
         lincleLink: Rb2LincleLinkMap
     }
 }
@@ -434,7 +444,7 @@ export function generateRb2Profile(rid: string, userId: number): IRb2Player {
             stageLogs: {},
             rival: {},
             glass: {},
-            mylist: {},
+            mylist: { collection: "rb.rb2.player.mylist" },
             lincleLink: generateRb2LincleLink()
         }
     }

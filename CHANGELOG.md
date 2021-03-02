@@ -1,3 +1,9 @@
+- v0.9.0-beta
+
+  Added webui for RB limelight.
+
+  Fixed mylist (favorite musics) feature for RB limelight.
+
 - v0.8.0-beta
 
   Added RB limelight support.

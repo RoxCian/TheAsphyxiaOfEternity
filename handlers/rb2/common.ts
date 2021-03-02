@@ -4,13 +4,12 @@ import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { DBM } from "../../utility/db_manager"
-import { generateRb2LincleLink, generateRb2MusicRecord, generateRb2MusicRecordElement, generateRb2Profile, IRb2Glass, IRb2LincleLink, IRb2MusicRecord, IRb2Player, IRb2PlayerBase, IRb2PlayerCustom, IRb2PlayerReleasedInfo, IRb2PlayerStat, IRb2StageLog, Rb2PlayerMap } from "../../models/rb2/profile"
+import { generateRb2LincleLink, generateRb2MusicRecord, generateRb2MusicRecordElement, generateRb2Profile, IRb2Glass, IRb2LincleLink, IRb2MusicRecord, IRb2Mylist, IRb2Player, IRb2PlayerBase, IRb2PlayerCustom, IRb2PlayerReleasedInfo, IRb2PlayerStat, IRb2StageLog, Rb2PlayerMap } from "../../models/rb2/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb2StageLogStandalone, IRb2StageLogStandaloneElement, Rb2StageLogStandaloneMap } from "../../models/rb2/stage_log_standalone"
 import { read } from "../../../popn@asphyxia/handler/player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, MusicRecordMetadatas } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
-import { Rb6HandlersCommon } from "../rb6/common"
 
 export namespace Rb2HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -80,6 +79,7 @@ export namespace Rb2HandlersCommon {
             let released: IRb2PlayerReleasedInfo[] = await DB.Find<IRb2PlayerReleasedInfo>(readParam.rid, { collection: "rb.rb2.player.releasedInfo" })
             let glass: IRb2Glass[] = await DB.Find<IRb2Glass>(readParam.rid, { collection: "rb.rb2.player.glass" })
             let lincleLink: IRb2LincleLink = await DB.FindOne<IRb2LincleLink>(readParam.rid, { collection: "rb.rb2.player.lincleLink" })
+            let mylist: IRb2Mylist = await DB.FindOne<IRb2Mylist>(readParam.rid, { collection: "rb.rb2.player.mylist" })
 
             if (base.level > 1) custom.isBeginner = false
 
@@ -127,7 +127,7 @@ export namespace Rb2HandlersCommon {
                     rival: {},
                     glass: (glass.length > 0) ? { g: glass } : {},
                     lincleLink: (lincleLink == null) ? generateRb2LincleLink() : lincleLink,
-                    mylist: {}
+                    mylist: (mylist == null) ? { collection: "rb.rb2.player.mylist" } : mylist
                 }
             }
         }
@@ -168,7 +168,6 @@ export namespace Rb2HandlersCommon {
             }
             result.push(currentRecord)
         }
-        Rb6HandlersCommon.log(result, "rb2log.txt")
 
         return result
     }
@@ -231,6 +230,7 @@ export namespace Rb2HandlersCommon {
             if (player.pdata.record?.rec?.length > 0) for (let i of player.pdata.record.rec) await updateMusicRecord(rid, i)
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
             if (player.pdata.glass?.g?.length > 0) for (let g of player.pdata.glass.g) await DBM.upsert<IRb2Glass>(rid, { collection: "rb.rb2.player.glass", id: g.id }, g)
+            if (player.pdata.mylist?.slot?.length > 0) await DBM.upsert<IRb2Mylist>(rid, { collection: "rb.rb2.player.mylist" }, player.pdata.mylist)
             if (player.pdata.lincleLink) await DBM.upsert<IRb2LincleLink>(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
         }
         send.object({ uid: K.ITEM("s32", player.pdata.base.userId), time: K.ITEM("s32", Math.trunc(Date.now() / 1000)) })

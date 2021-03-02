@@ -8,13 +8,11 @@ import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { generateRb5Profile } from "../../models/rb5/profile"
-import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
 import { DBM } from "../../utility/db_manager"
 import { generateKRb5LobbyController } from "../../models/rb5/lobby_entry_controller"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
-import { networkInterfaces } from "os"
 
 export namespace Rb5HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -227,7 +225,7 @@ export namespace Rb5HandlersCommon {
             if (player.pdata.config) await DBM.upsert<IRb5PlayerConfig>(rid, { collection: "rb.rb5.player.config" }, player.pdata.config)
             if (player.pdata.custom) await DBM.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
-            if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class) {
+            if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
                 (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + player.pdata.stageLogs.log[1]?.score + player.pdata.stageLogs.log[2]?.score
                 await updateClasscheckRecordFromLog(rid, <IRb5PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
             }
@@ -247,8 +245,11 @@ export namespace Rb5HandlersCommon {
         // }
     }
 
-    export const ReadLobby: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
-        send.object(generateKRb5LobbyController())
+    export const ReadLobby: EPR = async (info: EamuseInfo, data: any, send: EamuseSend) => {
+        let l: any
+        l = generateKRb5LobbyController()
+        l.e = data.e
+        send.object(l)
     }
 
     export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
@@ -268,7 +269,10 @@ export namespace Rb5HandlersCommon {
         let metas = await findMusicRecordMetadatas(rid)
 
         let result = {
-            pdata: { record: { rec: <IRb5MusicRecord[]>[] } }
+            pdata: {
+                recordOld: { rec: <IRb5MusicRecord[]>[] },
+                record: { rec: <IRb5MusicRecord[]>[] }
+            }
         }
 
         for (let mk of metas) {
@@ -277,7 +281,7 @@ export namespace Rb5HandlersCommon {
             let mid = getMusicId(midstr, 5)
             let bestRecord = await findBestMusicRecord(rid, midstr, chart, 5)
             if (bestRecord == null) continue
-            result.pdata.record.rec.push({
+            result.pdata.recordOld.rec.push({
                 collection: "rb.rb5.playData.musicRecord",
                 musicId: mid,
                 chartType: chart,
@@ -297,10 +301,17 @@ export namespace Rb5HandlersCommon {
                 isHasGhostBlue: false,
                 isHasGhostRed: false
             })
+            let newRecord: IRb5MusicRecord = await DB.FindOne<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord" })
+            if (newRecord == null) result.pdata.record.rec.push(generateRb5MusicRecord(mid, chart))
+            else result.pdata.record.rec.push(newRecord)
         }
         if (result.pdata.record.rec.length == 0) delete result.pdata.record.rec
+        if (result.pdata.recordOld.rec.length == 0) delete result.pdata.recordOld.rec
         send.object(mapKObject(result, {
-            pdata: { record: { rec: { 0: Rb5MusicRecordMap }, $targetKey: "record_old" } }
+            pdata: {
+                record: { rec: { 0: Rb5MusicRecordMap } },
+                recordOld: { rec: { 0: Rb5MusicRecordMap }, $targetKey: "record_old" }
+            }
         }))
     }
 
