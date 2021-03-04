@@ -1,10 +1,12 @@
 import { IRb5Player } from "../../models/rb5/profile"
 import { KITEM2 } from "../../utility/mapping"
+import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 0 -> song
 // player.pdata.released.info.type == 6 -> character card
 // player.pdata.released.info.type == 7 -> byword
 
 export function readPlayerPostTask(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
+    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     if (!isUnlockSongs && !isUnlockSongs) return player
 
@@ -13,6 +15,7 @@ export function readPlayerPostTask(player: KITEM2<IRb5Player>): KITEM2<IRb5Playe
     return player
 }
 export function writePlayerPredecessor(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
+    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     let isUnlockCharacterCards: boolean = U.GetConfig("unlock_all_character_cards")
     if (!isUnlockSongs && !isUnlockCharacterCards) return player

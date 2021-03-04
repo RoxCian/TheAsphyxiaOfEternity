@@ -68,10 +68,10 @@ export namespace Rb6HandlersCommon {
     export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
 
-        let playerAccount: Doc<IRb6PlayerAccount> = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
+        let playerAccount: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
         let result: IRb6Player
         if (playerAccount == null) {
-            let rbPlayer = await tryFindPlayer(readParam.rid, 5)
+            let rbPlayer = await tryFindPlayer(readParam.rid, 6)
             if (rbPlayer != null) {
                 result = generateRb6Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
@@ -252,7 +252,7 @@ export namespace Rb6HandlersCommon {
             if (player.pdata.config) await DBM.upsert<IRb6PlayerConfig>(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
             if (player.pdata.custom) await DBM.upsert<IRb6PlayerCustom>(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
             if ((<IRb6PlayerClasscheckLog>player.pdata.classcheck)?.class) {
-                (player.pdata.classcheck as IRb6PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + player.pdata.stageLogs.log[1]?.score + player.pdata.stageLogs.log[2]?.score
+                (player.pdata.classcheck as IRb6PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1].score == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2].score == null ? 0 : player.pdata.stageLogs.log[2].score)
                 await updateClasscheckRecordFromLog(rid, <IRb6PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
             }
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
@@ -411,7 +411,7 @@ export namespace Rb6HandlersCommon {
             isNeedUpdate = true
             classRecord.rank = log.rank
         }
-        if (isInitial || (log.totalScore > classRecord.totalScore)) {
+        if (isInitial || (classRecord.totalScore == null) || (log.totalScore > classRecord.totalScore)) {
             isNeedUpdate = true
             classRecord.totalScore = log.totalScore
         }

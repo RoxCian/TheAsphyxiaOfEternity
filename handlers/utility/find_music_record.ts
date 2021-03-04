@@ -1,6 +1,7 @@
 import { getAvaliableMusicChartInfo, getMusicId, getMusicIdStr, RbMusicChartInfoElement } from "../../data/musicinfo/rb_music_info"
 import { IRb1MusicRecord } from "../../models/rb1/profile"
 import { IRb2MusicRecord } from "../../models/rb2/profile"
+import { IRb3MusicRecord } from "../../models/rb3/music_record"
 import { IRb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb6HandlersCommon } from "../rb6/common"
 
@@ -20,6 +21,12 @@ export interface IRbBestMusicRecord {
     winCount: number
     loseCount: number
     drawCount: number
+
+    clearTypeVersion?: number
+    scoreVersion?: number
+    comboVersion?: number
+    missCountVersion?: number
+    achievementRateVersion?: number
 }
 
 export enum ClearType {
@@ -97,6 +104,21 @@ export async function findBestMusicRecord(rid: string, musicIdStr: string, chart
                     loseCountArray.push(recordRb2.newRecord.loseCount)
                     drawCountArray.push(recordRb2.newRecord.drawCount)
                     break
+                case 3:
+                    let midRb3 = getMusicId(musicIdStr, 3)
+                    let recordRb3: IRb3MusicRecord = await DB.FindOne<IRb3MusicRecord>(rid, { collection: "rb.rb3.playData.musicRecord", musicId: midRb3, chartType: chartType })
+                    if (recordRb3 == null) break
+
+                    if (recordRb3.missCount == 0) clearTypeArray.push(ClearType.fullCombo)
+                    else if ((recordRb3.clearType == 1) || (recordRb3.clearType == 2)) clearTypeArray.push(ClearType.failed)
+                    else (clearTypeArray.push(ClearType.notPlayed))
+
+                    scoreArray.push(recordRb3.score)
+                    comboArray.push(recordRb3.combo)
+                    missCountArray.push(recordRb3.missCount)
+                    arTimes100Array.push(recordRb3.achievementRateTimes100)
+                    playCountArray.push(recordRb3.playCount)
+                    break
 
                 case 5:
                     let midRb5 = getMusicId(musicIdStr, 5)
@@ -141,7 +163,12 @@ export async function findBestMusicRecord(rid: string, musicIdStr: string, chart
         playCount: count(playCountArray),
         winCount: count(winCountArray),
         drawCount: count(drawCountArray),
-        loseCount: count(loseCountArray)
+        loseCount: count(loseCountArray),
+        scoreVersion: scoreArray.indexOf(Math.max(...scoreArray)),
+        comboVersion: comboArray.indexOf(Math.max(...comboArray)),
+        achievementRateVersion: arTimes100Array.indexOf(Math.max(...arTimes100Array)),
+        clearTypeVersion: scoreArray.indexOf(Math.max(...clearTypeArray)),
+        missCountVersion: scoreArray.indexOf(Math.max(...missCountArray))
     }
 }
 

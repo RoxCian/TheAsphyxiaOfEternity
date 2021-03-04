@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { appendMappingElement, BigIntProxy, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
 import { IRb6JustCollection, Rb6JustCollectionMap } from "./just_collection"
 import { IRb6ClasscheckRecord, Rb6ClasscheckRecordMap } from "./classcheck_record"
 import { Rb6CharacterCardMap, IRb6CharacterCard } from "./character_card"
@@ -17,7 +17,7 @@ export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> 
     lid: string
     intrvld: number
     succeed: boolean
-    pst: bigint
+    pst: bigint | BigIntProxy
     wmode: number
     gmode: number
     version: number
@@ -27,7 +27,7 @@ export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> 
     isFirstFree: boolean
     pay: number
     payPc: number
-    st: bigint
+    st: bigint | BigIntProxy
     opc: number
     lpc: number
     cpc: number
@@ -207,8 +207,8 @@ export interface IRb6PlayerConfig extends ICollection<"rb.rb6.player.config"> {
     defaultMusicId: number // "s16"
     defaultNoteGrade: number // "u8"
     sortType: number // "u8"
-    randomEntryWork: bigint
-    customFolderWork: bigint
+    randomEntryWork: bigint | BigIntProxy
+    customFolderWork: bigint | BigIntProxy
     folderType: number // "u8"
     isTweet: boolean
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />

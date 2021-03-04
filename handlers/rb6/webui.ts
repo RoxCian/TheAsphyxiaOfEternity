@@ -66,24 +66,24 @@ export namespace Rb6HandlersWebUI {
                 rb6Base = await importAsphyxia(rb6Base, p, s, data.refid)
             }
 
-            const mapCharacters = (s: string) => {
-                let patternLc = /[a-z]/
-                let patternUc = /[A-Z]/
-                let patternNum = /[0-9]/
-                let resultCharCodes: number[] = []
-                for (let i = 0; i < s.length; i++) {
-                    let c = s[i]
-                    let cc = s.charCodeAt(i)
-                    if (patternUc.test(c)) resultCharCodes.push(cc - "A".charCodeAt(0) + 65313)
-                    else if (patternLc.test(c)) resultCharCodes.push(cc - "a".charCodeAt(0) + 65345)
-                    else if (patternNum.test(c)) resultCharCodes.push(cc - "0".charCodeAt(0) + 65296)
-                    else if (c == " ") resultCharCodes.push(12288)
-                    else resultCharCodes.push(cc)
-                }
-                return String.fromCharCode(...resultCharCodes)
-            }
+            // const mapCharacters = (s: string) => {
+            //     let patternLc = /[a-z]/
+            //     let patternUc = /[A-Z]/
+            //     let patternNum = /[0-9]/
+            //     let resultCharCodes: number[] = []
+            //     for (let i = 0; i < s.length; i++) {
+            //         let c = s[i]
+            //         let cc = s.charCodeAt(i)
+            //         if (patternUc.test(c)) resultCharCodes.push(cc - "A".charCodeAt(0) + 65313)
+            //         else if (patternLc.test(c)) resultCharCodes.push(cc - "a".charCodeAt(0) + 65345)
+            //         else if (patternNum.test(c)) resultCharCodes.push(cc - "0".charCodeAt(0) + 65296)
+            //         else if (c == " ") resultCharCodes.push(12288)
+            //         else resultCharCodes.push(cc)
+            //     }
+            //     return String.fromCharCode(...resultCharCodes)
+            // }
 
-            rb6Base.name = mapCharacters(data.name.trim())
+            rb6Base.name = data.name.trim()
             rb6Base.comment = data.comment
             // Customize page 1
             rb6Custom.stageClearGaugeType = data.gaugeType

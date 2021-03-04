@@ -4,7 +4,7 @@ export type KArrayType = KNumberType | KBigIntType
 export type KGroupType = KNumberGroupType | KBigIntGroupType
 export type KType = KArrayType | KGroupType | "str" | "bin" | "ip4" | "bool"
 export type KTypeExtended = KType | null | "kignore"
-export type TypeForKItem = number | string | bigint | boolean | Buffer | number[] | bigint[] | boolean[] | BufferArray | NumberGroup<number[] | bigint[]>
+export type TypeForKItem = number | string | bigint | BigIntProxy | boolean | Buffer | number[] | bigint[] | boolean[] | BufferArray | NumberGroup<number[] | bigint[]>
 export type TypeForKObject<T> = T extends TypeForKItem ? never : T
 export type TypeForKArray = number[] | bigint[] | BufferArray
 
@@ -15,7 +15,7 @@ export type KKey<T> = keyof T & (
     T extends number[] | bigint[] ? Exclude<keyof T, (keyof number[]) | (keyof bigint[])> :
     T extends any[] ? Exclude<keyof T, keyof any[]> | number :
     T extends number ? Exclude<keyof T, keyof number> :
-    T extends bigint ? Exclude<keyof T, keyof bigint> :
+    T extends bigint | BigIntProxy ? Exclude<keyof T, keyof bigint> :
     T extends BufferArray ? Exclude<keyof T, keyof BufferArray> :
     T extends NumberGroup<infer TGroup> ? Exclude<keyof T, keyof NumberGroup<TGroup>> :
     keyof T)
@@ -24,7 +24,7 @@ export type KTypeConvert<T extends string | Buffer | number | bigint | boolean |
     T extends string ? "str" :
     T extends Buffer ? "bin" :
     T extends number ? KNumberType | "ip4" | "bool" :
-    T extends bigint ? KBigIntType :
+    T extends bigint | BigIntProxy ? KBigIntType :
     T extends boolean | boolean[] ? "bool" :
     T extends number[] ? KNumberType : // KARRAY 
     T extends bigint[] ? KBigIntType : // KARRAY 
@@ -49,13 +49,38 @@ export type KTypeConvertBack<TKType extends KTypeExtended> =
     TKType extends KBigIntGroupType ? bigint[] :
     unknown
 
-export class NumberGroup<T extends number[] | bigint[] = number[]>  {
-    value: T
-    public constructor(value: T) { this.value = value }
+export type NumberGroup<T extends number[] | bigint[] = number[]> = {
+    "@numberGroupValue": T
 }
-export class BufferArray {
-    value: Buffer
-    public constructor(value: Buffer) { this.value = value }
+export const NumberGroup = <T extends number[] | bigint[] = number[]>(ng: T) => <NumberGroup>{ "@numberGroupValue": ng }
+export function isNumberGroup(value: any): value is NumberGroup {
+    try {
+        return Array.isArray(BigInt(value["@numberGroupValue"]))
+    } catch {
+        return false
+    }
+}
+export type BufferArray = {
+    "@bufferArrayValue": Buffer
+}
+export const BufferArray = (ba: Buffer) => <BufferArray>{ "@bufferArrayValue": ba }
+export function isBufferArray(value: any): value is BufferArray {
+    try {
+        return value["@bufferArrayValue"] instanceof Buffer
+    } catch {
+        return false
+    }
+}
+export type BigIntProxy = {
+    "@serializedBigInt": string
+}
+export const BigIntProxy = (value: bigint) => <BigIntProxy>{ "@serializedBigInt": value.toString() }
+export function isBigIntProxy(value: any): value is BigIntProxy {
+    try {
+        return BigInt(value["@serializedBigInt"]).toString() == value["@serializedBigInt"]
+    } catch {
+        return false
+    }
 }
 
 export type KITEM2<T> = { [K in keyof T]?: K extends KKey<T> ? KITEM2<T[K]> : never } &
@@ -65,7 +90,9 @@ export type KITEM2<T> = { [K in keyof T]?: K extends KKey<T> ? KITEM2<T[K]> : ne
     T extends string | Buffer | boolean | number[] | bigint[] ? T :
     T extends number | bigint ? [T] :
     T extends BufferArray ? Buffer :
-    T extends NumberGroup<infer TGroup> ? TGroup : never
+    T extends NumberGroup<infer TGroup> ? TGroup :
+    T extends BigIntProxy ? [bigint] : never
+
 }
 
 export type KAttrMap2<T> = { [key: string]: string } & {
@@ -96,16 +123,17 @@ export function ITEM2<T>(ktype: KTypeConvert<T>, value: T, attr?: KAttrMap2<T>):
         result["@content"] = <any>(value ? [1] : [0])
     } else if ((ktype == "bin") && value instanceof Buffer) {
         result = <any>K.ITEM("bin", value, result["@attr"])
-    } else if (((ktype == "s8") || (ktype == "u8")) && (value instanceof BufferArray)) {
-        result["@content"] = <any>value.value
+    } else if (((ktype == "s8") || (ktype == "u8")) && isBufferArray(value)) {
+        result["@content"] = <any>value["@bufferArrayValue"].toJSON()
+        result["@attr"].__count = <any>value["@bufferArrayValue"].byteLength
     } else if (isNumericKType(ktype) && !Array.isArray(value)) {
         result["@content"] = <any>[value]
-    } else if (isNumberGroupKType(ktype) && (value instanceof NumberGroup)) {
-        result["@content"] = <any>value.value
-    } else if (value instanceof BufferArray) {
-        result["@content"] = <any>value.value.toJSON()
-        result["@attr"].__count = <any>value.value.byteLength
-    } else {
+    } else if (isNumberGroupKType(ktype) && isNumberGroup(value)) {
+        result["@content"] = <any>value["@numberGroupValue"]
+    } else if (isBigIntProxy(value)) {
+        result["@content"] = <any>BigInt(value["@serializedBigInt"])
+    }
+    else {
         result["@content"] = <any>value
     }
     if (isKIntType(ktype) && Array.isArray(result["@content"])) for (let i = 0; i < result["@content"].length; i++) (<number[]>result["@content"])[i] = Math.trunc(result["@content"][i])
@@ -202,15 +230,17 @@ export function mapKObject<T>(data: T, kMapRecord: KObjectMappingRecord<T>, kAtt
                         target["@content"] = <any>(targetValue ? [1] : [0])
                     } else if ((tt == "bin") && targetValue instanceof Buffer) {
                         target = <any>K.ITEM("bin", targetValue, target["@attr"])
-                    } else if (((tt == "s8") || (tt == "u8")) && (targetValue instanceof BufferArray)) {
-                        target["@content"] = <any>targetValue.value
+                    } else if (((tt == "s8") || (tt == "u8")) && isBufferArray(targetValue)) {
+                        target["@content"] = <any>targetValue["@bufferArrayValue"]
                     } else if (isNumericKType(tt) && !Array.isArray(targetValue)) {
                         target["@content"] = <any>[targetValue]
-                    } else if (isNumberGroupKType(tt) && (targetValue instanceof NumberGroup)) {
-                        target["@content"] = <any>targetValue.value
-                    } else if (targetValue instanceof BufferArray) {
-                        target["@content"] = <any>targetValue.value.toJSON()
-                        target["@attr"].__count = <any>targetValue.value.byteLength
+                    } else if (isNumberGroupKType(tt) && isNumberGroup(targetValue)) {
+                        target["@content"] = <any>targetValue["@numberGroupValue"]
+                    } else if (isBufferArray(targetValue)) {
+                        target["@content"] = <any>targetValue["@bufferArrayValue"].toJSON()
+                        target["@attr"].__count = <any>targetValue["@bufferArrayValue"].byteLength
+                    } else if (isBigIntProxy(targetValue)) {
+                        target["@content"] = <any>BigInt(targetValue["@serializedBigInt"])
                     } else {
                         target["@content"] = <any>targetValue
                     }
@@ -262,15 +292,16 @@ export function mapBackKObject<T extends object>(data: KITEM2<T>, kMapRecord?: K
                 if (targetAttr.__type != null) { // KITEM
                     targetResult = targetValue["@content"]
                     if (isNumberGroupKType(targetAttr.__type)) { // KITEM2<NumberGroup>
-                        targetResult = new NumberGroup(targetResult)
+                        // TODO: bigint number group
+                        targetResult = NumberGroup(targetResult)
                     } else if (targetAttr.__type == "bin") { // KITEM<"bin">
                         targetResult = targetResult
                     } else if ((targetAttr.__type == "s8" || targetAttr.__type == "u8") && (targetResult?.type == "Buffer") && Array.isArray(targetResult?.data)) { // KITEM2<BufferArray>
-                        targetResult = new BufferArray(Buffer.from(<number[]>targetResult.data))
+                        targetResult = BufferArray(Buffer.from(<number[]>targetResult.data))
                     } else if (targetAttr.__type == "bool") { // KITEM<"bool">
                         targetResult = targetResult[0] == 1 ? true : false
                     } else if (Array.isArray(targetResult) && (targetAttr.__count == null) && isNumericKType(targetAttr.__type)) { // KITEM<KNumberType>
-                        targetResult = targetResult[0]
+                        targetResult = ((targetAttr.__type == "s64") || (targetAttr.__type == "u64")) ? BigIntProxy(BigInt(targetResult[0])) : targetResult[0]
                     }
                     result[k] = (targetMap.$convertBack != null) ? targetMap.$convertBack(<any>targetResult) : targetResult
                 } else { // KObject

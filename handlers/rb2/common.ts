@@ -73,6 +73,7 @@ export namespace Rb2HandlersCommon {
                 result = generateRb2Profile(readParam.rid, userId)
                 result.pdata.base.name = "RBPlayer"
             }
+            result.pdata.comment = (base?.comment != "") ? base.comment : "Enjoy limelight world to the last minutes."
         } else {
             let stat: IRb2PlayerStat = await DB.FindOne<IRb2PlayerStat>(readParam.rid, { collection: "rb.rb2.player.stat" })
             let custom: IRb2PlayerCustom = await DB.FindOne<IRb2PlayerCustom>(readParam.rid, { collection: "rb.rb2.player.custom" })
@@ -83,33 +84,9 @@ export namespace Rb2HandlersCommon {
 
             if (base.level > 1) custom.isBeginner = false
 
-            let init = (v, i) => (v == null) ? i : v
             if (base.playCount > 0) custom.isTutorialEnabled = false
-            // if (account.intrvld == null) account.intrvld = 0
-            // if (account.succeed == null) account.succeed = true
-            // if (account.pst == null) account.pst = BigInt(0)
-            // if (account.st == null) account.st = BigInt(0)
-            // if (account.opc == null) account.opc = 0
-            // account.tpc = 1000
-            // if (account.lpc == null) account.lpc = 0
-            // if (account.cpc == null) account.cpc = 0
-            // if (account.mpc == null) account.mpc = 0
-            // if (base.comment == null) base.comment = "Welcome to REFLEC BEAT."
-            // if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            // if (battleRoyale == null) battleRoyale = generateRb5BattleRoyale()
-            // if (myCourse == null) myCourse = generateRb5MyCourseLog()
-            // if (mylist.index < 0) mylist.index = 0
             let scoreMetadatas = await findMusicRecordMetadatas(readParam.rid)
             let scores = await pullMusicRecords(readParam.rid, scoreMetadatas)
-            // base.totalBestScore = 0
-            // base.totalBestScoreEachChartType = [0, 0, 0, 0]
-            // for (let s of scores) {
-            //     base.totalBestScore += s.score
-            //     base.totalBestScoreEachChartType[s.chartType] += s.score
-            // }
-
-            // config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
-            // config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
             result = {
                 rid: readParam.rid,
@@ -118,6 +95,7 @@ export namespace Rb2HandlersCommon {
                 endTime: BigInt(9614498759023),
                 mode: 0,
                 pdata: {
+                    comment: (base?.comment != "") ? base.comment : "Enjoy limelight world to the last minutes.",
                     base: base,
                     stat: stat,
                     custom: custom,

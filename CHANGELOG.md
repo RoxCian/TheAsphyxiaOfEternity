@@ -1,3 +1,11 @@
+- v0.10.0-beta
+
+  Added RB colette support.
+
+  Fixed an issue about saving bigint data.
+
+  Fixed a bug about failed to save classcheck score if you had died on the 1st or the 2nd round.
+
 - v0.9.0-beta
 
   Added webui for RB limelight.

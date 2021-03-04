@@ -226,7 +226,7 @@ export namespace Rb5HandlersCommon {
             if (player.pdata.custom) await DBM.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
             if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
-                (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + player.pdata.stageLogs.log[1]?.score + player.pdata.stageLogs.log[2]?.score
+                (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1].score == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2].score == null ? 0 : player.pdata.stageLogs.log[2].score)
                 await updateClasscheckRecordFromLog(rid, <IRb5PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
             }
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
@@ -430,7 +430,7 @@ export namespace Rb5HandlersCommon {
             isNeedUpdate = true
             classRecord.rank = log.rank
         }
-        if (isInitial || (log.totalScore > classRecord.totalScore)) {
+        if (isInitial || (classRecord.totalScore == null) || (log.totalScore > classRecord.totalScore)) {
             isNeedUpdate = true
             classRecord.totalScore = log.totalScore
         }

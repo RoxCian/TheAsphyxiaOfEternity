@@ -5,6 +5,7 @@ import { IRb2StageLogStandaloneElement, Rb2StageLogStandaloneElementMap } from "
 export interface IRb2PlayerBase extends ICollection<"rb.rb2.player.base"> {
     userId: number
     name: string
+    comment: string
     iconId: number
     level: number
     experience: number
@@ -18,6 +19,7 @@ export const Rb2PlayerBaseMap: KObjectMappingRecord<IRb2PlayerBase> = {
     userId: { $type: "s32", $targetKey: "uid" },
     iconId: { $type: "s16", $targetKey: "icon_id" },
     name: { $type: "str" },
+    comment: { $type: "kignore" },
     level: { $type: "s16", $targetKey: "lv" },
     experience: { $type: "s32", $targetKey: "exp" },
     matchingGrade: { $type: "s16", $targetKey: "mg" },
@@ -31,6 +33,7 @@ export function generateRb2PlayerBase(userId: number): IRb2PlayerBase {
         userId: userId,
         iconId: 0,
         name: "",
+        comment: "",
         level: 0,
         experience: 0,
         matchingGrade: 0,
@@ -396,6 +399,7 @@ export interface IRb2Player {
     endTime: bigint
     mode: number
     pdata: {
+        comment: string
         base: IRb2PlayerBase
         stat: IRb2PlayerStat
         custom: IRb2PlayerCustom
@@ -415,6 +419,7 @@ export const Rb2PlayerMap: KObjectMappingRecord<IRb2Player> = {
     endTime: { $type: "u64", $targetKey: "end_time" },
     mode: { $type: "u8" },
     pdata: {
+        comment: { $type: "str", $targetKey: "cmnt" },
         base: Rb2PlayerBaseMap,
         stat: appendMappingElement(Rb2PlayerStatMap, { $targetKey: "con" }),
         custom: Rb2PlayerCustomMap,
@@ -436,6 +441,7 @@ export function generateRb2Profile(rid: string, userId: number): IRb2Player {
         endTime: BigInt(9614498759023),
         mode: 0,
         pdata: {
+            comment: "",
             base: generateRb2PlayerBase(userId),
             stat: generateRb2PlayerStat(),
             custom: generateRb2PlayerCustom(),

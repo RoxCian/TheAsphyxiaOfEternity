@@ -3,7 +3,7 @@ import { Rb4HandlersCommon } from "./handlers/rb4/common"
 import { Rb5HandlersCommon } from "./handlers/rb5/common"
 import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
-import { Rb1Rb2HandlersDispatcher } from "./handlers/utility/rb1rb2_dispatcher"
+import { Rb1Rb2Rb3HandlersDispatcher } from "./handlers/utility/rb1rb2rb3_dispatcher"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 
 export function register() {
@@ -23,7 +23,7 @@ export function register() {
     routeRb6()
     routeRb5()
     routeRb4()
-    routeRb1Rb2()
+    routeRb1Rb2Rb3()
 
     R.Unhandled()
 }
@@ -63,10 +63,11 @@ function routeRb4() {
     // R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.ReadLobby)
 }
 
-function routeRb1Rb2() {
-    R.Route("pcbinfo.get", Rb1Rb2HandlersDispatcher.DispatchBootPcb)
-    R.Route("player.start", Rb1Rb2HandlersDispatcher.DispatchStartPlayer)
-    R.Route("player.write", Rb1Rb2HandlersDispatcher.DispatchWritePlayer)
-    R.Route("player.read", Rb1Rb2HandlersDispatcher.DispatchReadPlayer)
-    R.Route("log.play", Rb1Rb2HandlersDispatcher.DispatchLogPlayer)
+function routeRb1Rb2Rb3() {
+    R.Route("pcbinfo.get", Rb1Rb2Rb3HandlersDispatcher.DispatchBootPcb)
+    R.Route("player.start", Rb1Rb2Rb3HandlersDispatcher.DispatchStartPlayer)
+    R.Route("player.succeed", Rb1Rb2Rb3HandlersDispatcher.DispatchPlayerSucceeded)
+    R.Route("player.write", Rb1Rb2Rb3HandlersDispatcher.DispatchWritePlayer)
+    R.Route("player.read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadPlayer)
+    R.Route("log.play", Rb1Rb2Rb3HandlersDispatcher.DispatchLogPlayer)
 }
