@@ -383,7 +383,7 @@ export const Rb3PlayerStageLogMap: KObjectMappingRecord<IRb3PlayerStageLog> = {
     rivalMatchingGrade: { $type: "s16", $targetKey: "r_grd" },
     rivalClearGaugeTimes100: { $type: "s16", $targetKey: "r_cl_gauge" },
     rivalAchievementRateTimes100: { $type: "s16", $targetKey: "r_ar" },
-    rivalCpuId: { $type: "s8", $targetKey: "r_cpuid" }, // cpuid: 9/7, music: Velvet Centiment, rival: Cecil Spade; cpuid: 9, music: SPEED BLADE, rival: Francis Club;
+    rivalCpuId: { $type: "s8", $targetKey: "r_cpuid" }, // cpuid: 9/7, music: Velvet Sentiment, rival: Cecil Spade; cpuid: 9, music: SPEED BLADE, rival: Francis Club;
     time: { $type: "s32" },
     decide: { $type: "s8" }
 }

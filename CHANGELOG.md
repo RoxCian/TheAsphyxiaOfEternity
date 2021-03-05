@@ -1,3 +1,11 @@
+- v0.11.0-beta
+
+  Added webui for RB colette.
+
+  Fixed a bug about not saving the clear state in RB colette.
+
+  Corrected the order of RB VOLZZA 2 bywords (manually).
+
 - v0.10.0-beta
 
   Added RB colette support.

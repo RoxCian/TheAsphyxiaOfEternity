@@ -12,7 +12,6 @@ import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateRb2LincleLink, IRb2LincleLink } from "../../models/rb2/profile"
-import { Rb6HandlersCommon } from "../rb6/common"
 
 export namespace Rb3HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -300,7 +299,6 @@ export namespace Rb3HandlersCommon {
             if (player.pdata.stamp != null) await DBM.upsert<IRb3Stamp>(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
         }
-        Rb6HandlersCommon.log(player)
         send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
         // }
         // catch (e) {
@@ -378,6 +376,7 @@ export namespace Rb3HandlersCommon {
                 musicRecord.bestAchievementRateUpdateTime = stageLog.time
                 musicRecord.achievementRateTimes100 = stageLog.achievementRateTimes100
             }
+            if (musicRecord.clearType < stageLog.clearType) musicRecord.clearType = stageLog.clearType
             if (musicRecord.score < stageLog.score) {
                 musicRecord.bestScoreUpdateTime = stageLog.time
                 musicRecord.score = stageLog.score
@@ -402,23 +401,29 @@ export namespace Rb3HandlersCommon {
         if (oldOrder == null) await DBM.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, order)
         else {
             oldOrder.experience = order.experience
-            for (let no of order.details) {
-                let flag = false
-                if ((no.index == 2) && (no.clearedCount == 0)) {
-                    no.clearedCount = 1
-                    no.fragmentsCount0 = 1
-                    no.slot = -1
+            if (order.details != null) {
+                for (let oo of oldOrder.details) {
+                    oo.slot = -1
                 }
-                for (let ooi = 0; ooi < oldOrder.details.length; ooi++) {
-                    let oo = oldOrder.details[ooi]
-                    if (oo.index == no.index) {
-                        flag = true
-                        oldOrder.details[ooi] = no
-                    } else if (oo.slot == no.slot) oo.slot = -1
+                for (let no of order.details) {
+                    let flag = false
+                    if ((no.index == 2) && (no.clearedCount == 0)) {
+                        no.clearedCount = 1
+                        no.fragmentsCount0 = 1
+                        no.slot = -1
+                    }
+                    for (let ooi = 0; ooi < oldOrder.details.length; ooi++) {
+                        let oo = oldOrder.details[ooi]
+                        if (oo.index == no.index) {
+                            flag = true
+                            oldOrder.details[ooi] = no
+                            break
+                        }
+                    }
+                    if (!flag) oldOrder.details.push(no)
                 }
-                if (!flag) oldOrder.details.push(no)
+                await DBM.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, oldOrder)
             }
-            await DBM.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, oldOrder)
         }
     }
 

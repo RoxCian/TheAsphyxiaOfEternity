@@ -426,6 +426,47 @@ function initializeNotificatioAnimation() {
     }
 }
 
+function initializeCheckBox() {
+    let checks = document.querySelectorAll(".checkbox")
+    for (let c of checks) {
+        let input = c.querySelector("input[type=checkbox]")
+        let mark = c.querySelector(".checkmark")
+        let refresh = (value) => {
+            value = input.getAttribute("checked")
+            if (value == null) {
+                input.removeAttribute("checked")
+                mark.style.opacity = 0
+                if (!c.classList.contains("is-light")) c.classList.add("is-light")
+            } else {
+                input.setAttribute("checked", "checked")
+                mark.style.opacity = 100
+                c.classList.remove("is-light")
+            }
+        }
+        c.addEventListener("click", () => {
+            let value = input.getAttribute("checked")
+            if (value == null) input.setAttribute("checked", "checked")
+            else input.removeAttribute("checked")
+            refresh()
+        })
+        refresh()
+    }
+}
+
+function removeLoadingModal() {
+    let loading = document.querySelector(".loading")
+    setTimeout(() => (loading == null) ? null : loading.remove(), 505)
+    try {
+        let a = loading.animate([
+            { offset: 0, opacity: 1 },
+            { offset: 0.5, opacity: 0 },
+            { offset: 1, opacity: 0 }
+        ], { duration: 1000 })
+        a.onfinish = loading.remove
+        a.play()
+    } catch { }
+}
+
 $(document).ready(() => {
     initializeTabs()
     initializeToggles()
@@ -441,5 +482,8 @@ $(document).ready(() => {
     initializePastel()
     initializeMarqueeLabels()
     initializeNotificatioAnimation()
+    initializeCheckBox()
+
+    removeLoadingModal()
 })
 
