@@ -16,3 +16,9 @@ export function toHalfWidth(s: string): string {
     }
     return String.fromCharCode(...resultCharCodes)
 }
+export function isToday(st: bigint): boolean {
+    let now = new Date()
+    let today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    return (st >= (today.valueOf() * 1000)) && (st < (tomorrow.valueOf() * 1000))
+}

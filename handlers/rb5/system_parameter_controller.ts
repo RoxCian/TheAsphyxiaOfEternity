@@ -2,8 +2,14 @@ import { IRb5Player } from "../../models/rb5/profile"
 import { KITEM2 } from "../../utility/mapping"
 import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 0 -> song
-// player.pdata.released.info.type == 6 -> character card
+// player.pdata.released.info.type == 1 -> sfx
+// player.pdata.released.info.type == 2 -> bgm (2: Qrispy)
+// player.pdata.released.info.type == 3 -> frame
+// player.pdata.released.info.type == 4 -> explode fx
+// player.pdata.released.info.type == 5 -> bg
+// player.pdata.released.info.type == 6 -> icon
 // player.pdata.released.info.type == 7 -> byword
+// player.pdata.released.info.type == 8 -> voice chat
 
 export function readPlayerPostTask(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])

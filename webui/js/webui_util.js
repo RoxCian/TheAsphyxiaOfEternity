@@ -426,7 +426,7 @@ function initializeNotificatioAnimation() {
     }
 }
 
-function initializeCheckBox() {
+function initializeCheckBoxes() {
     let checks = document.querySelectorAll(".checkbox")
     for (let c of checks) {
         let input = c.querySelector("input[type=checkbox]")
@@ -459,15 +459,16 @@ function removeLoadingModal() {
     try {
         let a = loading.animate([
             { offset: 0, opacity: 1 },
-            { offset: 0.5, opacity: 0 },
+            { offset: 0.25, opacity: 0 },
             { offset: 1, opacity: 0 }
-        ], { duration: 1000 })
+        ], { duration: 2000 })
         a.onfinish = loading.remove
         a.play()
     } catch { }
 }
 
 $(document).ready(() => {
+    initializeNotificatioAnimation()
     initializeTabs()
     initializeToggles()
     initializeModals()
@@ -481,8 +482,7 @@ $(document).ready(() => {
     checkImg()
     initializePastel()
     initializeMarqueeLabels()
-    initializeNotificatioAnimation()
-    initializeCheckBox()
+    initializeCheckBoxes()
 
     removeLoadingModal()
 })

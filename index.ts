@@ -1,9 +1,9 @@
-import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
+import { Rb1Rb2Rb3HandlersDispatcher } from "./handlers/utility/rb1rb2rb3_dispatcher"
 import { Rb4HandlersCommon } from "./handlers/rb4/common"
 import { Rb5HandlersCommon } from "./handlers/rb5/common"
 import { Rb6HandlersCommon } from "./handlers/rb6/common"
+import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
-import { Rb1Rb2Rb3HandlersDispatcher } from "./handlers/utility/rb1rb2rb3_dispatcher"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 
 export function register() {
@@ -49,7 +49,8 @@ function routeRb5() {
     R.Route("player.rb5_player_read_score_old_5", Rb5HandlersCommon.ReadPlayerScoreOldVersion)
     R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer)
     R.Route("lobby.rb5_lobby_read", Rb5HandlersCommon.ReadLobby)
-    R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.ReadLobby)
+    R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.AddLobby)
+    R.Route("lobby.rb5_lobby_delete", Rb5HandlersCommon.DeleteLobby)
 }
 
 function routeRb4() {
@@ -70,4 +71,7 @@ function routeRb1Rb2Rb3() {
     R.Route("player.write", Rb1Rb2Rb3HandlersDispatcher.DispatchWritePlayer)
     R.Route("player.read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadPlayer)
     R.Route("log.play", Rb1Rb2Rb3HandlersDispatcher.DispatchLogPlayer)
+    R.Route("lobby.entry", Rb1Rb2Rb3HandlersDispatcher.DispatchAddLobby)
+    R.Route("lobby.read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadLobby)
+    R.Route("lobby.delete", Rb1Rb2Rb3HandlersDispatcher.DispatchDeleteLobby)
 }

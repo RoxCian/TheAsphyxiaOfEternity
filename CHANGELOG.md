@@ -1,3 +1,17 @@
+- v0.11.1-beta
+
+  Now all the non-breaking changes will keep compatible for 5 minor versions at least.
+
+  Fixed event progress saving for RB colette.
+
+  Added lobby feature for RB colette/RB VOLZZA, you can write comment in RB colette and play Reftis in RB VOLZZA 2 now, maybe you can matching also(not tested).
+
+  Fixed some webui issues.
+
+  Database entry/data structure changes:
+    - dpc -> playCountToday (RB colette, compatible)
+    - tdc -> dayCount (RB colette, compatible)
+
 - v0.11.0-beta
 
   Added webui for RB colette.
@@ -56,7 +70,7 @@
 
   Database entry changes
     - justReflectCount -> justReflecCount (again, breaking change)
-    - averagePrecisionTimes100 -> abilityPointTimes100
+    - averagePrecisionTimes100 -> abilityPointTimes100 (compatible)
 
 - v0.4.0-beta
 

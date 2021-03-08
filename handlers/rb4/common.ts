@@ -10,7 +10,7 @@ import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
 import { DBM } from "../../utility/db_manager"
-import { generateKRb5LobbyController } from "../../models/rb5/lobby_entry_controller"
+import { generateKRb5LobbyController } from "../../models/rb5/lobby"
 
 export namespace Rb4HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {

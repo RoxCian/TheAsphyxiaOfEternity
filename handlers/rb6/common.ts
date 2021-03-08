@@ -351,7 +351,6 @@ export namespace Rb6HandlersCommon {
             musicRecord.combo = stageLog.combo
             musicRecord.missCount = stageLog.missCount
             musicRecord.param = stageLog.param
-            musicRecord.time = stageLog.time
             musicRecord.justCollectionRateTimes100Red = (stageLog.color == 0) ? stageLog.justCollectionRateTimes100 : null
             musicRecord.justCollectionRateTimes100Blue = (stageLog.color == 1) ? stageLog.justCollectionRateTimes100 : null
             musicRecord.bestScoreUpdateTime = stageLog.time
@@ -387,6 +386,7 @@ export namespace Rb6HandlersCommon {
             }
         }
 
+        musicRecord.time = stageLog.time
         musicRecord.playCount++
         await DBM.upsert(rid, query, musicRecord)
         await DBM.insert(rid, stageLog)

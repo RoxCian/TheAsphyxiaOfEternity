@@ -37,4 +37,20 @@ export namespace Rb1Rb2Rb3HandlersDispatcher {
         else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.PlayerSucceeded(info, data, send)
         else send.deny()
     }
+    export const DispatchAddLobby: EPR = async (info, data, send) => {
+        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
+        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.AddLobby(info, data, send)
+        else send.deny()
+    }
+    export const DispatchReadLobby: EPR = async (info, data, send) => {
+        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
+        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.ReadLobby(info, data, send)
+        else send.deny()
+    }
+    export const DispatchDeleteLobby: EPR = async (info, data, send) => {
+
+        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
+        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.DeleteLobby(info, data, send)
+        else send.deny()
+    }
 }

@@ -5,11 +5,11 @@ import { generateRb5MusicRecord, IRb5MusicRecord, Rb5MusicRecordMap } from "../.
 import { IRb5Mylist } from "../../models/rb5/mylist"
 import { generateRb5BattleRoyale, generateRb5MyCourseLog, IRb5BattleRoyale, IRb5Derby, IRb5Minigame, IRb5MyCourseLog, IRb5Player, IRb5PlayerAccount, IRb5PlayerBase, IRb5PlayerClasscheckLog, IRb5PlayerConfig, IRb5PlayerCustom, IRb5PlayerParameters, IRb5PlayerReleasedInfo, IRb5PlayerStageLog, Rb5PlayerReadMap, Rb5PlayerWriteMap } from "../../models/rb5/profile"
 import { KRb5ShopInfo } from "../../models/rb5/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { DBM } from "../../utility/db_manager"
-import { generateKRb5LobbyController } from "../../models/rb5/lobby_entry_controller"
+import { generateRb5LobbyEntry, IRb5LobbyEntry, IRb5LobbyEntryElement, Rb5LobbyEntryMap } from "../../models/rb5/lobby"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
@@ -245,11 +245,55 @@ export namespace Rb5HandlersCommon {
         // }
     }
 
-    export const ReadLobby: EPR = async (info: EamuseInfo, data: any, send: EamuseSend) => {
-        let l: any
-        l = generateKRb5LobbyController()
-        l.e = data.e
-        send.object(l)
+    export const AddLobby: EPR = async (req, data, send) => {
+        let readParam = mapBackKObject(data, Rb5LobbyEntryMap)[0]
+        let result = await generateRb5LobbyEntry(readParam.entry[0])
+        await DBM.upsert<IRb5LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb5.temporary.lobbyEntry" }, result.entry[0])
+        send.object(mapKObject(result, Rb5LobbyEntryMap))
+    }
+    export const ReadLobby: EPR = async (req, data, send) => {
+        let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
+        let result: IRb5LobbyEntry
+        let flag = false
+        for (let i = 0; i <= 12; i++) {
+            setTimeout(async () => {
+                if (flag) return
+                result = await readLobbyEntity(readParam)
+                if (!flag && (result.entry.length >= readParam.maxRivalCount)) {
+                    flag = true
+                    returnLobby(result, send)
+                }
+            }, 500 * i)
+        }
+    }
+    async function returnLobby(result: IRb5LobbyEntry, send: EamuseSend) {
+        send.object(mapKObject(result, Rb5LobbyEntryMap))
+    }
+    async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb5LobbyEntry> {
+        let result = await generateRb5LobbyEntry()
+        let lobbies: IRb5LobbyEntryElement[] = await DB.Find<IRb5LobbyEntryElement>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb5.temporary.lobbyEntry" }] })
+        result.entry = lobbies.slice(0, param.maxRivalCount)
+        return result
+    }
+    export const DeleteLobby: EPR = async (req, data, send) => {
+        let entryId = $(data).number("eid")
+        await DBM.remove<IRb5LobbyEntryElement>(null, { collection: "rb.rb5.temporary.lobbyEntry", entryId: entryId })
+    }
+    type ReadLobbyParam = {
+        userId: number
+        matchingGrade: number
+        lobbyId: string
+        maxRivalCount: number
+        friend: number[]
+        version: number
+    }
+    const ReadLobbyParamMap: KObjectMappingRecord<ReadLobbyParam> = {
+        userId: s32me("uid"),
+        matchingGrade: u8me("m_grade"),
+        lobbyId: strme("lid"),
+        maxRivalCount: s32me("max"),
+        friend: s32me(),
+        version: u8me("var")
     }
 
     export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
@@ -382,7 +426,6 @@ export namespace Rb5HandlersCommon {
             musicRecord.score = stageLog.score
             musicRecord.missCount = stageLog.missCount
             musicRecord.param = stageLog.param
-            musicRecord.time = stageLog.time
             musicRecord.bestScoreUpdateTime = stageLog.time
             musicRecord.bestMissCountUpdateTime = stageLog.time
             musicRecord.bestAchievementRateUpdateTime = stageLog.time
@@ -406,6 +449,7 @@ export namespace Rb5HandlersCommon {
             }
         }
 
+        musicRecord.time = stageLog.time
         musicRecord.playCount++
         await DBM.upsert(rid, query, musicRecord)
         await DBM.insert(rid, stageLog)
