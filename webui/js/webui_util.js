@@ -391,7 +391,7 @@ function initializeMarqueeLabels() {
                     { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.9 },
                     { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", offset: 1 }
                 ],
-                    { duration: Math.max(20 * (marquee.offsetWidth - marquee.parentElement.offsetWidth), 2000), direction: "alternate-reverse", iterations: Infinity })
+                    { duration: 20 * (marquee.offsetWidth - marquee.parentElement.offsetWidth) + 1000, direction: "alternate-reverse", iterations: Infinity })
             } else marquee.style.animation = "none"
         }
         let o = new ResizeObserver(refresh)

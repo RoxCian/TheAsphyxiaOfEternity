@@ -1,3 +1,21 @@
+- v0.11.11-beta
+
+  Fixed bugs for RB Reflesia just collection, now the just collection rate on each color can be saved correctly and the data size of just collection entries are reduced dramatically.
+
+  Fixed the data export feature on webui for RB1/RB Reflesia.
+
+  Fixed a bug about not save dungeon quest flag for RB Reflesia.
+
+  Fixed a bug about error while save class check mode for RB Reflesia/RB VOLZZA.
+
+  Now Class 零 and 極 in class check mode of RB Reflesia can be played.
+
+  Added all subjugation quests for RB Reflesia.
+
+  Database entry/data structure changes:
+    - blueData (RB Reflesia, removed from database, compatible)
+    - blueDattaArray -> blueDataBase64 (RB Reflesia, compatible)
+
 - v0.11.1-beta
 
   Now all the non-breaking changes will keep compatible for 5 minor versions at least.

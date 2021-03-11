@@ -9,6 +9,8 @@ export interface IRb6JustCollection extends ICollection<"rb.rb6.playData.justCol
     redData?: Buffer
     blueDataArray?: number[]
     redDataArray?: number[]
+    blueDataBase64?: string
+    redDataBase64?: string
 }
 export const Rb6JustCollectionMap: KObjectMappingRecord<IRb6JustCollection> = {
     collection: getCollectionMappingElement<IRb6JustCollection>("rb.rb6.playData.justCollection#userId"),
@@ -18,7 +20,9 @@ export const Rb6JustCollectionMap: KObjectMappingRecord<IRb6JustCollection> = {
     blueData: { $type: "bin", $targetKey: "item_blue_data_bin" },
     redData: { $type: "bin", $targetKey: "item_red_data_bin" },
     blueDataArray: { $type: "kignore" },
-    redDataArray: { $type: "kignore" }
+    redDataArray: { $type: "kignore" },
+    blueDataBase64: { $type: "kignore" },
+    redDataBase64: { $type: "kignore" }
 }
 
 export interface IRb6ReadJustCollection {

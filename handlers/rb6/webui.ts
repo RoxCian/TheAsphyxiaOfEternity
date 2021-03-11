@@ -5,7 +5,7 @@ import { generateRb6MusicRecord, IRb6MusicRecord } from "../../models/rb6/music_
 import { IRb6Mylist } from "../../models/rb6/mylist"
 import { IRb6PlayerBase, IRb6PlayerConfig, IRb6PlayerCustom } from "../../models/rb6/profile"
 import { WebUIMessageType } from "../../models/utility/webui_message"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 import { Rb6HandlersCommon } from "./common"
 import { operateDataInternal } from "./data"
@@ -62,7 +62,6 @@ export namespace Rb6HandlersWebUI {
                 let p = checkData(data.asphyxiaProfileTextToImport)
                 let s = checkData(data.asphyxiaScoresTextToImport)
 
-                Rb6HandlersCommon.log((<any>p).pastelExp)
                 rb6Base = await importAsphyxia(rb6Base, p, s, data.refid)
             }
 

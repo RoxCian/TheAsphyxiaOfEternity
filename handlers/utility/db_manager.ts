@@ -1,4 +1,4 @@
-import { ICollection } from "../models/utility/definitions"
+import { ICollection } from "../../models/utility/definitions"
 
 export namespace DBM {
     export interface IDBCollectionName extends ICollection<"dbManager.collectionName"> {

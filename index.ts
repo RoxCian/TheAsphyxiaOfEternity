@@ -5,6 +5,7 @@ import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
+import { initialize } from "./handlers/utility/initialize"
 
 export function register() {
     R.GameCode("KBR")
@@ -13,8 +14,8 @@ export function register() {
 
     R.Contributor("Rox Cian", "https://github.com/RoxCian")
 
-    R.Config("unlock_all_songs", { type: "boolean", default: false });
-    R.Config("unlock_all_character_cards", { type: "boolean", default: false });
+    R.Config("unlock_all_songs", { type: "boolean", default: false })
+    R.Config("unlock_all_character_cards", { type: "boolean", default: false })
 
     R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
     R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
@@ -26,6 +27,8 @@ export function register() {
     routeRb1Rb2Rb3()
 
     R.Unhandled()
+
+    initialize()
 }
 
 function routeRb6() {
@@ -38,6 +41,9 @@ function routeRb6() {
     R.Route("player.rb6_player_delete", Rb6HandlersCommon.DeletePlayer)
     R.Route("player.rb6_player_read_score", Rb6HandlersCommon.ReadPlayerScore)
     R.Route("player.rb6_player_read_jc", Rb6HandlersCommon.ReadPlayerJustCollections)
+    R.Route("lobby.rb6_lobby_read", Rb6HandlersCommon.ReadLobby)
+    R.Route("lobby.rb6_lobby_entry", Rb6HandlersCommon.AddLobby)
+    R.Route("lobby.rb6_lobby_delete", Rb6HandlersCommon.DeleteLobby)
     R.Route("eventlog.write", true)
 }
 

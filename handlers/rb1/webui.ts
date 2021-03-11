@@ -1,6 +1,6 @@
 import { IRb1PlayerBase, IRb1PlayerCustom } from "../../models/rb1/profile"
 import { WebUIMessageType } from "../../models/utility/webui_message"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 
 export namespace Rb1HandlersWebUI {

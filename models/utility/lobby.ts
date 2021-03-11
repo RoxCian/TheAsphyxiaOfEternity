@@ -73,7 +73,7 @@ export function getRbLobbyEntryMap<T extends number>(forVersion: T): KObjectMapp
         entry: { 0: getRbLobbyEntryElementMap(forVersion), $targetKey: "e" }
     }
 }
-export async function generateRb5LobbyEntry<T extends number>(forVersion: T, readParam?: IRbLobbyEntryElement<T>): Promise<IRbLobbyEntry<T>> {
+export async function generateRbLobbyEntry<T extends number>(forVersion: T, readParam?: IRbLobbyEntryElement<T>): Promise<IRbLobbyEntry<T>> {
     return {
         interval: 6000,
         intervalP: 6000,

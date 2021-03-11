@@ -3,7 +3,7 @@ import { getExampleEventControl, Rb5EventControlMap } from "../../models/rb5/eve
 import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { generateRb1MusicRecord, generateRb1Profile, IRb1MusicRecord, IRb1Player, IRb1PlayerBase, IRb1PlayerCustom, IRb1PlayerReleasedInfo, IRb1PlayerStat, IRb1StageLog, Rb1PlayerMap } from "../../models/rb1/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb1StageLogStandalone, IRb1StageLogStandaloneElement, Rb1StageLogStandaloneMap } from "../../models/rb1/stage_log_standalone"

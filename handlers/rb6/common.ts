@@ -1,6 +1,6 @@
 import { generateRb6CharactorCard, IRb6CharacterCard } from "../../models/rb6/character_card"
 import { generateRb6ClasscheckRecord, IRb6ClasscheckRecord } from "../../models/rb6/classcheck_record"
-import { getExampleCourse, Rb6CourseMap } from "../../models/rb6/course"
+import { getExampleCourse, Rb6QuestMap } from "../../models/rb6/course"
 import { getExampleEventControl, Rb6EventControlMap } from "../../models/rb6/event_control"
 import { initializePlayer } from "./initialize_player"
 import { IRb6JustCollection, IRb6ReadJustCollection, Rb6ReadJustCollectionMap } from "../../models/rb6/just_collection"
@@ -8,11 +8,13 @@ import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMap } from "../.
 import { IRb6Mylist } from "../../models/rb6/mylist"
 import { generateRb6PlayerConfig, generateRb6PlayerCustom, generateRb6Profile, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6PlayerReadMap, Rb6PlayerWriteMap } from "../../models/rb6/profile"
 import { KRb6ShopInfo } from "../../models/rb6/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { operateDataInternal } from "./data"
 import { tryFindPlayer } from "../utility/try_find_player"
+import { base64ToBuffer, bufferToBase64 } from "../../utility/utility_functions"
+import { Rb6LobbyEntryMap, generateRb6LobbyEntry, IRb6LobbyEntryElement, IRb6LobbyEntry } from "../../models/rb6/lobby"
 
 export namespace Rb6HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -31,6 +33,8 @@ export namespace Rb6HandlersCommon {
     }
 
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
+        // await Rb6HandlersCommon.bat()
+
         let result = {
             plyid: 0,
             start_time: BigInt(0),
@@ -49,7 +53,7 @@ export namespace Rb6HandlersCommon {
             plyid: { $type: <"s32">"s32" },
             start_time: { $type: <"u64">"u64" },
             event_ctrl: {
-                data: Rb6EventControlMap
+                data: { 0: Rb6EventControlMap }
             },
             item_lock_ctrl: {
                 data: {
@@ -59,7 +63,7 @@ export namespace Rb6HandlersCommon {
                 }
             },
             quest_ctrl: {
-                data: Rb6CourseMap
+                data: { 0: Rb6QuestMap }
             }
         }
         send.object(mapKObject(result, map))
@@ -183,20 +187,6 @@ export namespace Rb6HandlersCommon {
         send.object(k)
     }
 
-    export async function log(data: any, file?: string) {
-        if (file == null) file = "./rb6log.txt"
-        let s = IO.Exists(file) ? await IO.ReadFile(file, "") : ""
-        if (typeof data == "string") s += data + "\n"
-        else {
-            let n = ""
-            try {
-                n = JSON.stringify(data)
-            } catch { }
-            s += n + "\n"
-        }
-        await IO.WriteFile(file, s)
-    }
-
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
         try {
             let rid = data.rid["@content"]
@@ -252,7 +242,7 @@ export namespace Rb6HandlersCommon {
             if (player.pdata.config) await DBM.upsert<IRb6PlayerConfig>(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
             if (player.pdata.custom) await DBM.upsert<IRb6PlayerCustom>(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
             if ((<IRb6PlayerClasscheckLog>player.pdata.classcheck)?.class) {
-                (player.pdata.classcheck as IRb6PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1].score == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2].score == null ? 0 : player.pdata.stageLogs.log[2].score)
+                (player.pdata.classcheck as IRb6PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1] == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2] == null ? 0 : player.pdata.stageLogs.log[2].score)
                 await updateClasscheckRecordFromLog(rid, <IRb6PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
             }
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
@@ -298,11 +288,102 @@ export namespace Rb6HandlersCommon {
         let result = <IRb6ReadJustCollection>{}
         if (element == null) result.list = { musicId: param.musicId, chartType: param.chartType }
         else {
-            if (element.blueDataArray != null) result.blueData = Buffer.from(element.blueDataArray)
-            if (element.redDataArray != null) result.redData = Buffer.from(element.redDataArray)
-            log(element)
+            if (element.blueDataBase64 != null) result.blueData = base64ToBuffer(element.blueDataBase64, 10240)
+            if (element.redDataBase64 != null) result.redData = base64ToBuffer(element.redDataBase64, 10240)
         }
         send.object(mapKObject({ justcollection: result }, { justcollection: Rb6ReadJustCollectionMap }))
+    }
+
+    // Waiting for template literal types support.
+
+    // export const AddLobby: EPR = async (req, data, send) => {
+    //     let readParam = mapBackKObject(data, getRbLobbyEntryMap<6>(6))[0]
+    //     let result = await generateRbLobbyEntry<6>(6, readParam.entry[0])
+    //     await DBM.upsert<IRbLobbyEntryElement<6>>(null, { userId: result.entry[0].userId, collection: "rb.rb6.temporary.lobbyEntry" }, result.entry[0])
+    //     send.object(mapKObject(result, getRbLobbyEntryMap<6>(6)))
+    // }
+    // export const ReadLobby: EPR = async (req, data, send) => {
+    //     let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
+    //     let result: IRbLobbyEntry<6>
+    //     let flag = false
+    //     for (let i = 0; i <= 12; i++) {
+    //         setTimeout(async () => {
+    //             if (flag) return
+    //             result = await readLobbyEntity(readParam)
+    //             if (!flag && (result.entry.length >= readParam.maxRivalCount)) {
+    //                 flag = true
+    //                 returnLobby(result, send)
+    //             }
+    //         }, 500 * i)
+    //     }
+    // }
+    // async function returnLobby(result: IRbLobbyEntry<6>, send: EamuseSend) {
+    //     send.object(mapKObject(result, getRbLobbyEntryMap<6>(6)))
+    // }
+    // async function readLobbyEntity(param: ReadLobbyParam): Promise<IRbLobbyEntry<6>> {
+    //     let result = await generateRbLobbyEntry<6>(6)
+    //     let lobbies: IRbLobbyEntryElement<6>[] = await DB.Find<IRbLobbyEntryElement<6>>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb6.temporary.lobbyEntry" }] })
+    //     result.entry = lobbies.slice(0, param.maxRivalCount)
+    //     return result
+    // }
+    // export const DeleteLobby: EPR = async (req, data, send) => {
+    //     let entryId = $(data).number("eid")
+    //     await DBM.remove<IRbLobbyEntryElement<6>>(null, { collection: "rb.rb6.temporary.lobbyEntry", entryId: entryId })
+    // }
+    let lobbyPendingMap = new Map<number, { send: EamuseSend, obj: KITEM2<IRb6LobbyEntry> }>()
+    export const AddLobby: EPR = async (req, data, send) => {
+        let readParam = mapBackKObject(data, Rb6LobbyEntryMap)[0]
+        let result = await generateRb6LobbyEntry(readParam.entry[0])
+        await DBM.upsert<IRb6LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb6.temporary.lobbyEntry" }, result.entry[0])
+        lobbyPendingMap.set(readParam.entry[0].userId, { send: send, obj: mapKObject(result, Rb6LobbyEntryMap) })
+        setTimeout(() => {
+            if (lobbyPendingMap.has(readParam.entry[0].userId)) {
+                let l = lobbyPendingMap.get(readParam.entry[0].userId)
+                l.send.object(l.obj)
+                lobbyPendingMap.delete(readParam.entry[0].userId)
+            }
+        }, 24000)
+    }
+    export const ReadLobby: EPR = async (req, data, send) => {
+        let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
+        if (lobbyPendingMap.has(readParam.userId)) {
+            let l = lobbyPendingMap.get(readParam.userId)
+            l.send.object(l.obj)
+            lobbyPendingMap.delete(readParam.userId)
+        }
+        let result: IRb6LobbyEntry
+        result = await readLobbyEntity(readParam)
+        returnLobby(result, send)
+    }
+    async function returnLobby(result: IRb6LobbyEntry, send: EamuseSend) {
+        send.object(mapKObject(result, Rb6LobbyEntryMap))
+    }
+    async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb6LobbyEntry> {
+        let result = await generateRb6LobbyEntry()
+        let lobbies: IRb6LobbyEntryElement[] = await DB.Find<IRb6LobbyEntryElement>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb6.temporary.lobbyEntry" }] })
+        result.entry = lobbies.slice(0, param.maxRivalCount)
+        return result
+    }
+    export const DeleteLobby: EPR = async (req, data, send) => {
+        let entryId = $(data).number("eid")
+        await DBM.remove<IRb6LobbyEntryElement>(null, { collection: "rb.rb6.temporary.lobbyEntry", entryId: entryId })
+    }
+
+    type ReadLobbyParam = {
+        userId: number
+        matchingGrade: number
+        lobbyId: string
+        maxRivalCount: number
+        friend: number[]
+        version: number
+    }
+    const ReadLobbyParamMap: KObjectMappingRecord<ReadLobbyParam> = {
+        userId: s32me("uid"),
+        matchingGrade: u8me("m_grade"),
+        lobbyId: strme("lid"),
+        maxRivalCount: s32me("max"),
+        friend: s32me(),
+        version: u8me("var")
     }
 
     export const WriteComment: EPR = async (req, data, send) => {
@@ -378,10 +459,10 @@ export namespace Rb6HandlersCommon {
                 musicRecord.bestMissCountUpdateTime = stageLog.time
                 musicRecord.missCount = stageLog.missCount
             }
-            if ((stageLog.color = 0) && (musicRecord.justCollectionRateTimes100Red < stageLog.justCollectionRateTimes100)) { // just collectioin red
+            if ((stageLog.color == 0) && (musicRecord.justCollectionRateTimes100Red < stageLog.justCollectionRateTimes100)) { // just collectioin red
                 musicRecord.justCollectionRateTimes100Red = stageLog.justCollectionRateTimes100
             }
-            if ((stageLog.color = 1) && (musicRecord.justCollectionRateTimes100Blue < stageLog.justCollectionRateTimes100)) { // just collectioin blue
+            if ((stageLog.color == 1) && (musicRecord.justCollectionRateTimes100Blue < stageLog.justCollectionRateTimes100)) { // just collectioin blue
                 musicRecord.justCollectionRateTimes100Blue = stageLog.justCollectionRateTimes100
             }
         }
@@ -432,12 +513,12 @@ export namespace Rb6HandlersCommon {
         if (old == null) {
             old = justColElement
         }
-        if (justColElement.redData != null) {
-            old.redDataArray = justColElement.redData.toJSON().data
-        }
-        if (justColElement.blueData != null) {
-            old.blueDataArray = justColElement.blueData.toJSON().data
-        }
+
+        if (justColElement.redData != null) old.redDataBase64 = bufferToBase64(justColElement.redData)
+        delete old.redData
+        if (justColElement.blueData != null) old.blueDataBase64 = bufferToBase64(justColElement.blueData)
+        delete old.blueData
+
         await DBM.upsert(null, query, old)
     }
 

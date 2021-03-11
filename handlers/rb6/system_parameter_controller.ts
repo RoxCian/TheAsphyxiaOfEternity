@@ -4,6 +4,7 @@ import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 0 -> song
 // player.pdata.released.info.type == 6 -> character card
 // player.pdata.released.info.type == 7 -> byword
+// player.pdata.released.info.type == 13 -> music fragment
 
 export function readPlayerPostTask(player: KITEM2<IRb6Player>): KITEM2<IRb6Player> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])

@@ -231,23 +231,23 @@
     //- rb6JustCollection: DB.Find({ collection: "rb.rb6.playData.justCollection#userId })
 
     let result = [rb6Account, rb6Base, rb6Config, rb6Custom, rb6Mylist]
-    for (let a of [rb6Classcheck, rb6MusicRecords, rb6ReleasedInfo]) result.concat(...a)
+    for (let a of [rb6Classcheck, rb6MusicRecords, rb6ReleasedInfo, rb6StageLog]) result = result.concat(a)
     for (let j of rb6JustCollection) if (j.userId == rb6Account.userId) result.push(j)
     return Buffer.from(JSON.stringify(result)).toString("base64")
   }
   function getRb3SaveData() {
     let result = [rb3Account, rb3Base, rb3Config, rb3Custom, rb3Mylist, rb3TricolettePark, rb3Stamp, rb3Order]
-    for (let a of [rb2MusicRecords, rb2ReleasedInfo, rb2StageLog, rb3EventProgress, rb3Equip, rb3SeedPod]) result.concat(...a)
+    for (let a of [rb3MusicRecords, rb3ReleasedInfo, rb3StageLog, rb3EventProgress, rb3Equip, rb3SeedPod]) result = result.concat(a)
     return Buffer.from(JSON.stringify(result)).toString("base64")
   }
   function getRb2SaveData() {
     let result = [rb2Base, rb2Custom, rb2Mylist]
-    for (let a of [rb2MusicRecords, rb2ReleasedInfo, rb2StageLog]) result.concat(...a)
+    for (let a of [rb2MusicRecords, rb2ReleasedInfo, rb2StageLog]) result = result.concat(a)
     return Buffer.from(JSON.stringify(result)).toString("base64")
   }
   function getRb1SaveData() {
     let result = [rb1Base, rb1Custom]
-    for (let a of [rb1MusicRecords, rb1ReleasedInfo, rb1StageLog]) result.concat(...a)
+    for (let a of [rb1MusicRecords, rb1ReleasedInfo, rb1StageLog]) result = result.concat(a)
     return Buffer.from(JSON.stringify(result)).toString("base64")
   }
 
@@ -1264,7 +1264,7 @@ div
                                                 .level-item 
                                                   p.is-size-7 Round 
                                                 .level-item 
-                                                  p.is-size-5(style = "margin-right: 16px") #{(s.stageIndex == 0) ? "1st" : (s.stageIndex == 1) ? "2nd" : (s.stageIndex == 2) ? "3rd" : "Final"}
+                                                  p.is-size-5(style = "margin-right: 16px") #{(s.stageIndex == 0) ? "1st" : (s.stageIndex == 1) ? "2nd" : (s.stageIndex == 2) ? "3rd" : (s.stageIndex == 3) ? "Final" : "Extra"}
                                           .tile.is-child.box
                                             .columns.is-mobile 
                                               .column.is-narrow

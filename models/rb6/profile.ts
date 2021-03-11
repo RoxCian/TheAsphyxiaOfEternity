@@ -483,7 +483,7 @@ export const Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
     dungeonGrade: { $type: "s8", $targetKey: "dungeon_grade" },
     clearCount: { $type: "s32", $targetKey: "clear_num" },
     playCount: { $type: "s32", $targetKey: "play_num" },
-    isCleared: { $type: "bool", $targetKey: "clear_flag" }
+    isCleared: { $type: "bool", $targetKey: "clear_flg" }
 }
 
 interface IRb6PlayerData {

@@ -189,6 +189,5 @@ export async function findMusicRecordMetadatas(rid: string): Promise<MusicRecord
         let musicIdStr = getMusicIdStr(r.musicId, 5)
         if (!result.includes(musicIdStr + ":" + r.chartType)) result.push(musicIdStr + ":" + r.chartType)
     }
-    Rb6HandlersCommon.log(result, "rb2log.txt")
     return result
 }

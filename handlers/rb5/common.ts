@@ -8,7 +8,7 @@ import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { generateRb5Profile } from "../../models/rb5/profile"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { generateRb5LobbyEntry, IRb5LobbyEntry, IRb5LobbyEntryElement, Rb5LobbyEntryMap } from "../../models/rb5/lobby"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
@@ -226,7 +226,7 @@ export namespace Rb5HandlersCommon {
             if (player.pdata.custom) await DBM.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
             if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
-                (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1].score == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2].score == null ? 0 : player.pdata.stageLogs.log[2].score)
+                (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1] == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2] == null ? 0 : player.pdata.stageLogs.log[2].score)
                 await updateClasscheckRecordFromLog(rid, <IRb5PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
             }
             if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)

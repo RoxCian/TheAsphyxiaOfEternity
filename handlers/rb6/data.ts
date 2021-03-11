@@ -1,5 +1,5 @@
 import { IRb6PlayerAccount } from "../../models/rb6/profile"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "../utility/db_manager"
 import { ICollection } from "../../models/utility/definitions"
 
 export async function operateDataInternal(rid: string, operation: "delete" | "export" | "override", data?: any): Promise<string | null> {

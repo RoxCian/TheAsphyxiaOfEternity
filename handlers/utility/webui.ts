@@ -1,5 +1,5 @@
 import { IWebUIMessage, WebUIMessageType } from "../../models/utility/webui_message"
-import { DBM } from "../../utility/db_manager"
+import { DBM } from "./db_manager"
 
 export namespace UtilityHandlersWebUI {
     export function pushMessage(message: string, type: WebUIMessageType, rid?: string) {
