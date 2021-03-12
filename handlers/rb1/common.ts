@@ -106,6 +106,7 @@ export namespace Rb1HandlersCommon {
                 lid: "ea",
                 mode: 1,
                 pdata: {
+                    comment: ((base.comment == null) || (base.comment == "")) ? "Welcome to REFLEC BEAT!" : base.comment,
                     base: base,
                     stat: stat,
                     custom: custom,
@@ -115,7 +116,9 @@ export namespace Rb1HandlersCommon {
                 }
             }
         }
-        send.object(readPlayerPostTask(mapKObject(result, Rb1PlayerMap)))
+        let k = mapKObject(result, Rb1PlayerMap)
+        k.pdata["cmnt"] = K.ITEM("str", "Welcome to REFLEC BEAT!")
+        send.object(readPlayerPostTask(k))
     }
 
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {

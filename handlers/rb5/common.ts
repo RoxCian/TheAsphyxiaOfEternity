@@ -5,7 +5,7 @@ import { generateRb5MusicRecord, IRb5MusicRecord, Rb5MusicRecordMap } from "../.
 import { IRb5Mylist } from "../../models/rb5/mylist"
 import { generateRb5BattleRoyale, generateRb5MyCourseLog, IRb5BattleRoyale, IRb5Derby, IRb5Minigame, IRb5MyCourseLog, IRb5Player, IRb5PlayerAccount, IRb5PlayerBase, IRb5PlayerClasscheckLog, IRb5PlayerConfig, IRb5PlayerCustom, IRb5PlayerParameters, IRb5PlayerReleasedInfo, IRb5PlayerStageLog, Rb5PlayerReadMap, Rb5PlayerWriteMap } from "../../models/rb5/profile"
 import { KRb5ShopInfo } from "../../models/rb5/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { DBM } from "../utility/db_manager"
@@ -13,6 +13,7 @@ import { generateRb5LobbyEntry, IRb5LobbyEntry, IRb5LobbyEntryElement, Rb5LobbyE
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
+import { isToday } from "../../utility/utility_functions"
 
 export namespace Rb5HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -95,7 +96,10 @@ export namespace Rb5HandlersCommon {
             if (account.pst == null) account.pst = BigInt(0)
             if (account.st == null) account.st = BigInt(0)
             if (account.opc == null) account.opc = 0
-            account.tpc = 1000
+            if (account.dayCount == null) account.dayCount = 0
+            if (account.playCountToday == null) account.playCountToday = 0
+            if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+            else account.playCountToday++
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
             if (account.mpc == null) account.mpc = 0
@@ -219,6 +223,12 @@ export namespace Rb5HandlersCommon {
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
+                if (!isToday(toBigInt(playerAccountForPlayCountQuery.st))) {
+                    playerAccountForPlayCountQuery.dayCount++
+                    playerAccountForPlayCountQuery.playCountToday = 0
+                }
+                playerAccountForPlayCountQuery.playCountToday++
+
                 await DBM.update(rid, { collection: "rb.rb5.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.base) await DBM.upsert<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" }, player.pdata.base)

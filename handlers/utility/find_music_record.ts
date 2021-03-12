@@ -2,8 +2,8 @@ import { getAvaliableMusicChartInfo, getMusicId, getMusicIdStr, RbMusicChartInfo
 import { IRb1MusicRecord } from "../../models/rb1/profile"
 import { IRb2MusicRecord } from "../../models/rb2/profile"
 import { IRb3MusicRecord } from "../../models/rb3/music_record"
+import { IRb4MusicRecord } from "../../models/rb4/music_record"
 import { IRb5MusicRecord } from "../../models/rb5/music_record"
-import { Rb6HandlersCommon } from "../rb6/common"
 
 export interface IRbBestMusicRecord {
     musicId: number
@@ -119,7 +119,29 @@ export async function findBestMusicRecord(rid: string, musicIdStr: string, chart
                     arTimes100Array.push(recordRb3.achievementRateTimes100)
                     playCountArray.push(recordRb3.playCount)
                     break
+                case 4:
+                    let midRb4 = getMusicId(musicIdStr, 4)
+                    let recordRb4: IRb4MusicRecord = await DB.FindOne<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord", musicId: midRb4, chartType: chartType })
+                    if (recordRb4 == null) break
 
+                    if (recordRb4.missCount == 0) clearTypeArray.push(ClearType.fullCombo)
+                    else if ((recordRb4.clearType == 1) || (recordRb4.clearType == 2) || (recordRb4.clearType == 3)) clearTypeArray.push(ClearType.failed)
+                    else if (recordRb4.clearType == 9) clearTypeArray.push(ClearType.cleared)
+                    else if (recordRb4.clearType == 10) clearTypeArray.push(ClearType.hardCleared)
+                    else if (recordRb4.clearType == 11) clearTypeArray.push(ClearType.sHardCleared)
+                    else (clearTypeArray.push(ClearType.notPlayed))
+
+                    if ((recordRb4.clearType == 1) || (recordRb4.clearType == 9)) gaugeTypeArray.push(GaugeType.normal)
+                    else if ((recordRb4.clearType == 2) || (recordRb4.clearType == 10)) gaugeTypeArray.push(GaugeType.hard)
+                    else if ((recordRb4.clearType == 3) || (recordRb4.clearType == 11)) gaugeTypeArray.push(GaugeType.sHard)
+
+                    scoreArray.push(recordRb4.score)
+                    comboArray.push(recordRb4.combo)
+                    paramArray.push(recordRb4.param)
+                    missCountArray.push(recordRb4.missCount)
+                    arTimes100Array.push(recordRb4.achievementRateTimes100)
+                    playCountArray.push(recordRb4.playCount)
+                    break
                 case 5:
                     let midRb5 = getMusicId(musicIdStr, 5)
                     let recordRb5: IRb5MusicRecord = await DB.FindOne<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord", musicId: midRb5, chartType: chartType })
@@ -183,6 +205,14 @@ export async function findMusicRecordMetadatas(rid: string): Promise<MusicRecord
     }
     for (let r of await DB.Find<IRb2MusicRecord>(rid, { collection: "rb.rb2.playData.musicRecord" })) {
         let musicIdStr = getMusicIdStr(r.musicId, 2)
+        if (!result.includes(musicIdStr + ":" + r.chartType)) result.push(musicIdStr + ":" + r.chartType)
+    }
+    for (let r of await DB.Find<IRb3MusicRecord>(rid, { collection: "rb.rb3.playData.musicRecord" })) {
+        let musicIdStr = getMusicIdStr(r.musicId, 3)
+        if (!result.includes(musicIdStr + ":" + r.chartType)) result.push(musicIdStr + ":" + r.chartType)
+    }
+    for (let r of await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })) {
+        let musicIdStr = getMusicIdStr(r.musicId, 4)
         if (!result.includes(musicIdStr + ":" + r.chartType)) result.push(musicIdStr + ":" + r.chartType)
     }
     for (let r of await DB.Find<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord" })) {

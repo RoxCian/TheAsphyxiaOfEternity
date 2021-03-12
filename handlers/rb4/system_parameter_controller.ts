@@ -1,12 +1,18 @@
-import { IRb3Player } from "../../models/rb3/profile"
+import { IRb4Player } from "../../models/rb4/profile"
 import { KITEM2 } from "../../utility/mapping"
 import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 0 -> song
-// player.pdata.released.info.type == 6 -> character card
+// player.pdata.released.info.type == 1 -> sfx
+// player.pdata.released.info.type == 2 -> bgm (2: Qrispy)
+// player.pdata.released.info.type == 3 -> frame
+// player.pdata.released.info.type == 4 -> explode fx
+// player.pdata.released.info.type == 5 -> bg
+// player.pdata.released.info.type == 6 -> icon
 // player.pdata.released.info.type == 7 -> byword
+// player.pdata.released.info.type == 8 -> voice chat
 
-export function readPlayerPostTask(player: KITEM2<IRb3Player>): KITEM2<IRb3Player> {
-    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])
+export function readPlayerPostTask(player: KITEM2<IRb4Player>): KITEM2<IRb4Player> {
+    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     if (!isUnlockSongs && !isUnlockSongs) return player
 
@@ -14,7 +20,7 @@ export function readPlayerPostTask(player: KITEM2<IRb3Player>): KITEM2<IRb3Playe
 
     return player
 }
-export function writePlayerPredecessor(player: KITEM2<IRb3Player>): KITEM2<IRb3Player> {
+export function writePlayerPredecessor(player: KITEM2<IRb4Player>): KITEM2<IRb4Player> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     let isUnlockCharacterCards: boolean = U.GetConfig("unlock_all_character_cards")
@@ -39,7 +45,7 @@ export function writePlayerPredecessor(player: KITEM2<IRb3Player>): KITEM2<IRb3P
 }
 
 let songsUnlockingData: any[]
-function appendSongsUnlockingData(player: KITEM2<IRb3Player>): KITEM2<IRb3Player> {
+function appendSongsUnlockingData(player: KITEM2<IRb4Player>): KITEM2<IRb4Player> {
     if (songsUnlockingData == null) {
         songsUnlockingData = []
         let ctrl = [944, 200, 200, 200, 200, 200, 200, 200, 200, 33, 33, 33, 33]

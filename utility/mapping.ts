@@ -83,8 +83,10 @@ export function isBigIntProxy(value: any): value is BigIntProxy {
     }
 }
 export function toBigInt(value: bigint | BigIntProxy): bigint {
+    if (value == null) return null
     if (value instanceof BigInt) return <bigint>value
-    else return BigInt(value["@serializedBigInt"])
+    else if (value["@serializedBigInt"] != null) return BigInt(value["@serializedBigInt"])
+    else return BigInt(0)
 }
 
 export type KITEM2<T> = { [K in keyof T]?: K extends KKey<T> ? KITEM2<T[K]> : never } &
@@ -323,7 +325,7 @@ export function mapBackKObject<T extends object>(data: KITEM2<T>, kMapRecord?: K
     return [result, resultAttr]
 }
 
-export function s8me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s8"> {
+export function s8me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s8"> {
     return {
         $type: "s8",
         $targetKey: targetKey,
@@ -331,7 +333,7 @@ export function s8me<T = any>(targetKey?: string, convert?: (source: T) => T, co
         $convertBack: convertBack
     }
 }
-export function u8me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u8"> {
+export function u8me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u8"> {
     return {
         $type: "u8",
         $targetKey: targetKey,
@@ -339,7 +341,7 @@ export function u8me<T = any>(targetKey?: string, convert?: (source: T) => T, co
         $convertBack: convertBack
     }
 }
-export function s16me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s16"> {
+export function s16me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s16"> {
     return {
         $type: "s16",
         $targetKey: targetKey,
@@ -347,7 +349,7 @@ export function s16me<T = any>(targetKey?: string, convert?: (source: T) => T, c
         $convertBack: convertBack
     }
 }
-export function u16me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u16"> {
+export function u16me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u16"> {
     return {
         $type: "u16",
         $targetKey: targetKey,
@@ -355,7 +357,7 @@ export function u16me<T = any>(targetKey?: string, convert?: (source: T) => T, c
         $convertBack: convertBack
     }
 }
-export function s32me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s32"> {
+export function s32me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "s32"> {
     return {
         $type: "s32",
         $targetKey: targetKey,
@@ -363,7 +365,7 @@ export function s32me<T = any>(targetKey?: string, convert?: (source: T) => T, c
         $convertBack: convertBack
     }
 }
-export function u32me<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u32"> {
+export function u32me<T extends number | number[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "u32"> {
     return {
         $type: "u32",
         $targetKey: targetKey,
@@ -371,7 +373,24 @@ export function u32me<T = any>(targetKey?: string, convert?: (source: T) => T, c
         $convertBack: convertBack
     }
 }
-export function boolme<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "bool"> {
+export function s64me(targetKey?: string, convert?: (source: bigint | BigIntProxy) => bigint | BigIntProxy, convertBack?: (target: bigint | BigIntProxy) => bigint | BigIntProxy): KObjectMappingElement<bigint | BigIntProxy, "s64"> {
+    return {
+        $type: "s64",
+        $targetKey: targetKey,
+        $convert: convert,
+        $convertBack: convertBack
+    }
+}
+export function u64me(targetKey?: string, convert?: (source: bigint | BigIntProxy) => bigint | BigIntProxy, convertBack?: (target: bigint | BigIntProxy) => bigint | BigIntProxy): KObjectMappingElement<bigint | BigIntProxy, "u64"> {
+    return {
+        $type: "u64",
+        $targetKey: targetKey,
+        $convert: convert,
+        $convertBack: convertBack
+    }
+}
+
+export function boolme(targetKey?: string, convert?: (source: boolean) => boolean, convertBack?: (target: boolean) => boolean): KObjectMappingElement<boolean, "bool"> {
     return {
         $type: "bool",
         $targetKey: targetKey,
@@ -379,11 +398,17 @@ export function boolme<T = any>(targetKey?: string, convert?: (source: T) => T, 
         $convertBack: convertBack
     }
 }
-export function strme<T = any>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "str"> {
+export function strme(targetKey?: string, convert?: (source: string) => string, convertBack?: (target: string) => string): KObjectMappingElement<string, "str"> {
     return {
         $type: "str",
         $targetKey: targetKey,
         $convert: convert,
         $convertBack: convertBack
+    }
+}
+export function ignoreme<T = any>(targetKey?: string, fallbackValue?: T): KObjectMappingElement<T, "kignore"> {
+    return {
+        $type: "kignore",
+        $fallbackValue: fallbackValue
     }
 }

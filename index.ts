@@ -61,13 +61,14 @@ function routeRb5() {
 
 function routeRb4() {
     R.Route("pcb.rb4boot", Rb4HandlersCommon.BootPcb)
-    R.Route("player.rb4_player_start", Rb4HandlersCommon.StartPlayer)
-    // R.Route("player.rb5_player_read", Rb5HandlersCommon.ReadPlayer)
-    // R.Route("player.rb5_player_read_score_5", Rb5HandlersCommon.ReadPlayerScore)
-    // R.Route("player.rb5_player_read_score_old_5", Rb5HandlersCommon.ReadPlayerScoreOldVersion)
-    // R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer)
-    // R.Route("lobby.rb5_lobby_read", Rb5HandlersCommon.ReadLobby)
-    // R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.ReadLobby)
+    R.Route("player.rb4start", Rb4HandlersCommon.StartPlayer)
+    R.Route("player.rb4write", Rb4HandlersCommon.WritePlayer)
+    R.Route("player.rb4read", Rb4HandlersCommon.ReadPlayer)
+    R.Route("player.rb4readepisode", Rb4HandlersCommon.ReadEpisode)
+    R.Route("player.rb4readscore", Rb4HandlersCommon.ReadPlayerScore)
+    R.Route("lobby.rb4entry", Rb4HandlersCommon.AddLobby)
+    R.Route("lobby.rb4read", Rb4HandlersCommon.ReadLobby)
+    R.Route("lobby.rb4delete", Rb4HandlersCommon.DeleteLobby)
 }
 
 function routeRb1Rb2Rb3() {

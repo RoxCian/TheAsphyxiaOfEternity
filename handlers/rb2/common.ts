@@ -4,7 +4,7 @@ import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { DBM } from "../utility/db_manager"
-import { generateRb2LincleLink, generateRb2MusicRecord, generateRb2MusicRecordElement, generateRb2Profile, IRb2Glass, IRb2LincleLink, IRb2MusicRecord, IRb2Mylist, IRb2Player, IRb2PlayerBase, IRb2PlayerCustom, IRb2PlayerReleasedInfo, IRb2PlayerStat, IRb2StageLog, Rb2PlayerMap } from "../../models/rb2/profile"
+import { generateRb2LincleLink, generateRb2MusicRecord, generateRb2Profile, IRb2Glass, IRb2LincleLink, IRb2MusicRecord, IRb2Mylist, IRb2Player, IRb2PlayerBase, IRb2PlayerCustom, IRb2PlayerReleasedInfo, IRb2PlayerStat, IRb2StageLog, Rb2PlayerMap } from "../../models/rb2/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb2StageLogStandalone, IRb2StageLogStandaloneElement, Rb2StageLogStandaloneMap } from "../../models/rb2/stage_log_standalone"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, MusicRecordMetadatas } from "../utility/find_music_record"
@@ -57,7 +57,7 @@ export namespace Rb2HandlersCommon {
         let result: IRb2Player
         let base: IRb2PlayerBase = await DB.FindOne<IRb2PlayerBase>(readParam.rid, { collection: "rb.rb2.player.base" })
         if (base == null) {
-            let rbPlayer = await tryFindPlayer(readParam.rid, 1)
+            let rbPlayer = await tryFindPlayer(readParam.rid, 2)
             if (rbPlayer != null) {
                 result = generateRb2Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
@@ -72,7 +72,7 @@ export namespace Rb2HandlersCommon {
                 result = generateRb2Profile(readParam.rid, userId)
                 result.pdata.base.name = "RBPlayer"
             }
-            result.pdata.comment = (base?.comment != "") ? base.comment : "Enjoy limelight world to the last minutes."
+            result.pdata.comment = ((base == null) || (base.comment == null)) ? "Enjoy limelight world!" : base.comment
         } else {
             let stat: IRb2PlayerStat = await DB.FindOne<IRb2PlayerStat>(readParam.rid, { collection: "rb.rb2.player.stat" })
             let custom: IRb2PlayerCustom = await DB.FindOne<IRb2PlayerCustom>(readParam.rid, { collection: "rb.rb2.player.custom" })
@@ -94,11 +94,12 @@ export namespace Rb2HandlersCommon {
                 endTime: BigInt(9614498759023),
                 mode: 0,
                 pdata: {
-                    comment: (base?.comment != "") ? base.comment : "Enjoy limelight world to the last minutes.",
+                    comment: (base?.comment != "") ? base.comment : "Enjoy limelight world!",
+                    team: { teamId: -1, teamName: "Asphyxia" },
                     base: base,
                     stat: stat,
                     custom: custom,
-                    released: (released.length > 0) ? { info: released } : {},
+                    released: (released.length > 0) ? { info: released } : { info: [{ collection: "rb.rb2.player.releasedInfo", type: 0, id: 0, param: 0 }] },
                     record: (scores.length > 0) ? { rec: scores } : {},
                     stageLogs: {},
                     rival: {},
@@ -128,6 +129,7 @@ export namespace Rb2HandlersCommon {
         for (let mk of metas) {
             let midstr = mk.split(":")[0]
             let mid = getMusicId(midstr, 2)
+            if (mid < 0) continue
             let chart = parseInt(mk.split(":")[1])
             let currentRecord = isAlwaysCreateRecord ? generateRb2MusicRecord(mid, chart) : await DB.FindOne<IRb2MusicRecord>(rid, { collection: "rb.rb2.playData.musicRecord", musicId: mid, chartType: chart })
             if (currentRecord == null) currentRecord = generateRb2MusicRecord(mid, chart)

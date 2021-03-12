@@ -6,11 +6,10 @@ import { IRb5Mylist, Rb5MylistMap } from "./mylist"
 export interface IRb5PlayerAccount extends ICollection<"rb.rb5.player.account"> {
     userId: number
     playerId: number
-    tpc: number
-    dpc: number
+    playCountToday: number
     crd: number
     brd: number
-    tdc: number
+    dayCount: number
     rid: string
     lid: string
     intrvld: number
@@ -36,11 +35,10 @@ export const Rb5PlayerAccountWriteMap: KObjectMappingRecord<IRb5PlayerAccount> =
     collection: getCollectionMappingElement<IRb5PlayerAccount>("rb.rb5.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "s32", $targetKey: "plyid" },
-    tpc: { $type: "s32" },
-    dpc: { $type: "s32" },
+    playCountToday: { $type: "s32", $targetKey: "dpc" },
     crd: { $type: "s32" },
     brd: { $type: "s32" },
-    tdc: { $type: "s32" },
+    dayCount: { $type: "s32", $targetKey: "tdc" },
     rid: { $type: "str" },
     lid: { $type: "str" },
     intrvld: { $type: "kignore" },
@@ -66,11 +64,10 @@ export const Rb5PlayerAccountReadMap: KObjectMappingRecord<IRb5PlayerAccount> = 
     collection: getCollectionMappingElement<IRb5PlayerAccount>("rb.rb5.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "kignore" },
-    tpc: { $type: "s32" },
-    dpc: { $type: "s32" },
+    playCountToday: { $type: "s32", $targetKey: "dpc" },
     crd: { $type: "s32" },
     brd: { $type: "s32" },
-    tdc: { $type: "s32" },
+    dayCount: { $type: "s32", $targetKey: "tdc" },
     rid: { $type: "kignore" },
     lid: { $type: "kignore" },
     intrvld: { $type: "s32" },
@@ -90,18 +87,17 @@ export const Rb5PlayerAccountReadMap: KObjectMappingRecord<IRb5PlayerAccount> = 
     lpc: { $type: "s32" },
     cpc: { $type: "s32" },
     mpc: { $type: "s32" },
-    playCount: { $type: "kignore", $fallbackValue: 0 }
+    playCount: { $type: "s32", $targetKey: "tpc" }
 }
 export function generateRb5PlayerAccount(rid: string, userId?: number): IRb5PlayerAccount {
     return {
         collection: "rb.rb5.player.account",
         userId: (userId != null) ? userId : -1,
         playerId: 0,
-        tpc: 1000,
-        dpc: 1,
+        playCountToday: 0,
         crd: 1,
         brd: 1,
-        tdc: 1,
+        dayCount: 0,
         rid: rid,
         lid: "ea",
         intrvld: 0,
@@ -184,7 +180,6 @@ export interface IRb5PlayerConfig extends ICollection<"rb.rb5.player.config"> {
     musicSelectBgm: number // <msel_bgm __type="u8" />
     narrowDownType: number // "u8"
     musicLevelDisplayingType: number // <musiclvdisp_type __type="u8" />
-    characterCardId: number // <characard_id __type="s16" />
     bywordLeft: number // <byword_0 __type="s16" />
     bywordRight: number // <byword_1 __type="s16" />
     isAutoBywordLeft: boolean // <is_auto_byword_0 __type="bool" />
@@ -215,7 +210,6 @@ export const Rb5PlayerConfigMap: KObjectMappingRecord<IRb5PlayerConfig> = {
     musicSelectBgm: { $type: "u8", $targetKey: "msel_bgm" },
     narrowDownType: { $type: "u8", $targetKey: "narrowdown_type" },
     musicLevelDisplayingType: { $type: "u8", $targetKey: "musiclvdisp_type" },
-    characterCardId: { $type: "s16", $targetKey: "characard_id" },
     bywordLeft: { $type: "s16", $targetKey: "byword_0" },
     bywordRight: { $type: "s16", $targetKey: "byword_1" },
     isAutoBywordLeft: { $type: "bool", $targetKey: "is_auto_byword_0" },
@@ -248,7 +242,6 @@ export function generateRb5PlayerConfig(): IRb5PlayerConfig {
 
         narrowDownType: 39,
         musicLevelDisplayingType: 0,
-        characterCardId: 0,
         bywordLeft: 0,
         bywordRight: 1,
         isAutoBywordLeft: true,

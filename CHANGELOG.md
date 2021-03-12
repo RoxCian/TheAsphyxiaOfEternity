@@ -1,3 +1,13 @@
+- v0.12.0-beta
+
+  Added RB groovin' support.
+
+  Fixed bugs about play count, classcheck and comment.
+  
+  Database entry/data structure changes:
+    - dpc -> playCountToday (compatible)
+    - tdc -> dayCount (compatible)
+
 - v0.11.11-beta
 
   Fixed bugs for RB Reflesia just collection, now the just collection rate on each color can be saved correctly and the data size of just collection entries are reduced dramatically.

@@ -28,8 +28,8 @@ export function getMusicIdStr(musicId: number, forVersion: number): string {
 export function getMusicId(musicIdStr: string, forVersion: number): number {
     let infos: RbMusicChartInfoElement[] = rbMusicChartInfo["rb" + forVersion]
     for (let i of infos) if (i.id == musicIdStr) return i.order
+    return -1
 }
-
 
 export function getAvaliableMusicChartInfo(musicIdStr: string): { rb1?: RbMusicChartInfoElement, rb2?: RbMusicChartInfoElement, rb3?: RbMusicChartInfoElement, rb4?: RbMusicChartInfoElement, rb5?: RbMusicChartInfoElement } {
     let c = (e: RbMusicChartInfoElement[]) => { for (let m of e) if ((m.id == musicIdStr) && (m.status == "avaliable")) return m }
@@ -40,4 +40,10 @@ export function getAvaliableMusicChartInfo(musicIdStr: string): { rb1?: RbMusicC
         rb4: c(rbMusicChartInfo.rb4),
         rb5: c(rbMusicChartInfo.rb5)
     }
+}
+
+export function isNewMusic(musicId: number, forVersion: number): boolean {
+    let midstr = getMusicIdStr(musicId, forVersion)
+    if (midstr == null) return false
+    return (midstr == null) || (parseInt(midstr[0]) >= forVersion)
 }

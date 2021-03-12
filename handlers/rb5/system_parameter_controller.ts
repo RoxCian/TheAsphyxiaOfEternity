@@ -48,7 +48,7 @@ let songsUnlockingData: any[]
 function appendSongsUnlockingData(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
     if (songsUnlockingData == null) {
         songsUnlockingData = []
-        let ctrl = [944, 200, 200, 200, 200, 200, -1, 200, 200, 33, 33, 33, 33]
+        let ctrl = [944, 200, 200, 200, 200, 200, 200, 200, 200, 33, 33, 33, 33]
         for (let i = 0; i < ctrl.length; i++) {
             for (let j = 0; j <= ctrl[i]; j++) {
                 songsUnlockingData.push({

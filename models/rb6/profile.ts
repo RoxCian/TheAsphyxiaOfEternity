@@ -8,11 +8,10 @@ import { IRb6Mylist, Rb6MylistMap } from "./mylist"
 export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> {
     userId: number
     playerId: number
-    tpc: number
-    dpc: number
+    playCountToday: number
     crd: number
     brd: number
-    tdc: number
+    dayCount: number
     rid: string
     lid: string
     intrvld: number
@@ -38,11 +37,10 @@ export const Rb6PlayerAccountWriteMap: KObjectMappingRecord<IRb6PlayerAccount> =
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "s32", $targetKey: "plyid" },
-    tpc: { $type: "s32" },
-    dpc: { $type: "s32" },
+    playCountToday: { $type: "s32", $targetKey: "dpc" },
     crd: { $type: "s32" },
     brd: { $type: "s32" },
-    tdc: { $type: "s32" },
+    dayCount: { $type: "s32", $targetKey: "tdc" },
     rid: { $type: "str" },
     lid: { $type: "str" },
     intrvld: { $type: "kignore" },
@@ -62,17 +60,16 @@ export const Rb6PlayerAccountWriteMap: KObjectMappingRecord<IRb6PlayerAccount> =
     lpc: { $type: "s32" },
     cpc: { $type: "s32" },
     mpc: { $type: "s32" },
-    playCount: { $type: "kignore", $fallbackValue: 0 }
+    playCount: { $type: "s32", $targetKey: "tpc" }
 }
 export const Rb6PlayerAccountReadMap: KObjectMappingRecord<IRb6PlayerAccount> = {
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
     userId: { $type: "s32", $targetKey: "usrid" },
     playerId: { $type: "kignore" },
-    tpc: { $type: "s32" },
-    dpc: { $type: "s32" },
+    playCountToday: { $type: "s32", $targetKey: "dpc" },
     crd: { $type: "s32" },
     brd: { $type: "s32" },
-    tdc: { $type: "s32" },
+    dayCount: { $type: "s32", $targetKey: "tdc" },
     rid: { $type: "kignore" },
     lid: { $type: "kignore" },
     intrvld: { $type: "s32" },
@@ -92,18 +89,17 @@ export const Rb6PlayerAccountReadMap: KObjectMappingRecord<IRb6PlayerAccount> = 
     lpc: { $type: "s32" },
     cpc: { $type: "s32" },
     mpc: { $type: "s32" },
-    playCount: { $type: "kignore", $fallbackValue: 0 }
+    playCount: { $type: "s32", $targetKey: "tpc" }
 }
 export function generateRb6PlayerAccount(rid: string, userId: number): IRb6PlayerAccount {
     return {
         collection: "rb.rb6.player.account",
         userId: userId,
         playerId: 0,
-        tpc: 1000,
-        dpc: 1,
+        playCountToday: 0,
         crd: 1,
         brd: 1,
-        tdc: 1,
+        dayCount: 0,
         rid: rid,
         lid: "ea",
         intrvld: 0,

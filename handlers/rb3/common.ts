@@ -13,7 +13,7 @@ import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } f
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateRb2LincleLink, IRb2LincleLink } from "../../models/rb2/profile"
 import { isToday } from "../../utility/utility_functions"
-import { generateRb3LobbyEntry, IRb3LobbyEntry, IRb3LobbyEntryElement, Rb3LobbyEntryElementMap, Rb3LobbyEntryMap } from "../../models/rb3/lobby"
+import { generateRb3LobbyEntry, IRb3LobbyEntry, IRb3LobbyEntryElement, Rb3LobbyEntryMap } from "../../models/rb3/lobby"
 
 export namespace Rb3HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -34,6 +34,7 @@ export namespace Rb3HandlersCommon {
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
         let data = <any>getExampleEventControl()
         data.nm = 0
+
         let result = {
             plyid: 0,
             nm: 0,
@@ -101,7 +102,7 @@ export namespace Rb3HandlersCommon {
         let result: IRb3Player
         let account: IRb3PlayerAccount = await DB.FindOne<IRb3PlayerAccount>(readParam.rid, { collection: "rb.rb3.player.account" })
         if (account == null) {
-            let rbPlayer = await tryFindPlayer(readParam.rid, 5)
+            let rbPlayer = await tryFindPlayer(readParam.rid, 3)
             if (rbPlayer != null) {
                 result = generateRb3Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
@@ -135,7 +136,10 @@ export namespace Rb3HandlersCommon {
             if (account.succeed == null) account.succeed = true
             if (account.pst == null) account.pst = BigInt(0)
             if (account.st == null) account.st = BigInt(0)
-            if (!isToday(toBigInt(account.st))) account.dpc = 0
+            if (account.dayCount == null) account.dayCount = account.tdc // For compatibility
+            if (account.playCountToday == null) account.playCountToday = account.dpc // For compatibility
+            if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+            else account.playCountToday = (account.playCountToday == null) ? 1 : (account.playCountToday + 1)
             if (account.opc == null) account.opc = 0
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
@@ -282,8 +286,11 @@ export namespace Rb3HandlersCommon {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
                 playerAccountForPlayCountQuery.st = player.pdata.account.st
-                if (player.pdata.account.dayCount == 0) playerAccountForPlayCountQuery.tdc++
-                playerAccountForPlayCountQuery.dpc = player.pdata.account.dayCount + 1
+                if (!isToday(toBigInt(playerAccountForPlayCountQuery.st))) {
+                    playerAccountForPlayCountQuery.dayCount++
+                    playerAccountForPlayCountQuery.playCountToday = 0
+                }
+                playerAccountForPlayCountQuery.playCountToday++
 
                 await DBM.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)
             }

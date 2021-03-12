@@ -311,7 +311,7 @@ export function generateRb3PlayerCustom(): IRb3PlayerCustom {
         collection: "rb.rb3.player.custom",
         stageMainGaugeType: 0,
         stageClearGaugeType: 0,
-        stageObjectSize: 3,
+        stageObjectSize: 1,
         stageShotSound: 0,
         stageShotVolume: 100,
         stageExplodeType: 0,

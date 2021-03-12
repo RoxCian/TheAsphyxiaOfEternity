@@ -1,4 +1,4 @@
-import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord, s32me, strme } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 import { IRb2StageLogStandaloneElement, Rb2StageLogStandaloneElementMap } from "./stage_log_standalone"
 
@@ -400,6 +400,7 @@ export interface IRb2Player {
     mode: number
     pdata: {
         comment: string
+        team: { teamId: number, teamName: string }
         base: IRb2PlayerBase
         stat: IRb2PlayerStat
         custom: IRb2PlayerCustom
@@ -420,6 +421,7 @@ export const Rb2PlayerMap: KObjectMappingRecord<IRb2Player> = {
     mode: { $type: "u8" },
     pdata: {
         comment: { $type: "str", $targetKey: "cmnt" },
+        team: { teamId: s32me("id"), teamName: strme("name") },
         base: Rb2PlayerBaseMap,
         stat: appendMappingElement(Rb2PlayerStatMap, { $targetKey: "con" }),
         custom: Rb2PlayerCustomMap,
@@ -442,10 +444,11 @@ export function generateRb2Profile(rid: string, userId: number): IRb2Player {
         mode: 0,
         pdata: {
             comment: "",
+            team: { teamId: -1, teamName: "Asphyxia" },
             base: generateRb2PlayerBase(userId),
             stat: generateRb2PlayerStat(),
             custom: generateRb2PlayerCustom(),
-            released: {},
+            released: { info: [{ collection: "rb.rb2.player.releasedInfo", type: 0, id: 0, param: 0 }] },
             record: {},
             stageLogs: {},
             rival: {},

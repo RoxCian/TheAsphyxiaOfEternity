@@ -381,21 +381,25 @@ function initializePastel() {
 }
 
 function initializeMarqueeLabels() {
-    let marquees = document.querySelectorAll(".marquee-label")
-    for (let marquee of marquees) {
-        let refresh = () => {
-            if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > marquee.parentElement.offsetWidth - 10)) {
-                marquee.animate([
-                    { transform: "translateX(0)", offset: 0 },
-                    { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.1 },
-                    { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.9 },
-                    { transform: "translateX(" + (marquee.parentElement.offsetWidth - marquee.offsetWidth - 10) + "px)", offset: 1 }
-                ],
-                    { duration: 20 * (marquee.offsetWidth - marquee.parentElement.offsetWidth) + 1000, direction: "alternate-reverse", iterations: Infinity })
-            } else marquee.style.animation = "none"
+    let marqueeContainers = document.querySelectorAll(".marquee-label-container")
+    for (let c of marqueeContainers) {
+        let marquees = c.querySelectorAll(".marquee-label")
+        for (let marquee of marquees) {
+            if (marquee.closest(".marquee-label-container") != c) continue
+            let refresh = () => {
+                if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > c.offsetWidth - 10)) {
+                    marquee.animate([
+                        { transform: "translateX(0)", offset: 0 },
+                        { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.1 },
+                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - 10) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.9 },
+                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - 10) + "px)", offset: 1 }
+                    ],
+                        { duration: 20 * (marquee.offsetWidth - c.offsetWidth) + 1000, direction: "alternate-reverse", iterations: Infinity })
+                } else marquee.style.animation = "none"
+            }
+            let o = new ResizeObserver(refresh)
+            o.observe(c)
         }
-        let o = new ResizeObserver(refresh)
-        o.observe(marquee.parentElement)
     }
 }
 

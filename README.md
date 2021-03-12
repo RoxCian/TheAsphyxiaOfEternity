@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v0.11.11-beta** 
+Plugin Version: **v0.12.0-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -18,7 +18,7 @@ Supported versions:
     - Score saving
     - Just collection saving
     - Character cards saving
-    - Quest progress saving
+    - Classcheck & Quest progress saving
     - Web UI
     - Asphyxia savedata importing<br/><br/>
 
@@ -29,7 +29,16 @@ Supported versions:
     - Account & settings & mylist saving
     - Score saving
     - Reftis
+    - Classcheck
     - Web UI<br/><br/>
+
+- **REFLEC BEAT groovin'!! Upper**
+
+    Supported features:
+
+    - Account & settings & mylist saving
+    - Score saving
+    - Reflec Dojo & Pastel Wonder Quest<br/><br/>
 
 - **REFLEC BEAT colette -All Seasons-**
 
@@ -62,6 +71,6 @@ The project used some data for web UI and game from several external websites/pr
 
 - <a href="http://bemaniwiki.com/">BEMANIWiki</a> for web UI data.
 - <a href="http://remywiki.com/">RemyWiki</a> for some missing jackets.
-- <a href="https://github.com/DragonMinded/bemaniutils">Bemaniutils</a> for lobby structures/RB colette event progress saving.<br/>
+- <a href="https://github.com/DragonMinded/bemaniutils">Bemaniutils</a> for lobby structures/RB colette event progress saving/RB groovin' episode data.<br/>
 
 I'm appreciated for their help.

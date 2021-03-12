@@ -8,12 +8,12 @@ import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMap } from "../.
 import { IRb6Mylist } from "../../models/rb6/mylist"
 import { generateRb6PlayerConfig, generateRb6PlayerCustom, generateRb6Profile, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6PlayerReadMap, Rb6PlayerWriteMap } from "../../models/rb6/profile"
 import { KRb6ShopInfo } from "../../models/rb6/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
 import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
 import { DBM } from "../utility/db_manager"
 import { operateDataInternal } from "./data"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { base64ToBuffer, bufferToBase64 } from "../../utility/utility_functions"
+import { base64ToBuffer, bufferToBase64, isToday } from "../../utility/utility_functions"
 import { Rb6LobbyEntryMap, generateRb6LobbyEntry, IRb6LobbyEntryElement, IRb6LobbyEntry } from "../../models/rb6/lobby"
 
 export namespace Rb6HandlersCommon {
@@ -72,9 +72,9 @@ export namespace Rb6HandlersCommon {
     export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
 
-        let playerAccount: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
+        let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
         let result: IRb6Player
-        if (playerAccount == null) {
+        if (account == null) {
             let rbPlayer = await tryFindPlayer(readParam.rid, 6)
             if (rbPlayer != null) {
                 result = generateRb6Profile(readParam.rid, rbPlayer.userId)
@@ -91,30 +91,30 @@ export namespace Rb6HandlersCommon {
                 initializePlayer(result)
             }
         } else {
-            let playerBase: Doc<IRb6PlayerBase> = await DB.FindOne<IRb6PlayerBase>(readParam.rid, { collection: "rb.rb6.player.base" })
-            let playerConfig: Doc<IRb6PlayerConfig> = await DB.FindOne<IRb6PlayerConfig>(readParam.rid, { collection: "rb.rb6.player.config" })
-            let playerCustom: Doc<IRb6PlayerCustom> = await DB.FindOne<IRb6PlayerCustom>(readParam.rid, { collection: "rb.rb6.player.custom" })
+            let base: Doc<IRb6PlayerBase> = await DB.FindOne<IRb6PlayerBase>(readParam.rid, { collection: "rb.rb6.player.base" })
+            let config: Doc<IRb6PlayerConfig> = await DB.FindOne<IRb6PlayerConfig>(readParam.rid, { collection: "rb.rb6.player.config" })
+            let custom: Doc<IRb6PlayerCustom> = await DB.FindOne<IRb6PlayerCustom>(readParam.rid, { collection: "rb.rb6.player.custom" })
             let classcheckRecords: Doc<IRb6ClasscheckRecord>[] = await DB.Find<IRb6ClasscheckRecord>(readParam.rid, { collection: "rb.rb6.playData.classcheck" })
             let characterCards: Doc<IRb6CharacterCard>[] = await DB.Find<IRb6CharacterCard>(readParam.rid, { collection: "rb.rb6.player.characterCard" })
             let releasedInfos = (await DB.Find<IRb6PlayerReleasedInfo>(readParam.rid, { collection: "rb.rb6.player.releasedInfo" }))
-            let playerParam = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
+            let param = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
             let mylist = await DB.FindOne<IRb6Mylist>(readParam.rid, { collection: "rb.rb6.player.mylist" })
             let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, { collection: "rb.rb6.playData.quest" })
             if (mylist?.index < 0) mylist.index = 0
 
-            if (!playerAccount) {
+            if (!account) {
                 throw new Error("no player account for rid=" + readParam.rid)
             }
-            if (!playerBase) {
+            if (!base) {
                 throw new Error("no player base data for rid=" + readParam.rid)
             }
-            if (!playerConfig) {
-                playerConfig = generateRb6PlayerConfig()
-                await DBM.insert(readParam.rid, playerConfig)
+            if (!config) {
+                config = generateRb6PlayerConfig()
+                await DBM.insert(readParam.rid, config)
             }
-            if (!playerCustom) {
-                playerCustom = generateRb6PlayerCustom()
-                await DBM.insert(readParam.rid, playerCustom)
+            if (!custom) {
+                custom = generateRb6PlayerCustom()
+                await DBM.insert(readParam.rid, custom)
             }
             if (characterCards.length < 1) {
                 let newCard = generateRb6CharactorCard(0)
@@ -122,57 +122,60 @@ export namespace Rb6HandlersCommon {
                 await DBM.insert(readParam.rid, newCard)
             }
             let init = (v, i) => (v == null) ? i : v
-            if (playerAccount.intrvld == null) playerAccount.intrvld = 0
-            if (playerAccount.succeed == null) playerAccount.succeed = true
-            if (playerAccount.pst == null) playerAccount.pst = BigInt(0)
-            if (playerAccount.st == null) playerAccount.st = BigInt(0)
-            if (playerAccount.opc == null) playerAccount.opc = 0
-            playerAccount.tpc = 1000
-            if (playerAccount.lpc == null) playerAccount.lpc = 0
-            if (playerAccount.cpc == null) playerAccount.cpc = 0
-            if (playerAccount.mpc == null) playerAccount.mpc = 0
-            if ((playerBase.comment == null) || (playerBase?.comment == "")) playerBase.comment = "Welcome to the land of Reflesia!"
-            if (playerBase.abilityPointTimes100 == null) playerBase.abilityPointTimes100 = playerBase["averagePrecisionTimes100"]  // For compatibility
+            if (account.intrvld == null) account.intrvld = 0
+            if (account.succeed == null) account.succeed = true
+            if (account.pst == null) account.pst = BigInt(0)
+            if (account.st == null) account.st = BigInt(0)
+            if (account.opc == null) account.opc = 0
+            if (account.dayCount == null) account.dayCount = 0
+            if (account.playCountToday == null) account.playCountToday = 0
+            if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+            else account.playCountToday++
+            if (account.lpc == null) account.lpc = 0
+            if (account.cpc == null) account.cpc = 0
+            if (account.mpc == null) account.mpc = 0
+            if ((base.comment == null) || (base?.comment == "")) base.comment = "Welcome to the land of Reflesia!"
+            if (base.abilityPointTimes100 == null) base.abilityPointTimes100 = base["averagePrecisionTimes100"]  // For compatibility
             for (let c of characterCards) if (c.level == null) c.level = 0
 
             let scores: IRb6MusicRecord[] = await DB.Find<IRb6MusicRecord>(readParam.rid, { collection: "rb.rb6.playData.musicRecord" })
 
-            playerBase.totalBestScore = 0
-            playerBase.totalBestScoreEachChartType = [0, 0, 0, 0]
+            base.totalBestScore = 0
+            base.totalBestScoreEachChartType = [0, 0, 0, 0]
             for (let s of scores) {
-                playerBase.totalBestScore += s.score
-                playerBase.totalBestScoreEachChartType[s.chartType] += s.score
+                base.totalBestScore += s.score
+                base.totalBestScoreEachChartType[s.chartType] += s.score
             }
 
-            playerConfig.randomEntryWork = init(playerConfig.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
-            playerConfig.customFolderWork = init(playerConfig.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
+            config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
+            config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
             // Twitter support test
-            playerConfig.isTwitterLinked = true
-            playerConfig.isTweet = true
+            config.isTwitterLinked = true
+            config.isTweet = true
             //
 
             // Classcheck unlock test
-            playerBase.uattr = 2
-            playerAccount.crd = 3
-            playerAccount.dpc = 3
-            playerAccount.brd = 3
-            playerAccount.tdc = 3
+            base.uattr = 2
+            account.crd = 3
+            account.playCountToday = 3
+            account.brd = 3
+            account.dayCount = 3
             //
 
             result = {
                 pdata: {
-                    account: playerAccount,
-                    base: playerBase,
-                    config: playerConfig,
-                    custom: playerCustom,
+                    account: account,
+                    base: base,
+                    config: config,
+                    custom: custom,
                     classcheck: (classcheckRecords?.length == 0) ? <any>{} : { rec: classcheckRecords },
                     characterCards: (characterCards?.length == 0) ? <any>{} : { list: characterCards },
                     released: (releasedInfos?.length == 0) ? <any>{} : { info: releasedInfos },
                     rival: {},
                     pickupRival: {},
                     announce: {},
-                    playerParam: (playerParam?.length == 0) ? <any>{} : { item: playerParam },
+                    playerParam: (param?.length == 0) ? <any>{} : { item: param },
                     mylist: (mylist == null) ? {} : { list: mylist },
                     musicRankPoint: {},
                     quest: (questRecords?.length == 0) ? {} : { list: questRecords },
@@ -225,6 +228,12 @@ export namespace Rb6HandlersCommon {
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
+                if (!isToday(toBigInt(playerAccountForPlayCountQuery.st))) {
+                    playerAccountForPlayCountQuery.dayCount++
+                    playerAccountForPlayCountQuery.playCountToday = 0
+                }
+                playerAccountForPlayCountQuery.playCountToday++
+
                 await DBM.update(rid, { collection: "rb.rb6.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
