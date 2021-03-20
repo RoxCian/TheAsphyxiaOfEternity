@@ -4,7 +4,7 @@ import { isHigherVersion } from "../../utility/utility_functions"
 import { Batch } from "./batch"
 import { DBM } from "./db_manager"
 
-export const currentVersion: string = "0.12.0"
+export const currentVersion: string = "1.0.0"
 export async function initialize() {
     let version = await DB.FindOne<IPluginVersion>({ collection: "rb.pluginVersion" })
     if ((version == null) || isHigherVersion(version.version, currentVersion)) {

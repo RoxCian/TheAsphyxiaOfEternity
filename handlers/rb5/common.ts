@@ -6,7 +6,7 @@ import { IRb5Mylist } from "../../models/rb5/mylist"
 import { generateRb5BattleRoyale, generateRb5MyCourseLog, IRb5BattleRoyale, IRb5Derby, IRb5Minigame, IRb5MyCourseLog, IRb5Player, IRb5PlayerAccount, IRb5PlayerBase, IRb5PlayerClasscheckLog, IRb5PlayerConfig, IRb5PlayerCustom, IRb5PlayerParameters, IRb5PlayerReleasedInfo, IRb5PlayerStageLog, Rb5PlayerReadMap, Rb5PlayerWriteMap } from "../../models/rb5/profile"
 import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
-import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
+import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { DBM } from "../utility/db_manager"
 import { generateRb5LobbyEntry, IRb5LobbyEntry, IRb5LobbyEntryElement, Rb5LobbyEntryMap } from "../../models/rb5/lobby"
@@ -14,6 +14,7 @@ import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { isToday } from "../../utility/utility_functions"
+import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb5HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -32,25 +33,20 @@ export namespace Rb5HandlersCommon {
     }
 
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
-        let data = <any>getExampleEventControl()
-        data.nm = 0
+        let data = getExampleEventControl()
         let result = {
             plyid: 0,
-            nm: 0,
-            start_time: BigInt(0),
+            start_time: BigInt(Date.now() * 1000),
             event_ctrl: { data: data },
             item_lock_ctrl: {},
         }
 
-        let datamap: any = {}
-        Object.assign(datamap, Rb5EventControlMap)
-        datamap.nm = { $type: "s32" }
         let map = {
             plyid: { $type: <"s32">"s32" },
             nm: { $type: <"s32">"s32" },
             start_time: { $type: <"u64">"u64" },
             event_ctrl: {
-                data: datamap
+                data: { 0: Rb5EventControlMap }
             },
             item_lock_ctrl: {},
         }
@@ -67,16 +63,12 @@ export namespace Rb5HandlersCommon {
                 result = generateRb5Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
             } else {
-                let userId
-
-                do userId = Math.trunc(Math.random() * 99999999)
-                while ((await DB.Find<IRb5PlayerAccount>({ collection: "rb.rb5.player.account", userId: userId })).length > 0)
-
-                result = generateRb5Profile(readParam.rid, rbPlayer.userId)
+                result = generateRb5Profile(readParam.rid, await generateUserId())
                 result.pdata.account.isFirstFree = true
                 result.pdata.base.name = "RBPlayer"
                 initializePlayer(result)
             }
+            await writePlayerInternal(result)
         } else {
             let base: IRb5PlayerBase = await DB.FindOne<IRb5PlayerBase>(readParam.rid, { collection: "rb.rb5.player.base" })
             let config: IRb5PlayerConfig = await DB.FindOne<IRb5PlayerConfig>(readParam.rid, { collection: "rb.rb5.player.config" })
@@ -150,47 +142,14 @@ export namespace Rb5HandlersCommon {
                 }
             }
         }
-        send.object(readPlayerPostTask(mapKObject(result, Rb5PlayerReadMap)))
-    }
-
-    export async function log(data: any, file?: string) {
-        if (file == null) file = "./rb5log.txt"
-        let s = IO.Exists(file) ? await IO.ReadFile(file, "") : ""
-        if (typeof data == "string") s += data + "\n"
-        else {
-            let n = ""
-            try {
-                n = JSON.stringify(data)
-            } catch { }
-            s += n + "\n"
-        }
-        await IO.WriteFile(file, s)
+        send.object(readPlayerPostProcess(mapKObject(result, Rb5PlayerReadMap)))
     }
 
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
         try {
             let rid = data.rid["@content"]
-            let ridqueries: Query<any>[] = [
-                { collection: "rb.rb5.player.account" },
-                { collection: "rb.rb5.player.base" },
-                { collection: "rb.rb5.player.characterCard" },
-                { collection: "rb.rb5.player.config" },
-                { collection: "rb.rb5.player.custom" },
-                { collection: "rb.rb5.playData.musicRecord" },
-                { collection: "rb.rb5.playData.classcheck" },
-                { collection: "rb.rb5.player.mylist" },
-                { collection: "rb.rb5.player.parameters" },
-            ]
-            let uid = ridqueries[0].userId
-            let uidqueries: Query<any>[] = [
-                { collection: "rb.rb5.playData.justCollection", userId: uid }
-            ]
-            for (let q of ridqueries) {
-                DB.Remove(rid, q)
-            }
-            for (let q of uidqueries) {
-                DB.Remove(q)
-            }
+            let account = await DB.FindOne<IRb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
+            await DBM.overall(rid, account?.userId, "rb.rb5", "delete")
 
             send.success()
         } catch (e) {
@@ -200,9 +159,13 @@ export namespace Rb5HandlersCommon {
     }
 
     export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb5Player>, send: EamuseSend) => {
-        // try {
-        data = writePlayerPredecessor(data)
+        data = await writePlayerPreProcess(data)
         let player: IRb5Player = mapBackKObject(data, Rb5PlayerWriteMap)[0]
+        await writePlayerInternal(player)
+        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
+    }
+    async function writePlayerInternal(player: IRb5Player) {
+        let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb5PlayerAccount> = { collection: "rb.rb5.player.account" }
         let playerAccountForPlayCountQuery: IRb5PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
@@ -210,16 +173,11 @@ export namespace Rb5HandlersCommon {
             if (rid == "") throw new Error("rid is empty")
             if (playerAccountForPlayCountQuery == null) { // save the new player
                 if (player.pdata.account.userId <= 0) {
-                    let userId
-
-                    do userId = Math.trunc(Math.random() * 99999999)
-                    while ((await DB.Find<IRb5PlayerAccount>({ collection: "rb.rb5.player.account", userId: userId })).length > 0)
-
-                    player.pdata.account.userId = userId
+                    player.pdata.account.userId = await generateUserId()
                     player.pdata.account.isFirstFree = true
                     initializePlayer(player)
                 }
-                await DBM.upsert(rid, { collection: "rb.rb5.player.account" }, player.pdata.account)
+                opm.upsert(rid, { collection: "rb.rb5.player.account" }, player.pdata.account)
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
@@ -229,30 +187,35 @@ export namespace Rb5HandlersCommon {
                 }
                 playerAccountForPlayCountQuery.playCountToday++
 
-                await DBM.update(rid, { collection: "rb.rb5.player.account" }, playerAccountForPlayCountQuery)
+                opm.update(rid, { collection: "rb.rb5.player.account" }, playerAccountForPlayCountQuery)
             }
-            if (player.pdata.base) await DBM.upsert<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" }, player.pdata.base)
-            if (player.pdata.config) await DBM.upsert<IRb5PlayerConfig>(rid, { collection: "rb.rb5.player.config" }, player.pdata.config)
-            if (player.pdata.custom) await DBM.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
-            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
+            if (player.pdata.base) {
+                let oldBase = await DB.FindOne<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
+                if (oldBase != null) {
+                    player.pdata.base.name = oldBase.name
+                    player.pdata.base.comment = oldBase.comment
+                } else {
+                    if (player.pdata.base.comment == "Welcome to REFLEC BEAT VOLZZA!") player.pdata.base.comment = ""
+                }
+                opm.upsert<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" }, player.pdata.base)
+            }
+            if (player.pdata.config) opm.upsert<IRb5PlayerConfig>(rid, { collection: "rb.rb5.player.config" }, player.pdata.config)
+            if (player.pdata.custom) opm.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
+            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, opm)
             if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
                 (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1] == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2] == null ? 0 : player.pdata.stageLogs.log[2].score)
-                await updateClasscheckRecordFromLog(rid, <IRb5PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time)
+                await updateClasscheckRecordFromLog(rid, <IRb5PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, opm)
             }
-            if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
-            if (player.pdata.playerParam?.item?.length > 0) await updatePlayerParameters(rid, player.pdata.playerParam)
-            if (player.pdata.mylist?.list != null) await DBM.upsert<IRb5Mylist>(rid, { collection: "rb.rb5.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
-            if (player.pdata.minigame != null) await DBM.upsert<IRb5Minigame>(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
-            if (player.pdata.myCourse?.courseId >= 0) await DBM.upsert<IRb5MyCourseLog>(rid, { collection: "rb.rb5.playData.myCourse", courseId: player.pdata.myCourse.courseId }, player.pdata.myCourse)
-            if (player.pdata.derby != null) await DBM.upsert<IRb5Derby>(rid, { collection: "rb.rb5.player.derby" }, player.pdata.derby)
-            if (player.pdata.battleRoyale != null) await DBM.upsert<IRb5BattleRoyale>(rid, { collection: "rb.rb5.playData.battleRoyale", battleId: player.pdata.battleRoyale.battleId }, player.pdata.battleRoyale)
+            if (player.pdata.released?.info?.length > 0) for (let i of player.pdata.released.info) opm.upsert<IRb5PlayerReleasedInfo>(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
+            if (player.pdata.playerParam?.item?.length > 0) for (let i of player.pdata.playerParam.item) opm.upsert<IRb5PlayerParameters>(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
+            if (player.pdata.mylist?.list != null) opm.upsert<IRb5Mylist>(rid, { collection: "rb.rb5.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
+            if (player.pdata.minigame != null) opm.upsert<IRb5Minigame>(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
+            if (player.pdata.myCourse?.courseId >= 0) opm.upsert<IRb5MyCourseLog>(rid, { collection: "rb.rb5.playData.myCourse", courseId: player.pdata.myCourse.courseId }, player.pdata.myCourse)
+            if (player.pdata.derby != null) opm.upsert<IRb5Derby>(rid, { collection: "rb.rb5.player.derby" }, player.pdata.derby)
+            if (player.pdata.battleRoyale != null) opm.upsert<IRb5BattleRoyale>(rid, { collection: "rb.rb5.playData.battleRoyale", battleId: player.pdata.battleRoyale.battleId }, player.pdata.battleRoyale)
         }
-        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
-        // }
-        // catch (e) {
-        //     console.log((<Error>e).message)
-        //     send.deny()
-        // }
+
+        DBM.operate(opm)
     }
 
     export const AddLobby: EPR = async (req, data, send) => {
@@ -421,7 +384,7 @@ export namespace Rb5HandlersCommon {
         card_type: { $type: "s16" }
     }
 
-    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb5PlayerStageLog): Promise<void> {
+    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb5PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb5MusicRecord> = { $and: [{ collection: "rb.rb5.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
         let musicRecord = await DB.FindOne<IRb5MusicRecord>(rid, query)
 
@@ -461,11 +424,11 @@ export namespace Rb5HandlersCommon {
 
         musicRecord.time = stageLog.time
         musicRecord.playCount++
-        await DBM.upsert(rid, query, musicRecord)
-        await DBM.insert(rid, stageLog)
+        opm.upsert(rid, query, musicRecord)
+        opm.insert(rid, stageLog)
     }
 
-    async function updateClasscheckRecordFromLog(rid: string, log: IRb5PlayerClasscheckLog, time: number): Promise<void> {
+    async function updateClasscheckRecordFromLog(rid: string, log: IRb5PlayerClasscheckLog, time: number, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb5ClasscheckRecord> = { collection: "rb.rb5.playData.classcheck", class: log.class }
         let classRecord = (await DB.Find<IRb5ClasscheckRecord>(rid, query))[0]
         let isNeedUpdate = false
@@ -495,15 +458,7 @@ export namespace Rb5HandlersCommon {
         classRecord.lastPlayTime = time
         if (isNeedUpdate) classRecord.recordUpdateTime = time
         classRecord.playCount++
-        await DBM.upsert(rid, query, classRecord)
-    }
-
-    async function updateReleasedInfos(rid: string, infos: { info: IRb5PlayerReleasedInfo[] }) {
-        for (let i of infos.info) await DBM.upsert<IRb5PlayerReleasedInfo>(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
-    }
-
-    async function updatePlayerParameters(rid: string, params: { item: IRb5PlayerParameters[] }) {
-        for (let i of params.item) await DBM.upsert<IRb5PlayerParameters>(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
+        opm.upsert(rid, query, classRecord)
     }
 
     function getClearTypeIndex(record: IRb5PlayerStageLog | IRb5MusicRecord): number {

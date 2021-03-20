@@ -5,7 +5,7 @@ import { IRb3Mylist } from "../../models/rb3/mylist"
 import { generateRb3Stamp, generateRb3TricolettePark, IRb3Equip, IRb3EventProgress, IRb3Order, IRb3Player, IRb3PlayerAccount, IRb3PlayerBase, IRb3PlayerConfig, IRb3PlayerCustom, IRb3PlayerReleasedInfo, IRb3PlayerStageLog, IRb3SeedPod, IRb3Stamp, IRb3TricolettePark, Rb3PlayerReadMap, Rb3PlayerReleasedInfoMap, Rb3PlayerWriteMap } from "../../models/rb3/profile"
 import { KRb3ShopInfo } from "../../models/rb3/shop_info"
 import { BigIntProxy, KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
-import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
+import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb3Profile } from "../../models/rb3/profile"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
@@ -14,6 +14,7 @@ import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateRb2LincleLink, IRb2LincleLink } from "../../models/rb2/profile"
 import { isToday } from "../../utility/utility_functions"
 import { generateRb3LobbyEntry, IRb3LobbyEntry, IRb3LobbyEntryElement, Rb3LobbyEntryMap } from "../../models/rb3/lobby"
+import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb3HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -32,26 +33,22 @@ export namespace Rb3HandlersCommon {
     }
 
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
-        let data = <any>getExampleEventControl()
-        data.nm = 0
+        let data = getExampleEventControl()
 
         let result = {
             plyid: 0,
             nm: 0,
-            start_time: BigInt(0),
+            start_time: BigInt(Date.now() * 1000),
             event_ctrl: { data: data },
             item_lock_ctrl: {},
         }
 
-        let datamap: any = {}
-        Object.assign(datamap, Rb3EventControlMap)
-        datamap.nm = { $type: "s32" }
         let map = {
             plyid: { $type: <"s32">"s32" },
             nm: { $type: <"s32">"s32" },
             start_time: { $type: <"u64">"u64" },
             event_ctrl: {
-                data: datamap
+                data: { 0: Rb3EventControlMap }
             },
             item_lock_ctrl: {},
         }
@@ -107,16 +104,12 @@ export namespace Rb3HandlersCommon {
                 result = generateRb3Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
             } else {
-                let userId
-
-                do userId = Math.trunc(Math.random() * 99999999)
-                while ((await DB.Find<IRb3PlayerAccount>({ collection: "rb.rb3.player.account", userId: userId })).length > 0)
-
-                result = generateRb3Profile(readParam.rid, rbPlayer.userId)
+                result = generateRb3Profile(readParam.rid, await generateUserId())
                 result.pdata.account.isFirstFree = true
                 result.pdata.base.name = "RBPlayer"
                 initializePlayer(result)
             }
+            await writePlayerInternal(result)
         } else {
             let base: IRb3PlayerBase = await DB.FindOne<IRb3PlayerBase>(readParam.rid, { collection: "rb.rb3.player.base" })
             let config: IRb3PlayerConfig = await DB.FindOne<IRb3PlayerConfig>(readParam.rid, { collection: "rb.rb3.player.config" })
@@ -226,33 +219,14 @@ export namespace Rb3HandlersCommon {
                 }
             }
         }
-        send.object(readPlayerPostTask(mapKObject(result, Rb3PlayerReadMap)))
+        send.object(readPlayerPostProcess(mapKObject(result, Rb3PlayerReadMap)))
     }
 
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
         try {
             let rid = data.rid["@content"]
-            let ridqueries: Query<any>[] = [
-                { collection: "rb.rb3.player.account" },
-                { collection: "rb.rb3.player.base" },
-                { collection: "rb.rb3.player.characterCard" },
-                { collection: "rb.rb3.player.config" },
-                { collection: "rb.rb3.player.custom" },
-                { collection: "rb.rb3.playData.musicRecord" },
-                { collection: "rb.rb3.playData.classcheck" },
-                { collection: "rb.rb3.player.mylist" },
-                { collection: "rb.rb3.player.parameters" },
-            ]
-            let uid = ridqueries[0].userId
-            let uidqueries: Query<any>[] = [
-                { collection: "rb.rb3.playData.justCollection", userId: uid }
-            ]
-            for (let q of ridqueries) {
-                DB.Remove(rid, q)
-            }
-            for (let q of uidqueries) {
-                DB.Remove(q)
-            }
+            let account = await DB.FindOne<IRb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
+            await DBM.overall(rid, account?.userId, "rb.rb3", "delete")
 
             send.success()
         } catch (e) {
@@ -262,9 +236,13 @@ export namespace Rb3HandlersCommon {
     }
 
     export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb3Player>, send: EamuseSend) => {
-        // try {
-        data = writePlayerPredecessor(data)
+        data = await writePlayerPreProcess(data)
         let player: IRb3Player = mapBackKObject(data, Rb3PlayerWriteMap)[0]
+        await writePlayerInternal(player)
+        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
+    }
+    async function writePlayerInternal(player: IRb3Player) {
+        let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb3PlayerAccount> = { collection: "rb.rb3.player.account" }
         let playerAccountForPlayCountQuery: IRb3PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
@@ -272,16 +250,11 @@ export namespace Rb3HandlersCommon {
             if (rid == "") throw new Error("rid is empty")
             if (playerAccountForPlayCountQuery == null) { // save the new player
                 if (player.pdata.account.userId <= 0) {
-                    let userId
-
-                    do userId = Math.trunc(Math.random() * 99999999)
-                    while ((await DB.Find<IRb3PlayerAccount>({ collection: "rb.rb3.player.account", userId: userId })).length > 0)
-
-                    player.pdata.account.userId = userId
+                    player.pdata.account.userId = await generateUserId()
                     player.pdata.account.isFirstFree = true
                     initializePlayer(player)
                 }
-                await DBM.upsert(rid, { collection: "rb.rb3.player.account" }, player.pdata.account)
+                opm.upsert(rid, { collection: "rb.rb3.player.account" }, player.pdata.account)
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
@@ -292,31 +265,34 @@ export namespace Rb3HandlersCommon {
                 }
                 playerAccountForPlayCountQuery.playCountToday++
 
-                await DBM.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)
+                opm.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.base) {
-                await DBM.upsert<IRb3PlayerBase>(rid, { collection: "rb.rb3.player.base" }, player.pdata.base)
+                let oldBase = await DB.FindOne<IRb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
+                if (oldBase != null) {
+                    player.pdata.base.name = oldBase.name
+                    player.pdata.base.comment = oldBase.comment
+                } else {
+                    if (player.pdata.base.comment == "Welcome to REFLEC BEAT colette!") player.pdata.base.comment = ""
+                }
+                opm.upsert<IRb3PlayerBase>(rid, { collection: "rb.rb3.player.base" }, player.pdata.base)
             }
-            if (player.pdata.config) await DBM.upsert<IRb3PlayerConfig>(rid, { collection: "rb.rb3.player.config" }, player.pdata.config)
-            if (player.pdata.custom) await DBM.upsert<IRb3PlayerCustom>(rid, { collection: "rb.rb3.player.custom" }, player.pdata.custom)
-            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
-            if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
-            if (player.pdata.mylist?.slot?.length > 0) await DBM.upsert<IRb3Mylist>(rid, { collection: "rb.rb3.player.mylist" }, player.pdata.mylist)
-            if (player.pdata.lincleLink != null) await DBM.upsert<IRb2LincleLink>(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
-            if (player.pdata.tricolettePark != null) await DBM.upsert<IRb3TricolettePark>(rid, { collection: "rb.rb3.player.tricolettePark" }, player.pdata.tricolettePark)
-            if (player.pdata.eventProgress?.data?.length > 0) for (let d of player.pdata.eventProgress.data) await updateEventProgress(rid, d)
-            if (player.pdata.equip?.data?.length > 0) for (let e of player.pdata.equip.data) await DBM.upsert<IRb3Equip>(rid, { collection: "rb.rb3.player.equip", index: e.index }, e)
-            if (player.pdata.seedPod?.data?.length > 0) for (let s of player.pdata.seedPod.data) await DBM.upsert<IRb3SeedPod>(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
-            if (player.pdata.order != null) await updateOrder(rid, player.pdata.order)
-            if (player.pdata.stamp != null) await DBM.upsert<IRb3Stamp>(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
+            if (player.pdata.config) opm.upsert<IRb3PlayerConfig>(rid, { collection: "rb.rb3.player.config" }, player.pdata.config)
+            if (player.pdata.custom) opm.upsert<IRb3PlayerCustom>(rid, { collection: "rb.rb3.player.custom" }, player.pdata.custom)
+            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, opm)
+            if (player.pdata.released?.info?.length > 0) for (let i of player.pdata.released.info) opm.upsert<IRb3PlayerReleasedInfo>(rid, { collection: "rb.rb3.player.releasedInfo", type: i.type, id: i.id }, i)
+            if (player.pdata.mylist?.slot?.length > 0) opm.upsert<IRb3Mylist>(rid, { collection: "rb.rb3.player.mylist" }, player.pdata.mylist)
+            if (player.pdata.lincleLink != null) opm.upsert<IRb2LincleLink>(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
+            if (player.pdata.tricolettePark != null) opm.upsert<IRb3TricolettePark>(rid, { collection: "rb.rb3.player.tricolettePark" }, player.pdata.tricolettePark)
+            if (player.pdata.eventProgress?.data?.length > 0) for (let d of player.pdata.eventProgress.data) await updateEventProgress(rid, d, opm)
+            if (player.pdata.equip?.data?.length > 0) for (let e of player.pdata.equip.data) opm.upsert<IRb3Equip>(rid, { collection: "rb.rb3.player.equip", index: e.index }, e)
+            if (player.pdata.seedPod?.data?.length > 0) for (let s of player.pdata.seedPod.data) opm.upsert<IRb3SeedPod>(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
+            if (player.pdata.order != null) await updateOrder(rid, player.pdata.order, opm)
+            if (player.pdata.stamp != null) opm.upsert<IRb3Stamp>(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
         }
-        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
-        // }
-        // catch (e) {
-        //     console.log((<Error>e).message)
-        //     send.deny()
-        // }
+
+        await DBM.operate(opm)
     }
 
     export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
@@ -415,7 +391,8 @@ export namespace Rb3HandlersCommon {
         card_type: { $type: "s16" }
     }
 
-    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb3PlayerStageLog): Promise<void> {
+    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb3PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
+        if ((stageLog.musicId == 0) && (stageLog.clearType == -1)) return
         let query: Query<IRb3MusicRecord> = { $and: [{ collection: "rb.rb3.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
         let musicRecord = await DB.FindOne<IRb3MusicRecord>(rid, query)
 
@@ -455,15 +432,16 @@ export namespace Rb3HandlersCommon {
 
         musicRecord.time = stageLog.time
         musicRecord.playCount++
-        await DBM.upsert(rid, query, musicRecord)
-        await DBM.insert(rid, stageLog)
+        opm.upsert(rid, query, musicRecord)
+        opm.insert(rid, stageLog)
     }
 
-    async function updateOrder(rid: string, order: IRb3Order) {
+    async function updateOrder(rid: string, order: IRb3Order, opm: DBM.DBOperationManager) {
         let oldOrder: IRb3Order = await DB.FindOne<IRb3Order>(rid, { collection: "rb.rb3.player.order" })
-        if (oldOrder == null) await DBM.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, order)
+        if ((oldOrder == null) || (oldOrder.details == null)) opm.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, order)
         else {
             oldOrder.experience = order.experience
+
             if (order.details != null) {
                 for (let oo of oldOrder.details) {
                     oo.slot = -1
@@ -473,33 +451,37 @@ export namespace Rb3HandlersCommon {
                     if ((no.index == 2) && (no.clearedCount == 0)) {
                         no.clearedCount = 1
                         no.fragmentsCount0 = 1
+                        no.fragmentsCount1 = 1
+                        no.slot = -1
+                    }
+                    else if (((no.index == 34) || (no.index == 35) || (no.index == 36)) && (no.clearedCount == 0)) {
+                        no.clearedCount = 1
+                        no.fragmentsCount0 = 12
+                        no.fragmentsCount1 = 12
                         no.slot = -1
                     }
                     for (let ooi = 0; ooi < oldOrder.details.length; ooi++) {
                         let oo = oldOrder.details[ooi]
                         if (oo.index == no.index) {
                             flag = true
+                            no.clearedCount += oldOrder.details[ooi].clearedCount
                             oldOrder.details[ooi] = no
                             break
                         }
                     }
                     if (!flag) oldOrder.details.push(no)
                 }
-                await DBM.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, oldOrder)
+                opm.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, oldOrder)
             }
         }
     }
 
-    async function updateReleasedInfos(rid: string, infos: { info: IRb3PlayerReleasedInfo[] }) {
-        for (let i of infos.info) await DBM.upsert<IRb3PlayerReleasedInfo>(rid, { collection: "rb.rb3.player.releasedInfo", type: i.type, id: i.id }, i)
-    }
-
-    async function updateEventProgress(rid: string, e: IRb3EventProgress) {
+    async function updateEventProgress(rid: string, e: IRb3EventProgress, opm: DBM.DBOperationManager) {
         let oldE: IRb3EventProgress = await DB.FindOne<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index })
-        if (oldE == null) await DBM.upsert<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index }, e)
+        if (oldE == null) opm.upsert<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index }, e)
         else {
             oldE.experience += e.experience
-            await DBM.update<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: oldE.index }, oldE)
+            opm.update<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: oldE.index }, oldE)
         }
     }
 

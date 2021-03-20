@@ -1,3 +1,17 @@
+- v1.0.0
+
+  Added webui for RB groovin' (include settings). 
+  - Due to some issues of data transfer, you cannot get your player name saved correctly in RB groovin' if you signed up with a new card or a card already has a player name with chinese characters/katakana & hiragana/symbols. You should edit your name on webui to solve it.
+
+  Now Class 零 and 極 in class check mode of RB VOLZZA can be played.
+
+  Fixed the logic of plugin settings.
+
+  Fixed webui issues, organized webui codes.
+
+  Database entry changes
+    - averagePrecisionTimes100 (removed, breaking change)
+
 - v0.12.0-beta
 
   Added RB groovin' support.

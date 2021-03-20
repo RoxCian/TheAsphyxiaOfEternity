@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v0.12.0-beta** 
+Plugin Version: **v1.0.0** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -18,7 +18,7 @@ Supported versions:
     - Score saving
     - Just collection saving
     - Character cards saving
-    - Classcheck & Quest progress saving
+    - Classcheck & quest progress saving
     - Web UI
     - Asphyxia savedata importing<br/><br/>
 
@@ -38,7 +38,8 @@ Supported versions:
 
     - Account & settings & mylist saving
     - Score saving
-    - Reflec Dojo & Pastel Wonder Quest<br/><br/>
+    - Reflec Dojo & Pastel Wonder Quest & Mystical Strike
+    - Web UI<br/><br/>
 
 - **REFLEC BEAT colette -All Seasons-**
 

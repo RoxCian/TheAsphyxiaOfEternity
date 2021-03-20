@@ -1,7 +1,7 @@
-
+"use strict";
 
 let getTabs = () => document.querySelectorAll("#tabs li")
-let getTabContents = () => document.querySelectorAll("#tab-content #tab-content-body")
+let getTabContents = () => document.querySelectorAll("#tab-content, .tab-content")
 function initializeTabs() {
     getTabs().forEach((t) => {
         t.addEventListener("click", (e) => {
@@ -30,15 +30,16 @@ function updateActiveContent(tabGroup, tabIndex) {
 }
 
 function initializeToggles() {
-    let headers = document.querySelectorAll(".card-header .card-toggle")
+    let toggles = document.querySelectorAll(".card-header .card-toggle")
     let contents = document.querySelectorAll(".card-content")
 
-    for (let h of headers) {
-        let card = h.getAttribute("card")
+    for (let t of toggles) {
+        let card = t.getAttribute("card")
         if (card == null) continue
         let cc = []
         for (let c of contents) if (c.getAttribute("card") == card) cc.push(c)
-        h.addEventListener("click", (e) => {
+        t.style.transition = "0.2s linear"
+        t.addEventListener("click", (e) => {
             if (e.currentTarget.style.transform == "rotate(180deg)") {
                 e.currentTarget.style.transform = ""
                 for (let c of cc) c.classList.remove("is-hidden")
@@ -72,10 +73,9 @@ function initializeFormSelects() {
         for (let i = 0; i < options.length; i++) {
             let o = options[i]
             let value = (o.getAttribute("value") == null) ? i : o.getAttribute("value")
-            if (value == input.value) {
-                select.selectedIndex = i
-                break
-            }
+            let enabled = (o.getAttribute("disabled") == null) ? true : false
+            if (value == input.value) select.selectedIndex = i
+            if (!enabled) o.style.display = "none"
         }
         select.addEventListener("change", () => {
             for (let i = 0; i < options.length; i++) {
@@ -387,14 +387,22 @@ function initializeMarqueeLabels() {
         for (let marquee of marquees) {
             if (marquee.closest(".marquee-label-container") != c) continue
             let refresh = () => {
-                if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > c.offsetWidth - 10)) {
+                let lpad = parseInt(($(c).css("padding-left")))
+                if (lpad == NaN) lpad = 0
+                let rpad = parseInt(($(c).css("padding-right")))
+                if (rpad == NaN) rpad = 20
+                let hpad = lpad + rpad
+                let speed = marquee.getAttribute("speed")
+                if (speed == null) speed = 1
+                let stopingTime = 0.5
+                let duration = (20 * (marquee.offsetWidth - c.offsetWidth)) / speed + 2 * stopingTime
+                if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > c.offsetWidth - hpad)) {
                     marquee.animate([
                         { transform: "translateX(0)", offset: 0 },
-                        { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.1 },
-                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - 10) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 0.9 },
-                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - 10) + "px)", offset: 1 }
-                    ],
-                        { duration: 20 * (marquee.offsetWidth - c.offsetWidth) + 1000, direction: "alternate-reverse", iterations: Infinity })
+                        { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: stopingTime / duration },
+                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - hpad) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 1 - stopingTime / duration },
+                        { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - hpad) + "px)", offset: 1 }
+                    ], { duration: (20 * (marquee.offsetWidth - c.offsetWidth) + 1000) / speed, direction: "alternate-reverse", iterations: Infinity })
                 } else marquee.style.animation = "none"
             }
             let o = new ResizeObserver(refresh)

@@ -3,10 +3,10 @@ import { getExampleEventControl, Rb4EventControlMap } from "../../models/rb4/eve
 import { initializePlayer } from "./initialize_player"
 import { generateRb4MusicRecord, IRb4MusicRecord, Rb4MusicRecordMap } from "../../models/rb4/music_record"
 import { IRb4Mylist } from "../../models/rb4/mylist"
-import { generateRb4Episode, IRb4Episode, IRb4Player, IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerClasscheckLog, IRb4PlayerConfig, IRb4PlayerCustom, IRb4PlayerParameters, IRb4PlayerReleasedInfo, IRb4PlayerStageLog, IRb4Quest, IRb4Stamp, Rb4EpisodeMap, Rb4PlayerReadMap, Rb4PlayerWriteMap } from "../../models/rb4/profile"
+import { generateRb4Episode, IRb4Episode, IRb4Player, IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerClasscheckLog, IRb4PlayerConfig, IRb4PlayerCustom, IRb4PlayerParameters, IRb4PlayerReleasedInfo, IRb4PlayerStageLog, IRb4Quest, IRb4Stamp, Rb4EpisodeMap, Rb4PlayerReadMap, Rb4PlayerReleasedInfoMap, Rb4PlayerWriteMap } from "../../models/rb4/profile"
 import { KRb4ShopInfo } from "../../models/rb4/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
-import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
+import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb4Profile } from "../../models/rb4/profile"
 import { DBM } from "../utility/db_manager"
 import { generateRb4LobbyEntry, IRb4LobbyEntry, IRb4LobbyEntryElement, Rb4LobbyEntryMap } from "../../models/rb4/lobby"
@@ -14,6 +14,7 @@ import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId, isNewMusic } from "../../data/musicinfo/rb_music_info"
 import { isToday, log, shiftjisToUtf8 } from "../../utility/utility_functions"
+import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb4HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -30,10 +31,50 @@ export namespace Rb4HandlersCommon {
     export const ReadHitChartInfo: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
         send.object({ ver: {} })
     }
+    export const PlayerSucceeded: EPR = async (info, data, send) => {
+        let rid = $(data).str("rid")
+        let account: IRb4PlayerAccount = await DB.FindOne<IRb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
+        let result
+        if (account == null) {
+            result = {
+                name: "",
+                lv: -1,
+                exp: -1,
+                grd: -1,
+                ap: -1,
+                money: -1,
+                released: {},
+                mrecord: {}
+            }
+        } else {
+            let base: IRb4PlayerBase = await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+            let released: IRb4PlayerReleasedInfo[] = await DB.Find<IRb4PlayerReleasedInfo>(rid, { collection: "rb.rb4.player.releasedInfo" })
+            let record: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })
+            result = {
+                name: base.name,
+                lv: 0,
+                exp: 0,
+                grd: base.matchingGrade,
+                ap: base.abilityPointTimes100,
+                money: base.money,
+                released: (released.length == 0) ? {} : { i: released },
+                mrecord: (record.length == 0) ? {} : { mrec: record }
+            }
+        }
+        send.object(mapKObject(result, {
+            name: { $type: "str" },
+            lv: { $type: "s16" },
+            exp: { $type: "s32" },
+            grd: { $type: "s32" },
+            ap: { $type: "s32" },
+            money: { $type: "s32" },
+            released: { i: { 0: Rb4PlayerReleasedInfoMap } },
+            mrecord: { mrec: { 0: Rb4MusicRecordMap } }
+        }))
+    }
 
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
-        let data = <any>getExampleEventControl()
-        data.nm = 0
+        let data = getExampleEventControl()
         let rid = $(_data).str("rid")
         let account = (rid == null) ? null : await DB.FindOne<IRb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
 
@@ -45,15 +86,12 @@ export namespace Rb4HandlersCommon {
             item_lock_ctrl: {},
         }
 
-        let datamap: any = {}
-        Object.assign(datamap, Rb4EventControlMap)
-        datamap.nm = { $type: "s32" }
         let map = {
             plyid: { $type: <"s32">"s32" },
             nm: { $type: <"s32">"s32" },
             start_time: { $type: <"u64">"u64" },
             event_ctrl: {
-                data: datamap
+                data: { 0: Rb4EventControlMap }
             },
             item_lock_ctrl: {},
         }
@@ -70,16 +108,12 @@ export namespace Rb4HandlersCommon {
                 result = generateRb4Profile(readParam.rid, rbPlayer.userId, rbPlayer.version)
                 result.pdata.base.name = rbPlayer.name
             } else {
-                let userId
-
-                do userId = Math.trunc(Math.random() * 99999999)
-                while ((await DB.Find<IRb4PlayerAccount>({ collection: "rb.rb4.player.account", userId: userId })).length > 0)
-
-                result = generateRb4Profile(readParam.rid, rbPlayer.userId)
+                result = generateRb4Profile(readParam.rid, await generateUserId())
                 result.pdata.account.isFirstFree = true
                 result.pdata.base.name = "RBPlayer"
                 initializePlayer(result)
             }
+            await writePlayerInternal(result)
         } else {
             let base: IRb4PlayerBase = await DB.FindOne<IRb4PlayerBase>(readParam.rid, { collection: "rb.rb4.player.base" })
             let config: IRb4PlayerConfig = await DB.FindOne<IRb4PlayerConfig>(readParam.rid, { collection: "rb.rb4.player.config" })
@@ -98,7 +132,7 @@ export namespace Rb4HandlersCommon {
             if (account.pst == null) account.pst = BigInt(0)
             if (account.st == null) account.st = BigInt(0)
             if (!isToday(toBigInt(account.st))) account.playCountToday = 1
-            else account.playCountToday++
+            else account.playCountToday = (account.playCountToday == null) ? 1 : (account.playCountToday + 1)
             if (account.opc == null) account.opc = 0
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
@@ -124,6 +158,9 @@ export namespace Rb4HandlersCommon {
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
+            if (episode == null) episode = generateRb4Episode(account.userId)
+            if (episode.text == null) episode.text = ""
+
             result = {
                 pdata: {
                     account: account,
@@ -148,33 +185,14 @@ export namespace Rb4HandlersCommon {
                 }
             }
         }
-        send.object(readPlayerPostTask(mapKObject(result, Rb4PlayerReadMap)))
+        send.object(readPlayerPostProcess(mapKObject(result, Rb4PlayerReadMap)))
     }
 
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
         try {
             let rid = data.rid["@content"]
-            let ridqueries: Query<any>[] = [
-                { collection: "rb.rb4.player.account" },
-                { collection: "rb.rb4.player.base" },
-                { collection: "rb.rb4.player.characterCard" },
-                { collection: "rb.rb4.player.config" },
-                { collection: "rb.rb4.player.custom" },
-                { collection: "rb.rb4.playData.musicRecord" },
-                { collection: "rb.rb4.playData.classcheck" },
-                { collection: "rb.rb4.player.mylist" },
-                { collection: "rb.rb4.player.parameters" },
-            ]
-            let uid = ridqueries[0].userId
-            let uidqueries: Query<any>[] = [
-                { collection: "rb.rb4.playData.justCollection", userId: uid }
-            ]
-            for (let q of ridqueries) {
-                DB.Remove(rid, q)
-            }
-            for (let q of uidqueries) {
-                DB.Remove(q)
-            }
+            let account = await DB.FindOne<IRb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
+            await DBM.overall(rid, account?.userId, "rb.rb4", "delete")
 
             send.success()
         } catch (e) {
@@ -184,9 +202,13 @@ export namespace Rb4HandlersCommon {
     }
 
     export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb4Player>, send: EamuseSend) => {
-        // try {
-        data = writePlayerPredecessor(data)
+        data = await writePlayerPreProcess(data)
         let player: IRb4Player = mapBackKObject(data, Rb4PlayerWriteMap)[0]
+        await writePlayerInternal(player)
+        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
+    }
+    async function writePlayerInternal(player: IRb4Player) {
+        let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb4PlayerAccount> = { collection: "rb.rb4.player.account" }
         let playerAccountForPlayCountQuery: IRb4PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
@@ -194,12 +216,7 @@ export namespace Rb4HandlersCommon {
             if (rid == "") throw new Error("rid is empty")
             if (playerAccountForPlayCountQuery == null) { // save the new player
                 if (player.pdata.account.userId <= 0) {
-                    let userId
-
-                    do userId = Math.trunc(Math.random() * 99999999)
-                    while ((await DB.Find<IRb4PlayerAccount>({ collection: "rb.rb4.player.account", userId: userId })).length > 0)
-
-                    player.pdata.account.userId = userId
+                    player.pdata.account.userId = await generateUserId()
                     player.pdata.account.isFirstFree = true
                     initializePlayer(player)
                 }
@@ -207,7 +224,7 @@ export namespace Rb4HandlersCommon {
                     let n = shiftjisToUtf8(player.pdata.base.name)
                     if ((n.length == 0) || (n.length > 8) || (n == "-")) player.pdata.base.name = player.pdata.account.userId.toString()
                 }
-                await DBM.upsert(rid, { collection: "rb.rb4.player.account" }, player.pdata.account)
+                opm.upsert(rid, { collection: "rb.rb4.player.account" }, player.pdata.account)
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
@@ -218,35 +235,56 @@ export namespace Rb4HandlersCommon {
                 playerAccountForPlayCountQuery.playCountToday++
                 if (player.pdata.base) player.pdata.base.name = (await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
 
-                await DBM.update(rid, { collection: "rb.rb4.player.account" }, playerAccountForPlayCountQuery)
+                opm.update(rid, { collection: "rb.rb4.player.account" }, playerAccountForPlayCountQuery)
             }
-            if (player.pdata.base) await DBM.upsert<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" }, player.pdata.base)
-            if (player.pdata.config) await DBM.upsert<IRb4PlayerConfig>(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
-            if (player.pdata.custom) await DBM.upsert<IRb4PlayerCustom>(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
-            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i)
+            if (player.pdata.base) {
+                let oldBase = await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+                if (oldBase != null) {
+                    player.pdata.base.name = oldBase.name
+                    player.pdata.base.comment = oldBase.comment
+                } else {
+                    if (player.pdata.base.comment == "Welcome to REFLEC BEAT groovin!!") player.pdata.base.comment = ""
+                }
+                opm.upsert<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" }, player.pdata.base)
+            }
+            if (player.pdata.config) opm.upsert<IRb4PlayerConfig>(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
+            if (player.pdata.custom) opm.upsert<IRb4PlayerCustom>(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
             if ((<IRb4PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
                 let musicsId: number[] = [player.pdata.stageLogs.log[0].musicId, (player.pdata.stageLogs.log[1] == null ? -1 : player.pdata.stageLogs.log[1].musicId), (player.pdata.stageLogs.log[2] == null ? -1 : player.pdata.stageLogs.log[2].musicId)]
                 let chartsType: number[] = [player.pdata.stageLogs.log[0].chartType, (player.pdata.stageLogs.log[1] == null ? -1 : player.pdata.stageLogs.log[1].chartType), (player.pdata.stageLogs.log[2] == null ? -1 : player.pdata.stageLogs.log[2].chartType)]
-                await updateClasscheckRecordFromLog(rid, <IRb4PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, musicsId, chartsType)
+                await updateClasscheckRecordFromLog(rid, <IRb4PlayerClasscheckLog>player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, musicsId, chartsType, opm)
+                if ((<IRb4PlayerClasscheckLog>player.pdata.classcheck).clearType == 1) { // For webui
+                    if (musicsId[0] >= 0) {
+                        if (musicsId[1] >= 0) {
+                            player.pdata.stageLogs.log[0].clearTypeForClasscheck == "Win"
+                            if (musicsId[2] >= 0) {
+                                player.pdata.stageLogs.log[1].clearTypeForClasscheck == "Win"
+                                player.pdata.stageLogs.log[2].clearTypeForClasscheck = (player.pdata.stageLogs.log[2].clearType >= 9) ? "Draw" : "Lose"
+                            } else player.pdata.stageLogs.log[1].clearTypeForClasscheck = (player.pdata.stageLogs.log[1].clearType >= 9) ? "Draw" : "Lose"
+                        } else player.pdata.stageLogs.log[0].clearTypeForClasscheck = (player.pdata.stageLogs.log[0].clearType >= 9) ? "Draw" : "Lose"
+                    }
+                } else {
+                    player.pdata.stageLogs.log[0].clearTypeForClasscheck == "Win"
+                    player.pdata.stageLogs.log[1].clearTypeForClasscheck == "Win"
+                    player.pdata.stageLogs.log[2].clearTypeForClasscheck == "Win"
+                }
             }
-            if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
-            if (player.pdata.playerParam?.item?.length > 0) await updatePlayerParameters(rid, player.pdata.playerParam)
-            if (player.pdata.mylist?.list != null) await DBM.upsert<IRb4Mylist>(rid, { collection: "rb.rb4.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
-            if (player.pdata.quest != null) await updateQuest(rid, player.pdata.quest)
-            if (player.pdata.stamp != null) await DBM.upsert<IRb4Stamp>(rid, { collection: "rb.rb4.player.stamp" }, player.pdata.stamp)
-            if (player.pdata.episode.info != null) await DBM.upsert<IRb4Episode>(null, { collection: "rb.rb4.player.episode#userId", type: player.pdata.episode.info.type }, player.pdata.episode.info)
+            if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, opm)
+            if (player.pdata.released?.info?.length > 0) for (let i of player.pdata.released.info) opm.upsert<IRb4PlayerReleasedInfo>(rid, { collection: "rb.rb4.player.releasedInfo", type: i.type, id: i.id }, i)
+            if (player.pdata.playerParam?.item?.length > 0) for (let i of player.pdata.playerParam.item) opm.upsert<IRb4PlayerParameters>(rid, { collection: "rb.rb4.player.parameters", type: i.type, bank: i.bank }, i)
+            if (player.pdata.mylist?.list != null) opm.upsert<IRb4Mylist>(rid, { collection: "rb.rb4.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
+            if (player.pdata.quest != null) await updateQuest(rid, player.pdata.quest, opm)
+            if (player.pdata.stamp != null) opm.upsert<IRb4Stamp>(rid, { collection: "rb.rb4.player.stamp" }, player.pdata.stamp)
+            if (player.pdata.episode.info != null) opm.upsert<IRb4Episode>(null, { collection: "rb.rb4.player.episode#userId", type: player.pdata.episode.info.type }, player.pdata.episode.info)
         }
-        send.object({ uid: K.ITEM("s32", player.pdata.account.userId) })
-        // }
-        // catch (e) {
-        //     console.log((<Error>e).message)
-        //     send.deny()
-        // }
+
+        DBM.operate(opm)
     }
 
     export const ReadEpisode: EPR = async (req, data, send) => {
         let userId = $(data).number("user_id")
         let episodes = await DB.Find<IRb4Episode>({ collection: "rb.rb4.player.episode#userId", userId: userId })
+        for (let e of episodes) if (e.text == null) e.text = ""
         let result: { pdata: { episode: { info?: IRb4Episode[] } } } = (episodes.length == 0) ? { pdata: { episode: {} } } : {
             pdata: { episode: { info: episodes } }
         }
@@ -425,7 +463,7 @@ export namespace Rb4HandlersCommon {
         card_type: { $type: "s16" }
     }
 
-    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb4PlayerStageLog): Promise<void> {
+    async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb4PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb4MusicRecord> = { $and: [{ collection: "rb.rb4.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
         let musicRecord = await DB.FindOne<IRb4MusicRecord>(rid, query)
 
@@ -465,11 +503,11 @@ export namespace Rb4HandlersCommon {
 
         musicRecord.time = stageLog.time
         musicRecord.playCount++
-        await DBM.upsert(rid, query, musicRecord)
-        await DBM.insert(rid, stageLog)
+        opm.upsert(rid, query, musicRecord)
+        opm.insert(rid, stageLog)
     }
 
-    async function updateClasscheckRecordFromLog(rid: string, log: IRb4PlayerClasscheckLog, time: number, musicsId: number[], chartsType: number[]): Promise<void> {
+    async function updateClasscheckRecordFromLog(rid: string, log: IRb4PlayerClasscheckLog, time: number, musicsId: number[], chartsType: number[], opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb4ClasscheckRecord> = { collection: "rb.rb4.playData.classcheck", class: log.class }
         let classRecord = (await DB.Find<IRb4ClasscheckRecord>(rid, query))[0]
         let isNeedUpdate = false
@@ -492,35 +530,27 @@ export namespace Rb4HandlersCommon {
             isNeedUpdate = true
             classRecord.totalScore = log.totalScore
             classRecord.seperateScore = log.seperateScore
+            classRecord.seperateAchievementRateTimes100 = log.seperateAchievementRateTimes100
+            classRecord.musicsId = musicsId
+            classRecord.chartsType = chartsType
         }
         if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
             isNeedUpdate = true
             classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
-            classRecord.seperateAchievementRateTimes100 = log.seperateAchievementRateTimes100
         }
         classRecord.lastPlayTime = time
         if (isNeedUpdate) {
             classRecord.recordUpdateTime = time
-            classRecord.musicsId = musicsId
-            classRecord.chartsType = chartsType
         }
         classRecord.playCount++
-        await DBM.upsert(rid, query, classRecord)
+        opm.upsert(rid, query, classRecord)
     }
 
-    async function updateReleasedInfos(rid: string, infos: { info: IRb4PlayerReleasedInfo[] }) {
-        for (let i of infos.info) await DBM.upsert<IRb4PlayerReleasedInfo>(rid, { collection: "rb.rb4.player.releasedInfo", type: i.type, id: i.id }, i)
-    }
-
-    async function updatePlayerParameters(rid: string, params: { item: IRb4PlayerParameters[] }) {
-        for (let i of params.item) await DBM.upsert<IRb4PlayerParameters>(rid, { collection: "rb.rb4.player.parameters", type: i.type, bank: i.bank }, i)
-    }
-
-    async function updateQuest(rid: string, quest: IRb4Quest) {
+    async function updateQuest(rid: string, quest: IRb4Quest, opm: DBM.DBOperationManager) {
         let old = await DB.FindOne<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" })
         if (old != null) quest.comment = old.comment
         if (quest.comment == null) quest.comment = ""
-        await DBM.upsert<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" }, quest)
+        opm.upsert<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" }, quest)
     }
 
     function getClearTypeIndex(record: IRb4PlayerStageLog | IRb4MusicRecord): number {

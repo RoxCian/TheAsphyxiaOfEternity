@@ -3,12 +3,10 @@ import { IRb6CharacterCard } from "../../models/rb6/character_card"
 import { IRb6ClasscheckRecord } from "../../models/rb6/classcheck_record"
 import { generateRb6MusicRecord, IRb6MusicRecord } from "../../models/rb6/music_record"
 import { IRb6Mylist } from "../../models/rb6/mylist"
-import { IRb6PlayerBase, IRb6PlayerConfig, IRb6PlayerCustom } from "../../models/rb6/profile"
+import { IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerConfig, IRb6PlayerCustom } from "../../models/rb6/profile"
 import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
-import { Rb6HandlersCommon } from "./common"
-import { operateDataInternal } from "./data"
 
 export namespace Rb6HandlersWebUI {
     export const updateSettings = async (data: {
@@ -128,7 +126,8 @@ export namespace Rb6HandlersWebUI {
     }
 
     export const exportData = async (data: { refid: string }) => {
-        return await operateDataInternal(data.refid, "export")
+        let account = await DB.FindOne<IRb6PlayerAccount>(data.refid, { collection: "rb.rb6.player.account" })
+        return await DBM.overall(data.refid, account.userId, "rb.rb6", "export")
     }
 
 

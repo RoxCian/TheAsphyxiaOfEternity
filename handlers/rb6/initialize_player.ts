@@ -3,6 +3,7 @@ import { IRb6Player } from "../../models/rb6/profile"
 export function initializePlayer(player: IRb6Player) {
     let init = (v, i) => (v == null) ? i : v
 
+    player.pdata.account.playCount = 0
     player.pdata.base.rankQuestScore = init(player.pdata.base.rankQuestScore, [0, 0, 0])
     player.pdata.base.rankQuestRank = init(player.pdata.base.rankQuestRank, [0, 0, 0])
     player.pdata.base.mLog = init(player.pdata.base.mLog, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])

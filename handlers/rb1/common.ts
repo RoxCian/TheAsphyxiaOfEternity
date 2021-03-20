@@ -1,12 +1,12 @@
 import { getExampleEventControl, Rb5EventControlMap } from "../../models/rb5/event_control"
 // import { initializePlayer } from "./initialize_player"
-import { KRb5ShopInfo } from "../../models/rb5/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
-import { readPlayerPostTask, writePlayerPredecessor } from "./system_parameter_controller"
+import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { DBM } from "../utility/db_manager"
 import { generateRb1MusicRecord, generateRb1Profile, IRb1MusicRecord, IRb1Player, IRb1PlayerBase, IRb1PlayerCustom, IRb1PlayerReleasedInfo, IRb1PlayerStat, IRb1StageLog, Rb1PlayerMap } from "../../models/rb1/profile"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { IRb1StageLogStandalone, IRb1StageLogStandaloneElement, Rb1StageLogStandaloneMap } from "../../models/rb1/stage_log_standalone"
+import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb1HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -14,10 +14,6 @@ export namespace Rb1HandlersCommon {
 
         }
         send.success()
-    }
-
-    export const BootPcb: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
-        send.object({ sinfo: KRb5ShopInfo })
     }
 
     export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
@@ -60,46 +56,17 @@ export namespace Rb1HandlersCommon {
                 result = generateRb1Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
             } else {
-                let userId
-
-                do userId = Math.trunc(Math.random() * 99999999)
-                while ((await DB.Find<IRb1PlayerBase>({ collection: "rb.rb1.player.base", userId: userId })).length > 0)
-                result = generateRb1Profile(readParam.rid, userId)
+                result = generateRb1Profile(readParam.rid, await generateUserId())
                 result.pdata.base.name = "RBPlayer"
             }
+            await writePlayerInternal(result)
         } else {
             if (base.level > 5) base.tutorialFlag = 0
             let stat: IRb1PlayerStat = await DB.FindOne<IRb1PlayerStat>(readParam.rid, { collection: "rb.rb1.player.stat" })
             let custom: IRb1PlayerCustom = await DB.FindOne<IRb1PlayerCustom>(readParam.rid, { collection: "rb.rb1.player.custom" })
             let released: IRb1PlayerReleasedInfo[] = await DB.Find<IRb1PlayerReleasedInfo>(readParam.rid, { collection: "rb.rb1.player.releasedInfo" })
 
-            let init = (v, i) => (v == null) ? i : v
-            // if (account.intrvld == null) account.intrvld = 0
-            // if (account.succeed == null) account.succeed = true
-            // if (account.pst == null) account.pst = BigInt(0)
-            // if (account.st == null) account.st = BigInt(0)
-            // if (account.opc == null) account.opc = 0
-            // account.tpc = 1000
-            // if (account.lpc == null) account.lpc = 0
-            // if (account.cpc == null) account.cpc = 0
-            // if (account.mpc == null) account.mpc = 0
-            // if (base.comment == null) base.comment = "Welcome to REFLEC BEAT."
-            // if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            // if (battleRoyale == null) battleRoyale = generateRb5BattleRoyale()
-            // if (myCourse == null) myCourse = generateRb5MyCourseLog()
-            // if (mylist.index < 0) mylist.index = 0
             let scores: IRb1MusicRecord[] = await DB.Find<IRb1MusicRecord>(readParam.rid, { collection: "rb.rb1.playData.musicRecord" })
-
-            // base.totalBestScore = 0
-            // base.totalBestScoreEachChartType = [0, 0, 0, 0]
-            // for (let s of scores) {
-            //     base.totalBestScore += s.score
-            //     base.totalBestScoreEachChartType[s.chartType] += s.score
-            // }
-
-            // config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
-            // config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
-
 
             result = {
                 rid: readParam.rid,
@@ -116,26 +83,15 @@ export namespace Rb1HandlersCommon {
                 }
             }
         }
-        let k = mapKObject(result, Rb1PlayerMap)
-        k.pdata["cmnt"] = K.ITEM("str", "Welcome to REFLEC BEAT!")
-        send.object(readPlayerPostTask(k))
+        send.object(readPlayerPostProcess(mapKObject(result, Rb1PlayerMap)))
     }
 
     export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
         if (!info.model.startsWith("KBR")) return send.deny()
         try {
             let rid = data.rid["@content"]
-            let ridqueries: Query<any>[] = [
-                { collection: "rb.rb1.player.account" },
-                { collection: "rb.rb1.player.base" },
-                { collection: "rb.rb1.player.custom" },
-                { collection: "rb.rb1.player.releasedInfo" },
-                { collection: "rb.rb1.playData.musicRecord" },
-                { collection: "rb.rb1.playData.stageLog" },
-            ]
-            for (let q of ridqueries) {
-                DB.Remove(rid, q)
-            }
+            let base = await DB.FindOne<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" })
+            await DBM.overall(rid, base?.userId, "rb.rb1", "delete")
             send.success()
         } catch (e) {
             console.log((<Error>e).message)
@@ -145,23 +101,23 @@ export namespace Rb1HandlersCommon {
 
     export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb1Player>, send: EamuseSend) => {
         if (!info.model.startsWith("KBR")) return send.deny()
-        // try {
-        data = await writePlayerPredecessor(data)
+        data = await writePlayerPreProcess(data)
         let player: IRb1Player = mapBackKObject(data, Rb1PlayerMap)[0]
+        await writePlayerInternal(player)
+        send.object({ uid: K.ITEM("s32", player.pdata.base.userId) })
+    }
+    async function writePlayerInternal(player: IRb1Player) {
+        let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb1PlayerBase> = { collection: "rb.rb1.player.base" }
         let playerBaseForPlayCountQuery: IRb1PlayerBase = await DB.FindOne(player.rid, playCountQuery)
         if (player?.rid) {
             let rid = player.rid
             if (playerBaseForPlayCountQuery == null) { // save the new player
                 if (player.pdata.base?.userId <= 0) {
-                    let userId
-
-                    do userId = Math.trunc(Math.random() * 99999999)
-                    while ((await DB.Find<IRb1PlayerBase>({ collection: "rb.rb1.player.base", userId: userId })).length > 0)
-
-                    player.pdata.base.userId = userId
+                    player.pdata.base.userId = await generateUserId()
                     // initializePlayer(player)
                     playerBaseForPlayCountQuery = player.pdata.base
+                    playerBaseForPlayCountQuery.playCount = 0
                 }
             }
             else {
@@ -170,21 +126,17 @@ export namespace Rb1HandlersCommon {
             }
             if (player.pdata.base) {
                 player.pdata.base.playCount = (playerBaseForPlayCountQuery?.playCount != null) ? playerBaseForPlayCountQuery.playCount : 1
-                await DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, player.pdata.base)
-            } else DBM.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, playerBaseForPlayCountQuery)
+                opm.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, player.pdata.base)
+            } else opm.upsert<IRb1PlayerBase>(rid, { collection: "rb.rb1.player.base" }, playerBaseForPlayCountQuery)
 
-            if (player.pdata.custom) await DBM.upsert<IRb1PlayerCustom>(rid, { collection: "rb.rb1.player.custom" }, player.pdata.custom)
-            if (player.pdata.stat) await DBM.upsert<IRb1PlayerStat>(rid, { collection: "rb.rb1.player.stat" }, player.pdata.stat)
+            if (player.pdata.custom) opm.upsert<IRb1PlayerCustom>(rid, { collection: "rb.rb1.player.custom" }, player.pdata.custom)
+            if (player.pdata.stat) opm.upsert<IRb1PlayerStat>(rid, { collection: "rb.rb1.player.stat" }, player.pdata.stat)
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, i)
-            if (player.pdata.record?.rec?.length > 0) for (let i of player.pdata.record.rec) await updateMusicRecord(rid, i)
-            if (player.pdata.released?.info?.length > 0) await updateReleasedInfos(rid, player.pdata.released)
+            if (player.pdata.record?.rec?.length > 0) for (let i of player.pdata.record.rec) await updateMusicRecord(rid, i, opm)
+            if (player.pdata.released?.info?.length > 0) for (let i of player.pdata.released.info) opm.upsert<IRb1PlayerReleasedInfo>(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
         }
-        send.object({ uid: K.ITEM("s32", player.pdata.base.userId) })
-        // }
-        // catch (e) {
-        //     console.log((<Error>e).message)
-        //     send.deny()
-        // }
+
+        await DBM.operate(opm)
     }
 
     export const LogPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb1StageLogStandalone>, send: EamuseSend) => {
@@ -210,7 +162,7 @@ export namespace Rb1HandlersCommon {
         card_type: { $type: "s16" }
     }
 
-    async function updateMusicRecord(rid: string, newRecord: IRb1MusicRecord): Promise<void> {
+    async function updateMusicRecord(rid: string, newRecord: IRb1MusicRecord, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb1MusicRecord> = { $and: [{ collection: "rb.rb1.playData.musicRecord" }, { musicId: newRecord.musicId }, { chartType: newRecord.chartType }] }
         let oldRecord = await DB.FindOne<IRb1MusicRecord>(rid, query)
 
@@ -225,11 +177,7 @@ export namespace Rb1HandlersCommon {
         oldRecord.loseCount = newRecord.loseCount
 
         oldRecord.playCount++
-        await DBM.upsert(rid, query, oldRecord)
-    }
-
-    async function updateReleasedInfos(rid: string, infos: { info?: IRb1PlayerReleasedInfo[] }) {
-        for (let i of infos.info) await DBM.upsert<IRb1PlayerReleasedInfo>(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
+        opm.upsert(rid, query, oldRecord)
     }
 }
 

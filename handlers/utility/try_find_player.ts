@@ -4,9 +4,7 @@ import { IRb3PlayerAccount, IRb3PlayerBase } from "../../models/rb3/profile"
 import { IRb4PlayerAccount, IRb4PlayerBase } from "../../models/rb4/profile"
 import { IRb5PlayerAccount, IRb5PlayerBase } from "../../models/rb5/profile"
 import { IRb6PlayerAccount, IRb6PlayerBase } from "../../models/rb6/profile"
-
-export type IRbPlayerAccount = IRb6PlayerAccount | IRb5PlayerAccount | IRb4PlayerAccount | IRb3PlayerAccount
-export type IRbPlayerBase = IRb6PlayerBase | IRb5PlayerBase | IRb4PlayerBase | IRb3PlayerBase | IRb2PlayerBase | IRb1PlayerBase
+import { IRbPlayerAccount, IRbPlayerBase } from "../../models/utility/profile"
 
 export type FindPlayerResult = {
     account?: IRbPlayerAccount

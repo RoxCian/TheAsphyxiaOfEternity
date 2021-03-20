@@ -31,22 +31,22 @@ export function initializeBatch() {
             await DBM.update(null, { collection: "rb.rb6.playData.justCollection#userId", userId: e.userId, musicId: e.musicId, chartType: e.chartType }, e)
         }
     })
-    // Batch.register("batch#0.12.0", "0.12.0", async () => {
-    //     let a = await DB.Find<IRb3PlayerAccount>({ collection: "rb.rb3.player.account" })
-    //     log(a)
-    //     for (let account of a) {
-    //         if (account.playCountToday == null) account.playCountToday = account.dpc
-    //         if (account.dayCount == null) account.dayCount = account.tdc
-    //         await DBM.update(null, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
-    //     }
-    // })
-    // Batch.register("batch#0.12.0.part2", "1.4.0", async () => {
-    //     let a = await DB.Find<IRb3PlayerAccount>({ collection: "rb.rb3.player.account" })
-    //     log(a)
-    //     for (let account of a) {
-    //         delete account["dpc"]
-    //         delete account["tdc"]
-    //         await DBM.update(null, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
-    //     }
-    // })
+    Batch.register("batch#0.12.0", "0.12.0", async () => {
+        let a = await DB.Find<IRb3PlayerAccount>(null, { collection: "rb.rb3.player.account" })
+        log(a)
+        for (let account of a) {
+            if (account.playCountToday == null) account.playCountToday = account.dpc
+            if (account.dayCount == null) account.dayCount = account.tdc
+            await DBM.update(null, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
+        }
+    })
+    Batch.register("batch#0.12.0.part2", "1.4.0", async () => {
+        let a = await DB.Find<IRb3PlayerAccount>(null, { collection: "rb.rb3.player.account" })
+        log(a)
+        for (let account of a) {
+            delete account["dpc"]
+            delete account["tdc"]
+            await DBM.update(null, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
+        }
+    })
 }

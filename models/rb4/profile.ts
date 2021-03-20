@@ -377,6 +377,7 @@ export interface IRb4PlayerStageLog extends ICollection<"rb.rb4.playData.stageLo
     mt: number
     rt: number
     clearType: number // 1: played, 9: C, 10: HC, 11: S-HC
+    clearTypeForClasscheck?: "Win" | "Draw" | "Lose"
     param: number
     matchingGrade: number
     clearGaugeTimes100: number
@@ -408,6 +409,7 @@ export const Rb4PlayerStageLogMap: KObjectMappingRecord<IRb4PlayerStageLog> = {
     mt: { $type: "s8" },
     rt: { $type: "s8" },
     clearType: { $type: "s8", $targetKey: "ct" },
+    clearTypeForClasscheck: ignoreme(),
     param: { $type: "s16" },
     matchingGrade: { $type: "s16", $targetKey: "grd" },
     clearGaugeTimes100: { $type: "s16", $targetKey: "cl_gauge" },

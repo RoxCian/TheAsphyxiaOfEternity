@@ -18,14 +18,21 @@ export const Rb3EventControlMap: KObjectMappingRecord<IRb3EventControl> = {
     startTime: { $type: "s32", $targetKey: "start_time" },
     endTime: { $type: "s32", $targetKey: "end_time" }
 }
-export function getExampleEventControl(): IRb3EventControl {
-    return {
-        type: 1,
-        index: 1,
-        phase: 0,
-        value: 25,
-        value2: 1,
-        startTime: 1533749833,
-        endTime: 1924991999
+export function getExampleEventControl(): IRb3EventControl[] {
+    let result: IRb3EventControl[] = []
+    let limit = [100, 100, 100]
+    for (let i = 0; i < limit.length; i++) {
+        for (let j = 0; j < limit[i]; j++) {
+            result.push({
+                type: i,
+                index: j,
+                phase: 3,
+                value: 99,
+                value2: 99,
+                startTime: 1533749833,
+                endTime: 2147483647
+            })
+        }
     }
+    return result
 }

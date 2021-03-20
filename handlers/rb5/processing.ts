@@ -11,35 +11,31 @@ import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 7 -> byword
 // player.pdata.released.info.type == 8 -> voice chat
 
-export function readPlayerPostTask(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
+export function readPlayerPostProcess(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
+    let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
     if (!isUnlockSongs && !isUnlockSongs) return player
 
     if (isUnlockSongs) player = appendSongsUnlockingData(player)
+    if (isUnlockItems) player = appendItemsUnlockingData(player)
 
     return player
 }
-export function writePlayerPredecessor(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
+export async function writePlayerPreProcess(player: KITEM2<IRb5Player>): Promise<KITEM2<IRb5Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
-    let isUnlockCharacterCards: boolean = U.GetConfig("unlock_all_character_cards")
-    if (!isUnlockSongs && !isUnlockCharacterCards) return player
-    if (isUnlockSongs && isUnlockCharacterCards) {
+    let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
+    if (!isUnlockSongs && !isUnlockItems) return player
+    // General
+    if (isUnlockSongs && isUnlockItems) {
         player.pdata.released = null
         return player
     }
 
-    if (isUnlockSongs) {
-        let removeList: number[] = []
-        for (let i = 0; i < player.pdata.released.info.length; i++) if (player.pdata.released.info[i].type != 6) removeList.push(i)
-        for (let r of removeList) player.pdata.released.info.splice(r)
-    } else if (isUnlockCharacterCards) {
-        let removeList: number[] = []
-        for (let i = 0; i < player.pdata.released.info.length; i++) if (player.pdata.released.info[i].type == 6) removeList.push(i)
-        for (let r of removeList) player.pdata.released.info.splice(r)
-    }
-
+    let removeList: number[] = []
+    for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
+    for (let r of removeList) player.pdata.released.info.splice(r)
 
     return player
 }
@@ -48,10 +44,28 @@ let songsUnlockingData: any[]
 function appendSongsUnlockingData(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
     if (songsUnlockingData == null) {
         songsUnlockingData = []
-        let ctrl = [944, 200, 200, 200, 200, 200, 200, 200, 200, 33, 33, 33, 33]
+        for (let j = 0; j <= 999; j++) {
+            songsUnlockingData.push({
+                type: K.ITEM("u8", 0),
+                id: K.ITEM("u16", j),
+                param: K.ITEM("u16", 15),
+                insert_time: K.ITEM("s32", 1581368499)
+            })
+        }
+    }
+    if (player.pdata.released?.info == null) player.pdata.released = <any>{ info: songsUnlockingData }
+    else player.pdata.released.info.push(...songsUnlockingData)
+    return player
+}
+
+let itemsUnlockingData: any[]
+function appendItemsUnlockingData(player: KITEM2<IRb5Player>): KITEM2<IRb5Player> {
+    if (itemsUnlockingData == null) {
+        itemsUnlockingData = []
+        let ctrl = [-1, 30, 30, 30, 30, 30, 200, 30]
         for (let i = 0; i < ctrl.length; i++) {
             for (let j = 0; j <= ctrl[i]; j++) {
-                songsUnlockingData.push({
+                itemsUnlockingData.push({
                     type: K.ITEM("u8", i),
                     id: K.ITEM("u16", j),
                     param: K.ITEM("u16", 15),
@@ -60,6 +74,7 @@ function appendSongsUnlockingData(player: KITEM2<IRb5Player>): KITEM2<IRb5Player
             }
         }
     }
-    player.pdata.released = <any>{ info: songsUnlockingData }
+    if (player.pdata.released?.info == null) player.pdata.released = <any>{ info: itemsUnlockingData }
+    else player.pdata.released.info.push(...itemsUnlockingData)
     return player
 }

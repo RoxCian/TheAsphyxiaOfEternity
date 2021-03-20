@@ -27,7 +27,7 @@ export function getExampleEventControl(): IRb6EventControl[] {
                 value: ((i == 1) && (j >= 5) && (j <= 8)) ? (j + 61) : ((i == 1) && (j == 3)) ? 2 : 99,
                 value2: ((i == 1) && (j >= 5) && (j <= 8)) ? 63 : ((i == 1) && (j == 3)) ? 1 : 99,
                 startTime: 1533749833,
-                endTime: 9924991999
+                endTime: 2147483647
             })
         }
     }

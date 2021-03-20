@@ -3,7 +3,9 @@ import { Rb4HandlersCommon } from "./handlers/rb4/common"
 import { Rb5HandlersCommon } from "./handlers/rb5/common"
 import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
+import { Rb4HandlersWebUI } from "./handlers/rb4/webui"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
+import { UtilityHandlersCommon } from "./handlers/utility/common"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 import { initialize } from "./handlers/utility/initialize"
 
@@ -15,9 +17,10 @@ export function register() {
     R.Contributor("Rox Cian", "https://github.com/RoxCian")
 
     R.Config("unlock_all_songs", { type: "boolean", default: false })
-    R.Config("unlock_all_character_cards", { type: "boolean", default: false })
+    R.Config("unlock_all_items", { type: "boolean", default: false })
 
     R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
+    R.WebUIEvent("rb4UpdateSettings", Rb4HandlersWebUI.updateSettings)
     R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
     R.WebUIEvent("removeWebUIMessage", UtilityHandlersWebUI.removeWebUIMessage)
 
@@ -41,9 +44,11 @@ function routeRb6() {
     R.Route("player.rb6_player_delete", Rb6HandlersCommon.DeletePlayer)
     R.Route("player.rb6_player_read_score", Rb6HandlersCommon.ReadPlayerScore)
     R.Route("player.rb6_player_read_jc", Rb6HandlersCommon.ReadPlayerJustCollections)
+    R.Route("player.rb6_player_succeed", Rb6HandlersCommon.PlayerSucceeded)
     R.Route("lobby.rb6_lobby_read", Rb6HandlersCommon.ReadLobby)
     R.Route("lobby.rb6_lobby_entry", Rb6HandlersCommon.AddLobby)
     R.Route("lobby.rb6_lobby_delete", Rb6HandlersCommon.DeleteLobby)
+    R.Route("shop.rb6_shop_write_info", UtilityHandlersCommon.WriteShopInfo)
     R.Route("eventlog.write", true)
 }
 
@@ -69,10 +74,10 @@ function routeRb4() {
     R.Route("lobby.rb4entry", Rb4HandlersCommon.AddLobby)
     R.Route("lobby.rb4read", Rb4HandlersCommon.ReadLobby)
     R.Route("lobby.rb4delete", Rb4HandlersCommon.DeleteLobby)
+    R.Route("player.rb4succeed", Rb4HandlersCommon.PlayerSucceeded)
 }
 
 function routeRb1Rb2Rb3() {
-    R.Route("pcbinfo.get", Rb1Rb2Rb3HandlersDispatcher.DispatchBootPcb)
     R.Route("player.start", Rb1Rb2Rb3HandlersDispatcher.DispatchStartPlayer)
     R.Route("player.succeed", Rb1Rb2Rb3HandlersDispatcher.DispatchPlayerSucceeded)
     R.Route("player.write", Rb1Rb2Rb3HandlersDispatcher.DispatchWritePlayer)
