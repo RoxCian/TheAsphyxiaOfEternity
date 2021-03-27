@@ -1,4 +1,4 @@
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { binme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s32me, s8me } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 
 export interface IRb6JustCollection extends ICollection<"rb.rb6.playData.justCollection#userId"> {
@@ -14,15 +14,15 @@ export interface IRb6JustCollection extends ICollection<"rb.rb6.playData.justCol
 }
 export const Rb6JustCollectionMap: KObjectMappingRecord<IRb6JustCollection> = {
     collection: getCollectionMappingElement<IRb6JustCollection>("rb.rb6.playData.justCollection#userId"),
-    userId: { $type: "s32", $targetKey: "user_id" },
-    musicId: { $type: "s32", $targetKey: "music_id" },
-    chartType: { $type: "s8", $targetKey: "note_grade" },
-    blueData: { $type: "bin", $targetKey: "item_blue_data_bin" },
-    redData: { $type: "bin", $targetKey: "item_red_data_bin" },
-    blueDataArray: { $type: "kignore" },
-    redDataArray: { $type: "kignore" },
-    blueDataBase64: { $type: "kignore" },
-    redDataBase64: { $type: "kignore" }
+    userId: s32me("user_id"),
+    musicId: s32me("music_id"),
+    chartType: s8me("note_grade"),
+    blueData: binme("item_blue_data_bin"),
+    redData: binme("item_red_data_bin"),
+    blueDataArray: ignoreme(),
+    redDataArray: ignoreme(),
+    blueDataBase64: ignoreme(),
+    redDataBase64: ignoreme()
 }
 
 export interface IRb6ReadJustCollection {
@@ -35,9 +35,9 @@ export interface IRb6ReadJustCollection {
 }
 export const Rb6ReadJustCollectionMap: KObjectMappingRecord<IRb6ReadJustCollection> = {
     list: {
-        musicId: { $type: "s32", $targetKey: "music_id" },
-        chartType: { $type: "s8", $targetKey: "note_grade" },
+        musicId: s32me("music_id"),
+        chartType: s8me("note_grade"),
     },
-    blueData: { $type: "bin", $targetKey: "item_blue_data_bin" },
-    redData: { $type: "bin", $targetKey: "item_red_data_bin" }
+    blueData: binme("item_blue_data_bin"),
+    redData: binme("item_red_data_bin")
 }

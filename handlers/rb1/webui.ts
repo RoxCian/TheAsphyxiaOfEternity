@@ -31,9 +31,9 @@ export namespace Rb1HandlersWebUI {
             custom.stageBackground = data.background
             custom.stageBackgroundBrightness = data.backgroundBrightness
             await DBM.update(data.refid, { collection: "rb.rb1.player.custom" }, custom)
-            UtilityHandlersWebUI.pushMessage("Save RB settings succeeded!", WebUIMessageType.success, data.refid)
+            UtilityHandlersWebUI.pushMessage("Save RB settings succeeded!", 1, WebUIMessageType.success, data.refid)
         } catch (e) {
-            UtilityHandlersWebUI.pushMessage("Error while save RB settings: " + e.message, WebUIMessageType.error, data.refid)
+            UtilityHandlersWebUI.pushMessage("Error while save RB settings: " + e.message, 1, WebUIMessageType.error, data.refid)
         }
     }
 }

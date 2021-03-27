@@ -1,4 +1,4 @@
-import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord, s32me, strme } from "../../utility/mapping"
+import { appendMappingElement, BigIntProxy, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, strme, u16me, u32me, u64me, u8me } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 import { IRb2StageLogStandaloneElement, Rb2StageLogStandaloneElementMap } from "./stage_log_standalone"
 
@@ -16,16 +16,16 @@ export interface IRb2PlayerBase extends ICollection<"rb.rb2.player.base"> {
 }
 export const Rb2PlayerBaseMap: KObjectMappingRecord<IRb2PlayerBase> = {
     collection: getCollectionMappingElement<IRb2PlayerBase>("rb.rb2.player.base"),
-    userId: { $type: "s32", $targetKey: "uid" },
-    iconId: { $type: "s16", $targetKey: "icon_id" },
-    name: { $type: "str" },
-    comment: { $type: "kignore" },
-    level: { $type: "s16", $targetKey: "lv" },
-    experience: { $type: "s32", $targetKey: "exp" },
-    matchingGrade: { $type: "s16", $targetKey: "mg" },
-    abilityPointTimes100: { $type: "s16", $targetKey: "ap" },
-    playCount: { $type: "s32", $targetKey: "pc" },
-    uattr: { $type: "s32" }
+    userId: s32me("uid"),
+    iconId: s16me("icon_id"),
+    name: strme(),
+    comment: ignoreme(),
+    level: s16me("lv"),
+    experience: s32me("exp"),
+    matchingGrade: s16me("mg"),
+    abilityPointTimes100: s16me("ap"),
+    playCount: s32me("pc"),
+    uattr: s32me()
 }
 export function generateRb2PlayerBase(userId: number): IRb2PlayerBase {
     return {
@@ -52,11 +52,11 @@ export interface IRb2PlayerStat extends ICollection<"rb.rb2.player.stat"> {
 }
 export const Rb2PlayerStatMap: KObjectMappingRecord<IRb2PlayerStat> = {
     collection: getCollectionMappingElement<IRb2PlayerStat>("rb.rb2.player.stat"),
-    day: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "cnt" },
-    totalCount: { $type: "s32", $targetKey: "total_cnt" },
-    last: { $type: "s32" },
-    now: { $type: "s32" }
+    day: s32me(),
+    playCount: s32me("cnt"),
+    totalCount: s32me("total_cnt"),
+    last: s32me(),
+    now: s32me()
 }
 export function generateRb2PlayerStat(): IRb2PlayerStat {
     return {
@@ -100,33 +100,33 @@ export interface IRb2PlayerCustom extends ICollection<"rb.rb2.player.custom"> {
 }
 export const Rb2PlayerCustomMap: KObjectMappingRecord<IRb2PlayerCustom> = {
     collection: getCollectionMappingElement<IRb2PlayerCustom>("rb.rb2.player.custom"),
-    stageBackgroundMusic: { $type: "u8", $targetKey: "bgm_m" },
-    stageFrameType: { $type: "u8", $targetKey: "st_f" },
-    stageBackground: { $type: "u8", $targetKey: "st_bg" },
-    stageBackgroundBrightness: { $type: "u8", $targetKey: "st_bg_b" },
-    stageExplodeType: { $type: "u8", $targetKey: "eff_e" },
-    stageShotSound: { $type: "u8", $targetKey: "se_s" },
-    stageShotVolume: { $type: "u8", $targetKey: "se_s_v" },
-    selectedGlass: { $type: "u8", $targetKey: "s_gls" },
-    sortType: { $type: "u8", $targetKey: "sort_type" },
-    lastMusicId: { $type: "s16", $targetKey: "last_music_id" },
-    lastChartType: { $type: "u8", $targetKey: "last_note_grade" },
-    narrowDownType: { $type: "u8", $targetKey: "narrowdown_type" },
-    isBeginner: { $type: "bool", $targetKey: "is_begginer" }, // Begginer? Excuse me?
-    isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
-    symbolChatSet1: { $type: "s16", $targetKey: "symbol_chat_0" },
-    symbolChatSet2: { $type: "s16", $targetKey: "symbol_chat_1" },
-    gaugeStyle: { $type: "u8", $targetKey: "gauge_style" },
-    objectShade: { $type: "u8", $targetKey: "obj_shade" },
-    objectSize: { $type: "u8", $targetKey: "obj_size" },
-    byword: { $type: "s16" },
-    isAutoByword: { $type: "bool", $targetKey: "is_auto_byword" },
-    isTweet: { $type: "bool", $targetKey: "is_tweet" },
-    isTwitterLinked: { $type: "bool", $targetKey: "is_link_twitter" },
-    mrecType: { $type: "s16", $targetKey: "mrec_type" },
-    cardDisplayType: { $type: "s16", $targetKey: "card_disp_type" },
-    tabSelected: { $type: "s16", $targetKey: "tab_sel" },
-    hiddenParam: { $type: "s32", $targetKey: "hidden_param" }
+    stageBackgroundMusic: u8me("bgm_m"),
+    stageFrameType: u8me("st_f"),
+    stageBackground: u8me("st_bg"),
+    stageBackgroundBrightness: u8me("st_bg_b"),
+    stageExplodeType: u8me("eff_e"),
+    stageShotSound: u8me("se_s"),
+    stageShotVolume: u8me("se_s_v"),
+    selectedGlass: u8me("s_gls"),
+    sortType: u8me("sort_type"),
+    lastMusicId: s16me("last_music_id"),
+    lastChartType: u8me("last_note_grade"),
+    narrowDownType: u8me("narrowdown_type"),
+    isBeginner: boolme("is_begginer"), // Begginer? Excuse me?
+    isTutorialEnabled: boolme("is_tut"),
+    symbolChatSet1: s16me("symbol_chat_0"),
+    symbolChatSet2: s16me("symbol_chat_1"),
+    gaugeStyle: u8me("gauge_style"),
+    objectShade: u8me("obj_shade"),
+    objectSize: u8me("obj_size"),
+    byword: s16me(),
+    isAutoByword: boolme("is_auto_byword"),
+    isTweet: boolme("is_tweet"),
+    isTwitterLinked: boolme("is_link_twitter"),
+    mrecType: s16me("mrec_type"),
+    cardDisplayType: s16me("card_disp_type"),
+    tabSelected: s16me("tab_sel"),
+    hiddenParam: s32me("hidden_param")
 }
 export function generateRb2PlayerCustom(): IRb2PlayerCustom {
     return {
@@ -168,9 +168,9 @@ export interface IRb2PlayerReleasedInfo extends ICollection<"rb.rb2.player.relea
 }
 export const Rb2PlayerReleasedInfoMap: KObjectMappingRecord<IRb2PlayerReleasedInfo> = {
     collection: getCollectionMappingElement<IRb2PlayerReleasedInfo>("rb.rb2.player.releasedInfo"),
-    type: { $type: "u8" },
-    id: { $type: "u16" },
-    param: { $type: "u16" }
+    type: u8me(),
+    id: u16me(),
+    param: u16me()
 }
 
 export interface IRb2MusicRecordElement {
@@ -185,15 +185,15 @@ export interface IRb2MusicRecordElement {
     playCount: number
 }
 export const Rb2MusicRecordElementMap: KObjectMappingRecord<IRb2MusicRecordElement> = {
-    winCount: { $type: "s32", $targetKey: "win" },
-    loseCount: { $type: "s32", $targetKey: "lose" },
-    drawCount: { $type: "s32", $targetKey: "draw" },
-    clearType: { $type: "u8", $targetKey: "ct" }, // 1: failed, 2: cleared, 3: full combo
-    achievementRateTimes10: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s32", $targetKey: "bs" },
-    combo: { $type: "s16", $targetKey: "mc" },
-    missCount: { $type: "s16", $targetKey: "bmc" },
-    playCount: { $type: "kignore" }
+    winCount: s32me("win"),
+    loseCount: s32me("lose"),
+    drawCount: s32me("draw"),
+    clearType: u8me("ct"), // 1: failed, 2: cleared, 3: full combo
+    achievementRateTimes10: s16me("ar"),
+    score: s32me("bs"),
+    combo: s16me("mc"),
+    missCount: s16me("bmc"),
+    playCount: ignoreme()
 }
 export function generateRb2MusicRecordElement() {
     return {
@@ -218,10 +218,10 @@ export interface IRb2MusicRecord extends ICollection<"rb.rb2.playData.musicRecor
 }
 export const Rb2MusicRecordMap: KObjectMappingRecord<IRb2MusicRecord> = {
     collection: getCollectionMappingElement<IRb2MusicRecord>("rb.rb2.playData.musicRecord"),
-    musicId: { $type: "u16", $targetKey: "mid" },
-    chartType: { $type: "u8", $targetKey: "ng" },
-    point: { $type: "s32" },
-    time: { $type: "s32", $targetKey: "played_time" },
+    musicId: u16me("mid"),
+    chartType: u8me("ng"),
+    point: s32me(),
+    time: s32me("played_time"),
     newRecord: appendMappingElement(Rb2MusicRecordElementMap, { $targetKey: "mrec_0" }),
     oldRecord: appendMappingElement(Rb2MusicRecordElementMap, { $targetKey: "mrec_1" })
 }
@@ -245,11 +245,11 @@ export interface IRb2StageLogElement {
     achievementRateTimes10: number
 }
 export const Rb2StageLogElementMap: KObjectMappingRecord<IRb2StageLogElement> = {
-    matchingGrade: { $type: "s16", $targetKey: "mg" },
-    abilityPointTimes100: { $type: "s16", $targetKey: "ap" },
-    clearType: { $type: "u8", $targetKey: "ct" },
-    score: { $type: "s16", $targetKey: "s" },
-    achievementRateTimes10: { $type: "s16", $targetKey: "ar" }
+    matchingGrade: s16me("mg"),
+    abilityPointTimes100: s16me("ap"),
+    clearType: u8me("ct"),
+    score: s16me("s"),
+    achievementRateTimes10: s16me("ar")
 }
 export interface IRb2StageLog extends ICollection<"rb.rb2.playData.stageLog"> {
     stageIndex: number
@@ -265,16 +265,16 @@ export interface IRb2StageLog extends ICollection<"rb.rb2.playData.stageLog"> {
 }
 export const Rb2StageLogMap: KObjectMappingRecord<IRb2StageLog> = {
     collection: getCollectionMappingElement<IRb2StageLog>("rb.rb2.playData.stageLog"),
-    stageIndex: { $type: "u8", $targetKey: "id" },
-    musicId: { $type: "u16", $targetKey: "mid" },
-    chartType: { $type: "u8", $targetKey: "ng" },
-    mt: { $type: "u8" },
-    rt: { $type: "u8" },
-    rivalUserId: { $type: "s32", $targetKey: "ruid" },
+    stageIndex: u8me("id"),
+    musicId: u16me("mid"),
+    chartType: u8me("ng"),
+    mt: u8me(),
+    rt: u8me(),
+    rivalUserId: s32me("ruid"),
     log: appendMappingElement(Rb2StageLogElementMap, { $targetKey: "myself" }),
     rivalLog: appendMappingElement(Rb2StageLogElementMap, { $targetKey: "rival" }),
-    time: { $type: "s32" },
-    standalone: appendMappingElement(Rb2StageLogStandaloneElementMap, { $type: "kignore" })
+    time: s32me(),
+    standalone: appendMappingElement(Rb2StageLogStandaloneElementMap, ignoreme())
 }
 
 export interface IRb2Glass extends ICollection<"rb.rb2.player.glass"> {
@@ -283,8 +283,8 @@ export interface IRb2Glass extends ICollection<"rb.rb2.player.glass"> {
 }
 export const Rb2GlassMap: KObjectMappingRecord<IRb2Glass> = {
     collection: getCollectionMappingElement<IRb2Glass>("rb.rb2.player.glass"),
-    id: { $type: "s32" },
-    experience: { $type: "s32", $targetKey: "exp" }
+    id: s32me(),
+    experience: s32me("exp")
 }
 
 export interface IRb2LincleLink extends ICollection<"rb.rb2.player.lincleLink"> {
@@ -317,32 +317,32 @@ export interface IRb2LincleLink extends ICollection<"rb.rb2.player.lincleLink"> 
 }
 export const Rb2LincleLinkMap: KObjectMappingRecord<IRb2LincleLink> = {
     collection: getCollectionMappingElement<IRb2LincleLink>("rb.rb2.player.lincleLink"),
-    qproParam: { $type: "u32", $targetKey: "qpro_add" },
-    glassParam: { $type: "u32", $targetKey: "glass_add" },
-    iidxParam0Sub0: { $type: "bool", $targetKey: "for_iidx_0_0" },
-    iidxParam0Sub1: { $type: "bool", $targetKey: "for_iidx_0_1" },
-    iidxParam0Sub2: { $type: "bool", $targetKey: "for_iidx_0_2" },
-    iidxParam0Sub3: { $type: "bool", $targetKey: "for_iidx_0_3" },
-    iidxParam0Sub4: { $type: "bool", $targetKey: "for_iidx_0_4" },
-    iidxParam0Sub5: { $type: "bool", $targetKey: "for_iidx_0_5" },
-    iidxParam0Sub6: { $type: "bool", $targetKey: "for_iidx_0_6" },
-    iidxParam0: { $type: "bool", $targetKey: "for_iidx_0" },
-    iidxParam1: { $type: "bool", $targetKey: "for_iidx_1" },
-    iidxParam2: { $type: "bool", $targetKey: "for_iidx_2" },
-    iidxParam3: { $type: "bool", $targetKey: "for_iidx_3" },
-    iidxParam4: { $type: "bool", $targetKey: "for_iidx_4" },
-    rbParam0Sub0: { $type: "bool", $targetKey: "for_rb_0_0" },
-    rbParam0Sub1: { $type: "bool", $targetKey: "for_rb_0_1" },
-    rbParam0Sub2: { $type: "bool", $targetKey: "for_rb_0_2" },
-    rbParam0Sub3: { $type: "bool", $targetKey: "for_rb_0_3" },
-    rbParam0Sub4: { $type: "bool", $targetKey: "for_rb_0_4" },
-    rbParam0Sub5: { $type: "bool", $targetKey: "for_rb_0_5" },
-    rbParam0Sub6: { $type: "bool", $targetKey: "for_rb_0_6" },
-    rbParam0: { $type: "bool", $targetKey: "for_rb_0" },
-    rbParam1: { $type: "bool", $targetKey: "for_rb_1" },
-    rbParam2: { $type: "bool", $targetKey: "for_rb_2" },
-    rbParam3: { $type: "bool", $targetKey: "for_rb_3" },
-    rbParam4: { $type: "bool", $targetKey: "for_rb_4" }
+    qproParam: u32me("qpro_add"),
+    glassParam: u32me("glass_add"),
+    iidxParam0Sub0: boolme("for_iidx_0_0"),
+    iidxParam0Sub1: boolme("for_iidx_0_1"),
+    iidxParam0Sub2: boolme("for_iidx_0_2"),
+    iidxParam0Sub3: boolme("for_iidx_0_3"),
+    iidxParam0Sub4: boolme("for_iidx_0_4"),
+    iidxParam0Sub5: boolme("for_iidx_0_5"),
+    iidxParam0Sub6: boolme("for_iidx_0_6"),
+    iidxParam0: boolme("for_iidx_0"),
+    iidxParam1: boolme("for_iidx_1"),
+    iidxParam2: boolme("for_iidx_2"),
+    iidxParam3: boolme("for_iidx_3"),
+    iidxParam4: boolme("for_iidx_4"),
+    rbParam0Sub0: boolme("for_rb_0_0"),
+    rbParam0Sub1: boolme("for_rb_0_1"),
+    rbParam0Sub2: boolme("for_rb_0_2"),
+    rbParam0Sub3: boolme("for_rb_0_3"),
+    rbParam0Sub4: boolme("for_rb_0_4"),
+    rbParam0Sub5: boolme("for_rb_0_5"),
+    rbParam0Sub6: boolme("for_rb_0_6"),
+    rbParam0: boolme("for_rb_0"),
+    rbParam1: boolme("for_rb_1"),
+    rbParam2: boolme("for_rb_2"),
+    rbParam3: boolme("for_rb_3"),
+    rbParam4: boolme("for_rb_4")
 }
 export function generateRb2LincleLink(): IRb2LincleLink {
     return {
@@ -385,8 +385,8 @@ export const Rb2MylistMap: KObjectMappingRecord<IRb2Mylist> = {
     collection: getCollectionMappingElement<IRb2Mylist>("rb.rb2.player.mylist"),
     slot: {
         0: {
-            slotId: { $type: "u8", $targetKey: "slot_id" },
-            musicId: { $type: "s16", $targetKey: "music_id" }
+            slotId: u8me("slot_id"),
+            musicId: s16me("music_id")
         }
     },
     $targetKey: "fav_music_slot"
@@ -395,8 +395,8 @@ export const Rb2MylistMap: KObjectMappingRecord<IRb2Mylist> = {
 export interface IRb2Player {
     rid: string
     lid: string
-    beginTime: bigint
-    endTime: bigint
+    beginTime: bigint | BigIntProxy
+    endTime: bigint | BigIntProxy
     mode: number
     pdata: {
         comment: string
@@ -414,13 +414,13 @@ export interface IRb2Player {
     }
 }
 export const Rb2PlayerMap: KObjectMappingRecord<IRb2Player> = {
-    rid: { $type: "str" },
-    lid: { $type: "str" },
-    beginTime: { $type: "u64", $targetKey: "begin_time" },
-    endTime: { $type: "u64", $targetKey: "end_time" },
-    mode: { $type: "u8" },
+    rid: strme(),
+    lid: strme(),
+    beginTime: u64me("begin_time"),
+    endTime: u64me("end_time"),
+    mode: u8me(),
     pdata: {
-        comment: { $type: "str", $targetKey: "cmnt" },
+        comment: strme("cmnt"),
         team: { teamId: s32me("id"), teamName: strme("name") },
         base: Rb2PlayerBaseMap,
         stat: appendMappingElement(Rb2PlayerStatMap, { $targetKey: "con" }),

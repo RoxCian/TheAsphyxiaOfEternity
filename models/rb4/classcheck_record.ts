@@ -17,18 +17,18 @@ export interface IRb4ClasscheckRecord extends ICollection<"rb.rb4.playData.class
 }
 export const Rb4ClasscheckRecordMappingRecord: KObjectMappingRecord<IRb4ClasscheckRecord> = {
     collection: getCollectionMappingElement<IRb4ClasscheckRecord>("rb.rb4.playData.classcheck"),
-    class: { $type: "s32" },
-    clearType: { $type: "s32", $targetKey: "clear_type" },
-    averageAchievementRateTimes100: { $type: "s32", $targetKey: "total_ar" },
-    totalScore: { $type: "s32", $targetKey: "total_score" },
+    class: s32me(),
+    clearType: s32me("clear_type"),
+    averageAchievementRateTimes100: s32me("total_ar"),
+    totalScore: s32me("total_score"),
     seperateScore: ignoreme(),
     seperateAchievementRateTimes100: ignoreme(),
     musicsId: ignoreme(),
     chartsType: ignoreme(),
-    playCount: { $type: "s32", $targetKey: "play_count" },
-    lastPlayTime: { $type: "s32", $targetKey: "last_play_time" },
-    recordUpdateTime: { $type: "s32", $targetKey: "record_update_time" },
-    rank: { $type: "s32" }
+    playCount: s32me("play_count"),
+    lastPlayTime: s32me("last_play_time"),
+    recordUpdateTime: s32me("record_update_time"),
+    rank: s32me()
 }
 export function generateRb4ClasscheckRecord(classIndex: number): IRb4ClasscheckRecord {
     return {

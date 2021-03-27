@@ -1,4 +1,4 @@
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { getCollectionMappingElement, KObjectMappingRecord, s32me } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 
 export interface IRb6CharacterCard extends ICollection<"rb.rb6.player.characterCard"> {
@@ -8,9 +8,9 @@ export interface IRb6CharacterCard extends ICollection<"rb.rb6.player.characterC
 }
 export const Rb6CharacterCardMap: KObjectMappingRecord<IRb6CharacterCard> = {
     collection: getCollectionMappingElement<IRb6CharacterCard>("rb.rb6.player.characterCard"),
-    characterCardId: { $type: "s32", $targetKey: "chara_card_id" },
-    level: { $type: "s32", $targetKey: "lv" },
-    experience: { $type: "s32", $targetKey: "exp" }
+    characterCardId: s32me("chara_card_id"),
+    level: s32me("lv"),
+    experience: s32me("exp")
 }
 export function generateRb6CharactorCard(charactorCardId: number): IRb6CharacterCard {
     return {

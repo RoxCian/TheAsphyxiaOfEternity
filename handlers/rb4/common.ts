@@ -13,7 +13,7 @@ import { generateRb4LobbyEntry, IRb4LobbyEntry, IRb4LobbyEntryElement, Rb4LobbyE
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId, isNewMusic } from "../../data/musicinfo/rb_music_info"
-import { isToday, log, shiftjisToUtf8 } from "../../utility/utility_functions"
+import { isToday, shiftjisToUtf8 } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb4HandlersCommon {
@@ -33,9 +33,9 @@ export namespace Rb4HandlersCommon {
     }
     export const PlayerSucceeded: EPR = async (info, data, send) => {
         let rid = $(data).str("rid")
-        let account: IRb4PlayerAccount = await DB.FindOne<IRb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
+        let player = await tryFindPlayer(rid, 4)
         let result
-        if (account == null) {
+        if (player == null) {
             result = {
                 name: "",
                 lv: -1,
@@ -47,16 +47,16 @@ export namespace Rb4HandlersCommon {
                 mrecord: {}
             }
         } else {
-            let base: IRb4PlayerBase = await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+            let player: IRb4PlayerBase = await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
             let released: IRb4PlayerReleasedInfo[] = await DB.Find<IRb4PlayerReleasedInfo>(rid, { collection: "rb.rb4.player.releasedInfo" })
             let record: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })
             result = {
-                name: base.name,
+                name: player.name,
                 lv: 0,
                 exp: 0,
-                grd: base.matchingGrade,
-                ap: base.abilityPointTimes100,
-                money: base.money,
+                grd: 0,
+                ap: 0,
+                money: 0,
                 released: (released.length == 0) ? {} : { i: released },
                 mrecord: (record.length == 0) ? {} : { mrec: record }
             }
@@ -210,7 +210,7 @@ export namespace Rb4HandlersCommon {
     async function writePlayerInternal(player: IRb4Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb4PlayerAccount> = { collection: "rb.rb4.player.account" }
-        let playerAccountForPlayCountQuery: IRb4PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
+        let playerAccountForPlayCountQuery: IRb4PlayerAccount = await opm.findOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
             let rid = player.pdata.account.rid
             if (rid == "") throw new Error("rid is empty")
@@ -233,14 +233,14 @@ export namespace Rb4HandlersCommon {
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
                 playerAccountForPlayCountQuery.playCountToday++
-                if (player.pdata.base) player.pdata.base.name = (await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
+                if (player.pdata.base) player.pdata.base.name = (await opm.findOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
 
                 opm.update(rid, { collection: "rb.rb4.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.base) {
-                let oldBase = await DB.FindOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+                let oldBase = await opm.findOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
                 if (oldBase != null) {
-                    player.pdata.base.name = oldBase.name
+                    if (oldBase.name) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
                 } else {
                     if (player.pdata.base.comment == "Welcome to REFLEC BEAT groovin!!") player.pdata.base.comment = ""
@@ -465,7 +465,7 @@ export namespace Rb4HandlersCommon {
 
     async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb4PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb4MusicRecord> = { $and: [{ collection: "rb.rb4.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
-        let musicRecord = await DB.FindOne<IRb4MusicRecord>(rid, query)
+        let musicRecord = await opm.findOne<IRb4MusicRecord>(rid, query)
 
         let newFlag = getClearTypeIndex(stageLog)
         if (newFlag < 0) return
@@ -547,7 +547,7 @@ export namespace Rb4HandlersCommon {
     }
 
     async function updateQuest(rid: string, quest: IRb4Quest, opm: DBM.DBOperationManager) {
-        let old = await DB.FindOne<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" })
+        let old = await opm.findOne<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" })
         if (old != null) quest.comment = old.comment
         if (quest.comment == null) quest.comment = ""
         opm.upsert<IRb4Quest>(rid, { collection: "rb.rb4.player.quest" }, quest)

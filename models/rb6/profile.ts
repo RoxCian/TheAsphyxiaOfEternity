@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { appendMappingElement, BigIntProxy, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { appendMappingElement, BigIntProxy, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, s8me, strme, u16me, u64me, u8me } from "../../utility/mapping"
 import { IRb6JustCollection, Rb6JustCollectionMap } from "./just_collection"
 import { IRb6ClasscheckRecord, Rb6ClasscheckRecordMap } from "./classcheck_record"
 import { Rb6CharacterCardMap, IRb6CharacterCard } from "./character_card"
@@ -35,61 +35,61 @@ export interface IRb6PlayerAccount extends ICollection<"rb.rb6.player.account"> 
 }
 export const Rb6PlayerAccountWriteMap: KObjectMappingRecord<IRb6PlayerAccount> = {
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
-    userId: { $type: "s32", $targetKey: "usrid" },
-    playerId: { $type: "s32", $targetKey: "plyid" },
-    playCountToday: { $type: "s32", $targetKey: "dpc" },
-    crd: { $type: "s32" },
-    brd: { $type: "s32" },
-    dayCount: { $type: "s32", $targetKey: "tdc" },
-    rid: { $type: "str" },
-    lid: { $type: "str" },
-    intrvld: { $type: "kignore" },
-    succeed: { $type: "kignore" },
-    pst: { $type: "u64" },
-    wmode: { $type: "u8" },
-    gmode: { $type: "u8" },
-    version: { $type: "s16", $targetKey: "ver" },
-    pp: { $type: "bool" },
-    ps: { $type: "bool" },
-    isContinue: { $type: "bool", $targetKey: "continue" },
-    isFirstFree: { $type: "bool", $targetKey: "firstfree" },
-    pay: { $type: "s16" },
-    payPc: { $type: "s16", $targetKey: "pay_pc" },
-    st: { $type: "u64" },
-    opc: { $type: "s32" },
-    lpc: { $type: "s32" },
-    cpc: { $type: "s32" },
-    mpc: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "tpc" }
+    userId: s32me("usrid"),
+    playerId: s32me("plyid"),
+    playCountToday: s32me("dpc"),
+    crd: s32me(),
+    brd: s32me(),
+    dayCount: s32me("tdc"),
+    rid: strme(),
+    lid: strme(),
+    intrvld: ignoreme(),
+    succeed: ignoreme(),
+    pst: u64me(),
+    wmode: u8me(),
+    gmode: u8me(),
+    version: s16me("ver"),
+    pp: boolme(),
+    ps: boolme(),
+    isContinue: boolme("continue"),
+    isFirstFree: boolme("firstfree"),
+    pay: s16me(),
+    payPc: s16me("pay_pc"),
+    st: u64me(),
+    opc: s32me(),
+    lpc: s32me(),
+    cpc: s32me(),
+    mpc: s32me(),
+    playCount: s32me("tpc")
 }
 export const Rb6PlayerAccountReadMap: KObjectMappingRecord<IRb6PlayerAccount> = {
     collection: getCollectionMappingElement<IRb6PlayerAccount>("rb.rb6.player.account"),
-    userId: { $type: "s32", $targetKey: "usrid" },
-    playerId: { $type: "kignore" },
-    playCountToday: { $type: "s32", $targetKey: "dpc" },
-    crd: { $type: "s32" },
-    brd: { $type: "s32" },
-    dayCount: { $type: "s32", $targetKey: "tdc" },
-    rid: { $type: "kignore" },
-    lid: { $type: "kignore" },
-    intrvld: { $type: "s32" },
-    succeed: { $type: "bool" },
-    pst: { $type: "u64" },
-    wmode: { $type: "kignore" },
-    gmode: { $type: "kignore" },
-    version: { $type: "s16", $targetKey: "ver" },
-    pp: { $type: "kignore" },
-    ps: { $type: "kignore" },
-    isContinue: { $type: "bool", $targetKey: "continue" },
-    isFirstFree: { $type: "bool", $targetKey: "firstfree" },
-    pay: { $type: "kignore" },
-    payPc: { $type: "kignore", $targetKey: "pay_pc" },
-    st: { $type: "u64" },
-    opc: { $type: "s32" },
-    lpc: { $type: "s32" },
-    cpc: { $type: "s32" },
-    mpc: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "tpc" }
+    userId: s32me("usrid"),
+    playerId: ignoreme(),
+    playCountToday: s32me("dpc"),
+    crd: s32me(),
+    brd: s32me(),
+    dayCount: s32me("tdc"),
+    rid: ignoreme(),
+    lid: ignoreme(),
+    intrvld: s32me(),
+    succeed: boolme(),
+    pst: u64me(),
+    wmode: ignoreme(),
+    gmode: ignoreme(),
+    version: s16me("ver"),
+    pp: ignoreme(),
+    ps: ignoreme(),
+    isContinue: boolme("continue"),
+    isFirstFree: boolme("firstfree"),
+    pay: ignoreme(),
+    payPc: ignoreme("pay_pc"),
+    st: u64me(),
+    opc: s32me(),
+    lpc: s32me(),
+    cpc: s32me(),
+    mpc: s32me(),
+    playCount: s32me("tpc")
 }
 export function generateRb6PlayerAccount(rid: string, userId: number): IRb6PlayerAccount {
     return {
@@ -144,23 +144,23 @@ export interface IRb6PlayerBase extends ICollection<"rb.rb6.player.base"> {
 }
 export const Rb6PlayerBaseMap: KObjectMappingRecord<IRb6PlayerBase> = {
     collection: getCollectionMappingElement<IRb6PlayerBase>("rb.rb6.player.base"),
-    comment: { $type: "str", $targetKey: "cmnt" },
-    totalBestScore: { $type: "s32", $targetKey: "tbs" },
-    totalBestScoreEachChartType: { $type: "s32", $targetKey: "tbgs" },
-    name: { $type: "str" },
-    matchingGrade: { $type: "s32", $targetKey: "mg" },
-    abilityPointTimes100: { $type: "s32", $targetKey: "ap" },
-    uattr: { $type: "s32" },
-    isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
-    class: { $type: "s32" },
-    classAchievrementRateTimes100: { $type: "s32", $targetKey: "class_ar" },
-    skillPointTimes10: { $type: "s32", $targetKey: "skill_point" },
-    pastelParts: { $type: "s32", $targetKey: "pastel_parts" },
-    pastelExperiences: { $type: "s32", $targetKey: "pastel_exp" },
-    rankQuestScore: { $type: "s32", $targetKey: "rankquestscore" },
-    rankQuestRank: { $type: "s32", $targetKey: "rankquestrank" },
-    mLog: { $type: "s16", $targetKey: "mlog" },
-    ghostWinCount: { $type: "s32", $targetKey: "ghost_win_count" }
+    comment: strme("cmnt"),
+    totalBestScore: s32me("tbs"),
+    totalBestScoreEachChartType: s32me("tbgs"),
+    name: strme(),
+    matchingGrade: s32me("mg"),
+    abilityPointTimes100: s32me("ap"),
+    uattr: s32me(),
+    isTutorialEnabled: boolme("is_tut"),
+    class: s32me(),
+    classAchievrementRateTimes100: s32me("class_ar"),
+    skillPointTimes10: s32me("skill_point"),
+    pastelParts: s32me("pastel_parts"),
+    pastelExperiences: s32me("pastel_exp"),
+    rankQuestScore: s32me("rankquestscore"),
+    rankQuestRank: s32me("rankquestrank"),
+    mLog: s16me("mlog"),
+    ghostWinCount: s32me("ghost_win_count")
 }
 export function generateRb6PlayerBase(): IRb6PlayerBase {
     return {
@@ -211,28 +211,28 @@ export interface IRb6PlayerConfig extends ICollection<"rb.rb6.player.config"> {
 }
 export const Rb6PlayerConfigMap: KObjectMappingRecord<IRb6PlayerConfig> = {
     collection: getCollectionMappingElement("rb.rb6.player.config"),
-    musicSelectBgm: { $type: "u8", $targetKey: "msel_bgm" },
-    narrowDownType: { $type: "u8", $targetKey: "narrowdown_type" },
-    musicLevelDisplayingType: { $type: "u8", $targetKey: "musiclvdisp_type" },
-    characterCardId: { $type: "s16", $targetKey: "characard_id" },
-    bywordLeft: { $type: "s16", $targetKey: "byword_0" },
-    bywordRight: { $type: "s16", $targetKey: "byword_1" },
-    isAutoBywordLeft: { $type: "bool", $targetKey: "is_auto_byword_0" },
-    isAutoBywordRight: { $type: "bool", $targetKey: "is_auto_byword_1" },
-    latestSymbolChatId: { $type: "s16", $targetKey: "latestsymbolchat_id" },
-    memoryRecordingType: { $type: "u8", $targetKey: "mrec_type" },
-    cardDisplay: { $type: "u8", $targetKey: "card_disp" },
-    scoreTabDisplay: { $type: "u8", $targetKey: "score_tab_disp" },
-    lastMusicId: { $type: "s16", $targetKey: "last_music_id" },
-    lastNoteGrade: { $type: "u8", $targetKey: "last_note_grade" },
-    defaultMusicId: { $type: "s16", $targetKey: "default_music_id" },
-    defaultNoteGrade: { $type: "u8", $targetKey: "default_note_grade" },
-    sortType: { $type: "u8", $targetKey: "sort_type" },
-    randomEntryWork: { $type: "u64", $targetKey: "random_entry_work" },
-    customFolderWork: { $type: "u64", $targetKey: "custom_folder_work" },
-    folderType: { $type: "u8", $targetKey: "folder_type" },
-    isTweet: { $type: "bool", $targetKey: "is_tweet" },
-    isTwitterLinked: { $type: "bool", $targetKey: "is_link_twitter" }
+    musicSelectBgm: u8me("msel_bgm"),
+    narrowDownType: u8me("narrowdown_type"),
+    musicLevelDisplayingType: u8me("musiclvdisp_type"),
+    characterCardId: s16me("characard_id"),
+    bywordLeft: s16me("byword_0"),
+    bywordRight: s16me("byword_1"),
+    isAutoBywordLeft: boolme("is_auto_byword_0"),
+    isAutoBywordRight: boolme("is_auto_byword_1"),
+    latestSymbolChatId: s16me("latestsymbolchat_id"),
+    memoryRecordingType: u8me("mrec_type"),
+    cardDisplay: u8me("card_disp"),
+    scoreTabDisplay: u8me("score_tab_disp"),
+    lastMusicId: s16me("last_music_id"),
+    lastNoteGrade: u8me("last_note_grade"),
+    defaultMusicId: s16me("default_music_id"),
+    defaultNoteGrade: u8me("default_note_grade"),
+    sortType: u8me("sort_type"),
+    randomEntryWork: u64me("random_entry_work"),
+    customFolderWork: u64me("custom_folder_work"),
+    folderType: u8me("folder_type"),
+    isTweet: boolme("is_tweet"),
+    isTwitterLinked: boolme("is_link_twitter")
 }
 export function generateRb6PlayerConfig(): IRb6PlayerConfig {
     return {
@@ -297,27 +297,27 @@ export interface IRb6PlayerCustom extends ICollection<"rb.rb6.player.custom"> {
 }
 export const Rb6PlayerCustomMap: KObjectMappingRecord<IRb6PlayerCustom> = {
     collection: getCollectionMappingElement<IRb6PlayerCustom>("rb.rb6.player.custom"),
-    stageShotSound: { $type: "u8", $targetKey: "st_shot" },
-    stageFrameType: { $type: "u8", $targetKey: "st_frame" },
-    stageExplodeType: { $type: "u8", $targetKey: "st_expl" },
-    stageBackground: { $type: "u8", $targetKey: "st_bg" },
-    stageShotVolume: { $type: "u8", $targetKey: "st_shot_vol" },
-    stageBackgroundBrightness: { $type: "u8", $targetKey: "st_bg_bri" },
-    stageObjectSize: { $type: "u8", $targetKey: "st_obj_size" },
-    stageClearGaugeType: { $type: "u8", $targetKey: "st_clr_gauge" },
-    stageRandom: { $type: "u8", $targetKey: "st_rnd" },
-    stageSameTimeObjectsDisplayingType: { $type: "u8", $targetKey: "same_time_note_disp" },
-    stageScoreDisplayingType: { $type: "u8", $targetKey: "st_score_disp_type" },
-    stageBonusType: { $type: "u8", $targetKey: "st_bonus_type" },
-    stageRivalObjectsDisplayingType: { $type: "u8", $targetKey: "st_rivalnote_type" },
-    stageTopAssistDisplayingType: { $type: "u8", $targetKey: "st_topassist_type" },
-    stageBigBangEffectPerformingType: { $type: "u8", $targetKey: "st_bigbangeff_type" },
-    stageChatSoundSwitch: { $type: "u8", $targetKey: "st_chatvolume_type" },
-    stageHighSpeed: { $type: "u8", $targetKey: "high_speed" },
-    stageColorSpecified: { $type: "u8", $targetKey: "color_type" },
-    stageJustCollectionDisplayingType: { $type: "u8", $targetKey: "justcol_type" },
-    stageAchievementRateDisplayingType: { $type: "u8", $targetKey: "st_hazard" },
-    stageClearCondition: { $type: "u8", $targetKey: "st_clr_cond" }
+    stageShotSound: u8me("st_shot"),
+    stageFrameType: u8me("st_frame"),
+    stageExplodeType: u8me("st_expl"),
+    stageBackground: u8me("st_bg"),
+    stageShotVolume: u8me("st_shot_vol"),
+    stageBackgroundBrightness: u8me("st_bg_bri"),
+    stageObjectSize: u8me("st_obj_size"),
+    stageClearGaugeType: u8me("st_clr_gauge"),
+    stageRandom: u8me("st_rnd"),
+    stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),
+    stageScoreDisplayingType: u8me("st_score_disp_type"),
+    stageBonusType: u8me("st_bonus_type"),
+    stageRivalObjectsDisplayingType: u8me("st_rivalnote_type"),
+    stageTopAssistDisplayingType: u8me("st_topassist_type"),
+    stageBigBangEffectPerformingType: u8me("st_bigbangeff_type"),
+    stageChatSoundSwitch: u8me("st_chatvolume_type"),
+    stageHighSpeed: u8me("high_speed"),
+    stageColorSpecified: u8me("color_type"),
+    stageJustCollectionDisplayingType: u8me("justcol_type"),
+    stageAchievementRateDisplayingType: u8me("st_hazard"),
+    stageClearCondition: u8me("st_clr_cond")
 }
 export function generateRb6PlayerCustom(): IRb6PlayerCustom {
     return {
@@ -388,37 +388,37 @@ export interface IRb6PlayerStageLog extends ICollection<"rb.rb6.playData.stageLo
 }
 export const Rb6PlayerStageLogMap: KObjectMappingRecord<IRb6PlayerStageLog> = {
     collection: getCollectionMappingElement<IRb6PlayerStageLog>("rb.rb6.playData.stageLog"),
-    stageIndex: { $type: "s8", $targetKey: "stg" },
-    musicId: { $type: "s16", $targetKey: "mid" },
-    chartType: { $type: "s8", $targetKey: "ng" },
-    color: { $type: "s8", $targetKey: "col" },
-    mt: { $type: "s8" },
-    rt: { $type: "s8" },
-    clearType: { $type: "s8", $targetKey: "ct" },
-    param: { $type: "s16" },
-    matchingGrade: { $type: "s16", $targetKey: "grd" },
-    clearGaugeTimes100: { $type: "s16", $targetKey: "cl_gauge" },
-    achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s16", $targetKey: "sc" },
-    combo: { $type: "s16" },
-    justCount: { $type: "s16", $targetKey: "jt_jst" },
-    greatCount: { $type: "s16", $targetKey: "jt_grt" },
-    goodCount: { $type: "s16", $targetKey: "jt_gd" },
-    keepCount: { $type: "s16", $targetKey: "jt_keep" },
-    missCount: { $type: "s16", $targetKey: "jt_ms" },
-    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
-    justCollectionRateTimes100: { $type: "s16", $targetKey: "justcoll" },
-    rivalUserId: { $type: "s32", $targetKey: "r_uid" },
-    rivalPlayerId: { $type: "s32", $targetKey: "r_plyid" },
-    rivalStageIndex: { $type: "s8", $targetKey: "r_stg" },
-    rivalClearType: { $type: "s8", $targetKey: "r_ct" },
-    rivalScore: { $type: "s16", $targetKey: "r_sc" },
-    rivalMatchingGrade: { $type: "s16", $targetKey: "r_grd" },
-    rivalClearGaugeTimes100: { $type: "s16", $targetKey: "r_cl_gauge" },
-    rivalAchievementRateTimes100: { $type: "s16", $targetKey: "r_ar" },
-    rivalCpuId: { $type: "s8", $targetKey: "r_cpuid" },
-    time: { $type: "s32" },
-    decide: { $type: "s8" }
+    stageIndex: s8me("stg"),
+    musicId: s16me("mid"),
+    chartType: s8me("ng"),
+    color: s8me("col"),
+    mt: s8me(),
+    rt: s8me(),
+    clearType: s8me("ct"),
+    param: s16me(),
+    matchingGrade: s16me("grd"),
+    clearGaugeTimes100: s16me("cl_gauge"),
+    achievementRateTimes100: s16me("ar"),
+    score: s16me("sc"),
+    combo: s16me(),
+    justCount: s16me("jt_jst"),
+    greatCount: s16me("jt_grt"),
+    goodCount: s16me("jt_gd"),
+    keepCount: s16me("jt_keep"),
+    missCount: s16me("jt_ms"),
+    justReflecCount: s16me("jt_jr"),
+    justCollectionRateTimes100: s16me("justcoll"),
+    rivalUserId: s32me("r_uid"),
+    rivalPlayerId: s32me("r_plyid"),
+    rivalStageIndex: s8me("r_stg"),
+    rivalClearType: s8me("r_ct"),
+    rivalScore: s16me("r_sc"),
+    rivalMatchingGrade: s16me("r_grd"),
+    rivalClearGaugeTimes100: s16me("r_cl_gauge"),
+    rivalAchievementRateTimes100: s16me("r_ar"),
+    rivalCpuId: s8me("r_cpuid"),
+    time: s32me(),
+    decide: s8me()
 }
 
 export interface IRb6PlayerClasscheckLog {
@@ -431,13 +431,13 @@ export interface IRb6PlayerClasscheckLog {
     rank: number
 }
 export const Rb6PlayerClasscheckLogMap: KObjectMappingRecord<IRb6PlayerClasscheckLog> = {
-    class: { $type: "s32" },
-    clearType: { $type: "s32", $targetKey: "clear_type" },
-    seperateAchievementRateTimes100: { $type: "s32", $targetKey: "s_ar" },
-    seperateScore: { $type: "s32", $targetKey: "s_score" },
-    averageAchievementRateTimes100: { $type: "s32", $targetKey: "t_ar" },
-    totalScore: { $type: "s32", $targetKey: "t_score" },
-    rank: { $type: "s32", $targetKey: "score_rank" }
+    class: s32me(),
+    clearType: s32me("clear_type"),
+    seperateAchievementRateTimes100: s32me("s_ar"),
+    seperateScore: s32me("s_score"),
+    averageAchievementRateTimes100: s32me("t_ar"),
+    totalScore: s32me("t_score"),
+    rank: s32me("score_rank")
 }
 
 export interface IRb6PlayerReleasedInfo extends ICollection<"rb.rb6.player.releasedInfo"> {
@@ -448,10 +448,10 @@ export interface IRb6PlayerReleasedInfo extends ICollection<"rb.rb6.player.relea
 }
 export const Rb6PlayerReleasedInfoMap: KObjectMappingRecord<IRb6PlayerReleasedInfo> = {
     collection: getCollectionMappingElement<IRb6PlayerReleasedInfo>("rb.rb6.player.releasedInfo"),
-    type: { $type: "u8" },
-    id: { $type: "u16" },
-    param: { $type: "u16" },
-    insertTime: { $type: "s32", $targetKey: "insert_time" }
+    type: u8me(),
+    id: u16me(),
+    param: u16me(),
+    insertTime: s32me("insert_time")
 }
 
 export interface IRb6PlayerParameters extends ICollection<"rb.rb6.player.parameters"> {
@@ -461,9 +461,9 @@ export interface IRb6PlayerParameters extends ICollection<"rb.rb6.player.paramet
 }
 export const Rb6PlayerParametersMap: KObjectMappingRecord<IRb6PlayerParameters> = {
     collection: getCollectionMappingElement<IRb6PlayerParameters>("rb.rb6.player.parameters"),
-    type: { $type: "s32" },
-    bank: { $type: "s32" },
-    data: { $type: "s32" }
+    type: s32me(),
+    bank: s32me(),
+    data: s32me()
 }
 
 export interface IRb6QuestRecord extends ICollection<"rb.rb6.playData.quest"> {
@@ -475,11 +475,11 @@ export interface IRb6QuestRecord extends ICollection<"rb.rb6.playData.quest"> {
 }
 export const Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
     collection: getCollectionMappingElement<IRb6QuestRecord>("rb.rb6.playData.quest"),
-    dungeonId: { $type: "s32", $targetKey: "dungeon_id" },
-    dungeonGrade: { $type: "s8", $targetKey: "dungeon_grade" },
-    clearCount: { $type: "s32", $targetKey: "clear_num" },
-    playCount: { $type: "s32", $targetKey: "play_num" },
-    isCleared: { $type: "bool", $targetKey: "clear_flg" }
+    dungeonId: s32me("dungeon_id"),
+    dungeonGrade: s8me("dungeon_grade"),
+    clearCount: s32me("clear_num"),
+    playCount: s32me("play_num"),
+    isCleared: boolme("clear_flg")
 }
 
 interface IRb6PlayerData {

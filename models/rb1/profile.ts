@@ -1,3 +1,4 @@
+import { ignoreme, me, s16me, s32me, strme, u16me, u8me } from "../../utility/mapping"
 import { appendMappingElement, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 import { IRb1StageLogStandaloneElement, Rb1StageLogStandaloneElementMap } from "./stage_log_standalone"
@@ -15,15 +16,15 @@ export interface IRb1PlayerBase extends ICollection<"rb.rb1.player.base"> {
 }
 export const Rb1PlayerBaseMap: KObjectMappingRecord<IRb1PlayerBase> = {
     collection: getCollectionMappingElement<IRb1PlayerBase>("rb.rb1.player.base"),
-    userId: { $type: "s32", $targetKey: "uid" },
-    name: { $type: "str" },
-    comment: { $type: "kignore" },
-    level: { $type: "s16", $targetKey: "lv" },
-    experience: { $type: "s32", $targetKey: "exp" },
-    matchingGrade: { $type: "s16", $targetKey: "mg" },
-    abilityPointTimes10: { $type: "s16", $targetKey: "ap" },
-    tutorialFlag: { $type: "s32", $targetKey: "flag" },
-    playCount: { $type: "kignore" }
+    userId: s32me("uid"),
+    name: strme(),
+    comment: ignoreme(),
+    level: s16me("lv"),
+    experience: s32me("exp"),
+    matchingGrade: s16me("mg"),
+    abilityPointTimes10: s16me("ap"),
+    tutorialFlag: s32me("flag"),
+    playCount: ignoreme()
 }
 export function generateRb1PlayerBase(userId: number): IRb1PlayerBase {
     return {
@@ -48,10 +49,10 @@ export interface IRb1PlayerStat extends ICollection<"rb.rb1.player.stat"> {
 }
 export const Rb1PlayerStatMap: KObjectMappingRecord<IRb1PlayerStat> = {
     collection: getCollectionMappingElement<IRb1PlayerStat>("rb.rb1.player.stat"),
-    day: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "cnt" },
-    last: { $type: "s32" },
-    now: { $type: "s32" }
+    day: s32me(),
+    playCount: s32me("cnt"),
+    last: s32me(),
+    now: s32me()
 }
 export function generateRb1PlayerStat(): IRb1PlayerStat {
     return {
@@ -74,13 +75,13 @@ export interface IRb1PlayerCustom extends ICollection<"rb.rb1.player.custom"> {
 }
 export const Rb1PlayerCustomMap: KObjectMappingRecord<IRb1PlayerCustom> = {
     collection: getCollectionMappingElement<IRb1PlayerCustom>("rb.rb1.player.custom"),
-    stageBackgroundMusic: { $type: "u8", $targetKey: "bgm_m" },
-    stageFrameType: { $type: "u8", $targetKey: "st_f" },
-    stageBackground: { $type: "u8", $targetKey: "st_bg" },
-    stageBackgroundBrightness: { $type: "u8", $targetKey: "st_bg_b" },
-    stageExplodeType: { $type: "u8", $targetKey: "eff_e" },
-    stageShotSound: { $type: "u8", $targetKey: "se_s" },
-    stageShotVolume: { $type: "u8", $targetKey: "se_s_v" }
+    stageBackgroundMusic: u8me("bgm_m"),
+    stageFrameType: u8me("st_f"),
+    stageBackground: u8me("st_bg"),
+    stageBackgroundBrightness: u8me("st_bg_b"),
+    stageExplodeType: u8me("eff_e"),
+    stageShotSound: u8me("se_s"),
+    stageShotVolume: u8me("se_s_v")
 }
 export function generateRb1PlayerCustom(): IRb1PlayerCustom {
     return {
@@ -101,8 +102,8 @@ export interface IRb1PlayerReleasedInfo extends ICollection<"rb.rb1.player.relea
 }
 export const Rb1PlayerReleasedInfoMap: KObjectMappingRecord<IRb1PlayerReleasedInfo> = {
     collection: getCollectionMappingElement<IRb1PlayerReleasedInfo>("rb.rb1.player.releasedInfo"),
-    type: { $type: "u8" },
-    id: { $type: "u16" }
+    type: u8me(),
+    id: u16me()
 }
 
 export interface IRb1MusicRecord extends ICollection<"rb.rb1.playData.musicRecord"> {
@@ -120,17 +121,17 @@ export interface IRb1MusicRecord extends ICollection<"rb.rb1.playData.musicRecor
 }
 export const Rb1MusicRecordMap: KObjectMappingRecord<IRb1MusicRecord> = {
     collection: getCollectionMappingElement<IRb1MusicRecord>("rb.rb1.playData.musicRecord"),
-    musicId: { $type: "u16", $targetKey: "mid" },
-    chartType: { $type: "u8", $targetKey: "ng" },
-    winCount: { $type: "s32", $targetKey: "win" },
-    loseCount: { $type: "s32", $targetKey: "lose" },
-    drawCount: { $type: "s32", $targetKey: "draw" },
-    clearType: { $type: "u8", $targetKey: "ct" }, // 1: failed, 2: cleared, 3: full combo
-    achievementRateTimes10: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s16", $targetKey: "bs" },
-    combo: { $type: "s16", $targetKey: "mc" },
-    missCount: { $type: "s16", $targetKey: "bmc" },
-    playCount: { $type: "kignore" }
+    musicId: u16me("mid"),
+    chartType: u8me("ng"),
+    winCount: s32me("win"),
+    loseCount: s32me("lose"),
+    drawCount: s32me("draw"),
+    clearType: u8me("ct"), // 1: failed, 2: cleared, 3: full combo
+    achievementRateTimes10: s16me("ar"),
+    score: s16me("bs"),
+    combo: s16me("mc"),
+    missCount: s16me("bmc"),
+    playCount: ignoreme()
 }
 export function generateRb1MusicRecord(musicId: number, chartType: number): IRb1MusicRecord {
     return {
@@ -157,11 +158,11 @@ export interface IRb1StageLogElement {
     achievementRateTimes10: number
 }
 export const Rb1StageLogElementMap: KObjectMappingRecord<IRb1StageLogElement> = {
-    matchingGrade: { $type: "s16", $targetKey: "mg" },
-    abilityPointTimes10: { $type: "s16", $targetKey: "ap" },
-    clearType: { $type: "u8", $targetKey: "ct" },
-    score: { $type: "s16", $targetKey: "s" },
-    achievementRateTimes10: { $type: "s16", $targetKey: "ar" }
+    matchingGrade: s16me("mg"),
+    abilityPointTimes10: s16me("ap"),
+    clearType: u8me("ct"),
+    score: s16me("s"),
+    achievementRateTimes10: s16me("ar")
 }
 export interface IRb1StageLog extends ICollection<"rb.rb1.playData.stageLog"> {
     stageIndex: number
@@ -177,16 +178,16 @@ export interface IRb1StageLog extends ICollection<"rb.rb1.playData.stageLog"> {
 }
 export const Rb1StageLogMap: KObjectMappingRecord<IRb1StageLog> = {
     collection: getCollectionMappingElement<IRb1StageLog>("rb.rb1.playData.stageLog"),
-    stageIndex: { $type: "u8", $targetKey: "id" },
-    musicId: { $type: "u16", $targetKey: "mid" },
-    chartType: { $type: "u8", $targetKey: "ng" },
-    mt: { $type: "u8" },
-    rt: { $type: "u8" },
-    rivalUserId: { $type: "s32", $targetKey: "ruid" },
-    log: appendMappingElement(Rb1StageLogElementMap, { $targetKey: "myself" }),
-    rivalLog: appendMappingElement(Rb1StageLogElementMap, { $targetKey: "rival" }),
-    time: { $type: "s32" },
-    standalone: appendMappingElement(Rb1StageLogStandaloneElementMap, { $type: "kignore" })
+    stageIndex: u8me("id"),
+    musicId: u16me("mid"),
+    chartType: u8me("ng"),
+    mt: u8me(),
+    rt: u8me(),
+    rivalUserId: s32me("ruid"),
+    log: appendMappingElement(Rb1StageLogElementMap, me("myself")),
+    rivalLog: appendMappingElement(Rb1StageLogElementMap, me("rival")),
+    time: s32me(),
+    standalone: appendMappingElement(Rb1StageLogStandaloneElementMap, ignoreme())
 }
 
 export interface IRb1Player {
@@ -204,13 +205,13 @@ export interface IRb1Player {
     }
 }
 export const Rb1PlayerMap: KObjectMappingRecord<IRb1Player> = {
-    rid: { $type: "str" },
-    lid: { $type: "str" },
-    mode: { $type: "u8" },
+    rid: strme(),
+    lid: strme(),
+    mode: u8me(),
     pdata: {
-        comment: { $type: "str", $targetKey: "cmnt" },
+        comment: strme("cmnt"),
         base: Rb1PlayerBaseMap,
-        stat: appendMappingElement(Rb1PlayerStatMap, { $targetKey: "con" }),
+        stat: appendMappingElement(Rb1PlayerStatMap, me("con")),
         custom: Rb1PlayerCustomMap,
         released: { info: { 0: Rb1PlayerReleasedInfoMap } },
         record: { rec: { 0: Rb1MusicRecordMap } },

@@ -4,6 +4,7 @@ export interface IWebUIMessage extends ICollection<"utility.webuiMessage"> {
     message: string
     type: WebUIMessageType
     refid?: string
+    version: number
 }
 
 export enum WebUIMessageType {

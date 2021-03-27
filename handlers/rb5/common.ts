@@ -167,7 +167,7 @@ export namespace Rb5HandlersCommon {
     async function writePlayerInternal(player: IRb5Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb5PlayerAccount> = { collection: "rb.rb5.player.account" }
-        let playerAccountForPlayCountQuery: IRb5PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
+        let playerAccountForPlayCountQuery: IRb5PlayerAccount = await opm.findOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
             let rid = player.pdata.account.rid
             if (rid == "") throw new Error("rid is empty")
@@ -190,9 +190,9 @@ export namespace Rb5HandlersCommon {
                 opm.update(rid, { collection: "rb.rb5.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.base) {
-                let oldBase = await DB.FindOne<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
+                let oldBase = await opm.findOne<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
                 if (oldBase != null) {
-                    player.pdata.base.name = oldBase.name
+                    if (oldBase.name) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
                 } else {
                     if (player.pdata.base.comment == "Welcome to REFLEC BEAT VOLZZA!") player.pdata.base.comment = ""
@@ -386,7 +386,7 @@ export namespace Rb5HandlersCommon {
 
     async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb5PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb5MusicRecord> = { $and: [{ collection: "rb.rb5.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
-        let musicRecord = await DB.FindOne<IRb5MusicRecord>(rid, query)
+        let musicRecord = await opm.findOne<IRb5MusicRecord>(rid, query)
 
         let newFlag = getClearTypeIndex(stageLog)
         if (newFlag < 0) return

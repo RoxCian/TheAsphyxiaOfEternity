@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { appendMappingElement, BigIntProxy, getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { appendMappingElement, BigIntProxy, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, s64me, s8me, strme, u16me, u64me, u8me } from "../../utility/mapping"
 import { IRb3Mylist, Rb3MylistMap } from "./mylist"
 import { generateRb2LincleLink, IRb2LincleLink, Rb2LincleLinkMap } from "../rb2/profile"
 import { IRb3MusicRecord, Rb3MusicRecordMap } from "./music_record"
@@ -36,67 +36,67 @@ export interface IRb3PlayerAccount extends ICollection<"rb.rb3.player.account"> 
 }
 export const Rb3PlayerAccountWriteMap: KObjectMappingRecord<IRb3PlayerAccount> = {
     collection: getCollectionMappingElement<IRb3PlayerAccount>("rb.rb3.player.account"),
-    userId: { $type: "s32", $targetKey: "usrid" },
-    playerId: { $type: "s32", $targetKey: "plyid" },
+    userId: s32me("usrid"),
+    playerId: s32me("plyid"),
     /** * @deprecated Use playCountToday instead  */
-    dpc: { $type: "kignore" },
-    playCountToday: { $type: "s32", $targetKey: "dpc" },
-    crd: { $type: "s32" },
-    brd: { $type: "s32" },
+    dpc: ignoreme(),
+    playCountToday: s32me("dpc"),
+    crd: s32me(),
+    brd: s32me(),
     /** * @deprecated Use dayCount instead  */
-    tdc: { $type: "kignore" },
-    dayCount: { $type: "s32", $targetKey: "tdc" },
-    rid: { $type: "str" },
-    lid: { $type: "str" },
-    intrvld: { $type: "kignore" },
-    succeed: { $type: "kignore" },
-    pst: { $type: "u64" },
-    wmode: { $type: "u8" },
-    gmode: { $type: "u8" },
-    version: { $type: "s16", $targetKey: "ver" },
-    pp: { $type: "bool" },
-    ps: { $type: "bool" },
-    isContinue: { $type: "bool", $targetKey: "continue" },
-    isFirstFree: { $type: "bool", $targetKey: "firstfree" },
-    pay: { $type: "s16" },
-    payPc: { $type: "s16", $targetKey: "pay_pc" },
-    st: { $type: "u64" },
-    opc: { $type: "s32" },
-    lpc: { $type: "s32" },
-    cpc: { $type: "s32" },
-    mpc: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "tpc" },
+    tdc: ignoreme(),
+    dayCount: s32me("tdc"),
+    rid: strme(),
+    lid: strme(),
+    intrvld: ignoreme(),
+    succeed: ignoreme(),
+    pst: u64me(),
+    wmode: u8me(),
+    gmode: u8me(),
+    version: s16me("ver"),
+    pp: boolme(),
+    ps: boolme(),
+    isContinue: boolme("continue"),
+    isFirstFree: boolme("firstfree"),
+    pay: s16me(),
+    payPc: s16me("pay_pc"),
+    st: u64me(),
+    opc: s32me(),
+    lpc: s32me(),
+    cpc: s32me(),
+    mpc: s32me(),
+    playCount: s32me("tpc"),
 }
 export const Rb3PlayerAccountReadMap: KObjectMappingRecord<IRb3PlayerAccount> = {
     collection: getCollectionMappingElement<IRb3PlayerAccount>("rb.rb3.player.account"),
-    userId: { $type: "s32", $targetKey: "usrid" },
-    playerId: { $type: "kignore" },
-    dpc: { $type: "s32" },
-    playCountToday: { $type: "s32", $targetKey: "dpc" },
-    crd: { $type: "s32" },
-    brd: { $type: "s32" },
-    tdc: { $type: "s32" },
-    dayCount: { $type: "s32", $targetKey: "tdc" },
-    rid: { $type: "kignore" },
-    lid: { $type: "kignore" },
-    intrvld: { $type: "s32" },
-    succeed: { $type: "bool" },
-    pst: { $type: "u64" },
-    wmode: { $type: "kignore" },
-    gmode: { $type: "kignore" },
-    version: { $type: "s16", $targetKey: "ver" },
-    pp: { $type: "kignore" },
-    ps: { $type: "kignore" },
-    isContinue: { $type: "bool", $targetKey: "continue" },
-    isFirstFree: { $type: "bool", $targetKey: "firstfree" },
-    pay: { $type: "kignore" },
-    payPc: { $type: "kignore", $targetKey: "pay_pc" },
-    st: { $type: "u64" },
-    opc: { $type: "s32" },
-    lpc: { $type: "s32" },
-    cpc: { $type: "s32" },
-    mpc: { $type: "s32" },
-    playCount: { $type: "s32", $targetKey: "tpc" },
+    userId: s32me("usrid"),
+    playerId: ignoreme(),
+    dpc: s32me(),
+    playCountToday: s32me("dpc"),
+    crd: s32me(),
+    brd: s32me(),
+    tdc: s32me(),
+    dayCount: s32me("tdc"),
+    rid: ignoreme(),
+    lid: ignoreme(),
+    intrvld: s32me(),
+    succeed: boolme(),
+    pst: u64me(),
+    wmode: ignoreme(),
+    gmode: ignoreme(),
+    version: s16me("ver"),
+    pp: ignoreme(),
+    ps: ignoreme(),
+    isContinue: boolme("continue"),
+    isFirstFree: boolme("firstfree"),
+    pay: ignoreme(),
+    payPc: ignoreme("pay_pc"),
+    st: u64me(),
+    opc: s32me(),
+    lpc: s32me(),
+    cpc: s32me(),
+    mpc: s32me(),
+    playCount: s32me("tpc"),
 }
 export function generateRb3PlayerAccount(rid: string, userId?: number): IRb3PlayerAccount {
     return {
@@ -147,19 +147,19 @@ export interface IRb3PlayerBase extends ICollection<"rb.rb3.player.base"> {
 }
 export const Rb3PlayerBaseMap: KObjectMappingRecord<IRb3PlayerBase> = {
     collection: getCollectionMappingElement<IRb3PlayerBase>("rb.rb3.player.base"),
-    comment: { $type: "str", $targetKey: "cmnt" },
-    teamId: { $type: "s32", $targetKey: "tid" },
-    teamName: { $type: "str", $targetKey: "tname" },
-    totalBestScore: { $type: "s32", $targetKey: "tbs" },
-    totalBestScoreRival: { $type: "s32", $targetKey: "tbs_r" },
-    name: { $type: "str" },
-    matchingGrade: { $type: "s32", $targetKey: "mg" },
-    abilityPointTimes100: { $type: "s32", $targetKey: "ap" },
-    isTutorialEnabled: { $type: "bool", $targetKey: "is_tut" },
-    onigiriTimes10: { $type: "s32", $targetKey: "exp" },
-    level: { $type: "s32", $targetKey: "lv" },
-    hiddenParam: { $type: "s32", $targetKey: "hidden_param" },
-    uattr: { $type: "s32" }
+    comment: strme("cmnt"),
+    teamId: s32me("tid"),
+    teamName: strme("tname"),
+    totalBestScore: s32me("tbs"),
+    totalBestScoreRival: s32me("tbs_r"),
+    name: strme(),
+    matchingGrade: s32me("mg"),
+    abilityPointTimes100: s32me("ap"),
+    isTutorialEnabled: boolme("is_tut"),
+    onigiriTimes10: s32me("exp"),
+    level: s32me("lv"),
+    hiddenParam: s32me("hidden_param"),
+    uattr: s32me()
 }
 export function generateRb3PlayerBase(): IRb3PlayerBase {
     return {
@@ -208,29 +208,29 @@ export interface IRb3PlayerConfig extends ICollection<"rb.rb3.player.config"> {
 }
 export const Rb3PlayerConfigMap: KObjectMappingRecord<IRb3PlayerConfig> = {
     collection: getCollectionMappingElement("rb.rb3.player.config"),
-    iconId: { $type: "s16", $targetKey: "icon_id" },
-    tabSelected: { $type: "u8", $targetKey: "tab_sel" },
-    rivalPanelType: { $type: "u8", $targetKey: "rival_panel_type" },
-    folderLampType: { $type: "u8", $targetKey: "folder_lamp_type" },
+    iconId: s16me("icon_id"),
+    tabSelected: u8me("tab_sel"),
+    rivalPanelType: u8me("rival_panel_type"),
+    folderLampType: u8me("folder_lamp_type"),
 
 
-    musicSelectBgm: { $type: "u8", $targetKey: "msel_bgm" },
-    narrowDownType: { $type: "u8", $targetKey: "narrowdown_type" },
-    bywordLeft: { $type: "s16", $targetKey: "byword_0" },
-    bywordRight: { $type: "s16", $targetKey: "byword_1" },
-    isAutoBywordLeft: { $type: "bool", $targetKey: "is_auto_byword_0" },
-    isAutoBywordRight: { $type: "bool", $targetKey: "is_auto_byword_1" },
-    memoryRecordingType: { $type: "u8", $targetKey: "mrec_type" },
-    cardDisplay: { $type: "u8", $targetKey: "card_disp" },
-    scoreTabDisplay: { $type: "u8", $targetKey: "score_tab_disp" },
-    lastMusicId: { $type: "s16", $targetKey: "last_music_id" },
-    lastChartType: { $type: "u8", $targetKey: "last_note_grade" },
-    sortType: { $type: "u8", $targetKey: "sort_type" },
-    randomEntryWork: { $type: "u64", $targetKey: "random_entry_work" },
-    customFolderWork: { $type: "u64", $targetKey: "custom_folder_work" },
-    folderType: { $type: "u8", $targetKey: "folder_lamp_type" },
-    isTweet: { $type: "bool", $targetKey: "is_tweet" },
-    isTwitterLinked: { $type: "bool", $targetKey: "is_link_twitter" }
+    musicSelectBgm: u8me("msel_bgm"),
+    narrowDownType: u8me("narrowdown_type"),
+    bywordLeft: s16me("byword_0"),
+    bywordRight: s16me("byword_1"),
+    isAutoBywordLeft: boolme("is_auto_byword_0"),
+    isAutoBywordRight: boolme("is_auto_byword_1"),
+    memoryRecordingType: u8me("mrec_type"),
+    cardDisplay: u8me("card_disp"),
+    scoreTabDisplay: u8me("score_tab_disp"),
+    lastMusicId: s16me("last_music_id"),
+    lastChartType: u8me("last_note_grade"),
+    sortType: u8me("sort_type"),
+    randomEntryWork: u64me("random_entry_work"),
+    customFolderWork: u64me("custom_folder_work"),
+    folderType: u8me("folder_lamp_type"),
+    isTweet: boolme("is_tweet"),
+    isTwitterLinked: boolme("is_link_twitter")
 }
 export function generateRb3PlayerConfig(): IRb3PlayerConfig {
     return {
@@ -288,23 +288,23 @@ export interface IRb3PlayerCustom extends ICollection<"rb.rb3.player.custom"> {
 }
 export const Rb3PlayerCustomMap: KObjectMappingRecord<IRb3PlayerCustom> = {
     collection: getCollectionMappingElement<IRb3PlayerCustom>("rb.rb3.player.custom"),
-    stageMainGaugeType: { $type: "u8", $targetKey: "st_jr_gauge" },
+    stageMainGaugeType: u8me("st_jr_gauge"),
 
-    stageShotSound: { $type: "u8", $targetKey: "st_shot" },
-    stageFrameType: { $type: "u8", $targetKey: "st_frame" },
-    stageExplodeType: { $type: "u8", $targetKey: "st_expl" },
-    stageBackground: { $type: "u8", $targetKey: "st_bg" },
-    stageShotVolume: { $type: "u8", $targetKey: "st_shot_vol" },
-    stageBackgroundBrightness: { $type: "u8", $targetKey: "st_bg_bri" },
-    stageObjectSize: { $type: "u8", $targetKey: "st_obj_size" },
-    stageClearGaugeType: { $type: "u8", $targetKey: "st_clr_gauge" },
-    stageRandom: { $type: "u8", $targetKey: "st_rnd" },
-    simpleChatSetBeforeMatching: { $type: "s16", $targetKey: "schat_0" },
-    simpleChatSetAfterMatching: { $type: "s16", $targetKey: "schat_1" },
-    iconChatSetBeforeMatching: { $type: "s16", $targetKey: "ichat_0" },
-    iconChatSetAfterMatching: { $type: "s16", $targetKey: "ichat_1" },
-    stageJudgeDisplayingType: { $type: "u8", $targetKey: "st_jdg_disp" },
-    stageTouchMarkerDisplayingType: { $type: "u8", $targetKey: "st_tm_disp" },
+    stageShotSound: u8me("st_shot"),
+    stageFrameType: u8me("st_frame"),
+    stageExplodeType: u8me("st_expl"),
+    stageBackground: u8me("st_bg"),
+    stageShotVolume: u8me("st_shot_vol"),
+    stageBackgroundBrightness: u8me("st_bg_bri"),
+    stageObjectSize: u8me("st_obj_size"),
+    stageClearGaugeType: u8me("st_clr_gauge"),
+    stageRandom: u8me("st_rnd"),
+    simpleChatSetBeforeMatching: s16me("schat_0"),
+    simpleChatSetAfterMatching: s16me("schat_1"),
+    iconChatSetBeforeMatching: s16me("ichat_0"),
+    iconChatSetAfterMatching: s16me("ichat_1"),
+    stageJudgeDisplayingType: u8me("st_jdg_disp"),
+    stageTouchMarkerDisplayingType: u8me("st_tm_disp"),
 }
 export function generateRb3PlayerCustom(): IRb3PlayerCustom {
     return {
@@ -361,35 +361,35 @@ export interface IRb3PlayerStageLog extends ICollection<"rb.rb3.playData.stageLo
 }
 export const Rb3PlayerStageLogMap: KObjectMappingRecord<IRb3PlayerStageLog> = {
     collection: getCollectionMappingElement<IRb3PlayerStageLog>("rb.rb3.playData.stageLog"),
-    stageIndex: { $type: "s8", $targetKey: "stg" },
-    musicId: { $type: "s16", $targetKey: "mid" },
-    chartType: { $type: "s8", $targetKey: "ng" },
-    color: { $type: "s8", $targetKey: "col" },
-    mt: { $type: "s8" },
-    rt: { $type: "s8" },
-    clearType: { $type: "s8", $targetKey: "ct" },
-    matchingGrade: { $type: "s16", $targetKey: "grd" },
-    clearGaugeTimes100: { $type: "s16", $targetKey: "cl_gauge" },
-    achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s16", $targetKey: "sc" },
-    combo: { $type: "s16", $targetKey: "cmb" },
-    experience: { $type: "s16", $targetKey: "exp" },
-    justCount: { $type: "s16", $targetKey: "jt_jst" },
-    greatCount: { $type: "s16", $targetKey: "jt_grt" },
-    goodCount: { $type: "s16", $targetKey: "jt_gd" },
-    missCount: { $type: "s16", $targetKey: "jt_ms" },
-    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
-    rivalUserId: { $type: "s32", $targetKey: "r_uid" },
-    rivalPlayerId: { $type: "s32", $targetKey: "r_plyid" },
-    rivalStageIndex: { $type: "s8", $targetKey: "r_stg" },
-    rivalClearType: { $type: "s8", $targetKey: "r_ct" },
-    rivalScore: { $type: "s16", $targetKey: "r_sc" },
-    rivalMatchingGrade: { $type: "s16", $targetKey: "r_grd" },
-    rivalClearGaugeTimes100: { $type: "s16", $targetKey: "r_cl_gauge" },
-    rivalAchievementRateTimes100: { $type: "s16", $targetKey: "r_ar" },
-    rivalCpuId: { $type: "s8", $targetKey: "r_cpuid" }, // cpuid: 9/7, music: Velvet Sentiment, rival: Cecil Spade; cpuid: 9, music: SPEED BLADE, rival: Francis Club;
-    time: { $type: "s32" },
-    decide: { $type: "s8" }
+    stageIndex: s8me("stg"),
+    musicId: s16me("mid"),
+    chartType: s8me("ng"),
+    color: s8me("col"),
+    mt: s8me(),
+    rt: s8me(),
+    clearType: s8me("ct"),
+    matchingGrade: s16me("grd"),
+    clearGaugeTimes100: s16me("cl_gauge"),
+    achievementRateTimes100: s16me("ar"),
+    score: s16me("sc"),
+    combo: s16me("cmb"),
+    experience: s16me("exp"),
+    justCount: s16me("jt_jst"),
+    greatCount: s16me("jt_grt"),
+    goodCount: s16me("jt_gd"),
+    missCount: s16me("jt_ms"),
+    justReflecCount: s16me("jt_jr"),
+    rivalUserId: s32me("r_uid"),
+    rivalPlayerId: s32me("r_plyid"),
+    rivalStageIndex: s8me("r_stg"),
+    rivalClearType: s8me("r_ct"),
+    rivalScore: s16me("r_sc"),
+    rivalMatchingGrade: s16me("r_grd"),
+    rivalClearGaugeTimes100: s16me("r_cl_gauge"),
+    rivalAchievementRateTimes100: s16me("r_ar"),
+    rivalCpuId: s8me("r_cpuid"), // cpuid: 9/7, music: Velvet Sentiment, rival: Cecil Spade; cpuid: 9, music: SPEED BLADE, rival: Francis Club;
+    time: s32me(),
+    decide: s8me()
 }
 
 export interface IRb3EventProgress extends ICollection<"rb.rb3.player.event.eventProgress"> {
@@ -398,8 +398,8 @@ export interface IRb3EventProgress extends ICollection<"rb.rb3.player.event.even
 }
 export const Rb3EventProgressMap: KObjectMappingRecord<IRb3EventProgress> = {
     collection: getCollectionMappingElement<IRb3EventProgress>("rb.rb3.player.event.eventProgress"),
-    index: { $type: "s16", $targetKey: "id" },
-    experience: { $type: "s32", $targetKey: "exp" }
+    index: s16me("id"),
+    experience: s32me("exp")
 }
 
 export interface IRb3Equip extends ICollection<"rb.rb3.player.equip"> {
@@ -409,9 +409,9 @@ export interface IRb3Equip extends ICollection<"rb.rb3.player.equip"> {
 }
 export const Rb3EquipMap: KObjectMappingRecord<IRb3Equip> = {
     collection: getCollectionMappingElement<IRb3Equip>("rb.rb3.player.equip"),
-    index: { $type: "s16", $targetKey: "id" },
-    experience: { $type: "s32", $targetKey: "exp" },
-    stype: { $type: "s16" }
+    index: s16me("id"),
+    experience: s32me("exp"),
+    stype: s16me()
 }
 
 export interface IRb3SeedPod extends ICollection<"rb.rb3.player.event.seedPod"> {
@@ -420,8 +420,8 @@ export interface IRb3SeedPod extends ICollection<"rb.rb3.player.event.seedPod"> 
 }
 export const Rb3SeedPodMap: KObjectMappingRecord<IRb3SeedPod> = {
     collection: getCollectionMappingElement<IRb3SeedPod>("rb.rb3.player.event.seedPod"),
-    index: { $type: "s16", $targetKey: "id" },
-    pod: { $type: "s16" },
+    index: s16me("id"),
+    pod: s16me(),
 }
 
 export interface IRb3OrderDetails {
@@ -433,12 +433,12 @@ export interface IRb3OrderDetails {
     param: number
 }
 export const Rb3OrderDetailsMap: KObjectMappingRecord<IRb3OrderDetails> = {
-    index: { $type: "s16", $targetKey: "order" },
-    slot: { $type: "s16", $targetKey: "slt" },
-    clearedCount: { $type: "s32", $targetKey: "ccnt" },
-    fragmentsCount0: { $type: "s32", $targetKey: "fcnt" },
-    fragmentsCount1: { $type: "s32", $targetKey: "fcnt1" },
-    param: { $type: "s32", $targetKey: "prm" }
+    index: s16me("order"),
+    slot: s16me("slt"),
+    clearedCount: s32me("ccnt"),
+    fragmentsCount0: s32me("fcnt"),
+    fragmentsCount1: s32me("fcnt1"),
+    param: s32me("prm")
 }
 export interface IRb3Order extends ICollection<"rb.rb3.player.order"> {
     experience: number
@@ -446,7 +446,7 @@ export interface IRb3Order extends ICollection<"rb.rb3.player.order"> {
 }
 export const Rb3OrderMap: KObjectMappingRecord<IRb3Order> = {
     collection: getCollectionMappingElement<IRb3Order>("rb.rb3.player.order"),
-    experience: { $type: "s32", $targetKey: "exp" },
+    experience: s32me("exp"),
     details: { 0: Rb3OrderDetailsMap, $targetKey: "d" }
 }
 
@@ -458,10 +458,10 @@ export interface IRb3PlayerReleasedInfo extends ICollection<"rb.rb3.player.relea
 }
 export const Rb3PlayerReleasedInfoMap: KObjectMappingRecord<IRb3PlayerReleasedInfo> = {
     collection: getCollectionMappingElement<IRb3PlayerReleasedInfo>("rb.rb3.player.releasedInfo"),
-    type: { $type: "u8" },
-    id: { $type: "u16" },
-    param: { $type: "u16" },
-    insertTime: { $type: "s32", $targetKey: "insert_time" }
+    type: u8me(),
+    id: u16me(),
+    param: u16me(),
+    insertTime: s32me("insert_time")
 }
 
 export interface IRb3Stamp extends ICollection<"rb.rb3.player.stamp"> {
@@ -473,11 +473,11 @@ export interface IRb3Stamp extends ICollection<"rb.rb3.player.stamp"> {
 }
 export const Rb3StampMap: KObjectMappingRecord<IRb3Stamp> = {
     collection: getCollectionMappingElement<IRb3Stamp>("rb.rb3.player.stamp"),
-    stampCount: { $type: "s32", $targetKey: "stmpcnt" },
-    ticketCount: { $type: "s32", $targetKey: "tcktcnt" },
-    area: { $type: "s64" },
-    magic: { $type: "s64", $targetKey: "prfvst" },
-    reserve: { $type: "s32" }
+    stampCount: s32me("stmpcnt"),
+    ticketCount: s32me("tcktcnt"),
+    area: s64me(),
+    magic: s64me("prfvst"),
+    reserve: s32me()
 }
 export function generateRb3Stamp(): IRb3Stamp {
     return {
@@ -506,18 +506,18 @@ export interface IRb3TricolettePark extends ICollection<"rb.rb3.player.tricolett
 }
 export const Rb3TricoletteParkMap: KObjectMappingRecord<IRb3TricolettePark> = {
     collection: getCollectionMappingElement<IRb3TricolettePark>("rb.rb3.player.tricolettePark"),
-    openMusic: { $type: "s32", $targetKey: "open_music" },
-    boss0Damage: { $type: "s32", $targetKey: "boss0_damage" },
-    boss1Damage: { $type: "s32", $targetKey: "boss1_damage" },
-    boss2Damage: { $type: "s32", $targetKey: "boss2_damage" },
-    boss3Damage: { $type: "s32", $targetKey: "boss3_damage" },
-    boss0Stun: { $type: "s32", $targetKey: "boss0_stun" },
-    boss1Stun: { $type: "s32", $targetKey: "boss1_stun" },
-    boss2Stun: { $type: "s32", $targetKey: "boss2_stun" },
-    boss3Stun: { $type: "s32", $targetKey: "boss3_stun" },
-    magicGauge: { $type: "s32", $targetKey: "magic_gauge" },
-    todaysParty: { $type: "s32", $targetKey: "today_party" },
-    isUseUnionMagic: { $type: "bool", $targetKey: "use_union_magic" },
+    openMusic: s32me("open_music"),
+    boss0Damage: s32me("boss0_damage"),
+    boss1Damage: s32me("boss1_damage"),
+    boss2Damage: s32me("boss2_damage"),
+    boss3Damage: s32me("boss3_damage"),
+    boss0Stun: s32me("boss0_stun"),
+    boss1Stun: s32me("boss1_stun"),
+    boss2Stun: s32me("boss2_stun"),
+    boss3Stun: s32me("boss3_stun"),
+    magicGauge: s32me("magic_gauge"),
+    todaysParty: s32me("today_party"),
+    isUseUnionMagic: boolme("use_union_magic"),
     $targetKey: "tricolettepark"
 }
 export function generateRb3TricolettePark(): IRb3TricolettePark {

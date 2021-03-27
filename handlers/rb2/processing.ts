@@ -1,4 +1,4 @@
-import { IRb2Player, IRb2PlayerBase } from "../../models/rb2/profile"
+import { IRb2Player } from "../../models/rb2/profile"
 import { KITEM2 } from "../../utility/mapping"
 import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 0 -> song

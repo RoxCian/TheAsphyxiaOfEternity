@@ -12,7 +12,7 @@ export type KKey<T> = keyof T & (
     T extends string ? Exclude<keyof T, keyof string> :
     T extends Buffer ? Exclude<keyof T, keyof Buffer> :
     T extends boolean ? Exclude<keyof T, keyof boolean> :
-    T extends number[] | bigint[] ? Exclude<keyof T, (keyof number[]) | (keyof bigint[])> :
+    T extends number[] | bigint[] | boolean[] ? Exclude<keyof T, (keyof number[]) | (keyof bigint[]) | (keyof boolean[])> :
     T extends any[] ? Exclude<keyof T, keyof any[]> | number :
     T extends number ? Exclude<keyof T, keyof number> :
     T extends bigint | BigIntProxy ? Exclude<keyof T, keyof bigint> :
@@ -390,7 +390,7 @@ export function u64me(targetKey?: string, convert?: (source: bigint | BigIntProx
     }
 }
 
-export function boolme(targetKey?: string, convert?: (source: boolean) => boolean, convertBack?: (target: boolean) => boolean): KObjectMappingElement<boolean, "bool"> {
+export function boolme<T extends boolean | boolean[]>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, "bool"> {
     return {
         $type: "bool",
         $targetKey: targetKey,
@@ -398,7 +398,7 @@ export function boolme(targetKey?: string, convert?: (source: boolean) => boolea
         $convertBack: convertBack
     }
 }
-export function strme(targetKey?: string, convert?: (source: string) => string, convertBack?: (target: string) => string): KObjectMappingElement<string, "str"> {
+export function strme<TName extends string>(targetKey?: string, convert?: (source: TName) => TName, convertBack?: (target: TName) => TName): KObjectMappingElement<TName, "str"> {
     return {
         $type: "str",
         $targetKey: targetKey,
@@ -406,9 +406,26 @@ export function strme(targetKey?: string, convert?: (source: string) => string, 
         $convertBack: convertBack
     }
 }
+
+export function binme(targetKey?: string, convert?: (source: Buffer) => Buffer, convertBack?: (target: Buffer) => Buffer): KObjectMappingElement<Buffer, "bin"> {
+    return {
+        $type: "bin",
+        $targetKey: targetKey,
+        $convert: convert,
+        $convertBack: convertBack
+    }
+}
+
 export function ignoreme<T = any>(targetKey?: string, fallbackValue?: T): KObjectMappingElement<T, "kignore"> {
     return {
         $type: "kignore",
         $fallbackValue: fallbackValue
+    }
+}
+export function me<T extends object>(targetKey?: string, convert?: (source: T) => T, convertBack?: (target: T) => T): KObjectMappingElement<T, null> {
+    return {
+        $targetKey: targetKey,
+        $convert: convert,
+        $convertBack: convertBack
     }
 }

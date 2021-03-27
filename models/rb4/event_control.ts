@@ -1,4 +1,4 @@
-import { KObjectMappingRecord } from "../../utility/mapping"
+import { KObjectMappingRecord, s32me } from "../../utility/mapping"
 
 export interface IRb4EventControl {
     type: number
@@ -9,12 +9,12 @@ export interface IRb4EventControl {
     endTime: number
 }
 export const Rb4EventControlMap: KObjectMappingRecord<IRb4EventControl> = {
-    type: { $type: "s32" },
-    index: { $type: "s32" },
-    value: { $type: "s32" },
-    value2: { $type: "s32" },
-    startTime: { $type: "s32", $targetKey: "start_time" },
-    endTime: { $type: "s32", $targetKey: "end_time" }
+    type: s32me(),
+    index: s32me(),
+    value: s32me(),
+    value2: s32me(),
+    startTime: s32me("start_time"),
+    endTime: s32me("end_time")
 }
 export function getExampleEventControl(): IRb4EventControl[] {
     let result: IRb4EventControl[] = []

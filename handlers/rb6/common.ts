@@ -251,7 +251,7 @@ export namespace Rb6HandlersCommon {
     async function writePlayerInternal(player: IRb6Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb6PlayerAccount> = { collection: "rb.rb6.player.account" }
-        let playerAccountForPlayCountQuery: IRb6PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
+        let playerAccountForPlayCountQuery: IRb6PlayerAccount = await opm.findOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
             let rid = player.pdata.account.rid
             if (rid == "") throw new Error("rid is empty")
@@ -284,9 +284,9 @@ export namespace Rb6HandlersCommon {
                 player.pdata.base.rankQuestRank = init(player.pdata.base.rankQuestRank, [0, 0, 0])
                 player.pdata.base.mLog = init(player.pdata.base.mLog, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
                 player.pdata.base.ghostWinCount = init(player.pdata.base.ghostWinCount, 0)
-                let oldBase = await DB.FindOne<IRb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
+                let oldBase = await opm.findOne<IRb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
                 if (oldBase != null) {
-                    player.pdata.base.name = oldBase.name
+                    if (oldBase.name != null) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
                 } else {
                     if (player.pdata.base.comment == "Welcome to the land of Reflesia!") player.pdata.base.comment = ""
@@ -468,7 +468,7 @@ export namespace Rb6HandlersCommon {
 
     async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb6PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb6MusicRecord> = { $and: [{ collection: "rb.rb6.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
-        let musicRecord = await DB.FindOne<IRb6MusicRecord>(rid, query)
+        let musicRecord = await opm.findOne<IRb6MusicRecord>(rid, query)
 
         let newFlag = getClearTypeIndex(stageLog)
         if (newFlag < 0) return
@@ -558,7 +558,7 @@ export namespace Rb6HandlersCommon {
 
     async function updateJustCollection(userId: number, justColElement: IRb6JustCollection, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb6JustCollection> = { collection: "rb.rb6.playData.justCollection#userId", userId: userId, musicId: justColElement.musicId, chartType: justColElement.chartType }
-        let old = await DB.FindOne(query)
+        let old = await opm.findOne(null, query)
         justColElement.userId = userId
         if (old == null) {
             old = justColElement

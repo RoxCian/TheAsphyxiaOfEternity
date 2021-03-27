@@ -168,7 +168,7 @@ export namespace Rb2HandlersCommon {
     async function writePlayerInternal(player: IRb2Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb2PlayerBase> = { collection: "rb.rb2.player.base" }
-        let playerBaseForPlayCountQuery: IRb2PlayerBase = await DB.FindOne(player.rid, playCountQuery)
+        let playerBaseForPlayCountQuery: IRb2PlayerBase = await opm.findOne(player.rid, playCountQuery)
         if (player?.rid) {
             let rid = player.rid
             if (playerBaseForPlayCountQuery == null) { // save the new player
@@ -225,37 +225,37 @@ export namespace Rb2HandlersCommon {
         card_type: { $type: "s16" }
     }
 
-    async function updateMusicRecord(rid: string, newRecord: IRb2MusicRecord, opm: DBM.DBOperationManager): Promise<void> {
-        let query: Query<IRb2MusicRecord> = { $and: [{ collection: "rb.rb2.playData.musicRecord" }, { musicId: newRecord.musicId }, { chartType: newRecord.chartType }] }
-        let oldRecord = await DB.FindOne<IRb2MusicRecord>(rid, query)
+    async function updateMusicRecord(rid: string, update: IRb2MusicRecord, opm: DBM.DBOperationManager): Promise<void> {
+        let query: Query<IRb2MusicRecord> = { $and: [{ collection: "rb.rb2.playData.musicRecord" }, { musicId: update.musicId }, { chartType: update.chartType }] }
+        let record = await opm.findOne<IRb2MusicRecord>(rid, query)
 
-        if (oldRecord == null) oldRecord = generateRb2MusicRecord(newRecord.musicId, newRecord.chartType)
+        if (record == null) record = generateRb2MusicRecord(update.musicId, update.chartType)
 
-        // red
-        oldRecord.newRecord.clearType = newRecord.newRecord.clearType
-        oldRecord.newRecord.achievementRateTimes10 = newRecord.newRecord.achievementRateTimes10
-        oldRecord.newRecord.score = newRecord.newRecord.score
-        oldRecord.newRecord.combo = newRecord.newRecord.combo
-        oldRecord.newRecord.missCount = newRecord.newRecord.missCount
-        oldRecord.newRecord.winCount = newRecord.newRecord.winCount
-        oldRecord.newRecord.drawCount = newRecord.newRecord.drawCount
-        oldRecord.newRecord.loseCount = newRecord.newRecord.loseCount
+        // new
+        record.newRecord.clearType = update.newRecord.clearType
+        record.newRecord.achievementRateTimes10 = update.newRecord.achievementRateTimes10
+        record.newRecord.score = update.newRecord.score
+        record.newRecord.combo = update.newRecord.combo
+        record.newRecord.missCount = update.newRecord.missCount
+        record.newRecord.winCount = update.newRecord.winCount
+        record.newRecord.drawCount = update.newRecord.drawCount
+        record.newRecord.loseCount = update.newRecord.loseCount
 
-        oldRecord.newRecord.playCount++
+        record.newRecord.playCount++
 
-        // blue
-        oldRecord.oldRecord.clearType = newRecord.oldRecord.clearType
-        oldRecord.oldRecord.achievementRateTimes10 = newRecord.oldRecord.achievementRateTimes10
-        oldRecord.oldRecord.score = newRecord.oldRecord.score
-        oldRecord.oldRecord.combo = newRecord.oldRecord.combo
-        oldRecord.oldRecord.missCount = newRecord.oldRecord.missCount
-        oldRecord.oldRecord.winCount = newRecord.oldRecord.winCount
-        oldRecord.oldRecord.drawCount = newRecord.oldRecord.drawCount
-        oldRecord.oldRecord.loseCount = newRecord.oldRecord.loseCount
+        // old
+        record.oldRecord.clearType = update.oldRecord.clearType
+        record.oldRecord.achievementRateTimes10 = update.oldRecord.achievementRateTimes10
+        record.oldRecord.score = update.oldRecord.score
+        record.oldRecord.combo = update.oldRecord.combo
+        record.oldRecord.missCount = update.oldRecord.missCount
+        record.oldRecord.winCount = update.oldRecord.winCount
+        record.oldRecord.drawCount = update.oldRecord.drawCount
+        record.oldRecord.loseCount = update.oldRecord.loseCount
 
-        oldRecord.oldRecord.playCount++
+        record.oldRecord.playCount++
 
-        opm.upsert(rid, query, oldRecord)
+        opm.upsert(rid, query, record)
     }
 }
 

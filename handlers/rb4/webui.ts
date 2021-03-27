@@ -65,9 +65,9 @@ export namespace Rb4HandlersWebUI {
             await DBM.update<IRb4PlayerConfig>(data.refid, { collection: "rb.rb4.player.config" }, rb4Config)
             await DBM.update<IRb4PlayerCustom>(data.refid, { collection: "rb.rb4.player.custom" }, rb4Custom)
             await DBM.upsert<IRb4Mylist>(data.refid, { collection: "rb.rb4.player.mylist" }, rb4Mylist)
-            UtilityHandlersWebUI.pushMessage("Save RB groovin'!! settings succeeded!", WebUIMessageType.success, data.refid)
+            UtilityHandlersWebUI.pushMessage("Save RB groovin'!! settings succeeded!", 4, WebUIMessageType.success, data.refid)
         } catch (e) {
-            UtilityHandlersWebUI.pushMessage("Error while save RB groovin'!! settings: " + e.message, WebUIMessageType.error, data.refid)
+            UtilityHandlersWebUI.pushMessage("Error while save RB groovin'!! settings: " + e.message, 4, WebUIMessageType.error, data.refid)
         }
     }
 

@@ -1,4 +1,4 @@
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { getCollectionMappingElement, KObjectMappingRecord, s16me } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 
 export interface IRb4Mylist extends ICollection<"rb.rb4.player.mylist"> {
@@ -8,6 +8,6 @@ export interface IRb4Mylist extends ICollection<"rb.rb4.player.mylist"> {
 
 export const Rb4MylistMap: KObjectMappingRecord<IRb4Mylist> = {
     collection: getCollectionMappingElement<IRb4Mylist>("rb.rb4.player.mylist"),
-    index: { $type: "s16", $targetKey: "idx" },
-    mylist: { $type: "s16", $targetKey: "mlst" }
+    index: s16me("idx"),
+    mylist: s16me("mlst")
 }

@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { boolme, getCollectionMappingElement, KObjectMappingRecord, s16me, s32me, s8me } from "../../utility/mapping"
 
 export interface IRb3MusicRecord extends ICollection<"rb.rb3.playData.musicRecord"> {
     musicId: number
@@ -28,28 +28,28 @@ export interface IRb3MusicRecord extends ICollection<"rb.rb3.playData.musicRecor
 }
 export const Rb3MusicRecordMap: KObjectMappingRecord<IRb3MusicRecord> = {
     collection: getCollectionMappingElement<IRb3MusicRecord>("rb.rb3.playData.musicRecord"),
-    musicId: { $type: "s16", $targetKey: "mid" },
-    chartType: { $type: "s8", $targetKey: "ntgrd" },
-    playCount: { $type: "s32", $targetKey: "pc" },
-    clearType: { $type: "s8", $targetKey: "ct" }, // 1: hard failed, 10: hard cleared, 11: s-hard cleared
-    achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s16", $targetKey: "scr" },
-    combo: { $type: "s16", $targetKey: "cmb" },
-    missCount: { $type: "s16", $targetKey: "ms" },
-    time: { $type: "s32" },
-    bestScoreUpdateTime: { $type: "s32", $targetKey: "bscrt" },
-    bestAchievementRateUpdateTime: { $type: "s32", $targetKey: "bart" },
-    bestComboUpdateTime: { $type: "s32", $targetKey: "bctt" },
-    bestMissCountUpdateTime: { $type: "s32", $targetKey: "bmst" },
-    kFlag: { $type: "s32", $targetKey: "k_flag" },
-    isHasGhostBlue: { $type: "bool", $targetKey: "ghostb" },
-    isHasGhostRed: { $type: "bool", $targetKey: "ghostr" },
+    musicId: s16me("mid"),
+    chartType: s8me("ntgrd"),
+    playCount: s32me("pc"),
+    clearType: s8me("ct"), // 1: hard failed, 10: hard cleared, 11: s-hard cleared
+    achievementRateTimes100: s16me("ar"),
+    score: s16me("scr"),
+    combo: s16me("cmb"),
+    missCount: s16me("ms"),
+    time: s32me(),
+    bestScoreUpdateTime: s32me("bscrt"),
+    bestAchievementRateUpdateTime: s32me("bart"),
+    bestComboUpdateTime: s32me("bctt"),
+    bestMissCountUpdateTime: s32me("bmst"),
+    kFlag: s32me("k_flag"),
+    isHasGhostBlue: boolme("ghostb"),
+    isHasGhostRed: boolme("ghostr"),
     version: {
-        score: { $type: "s16", $targetKey: "scr" },
-        combo: { $type: "s16", $targetKey: "cmb" },
-        missCount: { $type: "s16", $targetKey: "ms" },
-        clearType: { $type: "s16", $targetKey: "ct" },
-        achievementRate: { $type: "s16", $targetKey: "ar" },
+        score: s16me("scr"),
+        combo: s16me("cmb"),
+        missCount: s16me("ms"),
+        clearType: s16me("ct"),
+        achievementRate: s16me("ar"),
         $targetKey: "ver"
     }
 }

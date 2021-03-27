@@ -1,4 +1,4 @@
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { getCollectionMappingElement, KObjectMappingRecord, s32me } from "../../utility/mapping"
 import { ICollection } from "../utility/definitions"
 
 export interface IRb5ClasscheckRecord extends ICollection<"rb.rb5.playData.classcheck"> {
@@ -13,14 +13,14 @@ export interface IRb5ClasscheckRecord extends ICollection<"rb.rb5.playData.class
 }
 export const Rb5ClasscheckRecordMappingRecord: KObjectMappingRecord<IRb5ClasscheckRecord> = {
     collection: getCollectionMappingElement<IRb5ClasscheckRecord>("rb.rb5.playData.classcheck"),
-    class: { $type: "s32" },
-    clearType: { $type: "s32", $targetKey: "clear_type" },
-    averageAchievementRateTimes100: { $type: "s32", $targetKey: "total_ar" },
-    totalScore: { $type: "s32", $targetKey: "total_score" },
-    playCount: { $type: "s32", $targetKey: "play_count" },
-    lastPlayTime: { $type: "s32", $targetKey: "last_play_time" },
-    recordUpdateTime: { $type: "s32", $targetKey: "record_update_time" },
-    rank: { $type: "s32" }
+    class: s32me(),
+    clearType: s32me("clear_type"),
+    averageAchievementRateTimes100: s32me("total_ar"),
+    totalScore: s32me("total_score"),
+    playCount: s32me("play_count"),
+    lastPlayTime: s32me("last_play_time"),
+    recordUpdateTime: s32me("record_update_time"),
+    rank: s32me()
 }
 export function generateRb5ClasscheckRecord(classIndex: number): IRb5ClasscheckRecord {
     return {

@@ -1,32 +1,184 @@
 "use strict";
 
-let getTabs = () => document.querySelectorAll("#tabs li")
-let getTabContents = () => document.querySelectorAll("#tab-content, .tab-content")
-function initializeTabs() {
-    getTabs().forEach((t) => {
-        t.addEventListener("click", (e) => {
-            if (t.classList.contains("disabled")) return
-            let group = t.getAttribute("tab-group")
-            let index = t.getAttribute("tab-index")
-            updateActiveTab(group, t)
-            updateActiveContent(group, index)
-        })
-    })
-}
-function updateActiveTab(tabGroup, tab) {
-    getTabs().forEach((t) => {
-        if (t && t.classList.contains("is-active") && (t.getAttribute("tab-group") == tabGroup)) t.classList.remove("is-active")
-    })
-    tab.classList.add("is-active")
+function initializePaginatedContent() {
+    let containers = document.querySelectorAll(".paginated-container")
+
+    for (let container of containers) {
+        let pageSizeInput = container.querySelector("input.page-size")
+        let paginations = container.querySelectorAll(".pagination")
+        let contents = container.querySelectorAll(".paginated-content")
+        let group = container.getAttribute("pagination-group")
+        let flags = { isFirst: true }
+        let refreshEllipsis = (param) => {
+            if (flags.isFirst) return
+            let maxWidth = container.offsetWidth / 2
+            for (let pagination of paginations) {
+                let buttons = pagination.querySelector("ul.pagination-list")
+                if (buttons.childElementCount == 0) return
+                let show = (index) => buttons.querySelector("li[tab-index=\"" + index + "\"]").style.display = "block"
+                let hide = (index) => buttons.querySelector("li[tab-index=\"" + index + "\"]").style.display = "none"
+                let previousButton = pagination.querySelector("a.pagination-previous")
+                let nextButton = pagination.querySelector("a.pagination-next")
+                let leftEllipsis = buttons.querySelector("li.ellipsis-left")
+                let rightEllipsis = buttons.querySelector("li.ellipsis-right")
+                let width = buttons.firstChild.offsetWidth.toString()
+                leftEllipsis.style.width = width + "px"
+                rightEllipsis.style.width = width + "px"
+                let count = buttons.childElementCount - 2
+                let maxButtonCount = Math.max((buttons.firstChild.offsetWidth == 0) ? 5 : Math.trunc(maxWidth / buttons.firstChild.offsetWidth), 5)
+                let current = (param instanceof HTMLElement) ? param : buttons.querySelector("li.is-active")
+                let index = parseInt((current == null) ? 0 : current.getAttribute("tab-index"))
+                if (index == 0) previousButton.setAttribute("disabled", "")
+                else previousButton.removeAttribute("disabled")
+                if (index == (count - 1)) nextButton.setAttribute("disabled", "")
+                else nextButton.removeAttribute("disabled")
+                if (count <= maxButtonCount) {
+                    for (let i = 0; i < count; i++) buttons.querySelector("li[tab-index=\"" + i + "\"]").style.display = "block"
+                    leftEllipsis.style.display = "none"
+                    rightEllipsis.style.display = "none"
+                } else {
+                    maxButtonCount = Math.trunc((maxButtonCount - 1) / 2) * 2 + 1
+                    let maxSurroundingButtonCount = (maxButtonCount - 5) / 2
+                    let maxNoEllipsisIndex = maxButtonCount - 2 - maxSurroundingButtonCount - 1
+
+                    if (index <= maxNoEllipsisIndex) {
+                        for (let i = 0; i <= (maxNoEllipsisIndex + maxSurroundingButtonCount); i++) show(i)
+                        for (let i = (maxNoEllipsisIndex + maxSurroundingButtonCount) + 1; i < count - 1; i++) hide(i)
+                        show(count - 1)
+                        leftEllipsis.style.display = "none"
+                        rightEllipsis.style.display = "block"
+                    } else if (index >= (count - maxNoEllipsisIndex - 1)) {
+                        for (let i = 1; i < (count - maxNoEllipsisIndex - maxSurroundingButtonCount - 1); i++) hide(i)
+                        for (let i = (count - maxNoEllipsisIndex - maxSurroundingButtonCount - 1); i < count; i++) show(i)
+                        show(0)
+                        leftEllipsis.style.display = "block"
+                        rightEllipsis.style.display = "none"
+                    } else {
+                        for (let i = 1; i < (index - maxSurroundingButtonCount); i++) hide(i)
+                        for (let i = (index - maxSurroundingButtonCount); i <= (index + maxSurroundingButtonCount); i++) show(i)
+                        for (let i = (index + maxSurroundingButtonCount) + 1; i < count - 1; i++) hide(i)
+                        show(0)
+                        show(count - 1)
+                        leftEllipsis.style.display = "block"
+                        rightEllipsis.style.display = "block"
+                    }
+                }
+            }
+        }
+        let refresh = () => {
+            if ((pageSizeInput == null) || (parseInt(pageSizeInput.value) <= 0)) {
+                for (let pagination of paginations) pagination.style.display = "none"
+                return
+            }
+            let pageSize = parseInt(pageSizeInput.value)
+            let pageCount = Math.ceil(contents.length / pageSize)
+            if (!flags.isFirst && (flags.pageSize == pageSize) && (flags.pageCount == pageCount)) return
+            for (let pagination of paginations) {
+                let buttons = pagination.querySelector("ul.pagination-list")
+                buttons.innerHTML = ""
+                buttons.id = "tabs"
+            }
+            for (let i = 0; i < pageCount; i++) {
+                for (let j = i * pageSize; j < (i + 1) * pageSize; j++) {
+                    if (contents[j] == null) break
+                    contents[j].classList.add("tab-content")
+                    contents[j].setAttribute("tab-group", group)
+                    contents[j].setAttribute("tab-index", i)
+                    if ((i == 0) && (flags.isFirst || (flags.pageCount != pageCount))) contents[j].classList.add("is-active")
+                    if (j == ((i + 1) * pageSize - 1)) for (let td of contents[j].querySelectorAll("td")) td.style.borderBottom = "0"
+                }
+                if (pageCount > 1) for (let pagination of paginations) {
+                    let buttons = pagination.querySelector("ul.pagination-list")
+                    let a = document.createElement("a")
+                    a.classList.add("pagination-link")
+                    a.innerText = i + 1
+                    let li = document.createElement("li")
+                    li.appendChild(a)
+                    if ((i == 0) && (flags.isFirst || (flags.pageCount != pageCount))) {
+                        li.classList.add("is-active")
+                        a.classList.add("is-current")
+                    }
+                    li.setAttribute("tab-group", group)
+                    li.setAttribute("tab-index", i)
+                    buttons.appendChild(li)
+                    li.addEventListener("click", () => {
+                        refreshEllipsis(li)
+                    })
+                }
+            }
+            if (pageCount > 1) for (let pagination of paginations) {
+                pagination.style.display = "flex"
+                let buttons = pagination.querySelector("ul.pagination-list")
+                let leftEllipsis = document.createElement("li")
+                leftEllipsis.style.display = "none"
+                leftEllipsis.classList.add("ellipsis-left", "ignore")
+                leftEllipsis.innerHTML = "<span class=\"pagination-ellipsis\">&hellip;</span>"
+                let rightEllipsis = document.createElement("li")
+                rightEllipsis.style.display = "none"
+                rightEllipsis.classList.add("ellipsis-right", "ignore")
+                rightEllipsis.innerHTML = "<span class=\"pagination-ellipsis\">&hellip;</span>"
+                buttons.firstChild.after(leftEllipsis)
+                buttons.lastChild.before(rightEllipsis)
+
+                let previousButton = pagination.querySelector("a.pagination-previous")
+                let nextButton = pagination.querySelector("a.pagination-next")
+                previousButton.addEventListener("click", () => {
+                    let current = buttons.querySelector("li.is-active")
+                    let index = parseInt(current.getAttribute("tab-index"))
+                    if (index <= 0) return
+                    let prev = buttons.querySelector("li[tab-index=\"" + (index - 1) + "\"]")
+                    prev.dispatchEvent(new Event("click"))
+                })
+                nextButton.addEventListener("click", () => {
+                    let current = buttons.querySelector("li.is-active")
+                    let index = parseInt(current.getAttribute("tab-index"))
+                    if (index >= (buttons.childElementCount - 3)) return // includes left & right ellipsis
+                    let next = buttons.querySelector("li[tab-index=\"" + (index + 1) + "\"]")
+                    next.dispatchEvent(new Event("click"))
+                })
+            } else for (let pagination of paginations) pagination.style.display = "none"
+            flags.pageCount = pageCount
+            flags.pageSize = pageSize
+            flags.isFirst = false
+        }
+        refresh()
+        pageSizeInput.addEventListener("change", refresh)
+        let o = new ResizeObserver(refreshEllipsis)
+        o.observe(container)
+    }
 }
 
-function updateActiveContent(tabGroup, tabIndex) {
-    getTabContents().forEach((item) => {
-        let group = item.getAttribute("tab-group")
-        let index = item.getAttribute("tab-index")
-        if (item && item.classList.contains("is-active") && (group == tabGroup)) item.classList.remove("is-active")
-        if ((index == tabIndex) && (group == tabGroup)) item.classList.add("is-active")
-    })
+function initializeTabs() {
+    let tabs = document.querySelectorAll("#tabs li")
+    let tabContents = document.querySelectorAll("#tab-content, .tab-content")
+    let updateActiveTab = (tabGroup, tabIndex) => {
+        for (let t of tabs) if (t && (t.getAttribute("tab-group") == tabGroup)) {
+            if (t.getAttribute("tab-index") != tabIndex) {
+                t.classList.remove("is-active")
+                for (let a of t.querySelectorAll("a")) a.classList.remove("is-current")
+            } else {
+                t.classList.add("is-active")
+                for (let a of t.querySelectorAll("a")) a.classList.add("is-current")
+            }
+        }
+    }
+
+    let updateActiveContent = (tabGroup, tabIndex) => {
+        for (let item of tabContents) {
+            let group = item.getAttribute("tab-group")
+            let index = item.getAttribute("tab-index")
+            if (item && (group == tabGroup)) item.classList.remove("is-active")
+            if ((index == tabIndex) && (group == tabGroup)) item.classList.add("is-active")
+        }
+    }
+    for (let t of tabs) {
+        if (!t.classList.contains("disabled") && !t.classList.contains("ignore")) t.addEventListener("click", () => {
+            let group = t.getAttribute("tab-group")
+            let index = t.getAttribute("tab-index")
+            updateActiveTab(group, index)
+            updateActiveContent(group, index)
+        })
+    }
 }
 
 function initializeToggles() {
@@ -175,21 +327,20 @@ function initializeFormCollections() {
         let modTable = c.querySelector("table#multi-select")
         let modInput = modTable.querySelector("input#multi-select-input")
         let modTitle = modTable.querySelector("input#multi-select-title")
-        let deleteButtonClickEventListener = (e) => {
-            let t = e.target.parentElement
-            let tvalue = JSON.parse(t.getAttribute("value"))
+        let deleteButtonClickEventListener = (tag) => () => {
+            let tvalue = JSON.parse(tag.getAttribute("value"))
             let value = JSON.parse(input.value)
             value.splice(value.indexOf(tvalue), 1)
             if (fallbackValue != null) value.push(fallbackValue)
             input.value = JSON.stringify(value)
             modInput.value = input.value
             modInput.dispatchEvent(new Event("change"))
-            t.remove()
-            modButton.removeAttribute("disabled")
+            tag.remove()
         }
+
         for (let t of tags) {
-            let d = t.querySelector(".delete")
-            d.addEventListener("click", deleteButtonClickEventListener)
+            let d = t.querySelector(".delete, .is-delete")
+            d.addEventListener("click", deleteButtonClickEventListener(t))
         }
         modInput.value = input.value
         modInput.setAttribute("max-length", maxLength)
@@ -203,19 +354,12 @@ function initializeFormCollections() {
                 for (let t of tags) if (JSON.parse(t.getAttribute("value")) == o) t.remove()
             }
             for (let n = 0; n < newValue.length; n++) if (!oldValue.includes(newValue[n]) && (newValue[n] != fallbackValue)) {
-                let tag = document.createElement("span")
-                tag.classList.add("tag")
+                let tag = document.createElement("div")
+                tag.classList.add("control")
                 tag.id = "form-collection-tag"
                 tag.setAttribute("value", newValue[n])
-                let title = document.createElement("span")
-                title.id = "form-collection-tag-title"
-                title.innerText = JSON.parse(modTitle.value)[n]
-                let button = document.createElement("button")
-                button.classList.add("delete")
-                button.classList.add("is-small")
-                button.addEventListener("click", deleteButtonClickEventListener)
-                tag.appendChild(title)
-                tag.appendChild(button)
+                tag.innerHTML = "<span class=\"tags has-addons\"><span class=\"tag is-link is-light\" id=\"form-collection-tag-title\">" + JSON.parse(modTitle.value)[n] + "</span><a class=\"tag is-delete\" /></span>"
+                tag.querySelector("a.is-delete").addEventListener("click", deleteButtonClickEventListener(tag))
                 modButton.before(tag)
             }
             input.value = modInput.value
@@ -387,15 +531,15 @@ function initializeMarqueeLabels() {
         for (let marquee of marquees) {
             if (marquee.closest(".marquee-label-container") != c) continue
             let refresh = () => {
-                let lpad = parseInt(($(c).css("padding-left")))
+                let lpad = parseInt(window.getComputedStyle(c, null).getPropertyValue("padding-left"))
                 if (lpad == NaN) lpad = 0
-                let rpad = parseInt(($(c).css("padding-right")))
+                let rpad = parseInt(window.getComputedStyle(c, null).getPropertyValue("padding-right"))
                 if (rpad == NaN) rpad = 20
                 let hpad = lpad + rpad
                 let speed = marquee.getAttribute("speed")
                 if (speed == null) speed = 1
                 let stopingTime = 0.5
-                let duration = (20 * (marquee.offsetWidth - c.offsetWidth)) / speed + 2 * stopingTime
+                let duration = (20 * (marquee.offsetWidth - c.offsetWidth + hpad)) / speed + 2 * stopingTime
                 if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > c.offsetWidth - hpad)) {
                     marquee.animate([
                         { transform: "translateX(0)", offset: 0 },
@@ -432,6 +576,8 @@ function initializeNotificatioAnimation() {
             n.style.display = "none"
             if (endSubmitter != null) endRequest.send()
         }
+
+        n.style.animationPlayState = "running"
         remove.addEventListener("click", end)
         n.addEventListener("animationend", end)
         n.addEventListener("webkitAnimationEnd", end)
@@ -481,6 +627,7 @@ function removeLoadingModal() {
 
 $(document).ready(() => {
     initializeNotificatioAnimation()
+    initializePaginatedContent()
     initializeTabs()
     initializeToggles()
     initializeModals()

@@ -1,4 +1,4 @@
-import { KObjectMappingRecord } from "../../utility/mapping";
+import { KObjectMappingRecord, s16me, s32me, strme } from "../../utility/mapping"
 
 export interface IRb2StageLogStandaloneElement {
     stageIndex: number
@@ -17,20 +17,20 @@ export interface IRb2StageLogStandaloneElement {
     sec: number
 }
 export const Rb2StageLogStandaloneElementMap: KObjectMappingRecord<IRb2StageLogStandaloneElement> = {
-    stageIndex: { $type: "s16", $targetKey: "idx" },
-    musicId: { $type: "s16", $targetKey: "mid" },
-    chartType: { $type: "s16", $targetKey: "grade" },
-    color: { $type: "s16" },
-    isMatched: { $type: "s16", $targetKey: "match" },
-    result: { $type: "s16", $targetKey: "res" },
-    score: { $type: "s16" },
-    combo: { $type: "s16", $targetKey: "mc" },
-    justReflecCount: { $type: "s16", $targetKey: "jt_jr" },
-    justCount: { $type: "s16", $targetKey: "jt_ju" },
-    greatCount: { $type: "s16", $targetKey: "jt_gr" },
-    goodCount: { $type: "s16", $targetKey: "jt_gd" },
-    missCount: { $type: "s16", $targetKey: "jt_ms" },
-    sec: { $type: "s32" },
+    stageIndex: s16me("idx"),
+    musicId: s16me("mid"),
+    chartType: s16me("grade"),
+    color: s16me(),
+    isMatched: s16me("match"),
+    result: s16me("res"),
+    score: s16me(),
+    combo: s16me("mc"),
+    justReflecCount: s16me("jt_jr"),
+    justCount: s16me("jt_ju"),
+    greatCount: s16me("jt_gr"),
+    goodCount: s16me("jt_gd"),
+    missCount: s16me("jt_ms"),
+    sec: s32me(),
 }
 
 export interface IRb2StageLogStandalone {
@@ -43,11 +43,11 @@ export interface IRb2StageLogStandalone {
     rec: IRb2StageLogStandaloneElement[]
 }
 export const Rb2StageLogStandaloneMap: KObjectMappingRecord<IRb2StageLogStandalone> = {
-    userId: { $type: "s32", $targetKey: "uid" },
-    lid: { $type: "str" },
+    userId: s32me("uid"),
+    lid: strme(),
     play: {
-        stageCount: { $type: "s16", $targetKey: "stage" },
-        sec: { $type: "s32" }
+        stageCount: s16me("stage"),
+        sec: s32me()
     },
     rec: { 0: Rb2StageLogStandaloneElementMap }
 }

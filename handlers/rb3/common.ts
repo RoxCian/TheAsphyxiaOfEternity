@@ -244,7 +244,7 @@ export namespace Rb3HandlersCommon {
     async function writePlayerInternal(player: IRb3Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb3PlayerAccount> = { collection: "rb.rb3.player.account" }
-        let playerAccountForPlayCountQuery: IRb3PlayerAccount = await DB.FindOne(player.pdata.account.rid, playCountQuery)
+        let playerAccountForPlayCountQuery: IRb3PlayerAccount = await opm.findOne(player.pdata.account.rid, playCountQuery)
         if (player?.pdata?.account?.rid) {
             let rid = player.pdata.account.rid
             if (rid == "") throw new Error("rid is empty")
@@ -268,9 +268,9 @@ export namespace Rb3HandlersCommon {
                 opm.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)
             }
             if (player.pdata.base) {
-                let oldBase = await DB.FindOne<IRb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
+                let oldBase = await opm.findOne<IRb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
                 if (oldBase != null) {
-                    player.pdata.base.name = oldBase.name
+                    if (oldBase.name) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
                 } else {
                     if (player.pdata.base.comment == "Welcome to REFLEC BEAT colette!") player.pdata.base.comment = ""
@@ -394,7 +394,7 @@ export namespace Rb3HandlersCommon {
     async function updateMusicRecordFromStageLog(rid: string, stageLog: IRb3PlayerStageLog, opm: DBM.DBOperationManager): Promise<void> {
         if ((stageLog.musicId == 0) && (stageLog.clearType == -1)) return
         let query: Query<IRb3MusicRecord> = { $and: [{ collection: "rb.rb3.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }
-        let musicRecord = await DB.FindOne<IRb3MusicRecord>(rid, query)
+        let musicRecord = await opm.findOne<IRb3MusicRecord>(rid, query)
 
         let newFlag = getClearTypeIndex(stageLog)
         if (newFlag < 0) return
@@ -437,7 +437,7 @@ export namespace Rb3HandlersCommon {
     }
 
     async function updateOrder(rid: string, order: IRb3Order, opm: DBM.DBOperationManager) {
-        let oldOrder: IRb3Order = await DB.FindOne<IRb3Order>(rid, { collection: "rb.rb3.player.order" })
+        let oldOrder: IRb3Order = await opm.findOne<IRb3Order>(rid, { collection: "rb.rb3.player.order" })
         if ((oldOrder == null) || (oldOrder.details == null)) opm.upsert<IRb3Order>(rid, { collection: "rb.rb3.player.order" }, order)
         else {
             oldOrder.experience = order.experience
@@ -477,7 +477,7 @@ export namespace Rb3HandlersCommon {
     }
 
     async function updateEventProgress(rid: string, e: IRb3EventProgress, opm: DBM.DBOperationManager) {
-        let oldE: IRb3EventProgress = await DB.FindOne<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index })
+        let oldE: IRb3EventProgress = await opm.findOne<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index })
         if (oldE == null) opm.upsert<IRb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index }, e)
         else {
             oldE.experience += e.experience

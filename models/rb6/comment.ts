@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { getCollectionMappingElement, KObjectMappingRecord } from "../../utility/mapping"
+import { boolme, getCollectionMappingElement, KObjectMappingRecord, s16me, s32me, s8me, strme } from "../../utility/mapping"
 
 export interface IRb6Comment extends ICollection<"rb.rb6.utility.comment"> {
     uid: number
@@ -15,13 +15,13 @@ export interface IRb6Comment extends ICollection<"rb.rb6.utility.comment"> {
 
 export const Rb6CommentMap: KObjectMappingRecord<IRb6Comment> = {
     collection: getCollectionMappingElement<IRb6Comment>("rb.rb6.utility.comment"),
-    uid: { $type: "s32" },
-    name: { $type: "str" },
-    characterCard: { $type: "s16", $targetKey: "chara" },
-    bln: { $type: "s8" },
-    lobbyId: { $type: "str" },
-    preference: { $type: "s8", $targetKey: "pref" },
-    time: { $type: "s32" },
-    comment: { $type: "str" },
-    isTweet: { $type: "bool", $targetKey: "is_tweet" }
+    uid: s32me(),
+    name: strme(),
+    characterCard: s16me("chara"),
+    bln: s8me(),
+    lobbyId: strme(),
+    preference: s8me("pref"),
+    time: s32me(),
+    comment: strme(),
+    isTweet: boolme("is_tweet")
 }

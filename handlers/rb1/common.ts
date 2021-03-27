@@ -109,7 +109,7 @@ export namespace Rb1HandlersCommon {
     async function writePlayerInternal(player: IRb1Player) {
         let opm = new DBM.DBOperationManager()
         let playCountQuery: Query<IRb1PlayerBase> = { collection: "rb.rb1.player.base" }
-        let playerBaseForPlayCountQuery: IRb1PlayerBase = await DB.FindOne(player.rid, playCountQuery)
+        let playerBaseForPlayCountQuery: IRb1PlayerBase = await opm.findOne(player.rid, playCountQuery)
         if (player?.rid) {
             let rid = player.rid
             if (playerBaseForPlayCountQuery == null) { // save the new player
@@ -164,7 +164,7 @@ export namespace Rb1HandlersCommon {
 
     async function updateMusicRecord(rid: string, newRecord: IRb1MusicRecord, opm: DBM.DBOperationManager): Promise<void> {
         let query: Query<IRb1MusicRecord> = { $and: [{ collection: "rb.rb1.playData.musicRecord" }, { musicId: newRecord.musicId }, { chartType: newRecord.chartType }] }
-        let oldRecord = await DB.FindOne<IRb1MusicRecord>(rid, query)
+        let oldRecord = await opm.findOne<IRb1MusicRecord>(rid, query)
 
         if (oldRecord == null) oldRecord = generateRb1MusicRecord(newRecord.musicId, newRecord.chartType)
         oldRecord.clearType = newRecord.clearType

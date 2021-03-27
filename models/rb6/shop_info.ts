@@ -1,4 +1,4 @@
-import { KObjectMappingRecord, mapKObject } from "../../utility/mapping"
+import { boolme, KObjectMappingRecord, mapKObject, strme, u8me } from "../../utility/mapping"
 
 export interface IRb6ShopInfo {
     name: "Asphyxia Core"
@@ -8,11 +8,11 @@ export interface IRb6ShopInfo {
     shopFlag: boolean
 }
 export const Rb6ShopInfoMap: KObjectMappingRecord<IRb6ShopInfo> = {
-    name: { $type: "str", $targetKey: "nm" },
-    clEnabled: { $type: "bool", $targetKey: "cl_enbl" },
-    clH: { $type: "u8", $targetKey: "cl_h" },
-    clM: { $type: "u8", $targetKey: "cl_m" },
-    shopFlag: { $type: "bool", $targetKey: "shop_flag" }
+    name: strme("nm"),
+    clEnabled: boolme("cl_enbl"),
+    clH: u8me("cl_h"),
+    clM: u8me("cl_m"),
+    shopFlag: boolme("shop_flag")
 }
 export const Rb6ShopInfo: IRb6ShopInfo = {
     name: "Asphyxia Core",

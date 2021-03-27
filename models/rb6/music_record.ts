@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { getCollectionMappingElement, KObjectMappingRecord, NumberGroup } from "../../utility/mapping"
+import { boolme, getCollectionMappingElement, KObjectMappingRecord, s16me, s32me, s8me } from "../../utility/mapping"
 
 export interface IRb6MusicRecord extends ICollection<"rb.rb6.playData.musicRecord"> {
     musicId: number
@@ -24,25 +24,25 @@ export interface IRb6MusicRecord extends ICollection<"rb.rb6.playData.musicRecor
 }
 export const Rb6MusicRecordMap: KObjectMappingRecord<IRb6MusicRecord> = {
     collection: getCollectionMappingElement<IRb6MusicRecord>("rb.rb6.playData.musicRecord"),
-    musicId: { $type: "s16", $targetKey: "mid" },
-    chartType: { $type: "s8", $targetKey: "ntgrd" },
-    playCount: { $type: "s32", $targetKey: "pc" },
-    clearType: { $type: "s8", $targetKey: "ct" },
-    achievementRateTimes100: { $type: "s16", $targetKey: "ar" },
-    score: { $type: "s16", $targetKey: "scr" },
-    combo: { $type: "s16" },
-    missCount: { $type: "s16", $targetKey: "ms" },
-    param: { $type: "s16" },
-    time: { $type: "s32" },
-    bestScoreUpdateTime: { $type: "s32", $targetKey: "bscrt" },
-    bestAchievementRateUpdateTime: { $type: "s32", $targetKey: "bart" },
-    bestComboUpdateTime: { $type: "s32", $targetKey: "bctt" },
-    bestMissCountUpdateTime: { $type: "s32", $targetKey: "bmst" },
-    kFlag: { $type: "s32", $targetKey: "k_flag" },
-    justCollectionRateTimes100Red: { $type: "s32", $targetKey: "jcolr" },
-    justCollectionRateTimes100Blue: { $type: "s32", $targetKey: "jcolb" },
-    isHasGhostBlue: { $type: "bool", $targetKey: "ghostb" },
-    isHasGhostRed: { $type: "bool", $targetKey: "ghostr" }
+    musicId: s16me("mid"),
+    chartType: s8me("ntgrd"),
+    playCount: s32me("pc"),
+    clearType: s8me("ct"),
+    achievementRateTimes100: s16me("ar"),
+    score: s16me("scr"),
+    combo: s16me(),
+    missCount: s16me("ms"),
+    param: s16me(),
+    time: s32me(),
+    bestScoreUpdateTime: s32me("bscrt"),
+    bestAchievementRateUpdateTime: s32me("bart"),
+    bestComboUpdateTime: s32me("bctt"),
+    bestMissCountUpdateTime: s32me("bmst"),
+    kFlag: s32me("k_flag"),
+    justCollectionRateTimes100Red: s32me("jcolr"),
+    justCollectionRateTimes100Blue: s32me("jcolb"),
+    isHasGhostBlue: boolme("ghostb"),
+    isHasGhostRed: boolme("ghostr")
 }
 export function generateRb6MusicRecord(musicId: number, chartType: number): IRb6MusicRecord {
     return {

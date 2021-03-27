@@ -1,3 +1,9 @@
+- v1.0.1
+
+  Fixed an issue about not saving the highest score when played a chart multiple times.
+
+  Improved webui experience.
+
 - v1.0.0
 
   Added webui for RB groovin' (include settings). 

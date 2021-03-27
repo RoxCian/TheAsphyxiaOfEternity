@@ -194,6 +194,14 @@ export async function findBestMusicRecord(rid: string, musicIdStr: string, chart
     }
 }
 
+export async function findAllBestMusicRecord(rid: string, forVersion: 1 | 2 | 3 | 4 | 5): Promise<IRbBestMusicRecord[]> {
+    let result: IRbBestMusicRecord[] = []
+    let m = findMusicRecordMetadatas(rid)
+
+    
+
+    return result
+}
 
 export type MusicRecordMetadatas = string[] // `${number}:${number}:${number}`[]
 
