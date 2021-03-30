@@ -204,7 +204,7 @@ export function mapKObject<T>(data: T, kMapRecord: KObjectMappingRecord<T>, kAtt
     let result: KITEM2<T> = <any>(((0 in data) && data instanceof Object) ? [] : {})
     if (kAttrRecord.selfAttr != null) result["@attr"] = kAttrRecord.selfAttr
 
-    if (data instanceof Object && !(data instanceof BufferArray) && !(data instanceof NumberGroup)) {
+    if (data instanceof Object) {
         for (let __k in data) {
             let k: keyof T = __k
             let mapK: keyof T = __k

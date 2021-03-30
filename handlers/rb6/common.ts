@@ -6,15 +6,16 @@ import { initializePlayer } from "./initialize_player"
 import { IRb6JustCollection, IRb6ReadJustCollection, Rb6ReadJustCollectionMap } from "../../models/rb6/just_collection"
 import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMap } from "../../models/rb6/music_record"
 import { IRb6Mylist } from "../../models/rb6/mylist"
-import { generateRb6PlayerConfig, generateRb6PlayerCustom, generateRb6Profile, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6PlayerReadMap, Rb6PlayerReleasedInfoMap, Rb6PlayerWriteMap } from "../../models/rb6/profile"
+import { generateRb6PlayerConfig, generateRb6PlayerCustom, generateRb6Profile, IRb6Ghost, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6GhostMap, Rb6PlayerReadMap, Rb6PlayerReleasedInfoMap, Rb6PlayerWriteMap } from "../../models/rb6/profile"
 import { KRb6ShopInfo } from "../../models/rb6/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { base64ToBuffer, bufferToBase64, isToday } from "../../utility/utility_functions"
+import { base64ToBuffer, bufferToBase64, isToday, log } from "../../utility/utility_functions"
 import { Rb6LobbyEntryMap, generateRb6LobbyEntry, IRb6LobbyEntryElement, IRb6LobbyEntry } from "../../models/rb6/lobby"
 import { generateUserId } from "../utility/generate_user_id"
+import { BigIntProxy, s8me } from "../../../dea/utility/mapping"
 
 export namespace Rb6HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
@@ -138,6 +139,7 @@ export namespace Rb6HandlersCommon {
             let param = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
             let mylist = await DB.FindOne<IRb6Mylist>(readParam.rid, { collection: "rb.rb6.player.mylist" })
             let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, { collection: "rb.rb6.playData.quest" })
+            let ghosts = await DB.Find<IRb6Ghost>({ collection: "rb.rb6.playData.ghost#userId", userId: account.userId })
             if (mylist?.index < 0) mylist.index = 0
 
             if (!account) {
@@ -202,6 +204,13 @@ export namespace Rb6HandlersCommon {
             account.dayCount = 3
             //
 
+            // Ghost binary data
+            for (let g of ghosts) {
+                if (g.blueDataBase64) g.blueData = base64ToBuffer(g.blueDataBase64, 10240)
+                if (g.redDataBase64) g.redData = base64ToBuffer(g.redDataBase64, 10240)
+            }
+            //
+
             result = {
                 pdata: {
                     account: account,
@@ -218,8 +227,8 @@ export namespace Rb6HandlersCommon {
                     mylist: (mylist == null) ? {} : { list: mylist },
                     musicRankPoint: {},
                     quest: (questRecords?.length == 0) ? {} : { list: questRecords },
-                    ghost: {},
-                    ghostWinCount: {},
+                    ghost: (ghosts?.length == 0) ? {} : { list: ghosts },
+                    ghostWinCount: { info: base.ghostWinCount },
                     purpose: {}
                 }
             }
@@ -271,6 +280,7 @@ export namespace Rb6HandlersCommon {
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
                 playerAccountForPlayCountQuery.playCountToday++
+                playerAccountForPlayCountQuery.st = BigIntProxy(BigInt(Date.now()))
 
                 opm.update(rid, { collection: "rb.rb6.player.account" }, playerAccountForPlayCountQuery)
             }
@@ -303,6 +313,7 @@ export namespace Rb6HandlersCommon {
             if (player.pdata.playerParam?.item?.length > 0) for (let i of player.pdata.playerParam.item) opm.upsert<IRb6PlayerParameters>(rid, { collection: "rb.rb6.player.parameters", type: i.type, bank: i.bank }, i)
             if (player.pdata.mylist?.list != null) opm.upsert<IRb6Mylist>(rid, { collection: "rb.rb6.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
             if (player.pdata.quest?.list?.length > 0) for (let q of player.pdata.quest.list) opm.upsert<IRb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade }, q)
+            if (player.pdata.ghost?.list?.length > 0) for (let g of player.pdata.ghost.list) await updateGhostScore(player.pdata.account.userId, g, opm)
         }
 
         await DBM.operate(opm)
@@ -419,6 +430,37 @@ export namespace Rb6HandlersCommon {
         await DBM.remove<IRb6LobbyEntryElement>(null, { collection: "rb.rb6.temporary.lobbyEntry", entryId: entryId })
     }
 
+    export const ReadGhostScore: EPR = async (req, data, send) => {
+        let param = mapBackKObject(data, ReadGhostScoreParamMap)[0]
+        let redQuery: Query<IRb6Ghost> = { collection: "rb.rb6.playData.ghost#userId", musicId: param.musicId, chartType: param.chartType, redDataBase64: { $exists: true }, matchingGrade: { $gte: param.matchingGrade - 5, $lte: param.matchingGrade + 5 } }
+        let blueQuery: Query<IRb6Ghost> = { collection: "rb.rb6.playData.ghost#userId", musicId: param.musicId, chartType: param.chartType, blueDataBase64: { $exists: true }, matchingGrade: { $gte: param.matchingGrade - 5, $lte: param.matchingGrade + 5 } }
+        if (param.redUserId >= 0) redQuery.userId = param.redUserId
+        if (param.blueUserId >= 0) blueQuery.userId = param.blueUserId
+        let redDatas = await DB.Find(redQuery)
+        let blueDatas = await DB.Find(blueQuery)
+        let randomRedData: IRb6Ghost = (redDatas.length > 0) ? redDatas[Math.round((redDatas.length - 1) * Math.random())] : null
+        let randomBlueData: IRb6Ghost = (blueDatas.length > 0) ? blueDatas[Math.round((blueDatas.length - 1) * Math.random())] : null
+        let randomData: IRb6Ghost = (randomBlueData || randomRedData) ? Object.assign(randomRedData || <IRb6Ghost>{}, randomBlueData || <IRb6Ghost>{}) : { characterCardId: 0, musicId: param.musicId, chartType: param.chartType, collection: "rb.rb6.playData.ghost#userId", matchingGrade: param.matchingGrade }
+        // if (randomData.redDataBase64) randomData.redData = base64ToBuffer(randomData.redDataBase64, 10240)
+        // if (randomData.blueDataBase64) randomData.blueData = base64ToBuffer(randomData.blueDataBase64, 10240)
+
+        let k = mapKObject({ ghost: randomData }, { ghost: Rb6GhostMap })
+        /* @ts-ignore **/
+        k.ghost.win_count_blue = K.ITEM("s32", 5)
+        /* @ts-ignore **/
+        k.ghost.win_count_red = K.ITEM("s32", 5)
+        // /* @ts-ignore **/
+        // k.ghost.item_red_data_bin = K.ITEM("bin", Buffer.alloc(10240))
+        // /* @ts-ignore **/
+        // k.ghost.item_blue_data_bin = K.ITEM("bin", Buffer.alloc(10240))
+        /* @ts-ignore **/
+        k.ghost.red_id = K.ITEM("s32", 0)
+        /* @ts-ignore **/
+        k.ghost.blue_id = K.ITEM("s32", 0)
+        log(k)
+        send.object(k)
+    }
+
     type ReadLobbyParam = {
         userId: number
         matchingGrade: number
@@ -434,6 +476,23 @@ export namespace Rb6HandlersCommon {
         maxRivalCount: s32me("max"),
         friend: s32me(),
         version: u8me("var")
+    }
+
+    type ReadGhostScoreParam = {
+        redUserId: number
+        blueUserId: number
+        musicId: number
+        chartType: number
+        matchingGrade: number
+        composerType: number
+    }
+    const ReadGhostScoreParamMap: KObjectMappingRecord<ReadGhostScoreParam> = {
+        redUserId: s32me("red_user_id"),
+        blueUserId: s32me("blue_user_id"),
+        musicId: s32me("music_id"),
+        chartType: s8me("note_grade"),
+        matchingGrade: s32me("matching_greade"), // greade!
+        composerType: s32me("composer_type")
     }
 
     export const WriteComment: EPR = async (req, data, send) => {
@@ -521,6 +580,15 @@ export namespace Rb6HandlersCommon {
         musicRecord.playCount++
         opm.upsert(rid, query, musicRecord)
         opm.insert(rid, stageLog)
+    }
+
+    async function updateGhostScore(userId: number, ghost: IRb6Ghost, opm: DBM.DBOperationManager): Promise<void> {
+        ghost.userId = userId
+        if (ghost.redData != null) ghost.redDataBase64 = bufferToBase64(ghost.redData)
+        if (ghost.blueData != null) ghost.blueDataBase64 = bufferToBase64(ghost.blueData)
+        delete ghost.redData
+        delete ghost.blueData
+        opm.upsert<IRb6Ghost>(null, { collection: "rb.rb6.playData.ghost#userId", musicId: ghost.musicId, chartType: ghost.chartType, userId: userId }, ghost)
     }
 
     async function updateClasscheckRecordFromLog(rid: string, log: IRb6PlayerClasscheckLog, time: number, opm: DBM.DBOperationManager): Promise<void> {

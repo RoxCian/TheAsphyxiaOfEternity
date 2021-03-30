@@ -1,5 +1,5 @@
 import { ICollection } from "../utility/definitions"
-import { appendMappingElement, BigIntProxy, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, s8me, strme, u16me, u64me, u8me } from "../../utility/mapping"
+import { appendMappingElement, BigIntProxy, binme, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, s8me, strme, u16me, u64me, u8me } from "../../utility/mapping"
 import { IRb6JustCollection, Rb6JustCollectionMap } from "./just_collection"
 import { IRb6ClasscheckRecord, Rb6ClasscheckRecordMap } from "./classcheck_record"
 import { Rb6CharacterCardMap, IRb6CharacterCard } from "./character_card"
@@ -482,6 +482,30 @@ export const Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
     isCleared: boolme("clear_flg")
 }
 
+export interface IRb6Ghost extends ICollection<"rb.rb6.playData.ghost#userId"> {
+    userId?: number
+    characterCardId: number
+    matchingGrade: number
+    musicId: number
+    chartType: number
+    redData?: Buffer
+    blueData?: Buffer
+    redDataBase64?: string
+    blueDataBase64?: string
+}
+export const Rb6GhostMap: KObjectMappingRecord<IRb6Ghost> = {
+    collection: getCollectionMappingElement<IRb6Ghost>("rb.rb6.playData.ghost#userId"),
+    userId: ignoreme(),
+    characterCardId: s32me("chara_card_id"),
+    matchingGrade: s32me("matching_grade"),
+    musicId: s32me("music_id"),
+    chartType: s8me("note_grade"),
+    redData: binme("item_red_data_bin"),
+    blueData: binme("item_blue_data_bin"),
+    redDataBase64: ignoreme(),
+    blueDataBase64: ignoreme()
+}
+
 interface IRb6PlayerData {
     account: IRb6PlayerAccount
     base: IRb6PlayerBase
@@ -499,8 +523,10 @@ interface IRb6PlayerData {
     mylist: { list?: IRb6Mylist }
     musicRankPoint: {}
     quest: { list?: IRb6QuestRecord[] }
-    ghost: {}
-    ghostWinCount: {}
+    ghost: { list?: IRb6Ghost[] }
+    ghostWinCount: {
+        info: number
+    }
     purpose: {}
 }
 export interface IRb6Player {
@@ -543,8 +569,10 @@ export const Rb6PlayerReadMap: KObjectMappingRecord<IRb6Player> = {
         quest: {
             list: { 0: Rb6QuestRecordMap }
         },
-        ghost: {},
-        ghostWinCount: { $targetKey: "ghost_win_count" },
+        ghost: {
+            list: { 0: Rb6GhostMap }
+        },
+        ghostWinCount: { info: s32me(), $targetKey: "ghost_win_count" },
         purpose: {}
     }
 }
@@ -582,8 +610,10 @@ export const Rb6PlayerWriteMap: KObjectMappingRecord<IRb6Player> = {
         quest: {
             list: { 0: Rb6QuestRecordMap }
         },
-        ghost: {},
-        ghostWinCount: { $targetKey: "ghost_win_count" },
+        ghost: {
+            list: { 0: Rb6GhostMap }
+        },
+        ghostWinCount: { info: s32me(), $targetKey: "ghost_win_count" },
         purpose: {}
     }
 }
@@ -606,7 +636,7 @@ export function generateRb6Profile(rid: string, userId: number): IRb6Player {
             musicRankPoint: {},
             quest: {},
             ghost: {},
-            ghostWinCount: {},
+            ghostWinCount: { info: 0 },
             purpose: {}
         }
     }

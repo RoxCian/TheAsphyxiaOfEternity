@@ -1,3 +1,9 @@
+- v1.0.2
+
+  Fixed a bug about inner types of mapping.
+
+  Fixed some minor bugs for webui.
+
 - v1.0.1
 
   Fixed an issue about not saving the highest score when played a chart multiple times.

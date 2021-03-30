@@ -49,6 +49,7 @@ function routeRb6() {
     R.Route("lobby.rb6_lobby_entry", Rb6HandlersCommon.AddLobby)
     R.Route("lobby.rb6_lobby_delete", Rb6HandlersCommon.DeleteLobby)
     R.Route("shop.rb6_shop_write_info", UtilityHandlersCommon.WriteShopInfo)
+    R.Route("player.rb6_player_read_gs", Rb6HandlersCommon.ReadGhostScore)
     R.Route("eventlog.write", true)
 }
 
