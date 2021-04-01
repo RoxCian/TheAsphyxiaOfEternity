@@ -353,11 +353,11 @@
     let fcFlag = record.missCount == 0
     let gaugeName = ((record.clearType == 4) || (record.clearType == 2)) ? "Hard" : "Normal"
     if (excFlag && !fcFlag) return null
-    else if (excFlag) return { title: "Excellent", abbr: "EXC", guage: gaugeName }
-    else if (fcFlag) return { title: "Full Combo Cleared", abbr: "FC", guage: gaugeName }
-    else if (record.clearType == 4) return { title: "Hard Cleared", abbr: "HC", guage: gaugeName }
-    else if (record.clearType == 3) return { title: "Cleared", abbr: "C", guage: gaugeName }
-    else if ((record.clearType == 2) || (record.clearType == 1)) return { title: "Failed", abbr: "F", guage: gaugeName }
+    else if (excFlag) return { title: "Excellent", abbr: "EXC", gauge: gaugeName }
+    else if (fcFlag) return { title: "Full Combo Cleared", abbr: "FC", gauge: gaugeName }
+    else if (record.clearType == 4) return { title: "Hard Cleared", abbr: "HC", gauge: gaugeName }
+    else if (record.clearType == 3) return { title: "Cleared", abbr: "C", gauge: gaugeName }
+    else if ((record.clearType == 2) || (record.clearType == 1)) return { title: "Failed", abbr: "F", gauge: gaugeName }
     else return null
   }
   function getRb5ClearTypeDetails(record) {

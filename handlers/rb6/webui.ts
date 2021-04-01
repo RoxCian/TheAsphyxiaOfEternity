@@ -130,8 +130,6 @@ export namespace Rb6HandlersWebUI {
         return await DBM.overall(data.refid, account.userId, "rb.rb6", "export")
     }
 
-
-
     function checkData(content: string, rid?: string) {
         try {
             let result: Doc<{ __refid?: string }>[] = JSON.parse(content)

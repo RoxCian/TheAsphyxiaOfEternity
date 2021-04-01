@@ -15,7 +15,7 @@ import { tryFindPlayer } from "../utility/try_find_player"
 import { base64ToBuffer, bufferToBase64, isToday, log } from "../../utility/utility_functions"
 import { Rb6LobbyEntryMap, generateRb6LobbyEntry, IRb6LobbyEntryElement, IRb6LobbyEntry } from "../../models/rb6/lobby"
 import { generateUserId } from "../utility/generate_user_id"
-import { BigIntProxy, s8me } from "../../../dea/utility/mapping"
+import { BigIntProxy, s8me } from "../../utility/mapping"
 
 export namespace Rb6HandlersCommon {
     export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {

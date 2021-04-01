@@ -1,3 +1,7 @@
+- v1.0.3
+
+  Fixed bugs about importing and database operation.
+
 - v1.0.2
 
   Fixed a bug about inner types of mapping.
