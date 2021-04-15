@@ -23,24 +23,25 @@ export function readPlayerPostProcess(player: KITEM2<IRb4Player>): KITEM2<IRb4Pl
 }
 export async function writePlayerPreProcess(player: KITEM2<IRb4Player>): Promise<KITEM2<IRb4Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
-    let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
-    let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
-    if (!isUnlockSongs && !isUnlockItems) return player
-    // Process fields specifically
-    if (isUnlockSongs || isUnlockItems) {
-        let oldBase = await DB.FindOne<IRb4PlayerBase>(player.pdata.account.rid["@content"], { collection: "rb.rb4.player.base" })
-        player.pdata.base.level["@content"] = [oldBase.level]
-    }
-    // General
-    if (isUnlockSongs && isUnlockItems) {
-        player.pdata.released = null
-        return player
-    }
+    if (!player.pdata.released?.info) {
+        let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
+        let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
+        if (!isUnlockSongs && !isUnlockItems) return player
+        // Process fields specifically
+        if (isUnlockSongs || isUnlockItems) {
+            let oldBase = await DB.FindOne<IRb4PlayerBase>(player.pdata.account.rid["@content"], { collection: "rb.rb4.player.base" })
+            player.pdata.base.level["@content"] = [oldBase.level]
+        }
+        // General
+        if (isUnlockSongs && isUnlockItems) {
+            player.pdata.released = null
+            return player
+        }
 
-    let removeList: number[] = []
-    for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
-    for (let r of removeList) player.pdata.released.info.splice(r)
-
+        let removeList: number[] = []
+        for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
+        for (let r of removeList) player.pdata.released.info.splice(r)
+    }
     return player
 }
 

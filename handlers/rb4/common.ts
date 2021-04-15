@@ -137,7 +137,7 @@ export namespace Rb4HandlersCommon {
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
             if (account.mpc == null) account.mpc = 0
-            if (base.comment == null) base.comment = "Welcome to REFLEC BEAT groovin!!"
+            if ((base.comment == null) || (base.comment == "")) base.comment = "Welcome to REFLEC BEAT groovin'!"
             if (base.uattr == null) base.uattr = 0
             if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             if (mylist?.index < 0) mylist.index = 0
@@ -160,6 +160,8 @@ export namespace Rb4HandlersCommon {
 
             if (episode == null) episode = generateRb4Episode(account.userId)
             if (episode.text == null) episode.text = ""
+
+            if (episode.text == "") episode.text = "Hello there!"
 
             result = {
                 pdata: {

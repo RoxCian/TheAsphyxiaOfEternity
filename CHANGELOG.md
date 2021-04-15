@@ -1,3 +1,12 @@
+- v1.0.4
+
+  Fixed a bug which can cause error while loading save data.
+
+  Adjusted the webui.
+    - Skill rate can be displayed now. (RB VOLZZA 2 & RB Reflesia)
+    - Fixed scorll displaying for modals.
+    - All bosses' name can be displayed. (RB groovin'!!)
+
 - v1.0.3
 
   Fixed bugs about importing and database operation.

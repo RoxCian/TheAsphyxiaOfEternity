@@ -18,36 +18,37 @@ export function readPlayerPostProcess(player: KITEM2<IRb3Player>): KITEM2<IRb3Pl
 }
 export async function writePlayerPreProcess(player: KITEM2<IRb3Player>): Promise<KITEM2<IRb3Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
-    let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
-    let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
-    if (!isUnlockSongs && !isUnlockItems) return player
-    // Process fields specifically
-    if (isUnlockSongs || isUnlockItems) {
-        if (isUnlockItems) {
-            // Convert stamps to tickets
-            let oldStamps = await DB.FindOne<IRb3Stamp>(player.pdata.account.rid["@content"], { collection: "rb.rb3.player.stamp" })
-            if (oldStamps == null) oldStamps = generateRb3Stamp()
-            for (let i = 0; i <= 4; i++) {
-                let addStampCount = player.pdata.stamp.stampCount["@content"][i] - oldStamps.stampCount[i]
-                player.pdata.stamp.ticketCount["@content"][i] += addStampCount * 10 // 1 stamp == 10 tickets
+    if (!player.pdata.released?.info) {
+        let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
+        let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
+        if (!isUnlockSongs && !isUnlockItems) return player
+        // Process fields specifically
+        if (isUnlockSongs || isUnlockItems) {
+            if (isUnlockItems) {
+                // Convert stamps to tickets
+                let oldStamps = await DB.FindOne<IRb3Stamp>(player.pdata.account.rid["@content"], { collection: "rb.rb3.player.stamp" })
+                if (oldStamps == null) oldStamps = generateRb3Stamp()
+                for (let i = 0; i <= 4; i++) {
+                    let addStampCount = player.pdata.stamp.stampCount["@content"][i] - oldStamps.stampCount[i]
+                    player.pdata.stamp.ticketCount["@content"][i] += addStampCount * 10 // 1 stamp == 10 tickets
+                }
+            }
+            if (isUnlockSongs) {
+                // Event progress should not be saved
+                player.pdata.eventProgress = null
+                player.pdata.seedPod = null
             }
         }
-        if (isUnlockSongs) {
-            // Event progress should not be saved
-            player.pdata.eventProgress = null
-            player.pdata.seedPod = null
+        // General
+        if (isUnlockSongs && isUnlockItems) {
+            player.pdata.released = null
+            return player
         }
-    }
-    // General
-    if (isUnlockSongs && isUnlockItems) {
-        player.pdata.released = null
-        return player
-    }
 
-    let removeList: number[] = []
-    for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
-    for (let r of removeList) player.pdata.released.info.splice(r)
-
+        let removeList: number[] = []
+        for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
+        for (let r of removeList) player.pdata.released.info.splice(r)
+    }
     return player
 }
 

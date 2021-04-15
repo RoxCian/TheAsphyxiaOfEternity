@@ -73,7 +73,7 @@ export namespace Rb6HandlersCommon {
     }
 
 
-    export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const StartPlayer: EPR = async (_: EamuseInfo, _data: any, send: EamuseSend) => {
         // await Rb6HandlersCommon.bat()
         let rid = $(_data).str("rid")
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
@@ -111,7 +111,7 @@ export namespace Rb6HandlersCommon {
         send.object(mapKObject(result, map))
     }
 
-    export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
+    export const ReadPlayer: EPR = async (_: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
 
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
@@ -139,7 +139,7 @@ export namespace Rb6HandlersCommon {
             let param = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
             let mylist = await DB.FindOne<IRb6Mylist>(readParam.rid, { collection: "rb.rb6.player.mylist" })
             let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, { collection: "rb.rb6.playData.quest" })
-            let ghosts = await DB.Find<IRb6Ghost>({ collection: "rb.rb6.playData.ghost#userId", userId: account.userId })
+            let ghosts = [] // await DB.Find<IRb6Ghost>({ collection: "rb.rb6.playData.ghost#userId", userId: account.userId })
             if (mylist?.index < 0) mylist.index = 0
 
             if (!account) {
@@ -397,15 +397,13 @@ export namespace Rb6HandlersCommon {
         let result = await generateRb6LobbyEntry(readParam.entry[0])
         await DBM.upsert<IRb6LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb6.temporary.lobbyEntry" }, result.entry[0])
         lobbyPendingMap.set(readParam.entry[0].userId, { send: send, obj: mapKObject(result, Rb6LobbyEntryMap) })
-        setTimeout(() => {
-            if (lobbyPendingMap.has(readParam.entry[0].userId)) {
-                let l = lobbyPendingMap.get(readParam.entry[0].userId)
-                l.send.object(l.obj)
-                lobbyPendingMap.delete(readParam.entry[0].userId)
-            }
-        }, 24000)
+        if (lobbyPendingMap.has(readParam.entry[0].userId)) {
+            let l = lobbyPendingMap.get(readParam.entry[0].userId)
+            l.send.object(l.obj)
+            lobbyPendingMap.delete(readParam.entry[0].userId)
+        }
     }
-    export const ReadLobby: EPR = async (req, data, send) => {
+    export const ReadLobby: EPR = async (_, data, send) => {
         let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
         if (lobbyPendingMap.has(readParam.userId)) {
             let l = lobbyPendingMap.get(readParam.userId)
@@ -417,7 +415,7 @@ export namespace Rb6HandlersCommon {
         returnLobby(result, send)
     }
     async function returnLobby(result: IRb6LobbyEntry, send: EamuseSend) {
-        send.object(mapKObject(result, Rb6LobbyEntryMap))
+        setTimeout(() => send.object(mapKObject(result, Rb6LobbyEntryMap)), 24000)
     }
     async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb6LobbyEntry> {
         let result = await generateRb6LobbyEntry()

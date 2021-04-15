@@ -21,25 +21,26 @@ export function readPlayerPostProcess(player: KITEM2<IRb1Player>): KITEM2<IRb1Pl
 }
 export async function writePlayerPreProcess(player: KITEM2<IRb1Player>): Promise<KITEM2<IRb1Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
-    let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
-    let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
-    if (!isUnlockSongs && !isUnlockItems) return player
-    // Process fields specifically
-    if (isUnlockSongs || isUnlockItems) {
-        let oldBase = await DB.FindOne<IRb1PlayerBase>(player.rid["@content"], { collection: "rb.rb1.player.base" })
-        player.pdata.base.level["@content"] = [(oldBase == null) ? oldBase.level : 0] // You may unlock customize items and songs with your level upgrading.
-        if (isUnlockItems) player.pdata.base.matchingGrade["@content"] = [(oldBase == null) ? oldBase.matchingGrade : 0] // If your matching grade getting incresed, you should unlock customize items.
-    }
-    // General
-    if (isUnlockSongs && isUnlockItems) {
-        player.pdata.released = null
-        return player
-    }
+    if (!player.pdata.released?.info) {
+        let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
+        let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
+        if (!isUnlockSongs && !isUnlockItems) return player
+        // Process fields specifically
+        if (isUnlockSongs || isUnlockItems) {
+            let oldBase = await DB.FindOne<IRb1PlayerBase>(player.rid["@content"], { collection: "rb.rb1.player.base" })
+            player.pdata.base.level["@content"] = [(oldBase == null) ? oldBase.level : 0] // You may unlock customize items and songs with your level upgrading.
+            if (isUnlockItems) player.pdata.base.matchingGrade["@content"] = [(oldBase == null) ? oldBase.matchingGrade : 0] // If your matching grade getting incresed, you should unlock customize items.
+        }
+        // General
+        if (isUnlockSongs && isUnlockItems) {
+            player.pdata.released = null
+            return player
+        }
 
-    let removeList: number[] = []
-    for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
-    for (let r of removeList) player.pdata.released.info.splice(r)
-
+        let removeList: number[] = []
+        for (let i = 0; i < player.pdata.released.info.length; i++) if ((isUnlockSongs && (player.pdata.released.info[i].type == 0)) || (isUnlockItems && (player.pdata.released.info[i].type == 0))) removeList.push(i)
+        for (let r of removeList) player.pdata.released.info.splice(r)
+    }
     return player
 }
 

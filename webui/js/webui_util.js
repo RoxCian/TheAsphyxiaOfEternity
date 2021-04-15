@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 function initializePaginatedContent() {
     let containers = document.querySelectorAll(".paginated-container")
@@ -167,8 +167,9 @@ function initializeTabs() {
         for (let item of tabContents) {
             let group = item.getAttribute("tab-group")
             let index = item.getAttribute("tab-index")
+            let indexAlternate = item.getAttribute("tab-index-alternate")
             if (item && (group == tabGroup)) item.classList.remove("is-active")
-            if ((index == tabIndex) && (group == tabGroup)) item.classList.add("is-active")
+            if (((index == tabIndex) || (indexAlternate == tabIndex)) && (group == tabGroup)) item.classList.add("is-active")
         }
     }
     for (let t of tabs) {
@@ -620,7 +621,7 @@ function removeLoadingModal() {
             { offset: 0.25, opacity: 0 },
             { offset: 1, opacity: 0 }
         ], { duration: 2000 })
-        a.onfinish = loading.remove
+        a.onfinish = () => loading.remove ? loading.remove() : null
         a.play()
     } catch { }
 }

@@ -71,8 +71,8 @@ export const Rb6LobbyEntryMap: KObjectMappingRecord<IRb6LobbyEntry> = {
 }
 export async function generateRb6LobbyEntry(readParam?: IRb6LobbyEntryElement): Promise<IRb6LobbyEntry> {
     return {
-        interval: 6000,
-        intervalP: 6000,
+        interval: 24000,
+        intervalP: 24000,
         entry: (readParam == null) ? null : [await generateRb6LobbyEntryElement(readParam)]
     }
 }

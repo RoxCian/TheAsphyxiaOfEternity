@@ -17,7 +17,7 @@ Get-ChildItem -Exclude $conditions | ForEach-Object {
     Copy-Item $_ "dist\rb\$path" -Force -Recurse
 }
 ((Get-Content -Path README.md -Raw) -replace "src="".+""", "src=""icon.svg""") | Set-Content -Path README.md     
-((Get-Content -Path package.json -Raw) -replace "(?<=""version"": ""v)\d+\.\d+\.\d+-.+(?="")", "$version") | Set-Content -Path package.json
+((Get-Content -Path package.json -Raw) -replace "(?<=""version"": ""v)\d+\.\d+\.\d+(-.+)?(?="")", "$version") | Set-Content -Path package.json
 
 $compress = @{
     Path             = "dist\rb"

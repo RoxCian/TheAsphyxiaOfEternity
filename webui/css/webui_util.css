@@ -116,12 +116,34 @@ a {
     color: white;
 }
 
+.modal-card {
+    display: flex;
+}
 @media screen and (max-width: 768px) {
     .pagination {
-    flex-wrap: nowrap;
-    justify-content: left;
+        flex-wrap: nowrap;
+        justify-content: left;
     }
 }
+@media screen and (max-width: 500px) {
+    .pagination-previous span, .pagination-next span {
+        display: none
+    }
+}
+@media print, screen and (min-width: 900px) {
+    .modal-card, .modal-content {
+        max-width: 900px!important;
+        min-width: 600px;
+        width: unset;
+    }
+}
+@media print, screen and (min-width: 769px) {
+    .modal-card, .modal-content {
+        max-width: 100%;
+        width: unset;
+    }
+}
+
 .pagination-list {
     flex-wrap: nowrap;
     list-style: none!important;
@@ -231,6 +253,15 @@ a {
 .scrolling-y-wrapper {
     overflow-y: auto;
 }
+.clip-wrapper {
+    overflow: clip;
+}
+.clip-x-wrapper {
+    overflow-x: clip;
+}
+.clip-y-wrapper {
+    overflow-y: clip;
+}
 a.pagination-previous {
     overflow: hidden;
 }
@@ -239,4 +270,22 @@ a.pagination-next {
 }
 .button.checkbox, .button.checkbox .checkmark {
     transition: linear .2s;
+}
+
+tr.is-selected td .selected-shadow {
+    box-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white
+}
+
+.nomargin {
+    margin: 0;
+}
+.nopadding {
+    padding: 0;
+}
+.nospace {
+    margin: 0;
+    padding: 0;
+}
+.nowrap {
+    white-space: nowrap;
 }
