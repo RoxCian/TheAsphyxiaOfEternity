@@ -9,7 +9,7 @@ import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 5 -> bg (5: Black)
 
 export function readPlayerPostProcess(player: KITEM2<IRb1Player>): KITEM2<IRb1Player> {
-    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])
+    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"].toUpperCase())
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
     if (!isUnlockSongs && !isUnlockSongs) return player

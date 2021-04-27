@@ -9,7 +9,6 @@ import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme,
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { DBM } from "../utility/db_manager"
-import { generateRb5LobbyEntry, IRb5LobbyEntry, IRb5LobbyEntryElement, Rb5LobbyEntryMap } from "../../models/rb5/lobby"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
@@ -17,22 +16,15 @@ import { isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb5HandlersCommon {
-    export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
-        switch (info.method) {
-
-        }
-        send.success()
-    }
-
-    export const BootPcb: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const BootPcb: EPR = async (_, _data, send) => {
         send.object({ sinfo: KRb5ShopInfo })
     }
 
-    export const ReadHitChartInfo: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const ReadHitChartInfo: EPR = async (_, _data, send) => {
         send.object({ ver: {} })
     }
 
-    export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const StartPlayer: EPR = async (_, _data, send) => {
         let data = getExampleEventControl()
         let result = {
             plyid: 0,
@@ -53,7 +45,7 @@ export namespace Rb5HandlersCommon {
         send.object(mapKObject(result, map))
     }
 
-    export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
+    export const ReadPlayer: EPR = async (_, data: KITEM2<IPlayerReadParameters>, send) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
         let result: IRb5Player
         let account: IRb5PlayerAccount = await DB.FindOne<IRb5PlayerAccount>(readParam.rid, { collection: "rb.rb5.player.account" })
@@ -145,7 +137,7 @@ export namespace Rb5HandlersCommon {
         send.object(readPlayerPostProcess(mapKObject(result, Rb5PlayerReadMap)))
     }
 
-    export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
+    export const DeletePlayer: EPR = async (_, data: KITEM2<{ rid: string }>, send) => {
         try {
             let rid = data.rid["@content"]
             let account = await DB.FindOne<IRb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
@@ -158,7 +150,7 @@ export namespace Rb5HandlersCommon {
         }
     }
 
-    export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb5Player>, send: EamuseSend) => {
+    export const WritePlayer: EPR = async (_, data: KITEM2<IRb5Player>, send) => {
         data = await writePlayerPreProcess(data)
         let player: IRb5Player = mapBackKObject(data, Rb5PlayerWriteMap)[0]
         await writePlayerInternal(player)
@@ -218,58 +210,7 @@ export namespace Rb5HandlersCommon {
         DBM.operate(opm)
     }
 
-    export const AddLobby: EPR = async (req, data, send) => {
-        let readParam = mapBackKObject(data, Rb5LobbyEntryMap)[0]
-        let result = await generateRb5LobbyEntry(readParam.entry[0])
-        await DBM.upsert<IRb5LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb5.temporary.lobbyEntry" }, result.entry[0])
-        send.object(mapKObject(result, Rb5LobbyEntryMap))
-    }
-    export const ReadLobby: EPR = async (req, data, send) => {
-        let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
-        let result: IRb5LobbyEntry
-        let flag = false
-        for (let i = 0; i <= 12; i++) {
-            setTimeout(async () => {
-                if (flag) return
-                result = await readLobbyEntity(readParam)
-                if (!flag && (result.entry.length >= readParam.maxRivalCount)) {
-                    flag = true
-                    returnLobby(result, send)
-                }
-            }, 500 * i)
-        }
-    }
-    async function returnLobby(result: IRb5LobbyEntry, send: EamuseSend) {
-        send.object(mapKObject(result, Rb5LobbyEntryMap))
-    }
-    async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb5LobbyEntry> {
-        let result = await generateRb5LobbyEntry()
-        let lobbies: IRb5LobbyEntryElement[] = await DB.Find<IRb5LobbyEntryElement>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb5.temporary.lobbyEntry" }] })
-        result.entry = lobbies.slice(0, param.maxRivalCount)
-        return result
-    }
-    export const DeleteLobby: EPR = async (req, data, send) => {
-        let entryId = $(data).number("eid")
-        await DBM.remove<IRb5LobbyEntryElement>(null, { collection: "rb.rb5.temporary.lobbyEntry", entryId: entryId })
-    }
-    type ReadLobbyParam = {
-        userId: number
-        matchingGrade: number
-        lobbyId: string
-        maxRivalCount: number
-        friend: number[]
-        version: number
-    }
-    const ReadLobbyParamMap: KObjectMappingRecord<ReadLobbyParam> = {
-        userId: s32me("uid"),
-        matchingGrade: u8me("m_grade"),
-        lobbyId: strme("lid"),
-        maxRivalCount: s32me("max"),
-        friend: s32me(),
-        version: u8me("var")
-    }
-
-    export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
+    export const ReadPlayerScore: EPR = async (_, data, send) => {
         let rid: string = $(data).str("rid")
 
         let scores: IRb5MusicRecord[] = await DB.Find<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord" })
@@ -281,7 +222,7 @@ export namespace Rb5HandlersCommon {
             pdata: { record: { rec: { 0: Rb5MusicRecordMap } } }
         }))
     }
-    export const ReadPlayerScoreOldVersion: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
+    export const ReadPlayerScoreOldVersion: EPR = async (_, data, send) => {
         let rid: string = $(data).str("rid")
         let metas = await findMusicRecordMetadatas(rid)
 
@@ -365,7 +306,7 @@ export namespace Rb5HandlersCommon {
         }
     }
 
-    export const WriteComment: EPR = async (req, data, send) => {
+    export const WriteComment: EPR = async (_, data, send) => {
 
     }
 

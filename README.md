@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v1.0.4** 
+Plugin Version: **v1.0.5** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -68,7 +68,7 @@ Supported versions:
 
 ---
 
-The project used some data for web UI and game from several external websites/project, websites/project are listed as follows:
+This project used some data for web UI and game from several external websites/project, websites/project are listed as follows:
 
 - <a href="http://bemaniwiki.com/">BEMANIWiki</a> for web UI data.
 - <a href="http://remywiki.com/">RemyWiki</a> for some missing jackets.

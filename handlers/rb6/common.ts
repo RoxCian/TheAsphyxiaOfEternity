@@ -12,28 +12,20 @@ import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme,
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { base64ToBuffer, bufferToBase64, isToday, log } from "../../utility/utility_functions"
-import { Rb6LobbyEntryMap, generateRb6LobbyEntry, IRb6LobbyEntryElement, IRb6LobbyEntry } from "../../models/rb6/lobby"
+import { base64ToBuffer, bufferToBase64, isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 import { BigIntProxy, s8me } from "../../utility/mapping"
 
 export namespace Rb6HandlersCommon {
-    export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
-        switch (info.method) {
-
-        }
-        send.success()
-    }
-
-    export const BootPcb: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const BootPcb: EPR = async (_, _data, send) => {
         send.object({ sinfo: KRb6ShopInfo })
     }
 
-    export const ReadHitChartInfo: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const ReadHitChartInfo: EPR = async (_, _data, send) => {
         send.object({ ver: {} })
     }
 
-    export const PlayerSucceeded: EPR = async (info, data, send) => {
+    export const PlayerSucceeded: EPR = async (_, data, send) => {
         let rid = $(data).str("rid")
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
         let result
@@ -73,7 +65,7 @@ export namespace Rb6HandlersCommon {
     }
 
 
-    export const StartPlayer: EPR = async (_: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const StartPlayer: EPR = async (_, _data, send) => {
         // await Rb6HandlersCommon.bat()
         let rid = $(_data).str("rid")
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
@@ -111,7 +103,7 @@ export namespace Rb6HandlersCommon {
         send.object(mapKObject(result, map))
     }
 
-    export const ReadPlayer: EPR = async (_: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
+    export const ReadPlayer: EPR = async (_, data: KITEM2<IPlayerReadParameters>, send) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
 
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(readParam.rid, { collection: "rb.rb6.player.account" })
@@ -238,7 +230,7 @@ export namespace Rb6HandlersCommon {
         send.object(k)
     }
 
-    export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
+    export const DeletePlayer: EPR = async (_, data: KITEM2<{ rid: string }>, send) => {
         try {
             let rid = data.rid["@content"]
             let account = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
@@ -251,7 +243,7 @@ export namespace Rb6HandlersCommon {
         }
     }
 
-    export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb6Player>, send: EamuseSend) => {
+    export const WritePlayer: EPR = async (_, data: KITEM2<IRb6Player>, send) => {
         data = writePlayerPreProcess(data)
         let player: IRb6Player = mapBackKObject(data, Rb6PlayerWriteMap)[0]
         await writePlayerInternal(player)
@@ -319,7 +311,7 @@ export namespace Rb6HandlersCommon {
         await DBM.operate(opm)
     }
 
-    export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
+    export const ReadPlayerScore: EPR = async (_, data, send) => {
         let rid: string = $(data).str("rid")
 
         let scores: IRb6MusicRecord[] = await DB.Find<IRb6MusicRecord>(rid, { collection: "rb.rb6.playData.musicRecord" })
@@ -331,7 +323,7 @@ export namespace Rb6HandlersCommon {
             pdata: { record: { rec: { 0: Rb6MusicRecordMap } } }
         }))
     }
-    export const ReadPlayerJustCollections: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadJustCollectionParameters>, send: EamuseSend) => {
+    export const ReadPlayerJustCollections: EPR = async (_, data: KITEM2<IPlayerReadJustCollectionParameters>, send) => {
         let param = mapBackKObject(data, PlayerReadJustCollectioParametersMap)[0]
         if (param.userId == 1500008 && param.musicId == 1 && param.chartType == 2) {
             let k = {
@@ -355,80 +347,7 @@ export namespace Rb6HandlersCommon {
         send.object(mapKObject({ justcollection: result }, { justcollection: Rb6ReadJustCollectionMap }))
     }
 
-    // Waiting for template literal types support.
-
-    // export const AddLobby: EPR = async (req, data, send) => {
-    //     let readParam = mapBackKObject(data, getRbLobbyEntryMap<6>(6))[0]
-    //     let result = await generateRbLobbyEntry<6>(6, readParam.entry[0])
-    //     await DBM.upsert<IRbLobbyEntryElement<6>>(null, { userId: result.entry[0].userId, collection: "rb.rb6.temporary.lobbyEntry" }, result.entry[0])
-    //     send.object(mapKObject(result, getRbLobbyEntryMap<6>(6)))
-    // }
-    // export const ReadLobby: EPR = async (req, data, send) => {
-    //     let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
-    //     let result: IRbLobbyEntry<6>
-    //     let flag = false
-    //     for (let i = 0; i <= 12; i++) {
-    //         setTimeout(async () => {
-    //             if (flag) return
-    //             result = await readLobbyEntity(readParam)
-    //             if (!flag && (result.entry.length >= readParam.maxRivalCount)) {
-    //                 flag = true
-    //                 returnLobby(result, send)
-    //             }
-    //         }, 500 * i)
-    //     }
-    // }
-    // async function returnLobby(result: IRbLobbyEntry<6>, send: EamuseSend) {
-    //     send.object(mapKObject(result, getRbLobbyEntryMap<6>(6)))
-    // }
-    // async function readLobbyEntity(param: ReadLobbyParam): Promise<IRbLobbyEntry<6>> {
-    //     let result = await generateRbLobbyEntry<6>(6)
-    //     let lobbies: IRbLobbyEntryElement<6>[] = await DB.Find<IRbLobbyEntryElement<6>>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb6.temporary.lobbyEntry" }] })
-    //     result.entry = lobbies.slice(0, param.maxRivalCount)
-    //     return result
-    // }
-    // export const DeleteLobby: EPR = async (req, data, send) => {
-    //     let entryId = $(data).number("eid")
-    //     await DBM.remove<IRbLobbyEntryElement<6>>(null, { collection: "rb.rb6.temporary.lobbyEntry", entryId: entryId })
-    // }
-    let lobbyPendingMap = new Map<number, { send: EamuseSend, obj: KITEM2<IRb6LobbyEntry> }>()
-    export const AddLobby: EPR = async (req, data, send) => {
-        let readParam = mapBackKObject(data, Rb6LobbyEntryMap)[0]
-        let result = await generateRb6LobbyEntry(readParam.entry[0])
-        await DBM.upsert<IRb6LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb6.temporary.lobbyEntry" }, result.entry[0])
-        lobbyPendingMap.set(readParam.entry[0].userId, { send: send, obj: mapKObject(result, Rb6LobbyEntryMap) })
-        if (lobbyPendingMap.has(readParam.entry[0].userId)) {
-            let l = lobbyPendingMap.get(readParam.entry[0].userId)
-            l.send.object(l.obj)
-            lobbyPendingMap.delete(readParam.entry[0].userId)
-        }
-    }
-    export const ReadLobby: EPR = async (_, data, send) => {
-        let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
-        if (lobbyPendingMap.has(readParam.userId)) {
-            let l = lobbyPendingMap.get(readParam.userId)
-            l.send.object(l.obj)
-            lobbyPendingMap.delete(readParam.userId)
-        }
-        let result: IRb6LobbyEntry
-        result = await readLobbyEntity(readParam)
-        returnLobby(result, send)
-    }
-    async function returnLobby(result: IRb6LobbyEntry, send: EamuseSend) {
-        setTimeout(() => send.object(mapKObject(result, Rb6LobbyEntryMap)), 24000)
-    }
-    async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb6LobbyEntry> {
-        let result = await generateRb6LobbyEntry()
-        let lobbies: IRb6LobbyEntryElement[] = await DB.Find<IRb6LobbyEntryElement>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb6.temporary.lobbyEntry" }] })
-        result.entry = lobbies.slice(0, param.maxRivalCount)
-        return result
-    }
-    export const DeleteLobby: EPR = async (req, data, send) => {
-        let entryId = $(data).number("eid")
-        await DBM.remove<IRb6LobbyEntryElement>(null, { collection: "rb.rb6.temporary.lobbyEntry", entryId: entryId })
-    }
-
-    export const ReadGhostScore: EPR = async (req, data, send) => {
+    export const ReadGhostScore: EPR = async (_, data, send) => {
         let param = mapBackKObject(data, ReadGhostScoreParamMap)[0]
         let redQuery: Query<IRb6Ghost> = { collection: "rb.rb6.playData.ghost#userId", musicId: param.musicId, chartType: param.chartType, redDataBase64: { $exists: true }, matchingGrade: { $gte: param.matchingGrade - 5, $lte: param.matchingGrade + 5 } }
         let blueQuery: Query<IRb6Ghost> = { collection: "rb.rb6.playData.ghost#userId", musicId: param.musicId, chartType: param.chartType, blueDataBase64: { $exists: true }, matchingGrade: { $gte: param.matchingGrade - 5, $lte: param.matchingGrade + 5 } }
@@ -455,25 +374,7 @@ export namespace Rb6HandlersCommon {
         k.ghost.red_id = K.ITEM("s32", 0)
         /* @ts-ignore **/
         k.ghost.blue_id = K.ITEM("s32", 0)
-        log(k)
         send.object(k)
-    }
-
-    type ReadLobbyParam = {
-        userId: number
-        matchingGrade: number
-        lobbyId: string
-        maxRivalCount: number
-        friend: number[]
-        version: number
-    }
-    const ReadLobbyParamMap: KObjectMappingRecord<ReadLobbyParam> = {
-        userId: s32me("uid"),
-        matchingGrade: u8me("m_grade"),
-        lobbyId: strme("lid"),
-        maxRivalCount: s32me("max"),
-        friend: s32me(),
-        version: u8me("var")
     }
 
     type ReadGhostScoreParam = {
@@ -493,7 +394,7 @@ export namespace Rb6HandlersCommon {
         composerType: s32me("composer_type")
     }
 
-    export const WriteComment: EPR = async (req, data, send) => {
+    export const WriteComment: EPR = async (_, data, send) => {
 
     }
 

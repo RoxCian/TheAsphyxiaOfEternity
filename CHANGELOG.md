@@ -1,3 +1,12 @@
+- v1.0.5
+
+  Fixed the lobby feature for all RB titles.
+    - Now you can change lobby settings on webui (under the "Misc" tab).
+  
+  Added game settings for RB limelight on webui.
+
+  Fixed webui bugs.
+
 - v1.0.4
 
   Fixed a bug which can cause error while loading save data.
@@ -35,7 +44,7 @@
   Fixed webui issues, organized webui codes.
 
   Database entry changes
-    - averagePrecisionTimes100 (removed, breaking change)
+    - `averagePrecisionTimes100` (removed, breaking change)
 
 - v0.12.0-beta
 
@@ -44,8 +53,8 @@
   Fixed bugs about play count, classcheck and comment.
   
   Database entry/data structure changes:
-    - dpc -> playCountToday (compatible)
-    - tdc -> dayCount (compatible)
+    - `dpc -> playCountToday` (compatible)
+    - `tdc -> dayCount` (compatible)
 
 - v0.11.11-beta
 
@@ -62,8 +71,8 @@
   Added all subjugation quests for RB Reflesia.
 
   Database entry/data structure changes:
-    - blueData (RB Reflesia, removed from database, compatible)
-    - blueDattaArray -> blueDataBase64 (RB Reflesia, compatible)
+    - `blueData` (RB Reflesia, removed from database, compatible)
+    - `blueDattaArray -> blueDataBase64` (RB Reflesia, compatible)
 
 - v0.11.1-beta
 
@@ -76,8 +85,8 @@
   Fixed some webui issues.
 
   Database entry/data structure changes:
-    - dpc -> playCountToday (RB colette, compatible)
-    - tdc -> dayCount (RB colette, compatible)
+    - `dpc -> playCountToday` (RB colette, compatible)
+    - `tdc -> dayCount` (RB colette, compatible)
 
 - v0.11.0-beta
 
@@ -136,8 +145,8 @@
   Fixed a bug about no Great count in VOLZZA stage logs (again).
 
   Database entry changes
-    - justReflectCount -> justReflecCount (again, breaking change)
-    - averagePrecisionTimes100 -> abilityPointTimes100 (compatible)
+    - `justReflectCount -> justReflecCount` (again, breaking change)
+    - `averagePrecisionTimes100 -> abilityPointTimes100` (compatible)
 
 - v0.4.0-beta
 
@@ -153,10 +162,10 @@
 
   Breaking changes:
   - Database entry changes
-    - rb.rb6.playData.justCollection -> rb.rb6.playData.justCollection#userId
-    - stageColorRandom -> stageRandom
-    - charactorCardId -> characterCardId
-    - justReflectCount -> justReflecCount
+    - `rb.rb6.playData.justCollection -> rb.rb6.playData.justCollection#userId`
+    - `stageColorRandom -> stageRandom`
+    - `charactorCardId -> characterCardId`
+    - `justReflectCount -> justReflecCount`
   - Changed name of some files, you can repair it by using TSLint.
 
 - v0.2.1-alpha
@@ -167,8 +176,8 @@
 
   Breaking changes:
   - Exported member changes
-    - IRb6JustCollectionElement -> IRb6ReadJustCollection
-    - Rb6JustCollectionElementMappingRecord -> Rb6ReadJustCollectionElementMap
+    - `IRb6JustCollectionElement -> IRb6ReadJustCollection`
+    - `Rb6JustCollectionElementMappingRecord -> Rb6ReadJustCollectionElementMap`
   - Changed name of some files, you can repair it by using TSLint.
 
 - v0.2.0-alpha
@@ -181,8 +190,8 @@
 
   Breaking changes:
   - Database entry changes
-    - fullComboOrExcellentParam -> param
-    - charactorCards -> characterCards
+    - `fullComboOrExcellentParam -> param`
+    - `charactorCards -> characterCards`
   - Changed name of some files, you can repair it by using TSLint.
 
 - v0.1.0-alpha

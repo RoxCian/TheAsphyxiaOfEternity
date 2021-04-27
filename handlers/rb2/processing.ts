@@ -8,9 +8,11 @@ import { toFullWidth, toHalfWidth } from "../../utility/utility_functions"
 // player.pdata.released.info.type == 4 -> explode fx
 // player.pdata.released.info.type == 5 -> bg
 // player.pdata.released.info.type == 6 -> icon (11: FLOWER)
+// player.pdata.released.info.type == 7 -> byword left part
+// player.pdata.released.info.type == 8 -> byword right part
 
 export function readPlayerPostProcess(player: KITEM2<IRb2Player>): KITEM2<IRb2Player> {
-    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"])
+    if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toFullWidth(player.pdata.base.name["@content"].toUpperCase())
     let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
     let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
     if (!isUnlockSongs && !isUnlockSongs) return player
@@ -63,7 +65,7 @@ let itemsUnlockingData: any[]
 function appendItemsUnlockingData(player: KITEM2<IRb2Player>): KITEM2<IRb2Player> {
     if (itemsUnlockingData == null) {
         itemsUnlockingData = []
-        let ctrl = [-1, 30, 30, 30, 30, 30, 200, 30]
+        let ctrl = [-1, 30, 30, 30, 30, 30, 200, 50, 50]
         for (let i = 0; i < ctrl.length; i++) {
             for (let j = 0; j <= ctrl[i]; j++) {
                 itemsUnlockingData.push({

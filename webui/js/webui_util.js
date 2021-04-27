@@ -204,16 +204,25 @@ function initializeToggles() {
     }
 }
 
-function initializeModals() {
-    let modaltriggers = $(".modal-trigger")
-    for (let t of modaltriggers) {
-        let m = t.querySelector(".modal")
-        let c = m.querySelectorAll("#close")
-        t.addEventListener("click", (e) => { m.style.display = "flex" })
+function initializeModals(trigger, modal) {
+    if (trigger && modal) {
+        let c = modal.querySelectorAll("#close")
+        trigger.addEventListener("click", () => { modal.style.display = "flex" })
         for (let v of c) v.addEventListener("click", (e) => {
-            m.style.display = "none"
+            modal.style.display = "none"
             e.stopPropagation()
         })
+    } else {
+        let modaltriggers = $(".modal-trigger")
+        for (let t of modaltriggers) {
+            let m = t.querySelector(".modal")
+            let c = m.querySelectorAll("#close")
+            t.addEventListener("click", () => { m.style.display = "flex" })
+            for (let v of c) v.addEventListener("click", (e) => {
+                m.style.display = "none"
+                e.stopPropagation()
+            })
+        }
     }
 }
 
@@ -263,6 +272,10 @@ function initializeFormPaginations() {
     }
 }
 
+function clipFloat(v) {
+    if (typeof v == "string") return Math.round((typeof v == "string" ? parseFloat(v) : v) * 100000000000) / 100000000000
+}
+
 function initializeFormValidation() {
     let forms = document.querySelectorAll("form#validatable")
     for (let f of forms) {
@@ -276,7 +289,13 @@ function initializeFormValidation() {
                 recommendedLength: input.getAttribute("recommended-length"),
                 minPattern: input.getAttribute("min-pattern"),
                 recommendedPattern: input.getAttribute("recommended-pattern"),
-                isNumeric: (input.getAttribute("numeric") != null) ? true : false
+                isNumeric: (input.getAttribute("numeric") != null) || (input.getAttribute("int") != null) || (input.getAttribute("gt") != null) || (input.getAttribute("gte") != null) || (input.getAttribute("lt") != null) || (input.getAttribute("lte") != null) || (input.getAttribute("eq") != null),
+                isInt: input.getAttribute("int") != null,
+                gt: (parseFloat(input.getAttribute("gt")).toString() == input.getAttribute("gt")) ? parseFloat(input.getAttribute("gt")).toString() : null,
+                gte: (parseFloat(input.getAttribute("gte")).toString() == input.getAttribute("gte")) ? parseFloat(input.getAttribute("gte")).toString() : null,
+                lt: (parseFloat(input.getAttribute("lt")).toString() == input.getAttribute("lt")) ? parseFloat(input.getAttribute("lt")).toString() : null,
+                lte: (parseFloat(input.getAttribute("lte")).toString() == input.getAttribute("lte")) ? parseFloat(input.getAttribute("lte")).toString() : null,
+                eq: (parseFloat(input.getAttribute("eq")).toString() == input.getAttribute("eq")) ? parseFloat(input.getAttribute("eq")).toString() : null
             }
         }
         let isValid = (value, params) => {
@@ -284,7 +303,14 @@ function initializeFormValidation() {
             if (params.minLength != null) if (t.length < parseInt(params.minLength)) return false
             if (params.maxLength != null) if (t.length > parseInt(params.maxLength)) return false
             if (params.minPattern != null) if (!(new RegExp(params.minPattern).test(t))) return false
-            if (params.isNumeric == true) if (parseInt(t).toString() != t) return false
+            if (value == "") return true
+            if (params.isNumeric == true) if (clipFloat(t).toString() != t) return false
+            if (params.isFloat) if (parseInt(t).toString() != t) return false
+            if ((params.gte != null) && (clipFloat(t) < params.gte)) return false
+            if ((params.gt != null) && (clipFloat(t) <= params.gt)) return false
+            if ((params.lte != null) && (clipFloat(t) > params.lte)) return false
+            if ((params.lt != null) && (clipFloat(t) >= params.lt)) return false
+            if ((params.eq != null) && (clipFloat(t) != params.eq)) return false
             return true
         }
 
@@ -295,24 +321,38 @@ function initializeFormValidation() {
 
         for (let field of validatableFields) {
             let inputs = field.querySelectorAll("input#validatable")
-            let tips = field.querySelectorAll(".help")
-            for (let i of inputs) i.addEventListener("change", () => {
-                let params = getParams(i)
-                // inputs
-                if (isValid(i.value, params)) {
+            let labels = field.querySelectorAll("span, p")
+            for (let i of inputs) {
+                i.addEventListener("change", () => {
+                    let params = getParams(i)
+                    // inputs
+                    if (isValid(i.value, params)) {
+                        i.classList.remove("is-danger")
+                        for (let l of labels) l.classList.remove("is-danger")
+                    } else if (!i.classList.contains("is-danger")) {
+                        i.classList.add("is-danger")
+                        for (let l of labels) l.classList.add("is-danger")
+                    }
+                    // buttons
+                    if (isFormValid()) {
+                        for (let b of validatableButtons) b.removeAttribute("disabled")
+                    } else {
+                        for (let b of validatableButtons) if (b.getAttribute("disabled") == null) b.setAttribute("disabled", "")
+                    }
+                })
+                if (isValid(i.value, getParams(i))) {
                     i.classList.remove("is-danger")
-                    for (let t of tips) t.classList.remove("is-danger")
+                    for (let l of labels) l.classList.remove("is-danger")
                 } else if (!i.classList.contains("is-danger")) {
                     i.classList.add("is-danger")
-                    for (let t of tips) t.classList.add("is-danger")
+                    for (let l of labels) l.classList.add("is-danger")
                 }
-                // buttons
-                if (isFormValid()) {
-                    for (let b of validatableButtons) b.removeAttribute("disabled")
-                } else {
-                    for (let b of validatableButtons) if (b.getAttribute("disabled") == null) b.setAttribute("disabled", "")
-                }
-            })
+            }
+        }
+        if (isFormValid()) {
+            for (let b of validatableButtons) b.removeAttribute("disabled")
+        } else {
+            for (let b of validatableButtons) if (b.getAttribute("disabled") == null) b.setAttribute("disabled", "")
         }
     }
 }
@@ -365,6 +405,112 @@ function initializeFormCollections() {
             }
             input.value = modInput.value
         })
+    }
+}
+
+function initializeFormSlotedArrays() {
+    let arrays = document.querySelectorAll("#form-sloted-array")
+    for (let a of arrays) {
+        let elements = a.querySelectorAll("#form-array-slot")
+        let fallbackValue = JSON.parse(a.getAttribute("fallback"))
+        let modModal = a.querySelector(".modal#mod-modal")
+        let modTable = modModal.querySelector("table#single-select")
+        let modInput = modTable.querySelector("input#select-input")
+        let modCurrentIndex = modTable.querySelector("input#select-current-index")
+        let modTitle = modTable.querySelector("input#select-title")
+        let input = a.querySelector("#form-array-input")
+
+        let deleteButtonClickEventListener = (objIndex) => () => {
+            let value = JSON.parse(input.value)
+            value[objIndex.index] = fallbackValue
+            input.value = JSON.stringify(value)
+            modInput.value = input.value
+            modInput.dispatchEvent(new Event("change"))
+        }
+
+        for (let i = 0; i < elements.length; i++) {
+            let e = elements[i]
+            let tag = e.querySelector("#form-array-tag")
+            let modButton = e.querySelector("#form-array-modify")
+
+            let d = tag.querySelector(".delete, .is-delete")
+            d.addEventListener("click", deleteButtonClickEventListener({ index: i }))
+            modButton.addEventListener("click", () => {
+                modCurrentIndex.value = i
+                modCurrentIndex.dispatchEvent(new Event("change"))
+            })
+            initializeModals(modButton, modModal)
+        }
+        modInput.value = input.value
+        modInput.setAttribute("fallback", JSON.stringify(fallbackValue))
+        modInput.addEventListener("change", () => {
+            let fallbackValue = JSON.parse(a.getAttribute("fallback"))
+            let newValue = JSON.parse(modInput.value)
+            let newTitle = JSON.parse(modTitle.value)
+            for (let i = 0; i < elements.length; i++) {
+                let e = elements[i]
+                let tag = e.querySelector("#form-array-tag")
+                let modButton = e.querySelector("#form-array-modify")
+                if (newValue[i] == fallbackValue) {
+                    modButton.style.display = "block"
+                    tag.style.display = "none"
+                    tag.querySelector("#form-array-tag-title").innerText = ""
+                    tag.setAttribute("value", newValue[i])
+                } else {
+                    modButton.style.display = "none"
+                    tag.style.display = "block"
+                    tag.querySelector("#form-array-tag-title").innerText = newTitle[i]
+                    tag.setAttribute("value", newValue[i])
+                }
+            }
+            input.value = JSON.stringify(newValue)
+            input.dispatchEvent(new Event("change"))
+        })
+    }
+}
+
+function initializeSingleSelectTables() {
+    let tables = document.querySelectorAll("table#single-select")
+    for (let table of tables) {
+        let valueInput = table.querySelector("input#select-input")
+        let titleInput = table.querySelector("input#select-title")
+        let currentIndexInput = table.querySelector("input#select-current-index")
+        let lines = table.querySelectorAll("tbody tr")
+        let refresh = () => {
+            let value = JSON.parse(valueInput.value)
+            let currentIndex = currentIndexInput.value
+            let isAllowSameSelection = table.getAttribute("allow-same-selection") != null
+            let title = []
+            for (let l of lines) {
+                let lvalue = JSON.parse(l.getAttribute("select-value"))
+                if (value.includes(lvalue)) {
+                    let ltitle = l.getAttribute("select-title")
+                    if (lvalue == value[currentIndex]) l.classList.add("is-selected")
+                    else if (!isAllowSameSelection) l.classList.add("is-hidden")
+                    title[value.indexOf(lvalue)] = ltitle
+                } else {
+                    l.classList.remove("is-selected")
+                    l.classList.remove("is-hidden")
+                }
+            }
+            titleInput.value = JSON.stringify(title)
+        }
+
+        for (let l of lines) {
+            l.onclick = () => {
+                let fallbackValue = JSON.parse(valueInput.getAttribute("fallback"))
+                let value = JSON.parse(valueInput.value)
+                let currentIndex = currentIndexInput.value
+                let lvalue = JSON.parse(l.getAttribute("select-value"))
+                value[currentIndex] = lvalue
+                valueInput.value = JSON.stringify(value, fallbackValue)
+                refresh()
+                valueInput.dispatchEvent(new Event("change"))
+            }
+            refresh()
+        }
+        valueInput.addEventListener("change", refresh)
+        currentIndexInput.addEventListener("change", refresh)
     }
 }
 
@@ -525,8 +671,8 @@ function initializePastel() {
     refresh()
 }
 
-function initializeMarqueeLabels() {
-    let marqueeContainers = document.querySelectorAll(".marquee-label-container")
+function initializeMarqueeLabels(scope) {
+    let marqueeContainers = (scope ? scope : document).querySelectorAll(".marquee-label-container")
     for (let c of marqueeContainers) {
         let marquees = c.querySelectorAll(".marquee-label")
         for (let marquee of marquees) {
@@ -542,13 +688,21 @@ function initializeMarqueeLabels() {
                 let stopingTime = 0.5
                 let duration = (20 * (marquee.offsetWidth - c.offsetWidth + hpad)) / speed + 2 * stopingTime
                 if ((marquee.offsetWidth > 0) && (marquee.offsetWidth > c.offsetWidth - hpad)) {
-                    marquee.animate([
+                    marquee.style.textAlign = "left"
+                    c.style.justifyContent = "left"
+                    marquee.style.transform = ""
+                    return marquee.animate([
                         { transform: "translateX(0)", offset: 0 },
                         { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: stopingTime / duration },
                         { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - hpad) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 1 - stopingTime / duration },
                         { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - hpad) + "px)", offset: 1 }
                     ], { duration: (20 * (marquee.offsetWidth - c.offsetWidth) + 1000) / speed, direction: "alternate-reverse", iterations: Infinity })
-                } else marquee.style.animation = "none"
+                } else {
+                    marquee.style.textAlign = null
+                    c.style.justifyContent = null
+                    marquee.style.setProperty("animation", "none")
+                    marquee.style.setProperty("transform", "none", "important")
+                }
             }
             let o = new ResizeObserver(refresh)
             o.observe(c)
@@ -638,6 +792,8 @@ $(document).ready(() => {
     initializeFormValidation()
     initializeFormCollections()
     initializeMultiSelectTables()
+    initializeFormSlotedArrays()
+    initializeSingleSelectTables()
     initializeUploader()
     checkImg()
     initializePastel()

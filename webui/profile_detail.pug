@@ -10,6 +10,7 @@
   rb6StageLog: DB.Find(refid, { collection: "rb.rb6.playData.stageLog" })
   rb6JustCollection: DB.Find({ collection: "rb.rb6.playData.justCollection#userId" })
   rb6Quest: DB.Find(refid, { collection: "rb.rb6.playData.quest" })
+  rb6LobbySettingsAllAccount: DB.Find({ collection: "rb.rb6.player.lobbySettings#userId" })
 
   rb5Account: DB.FindOne(refid, {collection: "rb.rb5.player.account" })
   rb5Base: DB.FindOne(refid, { collection: "rb.rb5.player.base" })
@@ -20,6 +21,8 @@
   rb5ReleasedInfo: DB.Find(refid, { collection: "rb.rb5.player.releasedInfo" })
   rb5Mylist: DB.FindOne(refid, { collection: "rb.rb5.player.mylist" })
   rb5StageLog: DB.Find(refid, { collection: "rb.rb5.playData.stageLog" })
+  rb5Minigame: DB.Find(refid, { collection: "rb.rb5.playData.miniGame" })
+  rb5LobbySettingsAllAccount: DB.Find({ collection: "rb.rb5.player.lobbySettings#userId" })
 
   rb4Account: DB.FindOne(refid, {collection: "rb.rb4.player.account" })
   rb4Base: DB.FindOne(refid, { collection: "rb.rb4.player.base" })
@@ -31,6 +34,7 @@
   rb4Mylist: DB.FindOne(refid, { collection: "rb.rb4.player.mylist" })
   rb4StageLog: DB.Find(refid, { collection: "rb.rb4.playData.stageLog" })
   rb4PlayerParameters: DB.Find(refid, { collection: "rb.rb4.player.parameters" })
+  rb4LobbySettingsAllAccount: DB.Find({ collection: "rb.rb4.player.lobbySettings#userId" })
 
   rb3Account: DB.FindOne(refid, { collection: "rb.rb3.player.account" })
   rb3Base: DB.FindOne(refid, { collection: "rb.rb3.player.base" })
@@ -46,6 +50,7 @@
   rb3TricolettePark: DB.FindOne(refid, { collection: "rb.rb3.player.tricolettePark" })
   rb3Stamp: DB.FindOne(refid, { collection: "rb.rb3.player.stamp" })
   rb3Order: DB.FindOne(refid, { collection: "rb.rb3.player.order" })
+  rb3LobbySettingsAllAccount: DB.Find({ collection: "rb.rb3.player.lobbySettings#userId" })
 
   rb2Base: DB.FindOne(refid, { collection: "rb.rb2.player.base" })
   rb2Custom: DB.FindOne(refid, { collection: "rb.rb2.player.custom" })
@@ -53,12 +58,15 @@
   rb2ReleasedInfo: DB.Find(refid, { collection: "rb.rb2.player.releasedInfo" })
   rb2StageLog: DB.Find(refid, { collection: "rb.rb2.playData.stageLog" })
   rb2Glass: DB.Find(refid, { collection: "rb.rb2.player.glass" })
+  rb2Mylist: DB.FindOne(refid, { collection: "rb.rb2.player.mylist" })
+  rb2LobbySettingsAllAccount: DB.Find({ collection: "rb.rb2.player.lobbySettings#userId" })
 
   rb1Base: DB.FindOne(refid, { collection: "rb.rb1.player.base" })
   rb1Custom: DB.FindOne(refid, { collection: "rb.rb1.player.custom" })
   rb1MusicRecords: DB.Find(refid, { collection: "rb.rb1.playData.musicRecord" })
   rb1ReleasedInfo: DB.Find(refid, { collection: "rb.rb1.player.releasedInfo" })
   rb1StageLog: DB.Find(refid, { collection: "rb.rb1.playData.stageLog" })
+  rb1LobbySettingsAllAccount: DB.Find({ collection: "rb.rb1.player.lobbySettings#userId" })
 
   webuiMessage: DB.FindOne({ collection: "utility.webuiMessage" })
 
@@ -87,10 +95,10 @@
   let rb4ClasscheckTitle = ["五級","四級","三級","二級","一級","初段","二段","三段","四段","五段","六段","七段","八段","師範代","師範","名誉師範","最高師範","Qrispy検定","ロング検定","さくら検定","DJ YOSHITAKA検定","ウィザウチュナイ検定","kors k検定","トリル検定","Zektbach検定","BEMANIスタジアム検定","アツい検定","ひなビタ♪検定","L.E.D.検定","Sota Fujimori検定","サムい検定"]
   let rb4ClasscheckTitleSub = ["5 Kyuu","4 Kyuu","3 Kyuu","2 Kyuu","1 Kyuu","1 Dan","2 Dan","3 Dan","4 Dan","5 Dan","6 Dan","7 Dan","8 Dan","Shihandai","Shihan","Meiyo Shihan","Saikou Shihan","Qrispy Examination","Long Object Examination","Sakura Examination","DJ YOSHITAKA Examination","Without You Tonight Examination","kors k Examination","Triplet Examination","Zektbach Examination","BEMANI Stadium Examination","Hot Examination","Hinabita♪ Examination","L.E.D. Examination","Sota Fujimori Examination","Cold Examination"]
 
-  let rbChartTypeDetails = [{title:"Basic",color:"#2ECC71"},{title:"Medium",color:"#F2C40B"},{title:"Hard",color:"#FF3860"},{title:"Special",color:"#209cee"},]
   let rb6ChartTypeDetails = [{title:"Basic",color:"#2ECC71"},{title:"Medium",color:"#F2C40B"},{title:"Hard",color:"#FF3860"},{title:"WhiteHard",color:"#E45DA7"},]
+  let rbChartTypeDetails = [{title:"Basic",color:"#2ECC71"},{title:"Medium",color:"#F2C40B"},{title:"Hard",color:"#FF3860"},{title:"Special",color:"#209cee"},]
 
-  let rbItemsType = {music: 0, shotSound: 1, backgroundMusic: 2, frame: 3, explodeEffect: 4, background: 5}
+  let rbItemsType = { music: 0, shotSound: 1, backgroundMusic: 2, frame: 3, explodeEffect: 4, background: 5 }
 
   let rb4ItemsName = {
     shotSound: [{id:0,name:"Default 1",isDefault:true},{id:1,name:"Default 2",isDefault:true},{id:2,name:"Clap",isDefault:true},{id:3,name:"Tamborine",isDefault:true},{id:4,name:"Tennis",isDefault:true},{id:5,name:"Table Tennis",isDefault:true},{id:6,name:"Hockey",isDefault:true},{id:7,name:"Japan",isDefault:true},{id:8,name:"Sword",isDefault:true},{id:9,name:"Steel",isDefault:true},{id:10,name:"Light",isDefault:true},{id:11,name:"Electro",isDefault:false},{id:12,name:"Fireworks",isDefault:false},{id:13,name:"Electro 2",isDefault:false},{id:14,name:"Bell",isDefault:false},{id:15,name:"Volleybell",isDefault:false},{id:16,name:"Electro 3",isDefault:false},{id:17,name:"Default 3",isDefault:false},{id:18,name:"Powerful Pro",isDefault:false }],
@@ -98,6 +106,13 @@
     frame: [{id:0,name:"Default",isDefault:true},{id:1,name:"リフレク道場",isDefault:false},{id:2,name:"Pink",isDefault:false},{id:3,name:"Blue",isDefault:false},{id:4,name:"Green",isDefault:false},{id:5,name:"Purple",isDefault:false},{id:6,name:"Black",isDefault:false},{id:15,name:"Classic",isDefault:false},{id:16,name:"limelight",isDefault:false},{id:17,name:"colette",isDefault:false},{id:19,name:"Mystical Strike",isDefault:false}],
     explodeEffect: [{id:0,name:"Default",isDefault:true},{id:1,name:"Classic",isDefault:false},{id:2,name:"limelight",isDefault:false},{id:3,name:"colette",isDefault:false},{id:4,name:"Snow",isDefault:false},{id:5,name:"Flower",isDefault:false},{id:6,name:"Fireworks",isDefault:false},{id:7,name:"Maple",isDefault:false},{id:8,name:"Quaver",isDefault:false},{id:9,name:"Heart",isDefault:false},{id:10,name:"Rose",isDefault:false},{id:11,name:"groovin'!!",isDefault:false}],
     background: [{id:0,name:"Default",isDefault:true},{id:1,name:"Pink",isDefault:false},{id:2,name:"Blue",isDefault:false},{id:3,name:"Green",isDefault:false},{id:4,name:"Purple",isDefault:false},{id:5,name:"Mystical Strike",isDefault:false}]
+  }
+  let rb2ItemsName = {
+    shotSound: [{id:0,name:"Default 1",isDefault:true},{id:1,name:"Default 2",isDefault:true},{id:2,name:"Clap",isDefault:true},{id:3,name:"Tambourine",isDefault:true},{id:4,name:"Tennis",isDefault:true},{id:5,name:"Table Tennis",isDefault:true},{id:6,name:"Hockey",isDefault:true},{id:7,name:"Japan",isDefault:true},{id:8,name:"Sword",isDefault:true},{id:9,name:"Steel",isDefault:false},{id:10,name:"Light",isDefault:false},{id:11,name:"Electro",isDefault:false},{id:12,name:"Fireworks",isDefault:false},{id:13,name:"Qrispy",isDefault:false},{id:14,name:"Sota",isDefault:false},{id:15,name:"96",isDefault:false}],
+    backgroundMusic: [{id:0,name:"Default",isDefault:true},{id:1,name:"Qrispy",isDefault:false},{id:2,name:"猫叉Master",isDefault:false},{id:3,name:"dj TAKA",isDefault:false},{id:4,name:"TOMOSUKE",isDefault:false},{id:5,name:"DJ YOSHITAKA",isDefault:false},{id:6,name:"Qrispy 2",isDefault:false},{id:7,name:"Sota",isDefault:false},{id:8,name:"S-C-U",isDefault:false},{id:9,name:"Classic",isDefault:false}],
+    frame: [{id:0,name:"Default",isDefault:true},{id:1,name:"Yellow",isDefault:false},{id:2,name:"Blue",isDefault:false},{id:3,name:"Red",isDefault:false},{id:4,name:"Black",isDefault:false},{id:5,name:"Purple",isDefault:false},{id:6,name:"copius",isDefault:false},{id:7,name:"Pastel-kun",isDefault:false},{id:8,name:"Classic",isDefault:false}],
+    explodeEffect: [{id:0,name:"Default",isDefault:true},{id:1,name:"Fireworks",isDefault:false},{id:2,name:"Star",isDefault:false},{id:3,name:"Quaver",isDefault:false},{id:4,name:"Heart",isDefault:false},{id:5,name:"Rose",isDefault:false},{id:6,name:"copius",isDefault:false},{id:7,name:"Pastel-kun",isDefault:false},{id:8,name:"Classic",isDefault:false}],
+    background: [{id:0,name:"Default",isDefault:true},{id:1,name:"Yellow",isDefault:false},{id:2,name:"Blue",isDefault:false},{id:3,name:"Red",isDefault:false},{id:4,name:"Black",isDefault:false},{id:5,name:"Purple",isDefault:false},{id:6,name:"copius",isDefault:false},{id:7,name:"Pastel-kun",isDefault:false},{id:8,name:"Classic",isDefault:false}]
   }
   let rb1ItemsName = {
     shotSound: [{id:0,name:"Default 1",isDefault:true},{id:1,name:"Default 2",isDefault:true},{id:2,name:"Default 3",isDefault:true},{id:3,name:"Hockey",isDefault:true},{id:4,name:"Volley Ball",isDefault:true},{id:5,name:"Tennis",isDefault:true},{id:6,name:"Baseball",isDefault:false},{id:7,name:"Table Tennis",isDefault:false},{id:8,name:"Electro 1",isDefault:true},{id:9,name:"Electro 2",isDefault:true},{id:10,name:"Electro 3",isDefault:true},{id:11,name:"Electro 4",isDefault:false},{id:12,name:"Electro 5",isDefault:false},{id:13,name:"Clap",isDefault:true},{id:14,name:"Tambourine",isDefault:true},{id:15,name:"Japan",isDefault:true},{id:16,name:"Percussion",isDefault:false},{id:17,name:"Latin",isDefault:false},{id:18,name:"Hit",isDefault:true },{id:19,name:"Sword",isDefault:true},{id:20,name:"Bomb",isDefault:false},{id:21,name:"Fight",isDefault:false}],
@@ -294,9 +309,9 @@
       case 30: return { name: "Lily", color: "#C30202" }
       case 31: return { name: "Alice", color: "#D89DD8" }
       case 32: return { name: "Cecil", color: "#8402F0" }
-      case 33: return { name: "???", color: "#eaed30", background: "linear-gradient(-30deg, #000076, #3D4CF8 45%, #00009E 45%)" }
+      case 33: return { name: "???", color: "#EAED30", background: "linear-gradient(-30deg, #000076, #3D4CF8 45%, #00009E 45%)" }
       case 34: return { name: "Hanzo", color: "white; font-weight: 700; -webkit-text-stroke: 1px #940000;" }
-      case 35: return { name: "Chaos Joker", color: "#f63030", background: "linear-gradient(-30deg, #000 0, #646464 45%, #4B4B4B 45%)" }
+      case 35: return { name: "Chaos Joker", color: "#FF5858", background: "linear-gradient(-30deg, #000 0, #646464 45%, #4B4B4B 45%)" }
       case 40: return { name: "Triple face devil \"Asura\"", abbr: "Asura", color: "white; text-shadow: 0 0 3px #6B0B02, 0 0 3px #6B0B02, 0 0 3px #6B0B02;" }
       case 41: return { name: "Frightening beast king \"Chimera\"", abbr: "Chimera", color: "white; text-shadow: 0 0 3px #BC0091, 0 0 3px #BC0091, 0 0 3px #BC0091;" }
       case 42: return { name: "Wyvern in sea of desperation \"Leviathan\"", abbr: "Leviathan", color: "white; text-shadow: 0 0 3px #023C89, 0 0 3px #023C89, 0 0 3px #023C89;" }
@@ -304,6 +319,7 @@
       case 44: return { name: "Giant of world-devouring \"Cyclops\"", abbr: "Cyclops", color: "white; text-shadow: 0 0 3px #C90819, 0 0 3px #C90819, 0 0 3px #C90819;" }
       case 45: return { name: "Aerial sprite \"Griffin\"", abbr: "Griffin", color: "white; text-shadow: 0 0 3px #288205, 0 0 3px #288205, 0 0 3px #288205;" }
       case 46: return { name: "Overlord over the universe \"Bahamut\"", abbr: "Bahamut", color: "white; text-shadow: 0 0 3px black, 0 0 3px black, 0 0 3px black;"}
+      case 47: return { name: "The true overlord over the universe \"Bahamut†\"", abbr: "Bahamut†", color: "white; text-shadow: 0 0 3px black, 0 0 3px black, 0 0 3px black;"}
     }
     return { name: "CPU " + cpuId}
   }
@@ -426,6 +442,30 @@
 
     return result
   }
+  function getRb2UnlockedBywords() {
+    let result = { left: [], right: [] }
+    let unlocked = { left: [0], right: [0] }
+    for (let i of rb2ReleasedInfo) {
+      if (i.type == 7) {
+        if (!unlocked.left.includes(i.id)) unlocked.left.push(i.id)
+      } else if (i.type == 8) {
+        if (!unlocked.right.includes(i.id)) unlocked.right.push(i.id)
+      }
+    }
+    for (let i = 0; i < rb2Bywords.left.length; i++) result.left.push({id: i, details: rb2Bywords.left[i], isEnabled: unlocked.left.includes(i)})
+    for (let i = 0; i < rb2Bywords.right.length; i++) result.right.push({id: i, details: rb2Bywords.right[i], isEnabled: unlocked.right.includes(i)})
+    return result
+  }
+  function getRb2AvaliableItems(itemsType) {
+    let itemsTypeIndex = rbItemsType[itemsType]
+    let result = []
+    let itemsName = rb2ItemsName[itemsType]
+    let unlockedIndex = []
+    for (let r of rb2ReleasedInfo) if (itemsTypeIndex == r.type) unlockedIndex.push(r.id)
+    for (let i of itemsName) result.push({id: i.id, name: i.name, isEnabled: i.isDefault || unlockedIndex.includes(i.id)})
+
+    return result
+  }
   function getRb1AvaliableItems(itemsType) {
     let itemsTypeIndex = rbItemsType[itemsType]
     let result = []
@@ -465,6 +505,11 @@
     let result = [rb6Account, rb6Base, rb6Config, rb6Custom, rb6Mylist]
     for (let a of [rb6Classcheck, rb6MusicRecords, rb6ReleasedInfo, rb6StageLog, rb6Quest]) result = result.concat(a)
     for (let j of rb6JustCollection) if (j.userId == rb6Account.userId) result.push(j)
+    return Buffer.from(JSON.stringify(result)).toString("base64")
+  }
+  function getRb5SaveData() {
+    let result = [rb5Account, rb5Base, rb5Config, rb5Custom, rb5Mylist, rb5Minigame]
+    for (let a of [rb5Classcheck, rb5MusicRecords, rb5ReleasedInfo, rb5StageLog]) result = result.concat(a)
     return Buffer.from(JSON.stringify(result)).toString("base64")
   }
   function getRb4SaveData() {
@@ -603,12 +648,46 @@
     rb1MusicRecordsOrganized[r.musicId] = o
   }
 
+  let rb2MylistOrganized = Array(5).fill(-1)
+  if (rb2Mylist && rb2Mylist.slot) for (let s of rb2Mylist.slot) rb2MylistOrganized[s.slotId] = s.musicId
+
+  let rb6LobbySettings
+  if (rb6Account) for (let ls of rb6LobbySettingsAllAccount) if (ls.userId == rb6Account.userId) {
+    rb6LobbySettings = ls
+    break
+  }
+  let rb5LobbySettings
+  if (rb5Account) for (let ls of rb5LobbySettingsAllAccount) if (ls.userId == rb5Account.userId) {
+    rb5LobbySettings = ls
+    break
+  }
+  let rb4LobbySettings
+  if (rb4Account) for (let ls of rb4LobbySettingsAllAccount) if (ls.userId == rb4Account.userId) {
+    rb4LobbySettings = ls
+    break
+  }
+  let rb3LobbySettings
+  if (rb3Account) for (let ls of rb3LobbySettingsAllAccount) if (ls.userId == rb3Account.userId) {
+    rb3LobbySettings = ls
+    break
+  }
+  let rb2LobbySettings
+  if (rb2Base) for (let ls of rb2LobbySettingsAllAccount) if (ls.userId == rb2Base.userId) {
+    rb2LobbySettings = ls
+    break
+  }
+  let rb1LobbySettings
+  if (rb1Base) for (let ls of rb1LobbySettingsAllAccount) if (ls.userId == rb1Base.userId) {
+    rb1LobbySettings = ls
+    break
+  }
+
 //- Components
 mixin rb6LevelLabel(level, skillRate, chartType, size, sizeclass)
   if level == null 
     div
       abbr#tab-content(class = "selected-shadow is-active " + ((sizeclass == null) ? "" : sizeclass), title = "Level", tab-group = "level-label", tab-index = "level") Lv
-      abbr#tab-content(class = "selected-shadow " + ((sizeclass == null) ? "" : sizeclass), title = "Skill Rate", tab-group = "level-label", tab-index = "skill-rate") Sr
+      abbr#tab-content(class = "selected-shadow " + ((sizeclass == null) ? "" : sizeclass), title = "Skill Rate", tab-group = "level-label", tab-index = "skill-rate") SR
   else if level == "full"
     div
       span#tab-content(class = "selected-shadow is-active " + ((sizeclass == null) ? "" : sizeclass), tab-group = "level-label", tab-index = "level") Level
@@ -628,7 +707,7 @@ mixin rb5LevelLabel(level, skillRate, chartType, sizeclass)
   if level == null 
     div
       abbr#tab-content(class = "selected-shadow is-active " + ((sizeclass == null) ? "" : sizeclass), title = "Level", tab-group = "level-label", tab-index = "level") Lv
-      abbr#tab-content(class = "selected-shadow " + ((sizeclass == null) ? "" : sizeclass), title = "Skill Rate", tab-group = "level-label", tab-index = "skill-rate") Sr
+      abbr#tab-content(class = "selected-shadow " + ((sizeclass == null) ? "" : sizeclass), title = "Skill Rate", tab-group = "level-label", tab-index = "skill-rate") SR
   else if level == "full"
     div
       span#tab-content(class = "selected-shadow is-active " + ((sizeclass == null) ? "" : sizeclass), tab-group = "level-label", tab-index = "level") Level
@@ -1238,7 +1317,7 @@ div
                     //-       th
                     //-         abbr(title = "Clear Type") CT
                     //-       th
-                    //-         abbr(title = "Chart Difficulty Level") LV
+                    //-         abbr(title = "Chart Difficulty Level") Lv
                     //-       th Rank
                     //-       th
                     //-         abbr(title = "Achievement Rate") AR
@@ -1852,7 +1931,7 @@ div
                                                   span #{ta.titleArtist.title}
                                               .field.is-horizontal
                                                 .field-label
-                                                  label.labe Artist
+                                                  label.label Artist
                                                 .field-body
                                                   span #{ta.titleArtist.artist}
                                               .field.is-horizontal
@@ -2189,16 +2268,16 @@ div
           .tabs#tabs
             ul(style = "margin-top: 15px")
               li.is-active(tab-group = "rb4-play-data", tab-index = "0")
-                a(style = "padding: 8.5px 16px;") Overview
+                a(style = "padding: 9px 16px 8px;") Overview
               li(tab-group = "rb4-play-data", tab-index = "1")
-                a(style = "padding: 8.5px 16px;") Scores
+                a(style = "padding: 9px 16px 8px;") Scores
               li(tab-group = "rb4-play-data", tab-index = "2")
                 a(style = "padding: 0 16px; height: 42px")
                   .has-text-centered
                     p.is-size-7(style = "margin: 0") Reflec Dojo
                     p リフレク道場
               li(tab-group = "rb4-play-data", tab-index = "3")
-                a(style = "padding: 8.5px 16px;") Play History
+                a(style = "padding: 9px 16px 8px;") Play History
           #tab-content.is-active(tab-group = "rb4-play-data", tab-index = "0")
             .field.is-horizontal
               .field-label
@@ -2246,7 +2325,7 @@ div
                   span #{rb4ClasscheckTitle[rb4Base.class]}　(#{(rb4Base.classAchievrementRateTimes100 / 100).toFixed(2)}%)
             .field.is-horizontal
               .field-label
-                label.label Player Level
+                label.label Pastel Level
               .field-body
                 span #{rb4Base.level}
             .field.is-horizontal
@@ -2461,6 +2540,21 @@ div
                                                   span #{c.musicId}
                                               .field.is-horizontal
                                                 .field-label
+                                                  label.label Title
+                                                .field-body
+                                                  span #{ta.titleArtist.title}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label Artist
+                                                .field-body
+                                                  span #{ta.titleArtist.artist}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label BPM
+                                                .field-body
+                                                  span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
+                                              .field.is-horizontal
+                                                .field-label
                                                   label.label Chart
                                                 .field-body
                                                   .level.is-mobile
@@ -2631,7 +2725,7 @@ div
                         th ID
                         th(style = "max-width: 200px") Title
                         th Chart
-                        th LV
+                        th Lv
                         th User
                         th MG
                         th Stage
@@ -2736,8 +2830,8 @@ div
                                                       span Achievement Rate
                                                     .column(style = "color: " + lc)
                                                       if ar[0] == "0"
-                                                        span.is-size-4(style = "opacity: 50%") #{ar.slice(0, 1)}
-                                                        span.is-size-4 #{ar.slice(1, 2)}.
+                                                        span.is-size-3(style = "opacity: 50%") #{ar.slice(0, 1)}
+                                                        span.is-size-3 #{ar.slice(1, 2)}.
                                                       else
                                                         span.is-size-3 #{ar.slice(0, 2)}.
                                                       span.is-size-5 #{ar.slice(2, 4)}%
@@ -2913,7 +3007,7 @@ div
               .field-body
                 span #{(rb3Base.onigiriTimes10 / 10).toFixed(1)}
                 span(style = "margin-left: 5px")
-                  img(style = "height: 12.6px; opacity: 71%;" src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNS4xNCAxMi44OSI+PHBhdGggZD0iTTgsNC40OWExLjU4LDEuNTgsMCwwLDEsLjgyLjQsMTMuMzQsMTMuMzQsMCwwLDEsNSw3LjE4djBsMCwwYTEuMTYsMS4xNiwwLDAsMSwwLC45MiwxLjEzLDEuMTMsMCwwLDEtLjY5LjUyLDIzLjg5LDIzLjg5LDAsMCwxLTUuMjEuNiwyMy40NCwyMy40NCwwLDAsMS01LjE5LS42Ljg1Ljg1LDAsMCwxLS42MS0uNDEsMS4zNSwxLjM1LDAsMCwxLS4wNy0xLDE3LjQ0LDE3LjQ0LDAsMCwxLDUtNy4yNkExLjgzLDEuODMsMCwwLDEsOCw0LjQ5bTAtMS42YTMuMjQsMy4yNCwwLDAsMC0xLjg2Ljc0LDE5LjA2LDE5LjA2LDAsMCwwLTUuNTgsOCwyLjYyLDIuNjIsMCwwLDAsMS44MywzLjUxQTI0Ljg3LDI0Ljg3LDAsMCwwLDgsMTUuNzlhMjUuNDksMjUuNDksMCwwLDAsNS42LS42NSwyLjYyLDIuNjIsMCwwLDAsMS44My0zLjUxLDE1LDE1LDAsMCwwLTUuNTgtOEEzLDMsMCwwLDAsOCwyLjg5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTAuNDQgLTIuODkpIi8+PHJlY3QgeD0iMy45MSIgeT0iNy4wNCIgd2lkdGg9IjcuMjkiIGhlaWdodD0iNS4yMSIgcng9IjEuMTQiLz48L3N2Zz4=")
+                  img(style = "height: 12.6px; opacity: 71%;", src = "static/img/icons/onigiri.svg")
           #tab-content(tab-group = "rb3-play-data", tab-index = "1", style = "overflow-x: auto; overflow-y: hidden")
             if rb3MusicRecordsOrganizedLength == 0
               .has-text-grey.has-text-centered
@@ -3098,6 +3192,21 @@ div
                                                   span #{c.musicId}
                                               .field.is-horizontal
                                                 .field-label
+                                                  label.label Title
+                                                .field-body
+                                                  span #{ta.titleArtist.title}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label Artist
+                                                .field-body
+                                                  span #{ta.titleArtist.artist}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label BPM
+                                                .field-body
+                                                  span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
+                                              .field.is-horizontal
+                                                .field-label
                                                   label.label Chart
                                                 .field-body
                                                   .level.is-mobile
@@ -3175,7 +3284,7 @@ div
                         th ID
                         th(style = "max-width: 200px") Title
                         th Chart
-                        th LV
+                        th Lv
                         th User
                         th Stage
                         th MG
@@ -3447,9 +3556,11 @@ div
                   span #{getRb2MGMinor(rb2Base.matchingGrade)}
             .field.is-horizontal
               .field-label
-                label.label Player Level
-              .field-body
-                span #{rb2Base.level}
+                label.label Limes
+              .field-body(style = "max-height: 12px; display: flex")
+                div #{(rb2Base.experience / 12).toFixed(1)}
+                div(style = "margin-left: 5px")
+                  img(style = "height: 18px; opacity: 71%; margin-top: 2px", src = "static/img/icons/lime slice.svg")
           #tab-content(tab-group = "rb2-play-data", tab-index = "1", style = "overflow-x: auto; overflow-y: hidden")
             if rb2MusicRecordsOrganizedLength == 0
               .has-text-grey.has-text-centered
@@ -3664,6 +3775,21 @@ div
                                                   span #{c.musicId}
                                               .field.is-horizontal
                                                 .field-label
+                                                  label.label Title
+                                                .field-body
+                                                  span #{ta.titleArtist.title}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label Artist
+                                                .field-body
+                                                  span #{ta.titleArtist.artist}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label BPM
+                                                .field-body
+                                                  span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
+                                              .field.is-horizontal
+                                                .field-label
                                                   label.label Chart
                                                 .field-body
                                                   .level.is-mobile
@@ -3756,7 +3882,7 @@ div
                         th ID
                         th(style = "max-width: 200px") Title
                         th Chart
-                        th LV
+                        th Lv
                         th Stage
                         th User
                         th MG
@@ -4235,6 +4361,21 @@ div
                                                   span #{c.musicId}
                                               .field.is-horizontal
                                                 .field-label
+                                                  label.label Title
+                                                .field-body
+                                                  span #{ta.titleArtist.title}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label Artist
+                                                .field-body
+                                                  span #{ta.titleArtist.artist}
+                                              .field.is-horizontal
+                                                .field-label
+                                                  label.label BPM
+                                                .field-body
+                                                  span #{ta.info.bpm.min + (ta.info.bpm.max == null ? "" : (" - " + ta.info.bpm.max))}
+                                              .field.is-horizontal
+                                                .field-label
                                                   label.label Chart
                                                 .field-body
                                                   .level.is-mobile
@@ -4327,7 +4468,7 @@ div
                         th ID
                         th(style = "max-width: 200px") Title
                         th Chart
-                        th LV
+                        th Lv
                         th Stage
                         th User
                         th MG
@@ -4880,6 +5021,31 @@ div
                         select#form-select-select
                           option On
                           option Off
+                .field.is-horizontal
+                  .field-label
+                    label.label Lobby Feature
+                  .field-body
+                    .control
+                      label.switch.is-rounded
+                        input(type = "checkbox", name = "isLobbyEnabled", checked = rb6LobbySettings ? rb6LobbySettings.isEnabled : true)
+                        span.check
+                      p.help Turn on to enable matching and comment sending.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Lobby Waiting Time
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyDuration", gt = "0", value = rb6LobbySettings ? rb6LobbySettings.duration : "", placeholder = 24000)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Rival Searching Interval
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyRivalSearchingInterval", gt = "0", value = rb6LobbySettings ? rb6LobbySettings.rivalSearchingInterval : "", placeholder = 500)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
               #tab-content(tab-group = "rb6-edit-settings", tab-index = "3")
                 .field.is-horizontal
                   .field-label.is-normal
@@ -5039,7 +5205,7 @@ div
                               span.file-label
                                 a.button.file-cta(style = "background-color: #f97624; width: 130px")
                                   span.file-icon(style = "width: 22px")
-                                    img(style = "transform: scale(0.85); margin-bottom:2px", src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTQuNzMgMTYiPjxkZWZzPjxzdHlsZT4uYXtmaWxsOiNmZmY7fS5ie21hc2s6dXJsKCNhKTt9LmN7b3BhY2l0eTowLjQzO30uZHtmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7c3Ryb2tlLXdpZHRoOjIxcHg7fS5le29wYWNpdHk6MC4zO308L3N0eWxlPjxtYXNrIGlkPSJhIiB4PSItMS4yNSIgeT0iLTEuNTQiIHdpZHRoPSIxOS41NSIgaGVpZ2h0PSIxOS43NyIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSI+PHJlY3QgY2xhc3M9ImEiIHg9IjI5Ny4wNyIgeT0iMTc0Ljk2IiB3aWR0aD0iMTkuNTUiIGhlaWdodD0iMTkuNDMiLz48cGF0aCBkPSJNMzA1LjY4LDE3Ni4xNmwxLjU5LDEuNTkuODIuODItLjU2LjU2LS4yOS4yOS0uNDctLjQ3LS40OS0uNDl2Mi4zN2gtMS4yMXYtMi4zN2wtLjQ4LjQ4LS40OC40OC0uMjctLjI4LS41OC0uNTcuNzctLjc3LDEuNjUtMS42NG0wLTEuNTQtLjc3Ljc2TDMwMy4yNiwxNzdsLS43Ny43Ny0uNzcuNzcuNzcuNzcuNTguNTguMjcuMjcuNjQuNjRoMHYxLjA5aDMuMzl2LTEuMDloMGwuNjQtLjY0LjI5LS4yOS41Ni0uNTYuNzctLjc3LS43Ny0uNzctLjgxLS44Mi0xLjYtMS41OS0uNzYtLjc3WiIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzA5LjcxLDE3OC42M2wtMS4xMy44YTI5Ljg3LDI5Ljg3LDAsMCwwLTcuOTMsOC44MWMtLjIzLjM5LS40Ni43OS0uNjgsMS4yMWE3LjQ1LDcuNDUsMCwwLDAsMS44MSwxLjU5bC42MS0xLjExYTIyLjk0LDIyLjk0LDAsMCwxLDgtOWwxLjA2LS43MUE3LjM0LDcuMzQsMCwwLDAsMzA5LjcxLDE3OC42M1oiLz48L2c+PC9tYXNrPjwvZGVmcz48ZyBjbGFzcz0iYiI+PGNpcmNsZSBjbGFzcz0iYSIgY3g9IjQuMzMiIGN5PSI0LjkyIiByPSIwLjc4Ii8+PGNpcmNsZSBjbGFzcz0iYSIgY3g9IjkuMTMiIGN5PSI1LjI5IiByPSIxLjc3Ii8+PHBhdGggY2xhc3M9ImMiIGQ9Ik0zMTEuMTgsMTg4LjcydjBhNiw2LDAsMCwwLS4zMy04LjQ1Yy0xLjA1LS44NC02LjEyLTMuNC05LTEuMTIsMCwwLC40My42Mi40My42MiwyLjExLS45MSw1LjU2LjY1LDYuOTEsMi4zM2E2LjQsNi40LDAsMCwxLDEsNi41OWgxWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzA0LjQxLDE4My45MWEyLjUxLDIuNTEsMCwxLDEtMi41MSwyLjUxLDIuNTIsMi41MiwwLDAsMSwyLjUxLTIuNTFtMC0xYTMuNTQsMy41NCwwLDEsMCwzLjU0LDMuNTQsMy41NCwzLjU0LDAsMCwwLTMuNTQtMy41NFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yOTguMzEgLTE3Ni4xNikiLz48cGF0aCBjbGFzcz0iYSIgZD0iTTMwNi40MiwxODYuNjlhLjI3LjI3LDAsMCwxLS4yNy0uMjcsMS43NCwxLjc0LDAsMCwwLTEuNzQtMS43NC4yNy4yNywwLDEsMSwwLS41NCwyLjI4LDIuMjgsMCwwLDEsMi4yOCwyLjI4QS4yNy4yNywwLDAsMSwzMDYuNDIsMTg2LjY5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJkIiBkPSJNMjk5LjY2LDE4OS45MyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJlIiBkPSJNMzAzLjMzLDE5MC40MmEyMi41OSwyMi41OSwwLDAsMSw3LjY5LTguNTYsNC42Nyw0LjY3LDAsMCwwLS42MS0xLjE0cy0uNTgtLjg1LTEuMDUtLjUxYTI5Ljg3LDI5Ljg3LDAsMCwwLTcuOTMsOC44MUMzMDEuMiwxODkuNDEsMzAzLjE3LDE5MC43LDMwMy4zMywxOTAuNDJaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjk4LjMxIC0xNzYuMTYpIi8+PHBhdGggY2xhc3M9ImEiIGQ9Ik0yOTkuNTgsMTg0Ljc5YTYuMSw2LjEsMCwwLDEsNi4xLTYuMDksNiw2LDAsMCwxLDIuOS43M2wxLjEzLS44QTcuMzcsNy4zNywwLDAsMCwzMDAsMTg5LjQ1Yy4yMi0uNDIuNDUtLjgyLjY4LTEuMjFBNi4xLDYuMSwwLDAsMSwyOTkuNTgsMTg0Ljc5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzAzLjA4LDE5MC4zMWwuMTMuMDYuMSwwaDBsLjEsMCwuMDcsMCwuMDgsMCwuMzEuMS4xNCwwLC4xMiwwaC4wNWwuMSwwLC4xOSwwLC4xLDBoLjA1bC4xLDAsLjM0LDBoLjZhNi4wNSw2LjA1LDAsMCwwLDIuNzItLjY0bDIuMTgsMGE3LjM0LDcuMzQsMCwwLDEtNy44NywxLjI0LDYuODksNi44OSwwLDAsMS0uOTMtLjQ5LDcuNDUsNy40NSwwLDAsMS0xLjgxLTEuNTljLjIyLS40Mi40NS0uODIuNjgtMS4yMWEyOS44NywyOS44NywwLDAsMSw3LjkzLTguODFsMS4xMy0uOGE3LjM0LDcuMzQsMCwwLDEsMS43NiwxLjYyLDYuMTgsNi4xOCwwLDAsMSwuNjEuOSw3LjM5LDcuMzksMCwwLDEtLjg2LDguNWwwLS41OCwwLS4zNWgtLjg0YTYuMSw2LjEsMCwwLDAsMS40NC0zLjkzczAtLjEsMC0uMTZ2LS4xYTIuODMsMi44MywwLDAsMCwwLS4yOXMwLS4wOCwwLS4xMiwwLS4wNywwLS4xMWwwLS4yM3MwLDAsMC0uMDYsMC0uMDgsMC0uMTJsMC0uMTJjMC0uMTQtLjA2LS4yNy0uMS0uNDFsLS4wOS0uMjdhMy42NSwzLjY1LDAsMCwwLS4xNC0uMzVsMC0uMDljLS4wOC0uMTctLjE2LS4zNC0uMjUtLjVsLS4xNC0uMjQtLjE0LS4yM2EuNDQuNDQsMCwwLDEtLjA4LS4xMWwtLjA4LS4xMS0uMTctLjIxYTIyLjk0LDIyLjk0LDAsMCwwLTgsOWwuMjkuMTcuMDcsMFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yOTguMzEgLTE3Ni4xNikiLz48cGF0aCBjbGFzcz0iYSIgZD0iTTMwOSwxODkuOWgwbDEuODYsMCwwLS44NUgzMTBsLS43NiwwYzAtLjA5LjE1LS4xNi4zMS0uMjlsLjU3LS41NWExLjY4LDEuNjgsMCwwLDAsLjcyLTEuMjcsMS4xOSwxLjE5LDAsMCwwLTEuMjgtMS4yNGMtLjg3LDAtMS40Ny40Ni0xLjQ1LDEuMzFsLjg0LDBjLjA1LS40Mi4yMS0uNi41My0uNmEuNTEuNTEsMCwwLDEsLjUyLjU1LDEuMDUsMS4wNSwwLDAsMS0uNDUuNzRsLS41OC41MWEyLjU0LDIuNTQsMCwwLDAtMSwxLjYzWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjwvZz48cG9seWdvbiBjbGFzcz0iYSIgcG9pbnRzPSI2LjI4IDIuNzggNS44IDMuMjYgNS41MyAyLjk5IDQuOTUgMi40MSA1LjcxIDEuNjUgNy4zNyAwIDguOTYgMS41OSA5Ljc4IDIuNDEgOS4yMSAyLjk4IDguOTMgMy4yNiA4LjQ2IDIuNzkgNy45NyAyLjMgNy45NyAyLjcxIDcuOTcgMy45MiA3Ljk3IDQuMDUgNy45NyA0LjY4IDcuNTEgNC42OCA2Ljc2IDQuNjggNi43NiAzLjU4IDYuNzYgMi43IDYuNzYgMi4zIDYuMjggMi43OCIvPjwvc3ZnPg==")
+                                    img(style = "transform: scale(0.85); margin-bottom:2px", src = "static/img/icons/asphyxia import.svg")
                                   span.file-label(style = "color: white") Profile...
                                 span.file-name
                                   span.is-size-7#uploader-placeholder
@@ -5052,7 +5218,7 @@ div
                               span.file-label
                                 a.button.file-cta(style = "background-color: #f97624; width: 130px")
                                   span.file-icon(style = "width: 22px")
-                                    img(style = "transform: scale(0.85); margin-bottom:2px", src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTQuNzMgMTYiPjxkZWZzPjxzdHlsZT4uYXtmaWxsOiNmZmY7fS5ie21hc2s6dXJsKCNhKTt9LmN7b3BhY2l0eTowLjQzO30uZHtmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7c3Ryb2tlLXdpZHRoOjIxcHg7fS5le29wYWNpdHk6MC4zO308L3N0eWxlPjxtYXNrIGlkPSJhIiB4PSItMS4yNSIgeT0iLTEuNTQiIHdpZHRoPSIxOS41NSIgaGVpZ2h0PSIxOS43NyIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSI+PHJlY3QgY2xhc3M9ImEiIHg9IjI5Ny4wNyIgeT0iMTc0Ljk2IiB3aWR0aD0iMTkuNTUiIGhlaWdodD0iMTkuNDMiLz48cGF0aCBkPSJNMzA1LjY4LDE3Ni4xNmwxLjU5LDEuNTkuODIuODItLjU2LjU2LS4yOS4yOS0uNDctLjQ3LS40OS0uNDl2Mi4zN2gtMS4yMXYtMi4zN2wtLjQ4LjQ4LS40OC40OC0uMjctLjI4LS41OC0uNTcuNzctLjc3LDEuNjUtMS42NG0wLTEuNTQtLjc3Ljc2TDMwMy4yNiwxNzdsLS43Ny43Ny0uNzcuNzcuNzcuNzcuNTguNTguMjcuMjcuNjQuNjRoMHYxLjA5aDMuMzl2LTEuMDloMGwuNjQtLjY0LjI5LS4yOS41Ni0uNTYuNzctLjc3LS43Ny0uNzctLjgxLS44Mi0xLjYtMS41OS0uNzYtLjc3WiIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzA5LjcxLDE3OC42M2wtMS4xMy44YTI5Ljg3LDI5Ljg3LDAsMCwwLTcuOTMsOC44MWMtLjIzLjM5LS40Ni43OS0uNjgsMS4yMWE3LjQ1LDcuNDUsMCwwLDAsMS44MSwxLjU5bC42MS0xLjExYTIyLjk0LDIyLjk0LDAsMCwxLDgtOWwxLjA2LS43MUE3LjM0LDcuMzQsMCwwLDAsMzA5LjcxLDE3OC42M1oiLz48L2c+PC9tYXNrPjwvZGVmcz48ZyBjbGFzcz0iYiI+PGNpcmNsZSBjbGFzcz0iYSIgY3g9IjQuMzMiIGN5PSI0LjkyIiByPSIwLjc4Ii8+PGNpcmNsZSBjbGFzcz0iYSIgY3g9IjkuMTMiIGN5PSI1LjI5IiByPSIxLjc3Ii8+PHBhdGggY2xhc3M9ImMiIGQ9Ik0zMTEuMTgsMTg4LjcydjBhNiw2LDAsMCwwLS4zMy04LjQ1Yy0xLjA1LS44NC02LjEyLTMuNC05LTEuMTIsMCwwLC40My42Mi40My42MiwyLjExLS45MSw1LjU2LjY1LDYuOTEsMi4zM2E2LjQsNi40LDAsMCwxLDEsNi41OWgxWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzA0LjQxLDE4My45MWEyLjUxLDIuNTEsMCwxLDEtMi41MSwyLjUxLDIuNTIsMi41MiwwLDAsMSwyLjUxLTIuNTFtMC0xYTMuNTQsMy41NCwwLDEsMCwzLjU0LDMuNTQsMy41NCwzLjU0LDAsMCwwLTMuNTQtMy41NFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yOTguMzEgLTE3Ni4xNikiLz48cGF0aCBjbGFzcz0iYSIgZD0iTTMwNi40MiwxODYuNjlhLjI3LjI3LDAsMCwxLS4yNy0uMjcsMS43NCwxLjc0LDAsMCwwLTEuNzQtMS43NC4yNy4yNywwLDEsMSwwLS41NCwyLjI4LDIuMjgsMCwwLDEsMi4yOCwyLjI4QS4yNy4yNywwLDAsMSwzMDYuNDIsMTg2LjY5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJkIiBkPSJNMjk5LjY2LDE4OS45MyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJlIiBkPSJNMzAzLjMzLDE5MC40MmEyMi41OSwyMi41OSwwLDAsMSw3LjY5LTguNTYsNC42Nyw0LjY3LDAsMCwwLS42MS0xLjE0cy0uNTgtLjg1LTEuMDUtLjUxYTI5Ljg3LDI5Ljg3LDAsMCwwLTcuOTMsOC44MUMzMDEuMiwxODkuNDEsMzAzLjE3LDE5MC43LDMwMy4zMywxOTAuNDJaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjk4LjMxIC0xNzYuMTYpIi8+PHBhdGggY2xhc3M9ImEiIGQ9Ik0yOTkuNTgsMTg0Ljc5YTYuMSw2LjEsMCwwLDEsNi4xLTYuMDksNiw2LDAsMCwxLDIuOS43M2wxLjEzLS44QTcuMzcsNy4zNywwLDAsMCwzMDAsMTg5LjQ1Yy4yMi0uNDIuNDUtLjgyLjY4LTEuMjFBNi4xLDYuMSwwLDAsMSwyOTkuNTgsMTg0Ljc5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjxwYXRoIGNsYXNzPSJhIiBkPSJNMzAzLjA4LDE5MC4zMWwuMTMuMDYuMSwwaDBsLjEsMCwuMDcsMCwuMDgsMCwuMzEuMS4xNCwwLC4xMiwwaC4wNWwuMSwwLC4xOSwwLC4xLDBoLjA1bC4xLDAsLjM0LDBoLjZhNi4wNSw2LjA1LDAsMCwwLDIuNzItLjY0bDIuMTgsMGE3LjM0LDcuMzQsMCwwLDEtNy44NywxLjI0LDYuODksNi44OSwwLDAsMS0uOTMtLjQ5LDcuNDUsNy40NSwwLDAsMS0xLjgxLTEuNTljLjIyLS40Mi40NS0uODIuNjgtMS4yMWEyOS44NywyOS44NywwLDAsMSw3LjkzLTguODFsMS4xMy0uOGE3LjM0LDcuMzQsMCwwLDEsMS43NiwxLjYyLDYuMTgsNi4xOCwwLDAsMSwuNjEuOSw3LjM5LDcuMzksMCwwLDEtLjg2LDguNWwwLS41OCwwLS4zNWgtLjg0YTYuMSw2LjEsMCwwLDAsMS40NC0zLjkzczAtLjEsMC0uMTZ2LS4xYTIuODMsMi44MywwLDAsMCwwLS4yOXMwLS4wOCwwLS4xMiwwLS4wNywwLS4xMWwwLS4yM3MwLDAsMC0uMDYsMC0uMDgsMC0uMTJsMC0uMTJjMC0uMTQtLjA2LS4yNy0uMS0uNDFsLS4wOS0uMjdhMy42NSwzLjY1LDAsMCwwLS4xNC0uMzVsMC0uMDljLS4wOC0uMTctLjE2LS4zNC0uMjUtLjVsLS4xNC0uMjQtLjE0LS4yM2EuNDQuNDQsMCwwLDEtLjA4LS4xMWwtLjA4LS4xMS0uMTctLjIxYTIyLjk0LDIyLjk0LDAsMCwwLTgsOWwuMjkuMTcuMDcsMFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yOTguMzEgLTE3Ni4xNikiLz48cGF0aCBjbGFzcz0iYSIgZD0iTTMwOSwxODkuOWgwbDEuODYsMCwwLS44NUgzMTBsLS43NiwwYzAtLjA5LjE1LS4xNi4zMS0uMjlsLjU3LS41NWExLjY4LDEuNjgsMCwwLDAsLjcyLTEuMjcsMS4xOSwxLjE5LDAsMCwwLTEuMjgtMS4yNGMtLjg3LDAtMS40Ny40Ni0xLjQ1LDEuMzFsLjg0LDBjLjA1LS40Mi4yMS0uNi41My0uNmEuNTEuNTEsMCwwLDEsLjUyLjU1LDEuMDUsMS4wNSwwLDAsMS0uNDUuNzRsLS41OC41MWEyLjU0LDIuNTQsMCwwLDAtMSwxLjYzWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI5OC4zMSAtMTc2LjE2KSIvPjwvZz48cG9seWdvbiBjbGFzcz0iYSIgcG9pbnRzPSI2LjI4IDIuNzggNS44IDMuMjYgNS41MyAyLjk5IDQuOTUgMi40MSA1LjcxIDEuNjUgNy4zNyAwIDguOTYgMS41OSA5Ljc4IDIuNDEgOS4yMSAyLjk4IDguOTMgMy4yNiA4LjQ2IDIuNzkgNy45NyAyLjMgNy45NyAyLjcxIDcuOTcgMy45MiA3Ljk3IDQuMDUgNy45NyA0LjY4IDcuNTEgNC42OCA2Ljc2IDQuNjggNi43NiAzLjU4IDYuNzYgMi43IDYuNzYgMi4zIDYuMjggMi43OCIvPjwvc3ZnPg==")
+                                    img(style = "transform: scale(0.85); margin-bottom:2px", src = "static/img/icons/asphyxia import.svg")
                                   span.file-label(style = "color: white") Scores...
                                 span.file-name
                                   span.is-size-7#uploader-placeholder
@@ -5103,8 +5269,8 @@ div
                   a General
                 li(tab-group = "rb4-edit-settings", tab-index = "1")
                   a In-Game
-                //- li(tab-group = "rb4-edit-settings", tab-index = "2")
-                //-   a Misc
+                li(tab-group = "rb4-edit-settings", tab-index = "2")
+                  a Misc
                 //- li(tab-group = "rb4-edit-settings", tab-index = "3")
                 //-   a Pastel-kun
                 li(tab-group = "rb4-edit-settings", tab-index = "4")
@@ -5191,7 +5357,7 @@ div
                           option Normal
                           option Average
                           option Hazard
-                          option Hide
+                          option Hidden
                 .field.is-horizontal
                   .field-label.is-normal
                     label.label Object Size
@@ -5293,6 +5459,31 @@ div
                           option Show
                           option Hide
               #tab-content(tab-group = "rb4-edit-settings", tab-index = "2")
+                .field.is-horizontal
+                  .field-label
+                    label.label Lobby Feature
+                  .field-body
+                    .control
+                      label.switch.is-rounded
+                        input(type = "checkbox", name = "isLobbyEnabled", checked = rb4LobbySettings ? rb4LobbySettings.isEnabled : true)
+                        span.check
+                      p.help Turn on to enable matching and comment sending.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Lobby Waiting Time
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyDuration", gt = "0", value = rb4LobbySettings ? rb4LobbySettings.duration : "", placeholder = 24000)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Rival Searching Interval
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyRivalSearchingInterval", gt = "0", value = rb4LobbySettings ? rb4LobbySettings.rivalSearchingInterval : "", placeholder = 500)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
               #tab-content(tab-group = "rb4-edit-settings", tab-index = "3")
               #tab-content(tab-group = "rb4-edit-settings", tab-index = "4")
                 .field.is-horizontal
@@ -5402,13 +5593,290 @@ div
                   span.icon
                     i.mdi.mdi-check
                   span Submit
-      for i in [5, 3, 2]
+      for i in [5, 3]
         #tab-content(tab-group = "version", tab-index = i, class = (defaultVersion == i) ? "is-active" : "")
           .has-text-grey.has-text-centered
             p
               span.icon.is-large
                 i.mdi.mdi-emoticon-sad-outline.mdi-48px
             p Throw New YetToBeDevelopedException("Coming s∞n...")
+      #tab-content(tab-group = "version", tab-index = "2", class = (defaultVersion == 2) ? "is-active" : "")
+        if rb2Base == null
+          .has-text-grey.has-text-centered
+            p
+              span.icon.is-large
+                i.mdi.mdi-emoticon-happy.mdi-48px
+            p Nothing's here yet. Let's play!
+        else
+          form#validatable(method="post" action="/emit/rb2UpdateSettings")
+            input(type = "hidden", name = "refid", value = refid)
+            .tabs#tabs
+              ul
+                li.is-active(tab-group = "rb2-edit-settings", tab-index = "0")
+                  a General
+                li(tab-group = "rb2-edit-settings", tab-index = "1")
+                  a In-Game
+                li(tab-group = "rb2-edit-settings", tab-index = "2")
+                  a Misc
+                li(tab-group = "rb2-edit-settings", tab-index = "3")
+                  a Mylist
+                li(tab-group = "rb2-edit-settings", tab-index = "4")
+                  a Data
+            .field
+              #tab-content.is-active(tab-group = "rb2-edit-settings", tab-index = "0")
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Name
+                  .field-body
+                    .control
+                      input.input#validatable(type = "text", name = "name", min-length = "1", max-length = "8", value = rb2Base.name)
+                      p.help 1~8 character(s) in SHIFT-JIS.
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Bywords
+                  .field-body
+                    .control#form-pagination
+                      .level.is-mobile(style = "overflow-x: auto")
+                        .level-left
+                          - let unlockedBywords = getRb2UnlockedBywords()
+                          .field.has-addons.level-item
+                            .control
+                              span.button.is-danger.is-light.checkbox#form-numeric-sub(title = "Check to automatically put on the new left byword when you get.", style = "padding-top: 6px")
+                                input(type = "checkbox", name = "isAutoBywordLeft", checked = rb2Custom.isAutoByword[0], style = "display: none")
+                                i.mdi.mdi-check-bold.checkmark(style = "opacity: 0")
+                            .control#form-select
+                              input#form-select-input(type = "hidden", name = "bywordLeft", value = rb2Custom.byword[0])
+                              .select
+                                select#form-select-select
+                                  each b in unlockedBywords.left
+                                    option(value = b.id, disabled = b.isEnabled ? null : "") #{b.details}
+                          .field.has-addons.level-item
+                            .control#form-select
+                              input#form-select-input(type = "hidden", name = "bywordRight", value = rb2Custom.byword[1])
+                              .select
+                                select#form-select-select
+                                  each b in unlockedBywords.right
+                                    option(value = b.id, disabled = b.isEnabled ? null : "") #{b.details}
+                            .control
+                              span.button.is-link.is-light.checkbox#form-numeric-sub(title = "Check to automatically put on the new right byword when you get.", style = "padding-top: 6px")
+                                input(type = "checkbox", name = "isAutoBywordRight", checked = rb2Custom.isAutoByword[1], style = "display: none")
+                                i.mdi.mdi-check-bold.checkmark(style = "opacity: 0")
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Comment
+                  .field-body
+                    .control
+                      input.input#validatable(type = "text", name = "comment", value = rb2Base.comment, placeholder = "Enjoy limelight world!")
+                      p.help Comment will be displayed while matching with CPU or other players.
+              #tab-content(tab-group = "rb2-edit-settings", tab-index = "1")
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Primary Gauge
+                  .field-body
+                    .control#form-select
+                      input#form-select-input(type = "hidden", name = "mainGaugeType", value = rb2Custom.gaugeStyle)
+                      .select
+                        select#form-select-select
+                          option Clear / Life
+                          option Just Reflec
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Hit Sound
+                  .field-body
+                    .control#form-select
+                      input#form-select-input(type = "hidden", name = "shotSound", value = rb2Custom.stageShotSound)
+                      .select
+                        select#form-select-select
+                          each o in getRb2AvaliableItems("shotSound")
+                            option(value = o.id, disabled = o.isEnabled ? null : "") #{o.name}
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label SFX Volume
+                  .field-body
+                    .field.has-addons#form-numeric
+                      .control
+                        button.button.is-light#form-numeric-sub(type = "button") －
+                      .control
+                        input.input#form-numeric-input(name = "shotVolume", style = "width: 60px; text-align: center", min-value = "0", max-value = "100", step = "1", value = rb2Custom.stageShotVolume readonly)
+                      .control
+                        button.button.is-light#form-numeric-add(type = "button") ＋
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Explode Effect
+                  .field-body
+                    .control#form-select
+                      input#form-select-input(type = "hidden", name = "explodeType", value = rb2Custom.stageExplodeType)
+                      .select
+                        select#form-select-select
+                          each o in getRb2AvaliableItems("explodeEffect")
+                            option(value = o.id, disabled = o.isEnabled ? null : "") #{o.name}
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Frame Color
+                  .field-body
+                    .control#form-select
+                      input#form-select-input(type = "hidden", name = "frameType", value = rb2Custom.stageFrameType)
+                      .select
+                        select#form-select-select
+                          each o in getRb2AvaliableItems("frame")
+                            option(value = o.id, disabled = o.isEnabled ? null : "") #{o.name}
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Stage Background
+                  .field-body
+                    .control#form-select
+                      input#form-select-input(type = "hidden", name = "background", value = rb2Custom.stageBackground)
+                      .select
+                        select#form-select-select
+                          each o in getRb2AvaliableItems("background")
+                            option(value = o.id, disabled = o.isEnabled ? null : "") #{o.name}
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Background Brightness
+                  .field-body
+                    .field.has-addons#form-numeric
+                      .control
+                        button.button.is-light#form-numeric-sub(type = "button") －
+                      .control
+                        input.input#form-numeric-input(name = "backgroundBrightness", style = "width: 60px; text-align: center", min-value = "0", max-value = "100", step = "1", value = rb2Custom.stageBackgroundBrightness readonly)
+                      .control
+                        button.button.is-light#form-numeric-add(type = "button") ＋
+              #tab-content(tab-group = "rb2-edit-settings", tab-index = "2")
+                .field.is-horizontal
+                  .field-label
+                    label.label Lobby Feature
+                  .field-body
+                    .control
+                      label.switch.is-rounded
+                        input(type = "checkbox", name = "isLobbyEnabled", checked = rb2LobbySettings ? rb2LobbySettings.isEnabled : true)
+                        span.check
+                      p.help Turn on to enable matching and comment sending.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Lobby Waiting Time
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyDuration", gt = "0", value = rb2LobbySettings ? rb2LobbySettings.duration : "", placeholder = 24000)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Rival Searching Interval
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyRivalSearchingInterval", gt = "0", value = rb2LobbySettings ? rb2LobbySettings.rivalSearchingInterval : "", placeholder = 500)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+              #tab-content(tab-group = "rb2-edit-settings", tab-index = "3")
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Mylist
+                  .field-body
+                    .field#form-sloted-array(fallback = "-1", style = "padding: 6px 0")
+                      input#form-array-input(type = "hidden", name = "mylistMusicId", value = rb2MylistOrganized, autocomplete = "off")
+                      .columns.is-mobile.is-multiline
+                        each i in [0, 1, 2, 3, 4]
+                          - let m = rb2MylistOrganized[i]
+                          .column.has-text-centered(style = "min-width: 180px")
+                            .box#form-array-slot
+                              p Slot #{i + 1}
+                              - let d = (m < 0) ? { info: { order: -1 }, titleArtist: {} } : getRb2MusicInfo(m)
+                              .tags.nomargin#form-array-tag(style = (m >= 0) ? "display: block" : "display: none", value = d.info.order)
+                                .control
+                                  span.tags.nomargin.has-addons(style = "max-width: 100%; flex-wrap: nowrap")
+                                    div.tag.nomargin.is-link.is-light.marquee-label-container(style = "flex-grow: 1")
+                                      p.marquee-label#form-array-tag-title #{d.titleArtist.title}
+                                    a.tag.nomargin.is-delete(style = "min-width: 2em")
+                              span(style = "background-color: transparent")
+                                div
+                                  a.tag.pagination-link.nomargin#form-array-modify(style = "color: #209CEE; display: " + ((m >= 0) ? "none" : "block"))
+                                    i.mdi.mdi-playlist-plus
+                      .modal.is-size-7#mod-modal(style = "display: none; padding-top: 65px;")
+                        .modal-background#close
+                        .modal-card
+                          header.has-text-left.modal-card-head
+                            p.modal-card-title(style = "margin-bottom: 0;") Select Song
+                            a.delete#close
+                          section.modal-card-body
+                            table.table.is-hoverable#single-select
+                              -
+                                let insertStyle = () => {
+                                  let result = ""
+                                  for (let i = 0; i <= 2 ; i++){
+                                    let c = rbChartTypeDetails[i].color
+                                    result += "tr td p#c" + i + " {\n background-color: " + c + "; color: white; \n}\n"
+                                    result += "tr.is-selected td p#c" + i + " {\n color: " + c + "; background-color: white; \n}\n"
+                                  }
+                                  return result
+                                }
+                              thead
+                                tr
+                                  th ID
+                                  th Title
+                                  th Artist
+                                  th BPM
+                                  th(colspan = "4") Charts Level
+                              tbody
+                                style.
+                                  tr.is-selected td p {
+                                    text-shadow: 0 0 2px white, 0 0 2px white, 0 0 2px white, 0 0 2px white;
+                                  }
+                                  tr td p.mylist-level {
+                                    width: 16px
+                                  }
+                                  p.mylist-level#c0 {
+                                    color: #2ECC71;
+                                  }
+                                  p.mylist-level#c1 {
+                                    color: #FFDD57;
+                                  }
+                                  p.mylist-level#c2 {
+                                    color: #FF3860;
+                                  }
+                                input#select-input(type = "hidden", autocomplete = "off")
+                                input#select-current-index(type = "hidden", autocomplete = "off")
+                                input#select-title(type = "hidden", autocomplete = "off")
+                                each i in getRb2AvaliableMusicInfos()
+                                  if i.titleArtist != null
+                                    tr#close(select-title = i.titleArtist.title, select-value = i.info.order)
+                                      td #{i.info.order}
+                                      td.marquee-label-container(style = "max-width: 250px;")
+                                        div(style = "overflow: hidden;")
+                                          span.marquee-label #{i.titleArtist.title}
+                                      td.marquee-label-container(style = "max-width: 250px;")
+                                        div(style = "overflow: hidden;")
+                                          span.marquee-label #{i.titleArtist.artist}
+                                      td.nowrap #{i.info.bpm.min.toString() + ((i.info.bpm.max == null) ? "" : (" - " + i.info.bpm.max.toString()))}
+                                      each t in [0, 1, 2]
+                                        - let d = rbChartTypeDetails[t]
+                                        - let l = i.info.chartsInfo[d.title.toLowerCase()]
+                                        td
+                                          if l != null
+                                            p.mylist-level(style = "font-weight: bold", id = "c" + t) #{l.level}
+                          footer.modal-card-foot
+              #tab-content(tab-group = "rb2-edit-settings", tab-index = "4")
+                .field.is-horizontal
+                  .field-label.is-normal
+                    label.label Export Save Data
+                  .field-body
+                    .field.is-expanded
+                      .control
+                        .file.has-name.is-fullwidth
+                          span.file-label
+                            a.button.file-cta(style = "background-color: #209cee; color: white; width: 130px", href = "data:text/plain;base64," + getRb2SaveData(), download = "rb2-savedata-" + refid + "-" + rb2Base.name + ".asphyxiacore", title = "rb2-savedata-" + refid + "-" + rb2Base.name + ".asphyxiacore")
+                              span.file-icon
+                                i.mdi.mdi-database-export
+                              span.file-label Export...
+                            span.file-name
+                              span.is-size-7 #{"rb2-savedata-" + refid + "-" + rb2Base.name + ".asphyxiacore"}
+                      p.help Will save in json format.
+            .field.is-horizontal
+              .field-label
+              .field-body
+                button.button.is-primary#validatable(type = "submit", style = "width: 130px")
+                  span.icon
+                    i.mdi.mdi-check
+                  span Submit
       #tab-content(tab-group = "version", tab-index = "1", class = (defaultVersion == 1) ? "is-active" : "")
         if rb1Base == null
           .has-text-grey.has-text-centered
@@ -5426,6 +5894,8 @@ div
                 li(tab-group = "rb1-edit-settings", tab-index = "1")
                   a In-Game
                 li(tab-group = "rb1-edit-settings", tab-index = "2")
+                  a Misc
+                li(tab-group = "rb1-edit-settings", tab-index = "3")
                   a Data
             .field
               #tab-content.is-active(tab-group = "rb1-edit-settings", tab-index = "0")
@@ -5507,6 +5977,32 @@ div
                       .control
                         button.button.is-light#form-numeric-add(type = "button") ＋
               #tab-content(tab-group = "rb1-edit-settings", tab-index = "2")
+                .field.is-horizontal
+                  .field-label
+                    label.label Lobby Feature
+                  .field-body
+                    .control
+                      label.switch.is-rounded
+                        input(type = "checkbox", name = "isLobbyEnabled", checked = rb1LobbySettings ? rb1LobbySettings.isEnabled : true)
+                        span.check
+                      p.help Turn on to enable matching.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Lobby Waiting Time
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyDuration", gt = "0", value = rb1LobbySettings ? rb1LobbySettings.duration : "", placeholder = 24000)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+                .field.is-horizontal#validatable
+                  .field-label.is-normal
+                    label.label Rival Searching Interval
+                  .field-body
+                    .control.has-icons-right
+                      input.input#validatable(type = "text", name = "lobbyRivalSearchingInterval", gt = "0", value = rb1LobbySettings ? rb1LobbySettings.rivalSearchingInterval : "", placeholder = 500)
+                      span.icon.is-right ms
+                      p.help Should be a positive integer.
+              #tab-content(tab-group = "rb1-edit-settings", tab-index = "3")
                 .field.is-horizontal
                   .field-label.is-normal
                     label.label Export Save Data

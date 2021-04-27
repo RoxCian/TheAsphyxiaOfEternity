@@ -1,6 +1,7 @@
 import { Rb1HandlersCommon } from "../rb1/common"
 import { Rb2HandlersCommon } from "../rb2/common"
 import { Rb3HandlersCommon } from "../rb3/common"
+import { UtilityHandlersCommon } from "./common"
 
 export namespace Rb1Rb2Rb3HandlersDispatcher {
     export const DispatchStartPlayer: EPR = async (info, data, send) => {
@@ -32,19 +33,21 @@ export namespace Rb1Rb2Rb3HandlersDispatcher {
         else send.deny()
     }
     export const DispatchAddLobby: EPR = async (info, data, send) => {
-        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
-        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.AddLobby(info, data, send)
+        if (info.model.startsWith("KBR")) return await UtilityHandlersCommon.getAddLobbyHandler(1)(info, data, send)
+        else if (info.model.startsWith("LBR")) return await UtilityHandlersCommon.getAddLobbyHandler(2)(info, data, send)
+        else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getAddLobbyHandler(3)(info, data, send)
         else send.deny()
     }
     export const DispatchReadLobby: EPR = async (info, data, send) => {
-        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
-        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.ReadLobby(info, data, send)
+        if (info.model.startsWith("KBR")) return await UtilityHandlersCommon.getReadLobbyHandler(1)(info, data, send)
+        else if (info.model.startsWith("LBR")) return await UtilityHandlersCommon.getReadLobbyHandler(2)(info, data, send)
+        else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getReadLobbyHandler(3)(info, data, send)
         else send.deny()
     }
     export const DispatchDeleteLobby: EPR = async (info, data, send) => {
-
-        if (info.model.startsWith("KBR") || info.model.startsWith("LBR")) return await send.success()
-        else if (info.model.startsWith("MBR")) return await Rb3HandlersCommon.DeleteLobby(info, data, send)
+        if (info.model.startsWith("KBR")) return await UtilityHandlersCommon.getDeleteLobbyHandler(1)(info, data, send)
+        else if (info.model.startsWith("LBR")) return await UtilityHandlersCommon.getDeleteLobbyHandler(2)(info, data, send)
+        else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getDeleteLobbyHandler(3)(info, data, send)
         else send.deny()
     }
 }

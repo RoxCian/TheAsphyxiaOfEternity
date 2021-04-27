@@ -3,6 +3,7 @@ import { Rb4HandlersCommon } from "./handlers/rb4/common"
 import { Rb5HandlersCommon } from "./handlers/rb5/common"
 import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
+import { Rb2HandlersWebUI } from "./handlers/rb2/webui"
 import { Rb4HandlersWebUI } from "./handlers/rb4/webui"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
 import { UtilityHandlersCommon } from "./handlers/utility/common"
@@ -21,6 +22,7 @@ export function register() {
 
     R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
     R.WebUIEvent("rb4UpdateSettings", Rb4HandlersWebUI.updateSettings)
+    R.WebUIEvent("rb2UpdateSettings", Rb2HandlersWebUI.updateSettings)
     R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
     R.WebUIEvent("removeWebUIMessage", UtilityHandlersWebUI.removeWebUIMessage)
 
@@ -35,7 +37,6 @@ export function register() {
 }
 
 function routeRb6() {
-    R.Route("info.rb6_info_read", Rb6HandlersCommon.ReadInfo)
     R.Route("info.rb6_info_read_hit_chart", Rb6HandlersCommon.ReadHitChartInfo)
     R.Route("pcb.rb6_pcb_boot", Rb6HandlersCommon.BootPcb)
     R.Route("player.rb6_player_start", Rb6HandlersCommon.StartPlayer)
@@ -45,9 +46,9 @@ function routeRb6() {
     R.Route("player.rb6_player_read_score", Rb6HandlersCommon.ReadPlayerScore)
     R.Route("player.rb6_player_read_jc", Rb6HandlersCommon.ReadPlayerJustCollections)
     R.Route("player.rb6_player_succeed", Rb6HandlersCommon.PlayerSucceeded)
-    R.Route("lobby.rb6_lobby_read", Rb6HandlersCommon.ReadLobby)
-    R.Route("lobby.rb6_lobby_entry", Rb6HandlersCommon.AddLobby)
-    R.Route("lobby.rb6_lobby_delete", Rb6HandlersCommon.DeleteLobby)
+    R.Route("lobby.rb6_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(6))
+    R.Route("lobby.rb6_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(6))
+    R.Route("lobby.rb6_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(6))
     R.Route("shop.rb6_shop_write_info", UtilityHandlersCommon.WriteShopInfo)
     R.Route("player.rb6_player_read_gs", Rb6HandlersCommon.ReadGhostScore)
     R.Route("eventlog.write", true)
@@ -60,9 +61,9 @@ function routeRb5() {
     R.Route("player.rb5_player_read_score_5", Rb5HandlersCommon.ReadPlayerScore)
     R.Route("player.rb5_player_read_score_old_5", Rb5HandlersCommon.ReadPlayerScoreOldVersion)
     R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer)
-    R.Route("lobby.rb5_lobby_read", Rb5HandlersCommon.ReadLobby)
-    R.Route("lobby.rb5_lobby_entry", Rb5HandlersCommon.AddLobby)
-    R.Route("lobby.rb5_lobby_delete", Rb5HandlersCommon.DeleteLobby)
+    R.Route("lobby.rb5_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(5))
+    R.Route("lobby.rb5_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(5))
+    R.Route("lobby.rb5_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(5))
 }
 
 function routeRb4() {
@@ -72,9 +73,9 @@ function routeRb4() {
     R.Route("player.rb4read", Rb4HandlersCommon.ReadPlayer)
     R.Route("player.rb4readepisode", Rb4HandlersCommon.ReadEpisode)
     R.Route("player.rb4readscore", Rb4HandlersCommon.ReadPlayerScore)
-    R.Route("lobby.rb4entry", Rb4HandlersCommon.AddLobby)
-    R.Route("lobby.rb4read", Rb4HandlersCommon.ReadLobby)
-    R.Route("lobby.rb4delete", Rb4HandlersCommon.DeleteLobby)
+    R.Route("lobby.rb4entry", UtilityHandlersCommon.getAddLobbyHandler(4))
+    R.Route("lobby.rb4read", UtilityHandlersCommon.getReadLobbyHandler(4))
+    R.Route("lobby.rb4delete", UtilityHandlersCommon.getDeleteLobbyHandler(4))
     R.Route("player.rb4succeed", Rb4HandlersCommon.PlayerSucceeded)
 }
 

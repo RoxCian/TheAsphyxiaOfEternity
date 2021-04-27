@@ -1,7 +1,8 @@
-import { getCollectionMappingElement, KObjectMappingRecord, s16me, s32me, s8me, strme, u16me, u8me } from "../../utility/mapping"
-import { ICollection } from "../utility/definitions"
+import { ignoreme } from "../../../bst@asphyxia/utility/mapping"
+import { getCollectionMappingElement, KObjectMappingElement, KObjectMappingRecord, s16me, s32me, s8me, strme, TypeForKItem, u16me, u8me } from "../../utility/mapping"
+import { ICollection } from "./definitions"
 
-export interface IRbLobbyEntryElement<T extends number> extends ICollection<`rb.rb${T}.temporary.lobbyEntry`> {
+export interface IRbLobbyEntryElement<TVersion extends number> extends ICollection<`rb.rb${TVersion}.temporary.lobbyEntry`> {
     entryId: number
     musicId: number
     chartType: number
@@ -23,10 +24,12 @@ export interface IRbLobbyEntryElement<T extends number> extends ICollection<`rb.
     portal: number
     adapter: number[]
     version: number
+    isHanging: boolean
+    ticking: number
 }
-export function getRbLobbyEntryElementMap<T extends number>(forVersion: T): KObjectMappingRecord<IRbLobbyEntryElement<T>> {
+export function getRbLobbyEntryElementMap<TVersion extends number>(version: TVersion): KObjectMappingRecord<IRbLobbyEntryElement<TVersion>> {
     return {
-        collection: <any>getCollectionMappingElement<IRbLobbyEntryElement<T>>(<`rb.rb${T}.temporary.lobbyEntry`>`rb.rb${forVersion}.temporary.lobbyEntry`),
+        collection: <`rb.rb${TVersion}.temporary.lobbyEntry` extends TypeForKItem ? KObjectMappingElement<`rb.rb${TVersion}.temporary.lobbyEntry`, "kignore"> : KObjectMappingRecord<`rb.rb${TVersion}.temporary.lobbyEntry`>>getCollectionMappingElement<IRbLobbyEntryElement<TVersion>>(<`rb.rb${TVersion}.temporary.lobbyEntry`>`rb.rb${version}.temporary.lobbyEntry`),
         entryId: s32me("eid"),
         musicId: u16me("mid"),
         chartType: u8me("ng"),
@@ -47,36 +50,53 @@ export function getRbLobbyEntryElementMap<T extends number>(forVersion: T): KObj
         gateway: u8me("ga"),
         portal: u16me("gp"),
         adapter: u8me("la"),
-        version: u8me("ver")
+        version: u8me("ver"),
+        isHanging: ignoreme(),
+        ticking: ignoreme()
     }
 }
-export async function generateRbLobbyEntryElement<T extends number>(forVersion: T, readParam: IRbLobbyEntryElement<T>): Promise<IRbLobbyEntryElement<T>> {
+export async function generateRbLobbyEntryElement<TVersion extends number>(version: TVersion, readParam: IRbLobbyEntryElement<TVersion>): Promise<IRbLobbyEntryElement<TVersion>> {
     let entryId
-    let checker: IRbLobbyEntryElement<T>[]
+    let checker: IRbLobbyEntryElement<TVersion>[]
     do {
         entryId = Math.trunc(Math.random() * 99999999)
-        checker = await DB.Find<IRbLobbyEntryElement<T>>({ collection: <`rb.rb${T}.temporary.lobbyEntry`>`rb.rb${forVersion}.temporary.lobbyEntry`, entryId: entryId })
-
+        checker = await DB.Find<IRbLobbyEntryElement<TVersion>>({ collection: <`rb.rb${TVersion}.temporary.lobbyEntry`>`rb.rb${version}.temporary.lobbyEntry`, entryId: entryId })
     } while (checker.length > 0)
-    return Object.assign<Partial<IRbLobbyEntryElement<T>>, IRbLobbyEntryElement<T>>({ name: readParam.userId.toString(), matchingGrade: 24, uattr: 0, entryId: entryId }, readParam)
+    return Object.assign<Partial<IRbLobbyEntryElement<TVersion>>, IRbLobbyEntryElement<TVersion>>({ name: readParam.userId.toString(), matchingGrade: 24, uattr: 0, entryId: entryId, isHanging: false, ticking: 0 }, readParam)
 }
 
-export interface IRbLobbyEntry<T extends number> {
+export interface IRbLobbyEntry<TVersion extends number> {
     interval: number
     intervalP: number
-    entry: IRbLobbyEntryElement<T>[]
+    entry: IRbLobbyEntryElement<TVersion>[]
 }
-export function getRbLobbyEntryMap<T extends number>(forVersion: T): KObjectMappingRecord<IRbLobbyEntry<T>> {
+export function getRbLobbyEntryMap<TVersion extends number>(version: TVersion): KObjectMappingRecord<IRbLobbyEntry<TVersion>> {
     return {
         interval: s32me(),
         intervalP: s32me("interval_p"),
-        entry: { 0: getRbLobbyEntryElementMap(forVersion), $targetKey: "e" }
+        entry: { 0: getRbLobbyEntryElementMap(version), $targetKey: "e" }
     }
 }
-export async function generateRbLobbyEntry<T extends number>(forVersion: T, readParam?: IRbLobbyEntryElement<T>): Promise<IRbLobbyEntry<T>> {
+export async function generateRbLobbyEntry<TVersion extends number>(version: TVersion, readParam?: IRbLobbyEntryElement<TVersion>): Promise<IRbLobbyEntry<TVersion>> {
     return {
-        interval: 6000,
-        intervalP: 6000,
-        entry: (readParam == null) ? null : [await generateRbLobbyEntryElement<T>(forVersion, readParam)]
+        interval: 120,
+        intervalP: 120,
+        entry: (readParam == null) ? null : [await generateRbLobbyEntryElement(version, readParam)]
+    }
+}
+
+export interface IRbLobbySettings<TVersion extends number> extends ICollection<`rb.rb${TVersion}.player.lobbySettings#userId`> {
+    userId: number
+    isEnabled: boolean
+    duration: number
+    rivalSearchingInterval: number
+}
+export function generateRbLobbySettings<TVersion extends number>(version: TVersion, userId: number): IRbLobbySettings<TVersion> {
+    return {
+        collection: <`rb.rb${TVersion}.player.lobbySettings#userId`>`rb.rb${version}.player.lobbySettings#userId`,
+        userId: userId,
+        isEnabled: true,
+        duration: 24000,
+        rivalSearchingInterval: 500
     }
 }

@@ -1,6 +1,6 @@
 import { getExampleEventControl, Rb5EventControlMap } from "../../models/rb5/event_control"
 // import { initializePlayer } from "./initialize_player"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, u8me } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { DBM } from "../utility/db_manager"
 import { generateRb2LincleLink, generateRb2MusicRecord, generateRb2Profile, IRb2Glass, IRb2LincleLink, IRb2MusicRecord, IRb2Mylist, IRb2Player, IRb2PlayerBase, IRb2PlayerCustom, IRb2PlayerReleasedInfo, IRb2PlayerStat, IRb2StageLog, Rb2PlayerMap } from "../../models/rb2/profile"
@@ -11,14 +11,14 @@ import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb2HandlersCommon {
-    export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
+    export const ReadInfo: EPR = async (info, data, send) => {
         switch (info.method) {
 
         }
         send.success()
     }
 
-    export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const StartPlayer: EPR = async (info, _data, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         let data = <any>getExampleEventControl()
         data.nm = 0
@@ -47,7 +47,7 @@ export namespace Rb2HandlersCommon {
         send.object(mapKObject(result, map))
     }
 
-    export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
+    export const ReadPlayer: EPR = async (info, data: KITEM2<IPlayerReadParameters>, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
         let result: IRb2Player
@@ -65,8 +65,7 @@ export namespace Rb2HandlersCommon {
                 result.pdata.base.name = "RBPlayer"
             }
             await writePlayerInternal(result)
-            result.pdata.comment = ((base == null) || (base.comment == null)) ? "Enjoy limelight world!" : base.comment
-
+            result.pdata.comment = ((base?.comment != null) && (base?.comment != "")) ? base.comment : "Enjoy limelight world!"
         } else {
             let stat: IRb2PlayerStat = await DB.FindOne<IRb2PlayerStat>(readParam.rid, { collection: "rb.rb2.player.stat" })
             let custom: IRb2PlayerCustom = await DB.FindOne<IRb2PlayerCustom>(readParam.rid, { collection: "rb.rb2.player.custom" })
@@ -88,7 +87,7 @@ export namespace Rb2HandlersCommon {
                 endTime: BigInt(9614498759023),
                 mode: 0,
                 pdata: {
-                    comment: (base?.comment != "") ? base.comment : "Enjoy limelight world!",
+                    comment: ((base?.comment != null) && (base?.comment != "")) ? base.comment : "Enjoy limelight world!",
                     team: { teamId: -1, teamName: "Asphyxia" },
                     base: base,
                     stat: stat,
@@ -145,7 +144,7 @@ export namespace Rb2HandlersCommon {
         return result
     }
 
-    export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
+    export const DeletePlayer: EPR = async (info, data: KITEM2<{ rid: string }>, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         try {
             let rid = data.rid["@content"]
@@ -158,7 +157,7 @@ export namespace Rb2HandlersCommon {
         }
     }
 
-    export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb2Player>, send: EamuseSend) => {
+    export const WritePlayer: EPR = async (info, data: KITEM2<IRb2Player>, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         data = await writePlayerPreProcess(data)
         let player: IRb2Player = mapBackKObject(data, Rb2PlayerMap)[0]
@@ -178,15 +177,17 @@ export namespace Rb2HandlersCommon {
                     playerBaseForPlayCountQuery = player.pdata.base
                     playerBaseForPlayCountQuery.playCount = 0
                 }
-            }
-            else {
+            } else {
                 if (playerBaseForPlayCountQuery.playCount == null) playerBaseForPlayCountQuery.playCount = 1
                 else playerBaseForPlayCountQuery.playCount++
+
+                if (player.pdata.base) {
+                    if (playerBaseForPlayCountQuery.name) player.pdata.base.name = playerBaseForPlayCountQuery.name
+                    player.pdata.base.comment = playerBaseForPlayCountQuery.comment
+                    player.pdata.base.playCount = playerBaseForPlayCountQuery.playCount
+                    opm.upsert<IRb2PlayerBase>(rid, { collection: "rb.rb2.player.base" }, player.pdata.base)
+                } else opm.upsert<IRb2PlayerBase>(rid, { collection: "rb.rb2.player.base" }, playerBaseForPlayCountQuery)
             }
-            if (player.pdata.base) {
-                player.pdata.base.playCount = (playerBaseForPlayCountQuery?.playCount != null) ? playerBaseForPlayCountQuery.playCount : 1
-                opm.upsert<IRb2PlayerBase>(rid, { collection: "rb.rb2.player.base" }, player.pdata.base)
-            } else opm.upsert<IRb2PlayerBase>(rid, { collection: "rb.rb2.player.base" }, playerBaseForPlayCountQuery)
 
             if (player.pdata.custom) opm.upsert<IRb2PlayerCustom>(rid, { collection: "rb.rb2.player.custom" }, player.pdata.custom)
             if (player.pdata.stat) opm.upsert<IRb2PlayerStat>(rid, { collection: "rb.rb2.player.stat" }, player.pdata.stat)
@@ -199,10 +200,9 @@ export namespace Rb2HandlersCommon {
         }
 
         await DBM.operate(opm)
-
     }
 
-    export const LogPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb2StageLogStandalone>, send: EamuseSend) => {
+    export const LogPlayer: EPR = async (info, data: KITEM2<IRb2StageLogStandalone>, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         let log = mapBackKObject(data, Rb2StageLogStandaloneMap)[0]
         StageLogManager.pushStandaloneStageLog(log)

@@ -141,6 +141,7 @@ a {
     .modal-card, .modal-content {
         max-width: 100%;
         width: unset;
+        min-width: 600px;
     }
 }
 
@@ -276,15 +277,19 @@ tr.is-selected td .selected-shadow {
     box-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white
 }
 
+input.input {
+    min-width: 100%
+}
+
 .nomargin {
-    margin: 0;
+    margin: 0!important;
 }
 .nopadding {
-    padding: 0;
+    padding: 0!important;
 }
 .nospace {
-    margin: 0;
-    padding: 0;
+    margin: 0!important;
+    padding: 0!important;
 }
 .nowrap {
     white-space: nowrap;

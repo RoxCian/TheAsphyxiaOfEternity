@@ -98,7 +98,6 @@ export type KITEM2<T> = { [K in keyof T]?: K extends KKey<T> ? KITEM2<T[K]> : ne
     T extends BufferArray ? Buffer :
     T extends NumberGroup<infer TGroup> ? TGroup :
     T extends BigIntProxy ? [bigint] : never
-
 }
 
 export type KAttrMap2<T> = { [key: string]: string } & {
@@ -107,21 +106,6 @@ export type KAttrMap2<T> = { [key: string]: string } & {
 }
 
 export function ITEM2<T>(ktype: KTypeConvert<T>, value: T, attr?: KAttrMap2<T>): KITEM2<T> {
-    // let result
-    // if (value instanceof NumberGroup && IsNumberGroupKType(ktype)) {
-    //     result = K.ITEM(<KTypeConvert<T & NumberGroup>>ktype, value.value, attr)
-    // } else if (Array.isArray(value) && IsNumericKType(ktype)) {
-    //     result = K.ARRAY(<KTypeConvert<T & number[]>>ktype, <any>value, <any>attr)
-    // } else if (value instanceof BufferArray && IsNumericKType(ktype)) {
-    //     result = K.ARRAY(<KTypeConvert<T & BufferArray>>ktype, value.value, attr)
-    // } else if (typeof value != "object" && typeof value != "function") {
-    //     result = K.ITEM(<any>ktype, <any>value, attr)
-    // } else {
-    //     Object.assign(result, value, { ["@attr"]: attr })
-    //     result["@attr"].__type = ktype
-    // }
-
-    // return <KITEM2<T>>result
     let result = <KITEM2<T>>{}
     result["@attr"] = Object.assign({}, attr, (!isNumberGroupKType(ktype) && isNumericKType(ktype) && Array.isArray(value)) ? { __type: ktype, __count: (<any[]>value).length } : { __type: ktype })
 
@@ -138,8 +122,7 @@ export function ITEM2<T>(ktype: KTypeConvert<T>, value: T, attr?: KAttrMap2<T>):
         result["@content"] = <any>value["@numberGroupValue"]
     } else if (isBigIntProxy(value)) {
         result["@content"] = <any>BigInt(value["@serializedBigInt"])
-    }
-    else {
+    } else {
         result["@content"] = <any>value
     }
     if (isKIntType(ktype) && Array.isArray(result["@content"])) for (let i = 0; i < result["@content"].length; i++) (<number[]>result["@content"])[i] = Math.trunc(result["@content"][i])
@@ -161,7 +144,7 @@ export type KAttrRecord<T> = { [K in keyof T]?: T extends TypeForKItem ? KAttrMa
 export function getKIgnoreMappingElement<T>(targetKey?: string, fallbackValue?: T): KObjectMappingElement<T, "kignore"> {
     return { $type: "kignore", $targetKey: targetKey, $fallbackValue: fallbackValue }
 }
-export function getCollectionMappingElement<TCollection extends ICollection<any>>(collectionName: TCollection extends ICollection<infer TName> ? TName : never): KObjectMappingElement<TCollection extends ICollection<infer TName> ? TName : unknown, "kignore"> {
+export function getCollectionMappingElement<TCollection extends ICollection<any>>(collectionName: TCollection extends ICollection<infer TName> ? TName : never): KObjectMappingElement<TCollection extends ICollection<infer TName> ? TName : unknown, "kignore"> | KObjectMappingElementInfer<TCollection extends ICollection<infer TName> ? TName : unknown> {
     return getKIgnoreMappingElement("collection", collectionName)
 }
 

@@ -13,26 +13,25 @@ import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } f
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateRb2LincleLink, IRb2LincleLink } from "../../models/rb2/profile"
 import { isToday } from "../../utility/utility_functions"
-import { generateRb3LobbyEntry, IRb3LobbyEntry, IRb3LobbyEntryElement, Rb3LobbyEntryMap } from "../../models/rb3/lobby"
 import { generateUserId } from "../utility/generate_user_id"
 
 export namespace Rb3HandlersCommon {
-    export const ReadInfo: EPR = async (info: EamuseInfo, data, send) => {
+    export const ReadInfo: EPR = async (info, data, send) => {
         switch (info.method) {
 
         }
         send.success()
     }
 
-    export const BootPcb: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const BootPcb: EPR = async (_info, _data: any, send) => {
         send.object({ sinfo: KRb3ShopInfo })
     }
 
-    export const ReadHitChartInfo: EPR = async (_info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const ReadHitChartInfo: EPR = async (_info, _data: any, send) => {
         send.object({ ver: {} })
     }
 
-    export const StartPlayer: EPR = async (info: EamuseInfo, _data: any, send: EamuseSend) => {
+    export const StartPlayer: EPR = async (_, _data: any, send) => {
         let data = getExampleEventControl()
 
         let result = {
@@ -55,7 +54,7 @@ export namespace Rb3HandlersCommon {
         send.object(mapKObject(result, map))
     }
 
-    export const PlayerSucceeded: EPR = async (info, data, send) => {
+    export const PlayerSucceeded: EPR = async (_, data, send) => {
         let rid = $(data).str("rid")
         let account: IRb3PlayerAccount = await DB.FindOne<IRb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
         let result
@@ -94,7 +93,7 @@ export namespace Rb3HandlersCommon {
         }))
     }
 
-    export const ReadPlayer: EPR = async (info: EamuseInfo, data: KITEM2<IPlayerReadParameters>, send: EamuseSend) => {
+    export const ReadPlayer: EPR = async (_, data: KITEM2<IPlayerReadParameters>, send) => {
         let readParam: IPlayerReadParameters = mapBackKObject(data, PlayerReadParametersMap)[0]
         let result: IRb3Player
         let account: IRb3PlayerAccount = await DB.FindOne<IRb3PlayerAccount>(readParam.rid, { collection: "rb.rb3.player.account" })
@@ -222,7 +221,7 @@ export namespace Rb3HandlersCommon {
         send.object(readPlayerPostProcess(mapKObject(result, Rb3PlayerReadMap)))
     }
 
-    export const DeletePlayer: EPR = async (info: EamuseInfo, data: KITEM2<{ rid: string }>, send: EamuseSend) => {
+    export const DeletePlayer: EPR = async (_, data: KITEM2<{ rid: string }>, send) => {
         try {
             let rid = data.rid["@content"]
             let account = await DB.FindOne<IRb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
@@ -235,7 +234,7 @@ export namespace Rb3HandlersCommon {
         }
     }
 
-    export const WritePlayer: EPR = async (info: EamuseInfo, data: KITEM2<IRb3Player>, send: EamuseSend) => {
+    export const WritePlayer: EPR = async (_, data: KITEM2<IRb3Player>, send) => {
         data = await writePlayerPreProcess(data)
         let player: IRb3Player = mapBackKObject(data, Rb3PlayerWriteMap)[0]
         await writePlayerInternal(player)
@@ -295,7 +294,7 @@ export namespace Rb3HandlersCommon {
         await DBM.operate(opm)
     }
 
-    export const ReadPlayerScore: EPR = async (info: EamuseInfo, data: object, send: EamuseSend) => {
+    export const ReadPlayerScore: EPR = async (_, data: object, send) => {
         let rid: string = $(data).str("rid")
 
         let scores: IRb3MusicRecord[] = await DB.Find<IRb3MusicRecord>(rid, { collection: "rb.rb3.playData.musicRecord" })
@@ -321,59 +320,8 @@ export namespace Rb3HandlersCommon {
         }
     }
 
-    export const WriteComment: EPR = async (req, data, send) => {
+    export const WriteComment: EPR = async (_, data, send) => {
 
-    }
-
-    export const AddLobby: EPR = async (req, data, send) => {
-        let readParam = mapBackKObject(data, Rb3LobbyEntryMap)[0]
-        let result = await generateRb3LobbyEntry(readParam.entry[0])
-        await DBM.upsert<IRb3LobbyEntryElement>(null, { userId: result.entry[0].userId, collection: "rb.rb3.temporary.lobbyEntry" }, result.entry[0])
-        send.object(mapKObject(result, Rb3LobbyEntryMap))
-    }
-    export const ReadLobby: EPR = async (req, data, send) => {
-        let readParam = mapBackKObject(data, ReadLobbyParamMap)[0]
-        let result: IRb3LobbyEntry
-        let flag = false
-        for (let i = 0; i <= 12; i++) {
-            setTimeout(async () => {
-                if (flag) return
-                result = await readLobbyEntity(readParam)
-                if (!flag && (result.entry.length >= readParam.maxRivalCount)) {
-                    flag = true
-                    returnLobby(result, send)
-                }
-            }, 500 * i)
-        }
-    }
-    async function returnLobby(result: IRb3LobbyEntry, send: EamuseSend) {
-        send.object(mapKObject(result, Rb3LobbyEntryMap))
-    }
-    async function readLobbyEntity(param: ReadLobbyParam): Promise<IRb3LobbyEntry> {
-        let result = await generateRb3LobbyEntry()
-        let lobbies: IRb3LobbyEntryElement[] = await DB.Find<IRb3LobbyEntryElement>({ $not: { userId: param.userId }, $and: [{ collection: "rb.rb3.temporary.lobbyEntry" }] })
-        result.entry = lobbies.slice(0, param.maxRivalCount)
-        return result
-    }
-    export const DeleteLobby: EPR = async (req, data, send) => {
-        let entryId = $(data).number("eid")
-        await DBM.remove<IRb3LobbyEntryElement>(null, { collection: "rb.rb3.temporary.lobbyEntry", entryId: entryId })
-    }
-    type ReadLobbyParam = {
-        userId: number
-        matchingGrade: number
-        lobbyId: string
-        maxRivalCount: number
-        friend: number[]
-        version: number
-    }
-    const ReadLobbyParamMap: KObjectMappingRecord<ReadLobbyParam> = {
-        userId: s32me("uid"),
-        matchingGrade: u8me("m_grade"),
-        lobbyId: strme("lid"),
-        maxRivalCount: s32me("max"),
-        friend: s32me(),
-        version: u8me("var")
     }
 
     interface IPlayerReadParameters {

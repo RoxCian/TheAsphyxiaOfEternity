@@ -1,5 +1,6 @@
 import { IRb4Mylist } from "../../models/rb4/mylist"
 import { IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerConfig, IRb4PlayerCustom } from "../../models/rb4/profile"
+import { generateRbLobbySettings, IRbLobbySettings } from "../../models/utility/lobby"
 import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
@@ -25,6 +26,9 @@ export namespace Rb4HandlersWebUI {
         bywordRight: number
         isAutoBywordLeft?: string
         isAutoBywordRight?: string
+        isLobbyEnabled?: string
+        lobbyDuration: number | ""
+        lobbyRivalSearchingInterval: number | ""
         pastelEquipHead: number
         pastelEquipTop: number
         pastelEquipUnder: number
@@ -32,9 +36,11 @@ export namespace Rb4HandlersWebUI {
         mylist: string
     }) => {
         try {
+            let rb4Account = await DB.FindOne<IRb4PlayerAccount>(data.refid, { collection: "rb.rb4.player.account" })
             let rb4Base = await DB.FindOne<IRb4PlayerBase>(data.refid, { collection: "rb.rb4.player.base" })
             let rb4Config = await DB.FindOne<IRb4PlayerConfig>(data.refid, { collection: "rb.rb4.player.config" })
             let rb4Custom = await DB.FindOne<IRb4PlayerCustom>(data.refid, { collection: "rb.rb4.player.custom" })
+            let rb4LobbySettings = generateRbLobbySettings(4, rb4Account.userId)
 
             rb4Base.name = data.name.trim()
             rb4Base.comment = data.comment
@@ -55,6 +61,10 @@ export namespace Rb4HandlersWebUI {
             rb4Config.isAutoBywordLeft = (data.isAutoBywordLeft == null) ? false : true
             rb4Config.isAutoBywordRight = (data.isAutoBywordRight == null) ? false : true
 
+            rb4LobbySettings.isEnabled = data.isLobbyEnabled != null
+            if ((data.lobbyDuration != "") && (data.lobbyDuration != null)) rb4LobbySettings.duration = <number>data.lobbyDuration
+            if ((data.lobbyRivalSearchingInterval != "") && (data.lobbyRivalSearchingInterval != null)) rb4LobbySettings.rivalSearchingInterval = <number>data.lobbyRivalSearchingInterval
+
             let rb4Mylist: IRb4Mylist = {
                 collection: "rb.rb4.player.mylist",
                 index: 0,
@@ -65,9 +75,10 @@ export namespace Rb4HandlersWebUI {
             await DBM.update<IRb4PlayerConfig>(data.refid, { collection: "rb.rb4.player.config" }, rb4Config)
             await DBM.update<IRb4PlayerCustom>(data.refid, { collection: "rb.rb4.player.custom" }, rb4Custom)
             await DBM.upsert<IRb4Mylist>(data.refid, { collection: "rb.rb4.player.mylist" }, rb4Mylist)
+            await DBM.upsert<IRbLobbySettings<4>>(null, { collection: "rb.rb4.player.lobbySettings#userId", userId: rb4Account.userId }, rb4LobbySettings)
             UtilityHandlersWebUI.pushMessage("Save RB groovin'!! settings succeeded!", 4, WebUIMessageType.success, data.refid)
         } catch (e) {
-            UtilityHandlersWebUI.pushMessage("Error while save RB groovin'!! settings: " + e.message, 4, WebUIMessageType.error, data.refid)
+            UtilityHandlersWebUI.pushMessage("Error occurred while saving RB groovin'!! settings: " + e.message, 4, WebUIMessageType.error, data.refid)
         }
     }
 
