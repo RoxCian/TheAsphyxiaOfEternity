@@ -22,8 +22,6 @@ export namespace Rb2HandlersWebUI {
         backgroundBrightness: number
         mylistMusicId: string
         isLobbyEnabled?: string
-        lobbyDuration: number | ""
-        lobbyRivalSearchingInterval: number | ""
     }) => {
         try {
             let opm = new DBM.DBOperationManager()
@@ -48,8 +46,6 @@ export namespace Rb2HandlersWebUI {
             custom.stageBackgroundBrightness = data.backgroundBrightness
 
             lobbySettings.isEnabled = data.isLobbyEnabled != null
-            if ((data.lobbyDuration != "") && (data.lobbyDuration != null)) lobbySettings.duration = <number>data.lobbyDuration
-            if ((data.lobbyRivalSearchingInterval != "") && (data.lobbyRivalSearchingInterval != null)) lobbySettings.rivalSearchingInterval = <number>data.lobbyRivalSearchingInterval
 
             let mylist: IRb2Mylist = { collection: "rb.rb2.player.mylist", slot: [] }
             let parsedMylistMusicId: number[] = JSON.parse(data.mylistMusicId)

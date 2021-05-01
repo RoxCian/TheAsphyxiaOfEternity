@@ -4,13 +4,12 @@ import { generateRb3MusicRecord, IRb3MusicRecord, Rb3MusicRecordMap } from "../.
 import { IRb3Mylist } from "../../models/rb3/mylist"
 import { generateRb3Stamp, generateRb3TricolettePark, IRb3Equip, IRb3EventProgress, IRb3Order, IRb3Player, IRb3PlayerAccount, IRb3PlayerBase, IRb3PlayerConfig, IRb3PlayerCustom, IRb3PlayerReleasedInfo, IRb3PlayerStageLog, IRb3SeedPod, IRb3Stamp, IRb3TricolettePark, Rb3PlayerReadMap, Rb3PlayerReleasedInfoMap, Rb3PlayerWriteMap } from "../../models/rb3/profile"
 import { KRb3ShopInfo } from "../../models/rb3/shop_info"
-import { BigIntProxy, KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, toBigInt } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb3Profile } from "../../models/rb3/profile"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
-import { getMusicId } from "../../data/musicinfo/rb_music_info"
+import { ClearType, findAllBestMusicRecord } from "../utility/find_music_record"
 import { generateRb2LincleLink, IRb2LincleLink } from "../../models/rb2/profile"
 import { isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
@@ -150,44 +149,30 @@ export namespace Rb3HandlersCommon {
             }
             base.totalBestScoreRival = 0
 
-            let metas = await findMusicRecordMetadatas(readParam.rid)
-
-            let recordOld = <IRb3MusicRecord[]>[]
-
-            // for (let mk of metas) {
-            //     let midstr = mk.split(":")[0]
-            //     let chart = parseInt(mk.split(":")[1])
-            //     let mid = getMusicId(midstr, 3)
-            //     let bestRecord = await findBestMusicRecord(readParam.rid, midstr, chart, 3)
-            //     if (bestRecord == null) continue
-            //     recordOld.push({
-            //         collection: "rb.rb3.playData.musicRecord",
-            //         musicId: mid,
-            //         chartType: chart,
-            //         playCount: bestRecord.playCount,
-            //         param: bestRecord.param,
-            //         clearType: translateRb3ClearType(bestRecord.clearType),
-            //         achievementRateTimes100: bestRecord.achievementRateTimes100,
-            //         score: bestRecord.score,
-            //         missCount: bestRecord.missCount,
-            //         combo: bestRecord.combo,
-            //         time: Math.trunc(Date.now() / 1000),
-            //         bestAchievementRateUpdateTime: Math.trunc(Date.now() / 1000),
-            //         bestComboUpdateTime: Math.trunc(Date.now() / 1000),
-            //         bestMissCountUpdateTime: Math.trunc(Date.now() / 1000),
-            //         bestScoreUpdateTime: Math.trunc(Date.now() / 1000),
-            //         kFlag: 0,
-            //         isHasGhostBlue: false,
-            //         isHasGhostRed: false,
-            //         version: {
-            //             score: 1,
-            //             combo: 1,
-            //             missCount: 1,
-            //             clearType: 1,
-            //             achievementRate: 1
-            //         }
-            //     })
-            // }
+            let oldRecords = await findAllBestMusicRecord(readParam.rid, 3)
+            let oldRecordsOrganized: IRb3MusicRecord[] = []
+            for (let r of oldRecords) {
+                oldRecordsOrganized.push({
+                    collection: "rb.rb3.playData.musicRecord",
+                    musicId: r.musicId,
+                    chartType: r.chartType,
+                    playCount: r.playCount,
+                    clearType: translateRb3ClearType(r.clearType),
+                    achievementRateTimes100: r.achievementRateTimes100,
+                    score: r.score,
+                    combo: r.combo,
+                    missCount: r.missCount,
+                    bestAchievementRateUpdateTime: r.achievementRateUpdateTime,
+                    bestComboUpdateTime: r.comboUpdateTime,
+                    bestScoreUpdateTime: r.scoreUpdateTime,
+                    bestMissCountUpdateTime: r.missCountUpdateTime,
+                    version: (r.scoreVersion >= 3) ? 1 : r.scoreVersion,
+                    time: r.comboUpdateTime,
+                    kFlag: 0,
+                    isHasGhostBlue: false,
+                    isHasGhostRed: false
+                })
+            }
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
@@ -214,7 +199,7 @@ export namespace Rb3HandlersCommon {
                     purpose: {},
                     share: {},
                     record: (scores.length == 0) ? {} : { rec: scores },
-                    recordOld: (recordOld.length == 0) ? {} : { rec: recordOld }
+                    recordOld: (oldRecordsOrganized.length == 0) ? {} : { rec: oldRecordsOrganized }
                 }
             }
         }

@@ -1,17 +1,16 @@
 import { generateRb5ClasscheckRecord, IRb5ClasscheckRecord } from "../../models/rb5/classcheck_record"
 import { getExampleEventControl, Rb5EventControlMap } from "../../models/rb5/event_control"
 import { initializePlayer } from "./initialize_player"
-import { generateRb5MusicRecord, IRb5MusicRecord, Rb5MusicRecordMap } from "../../models/rb5/music_record"
+import { generateRb5MusicRecord, IRb5MusicRecord, Rb5MusicRecordMap, Rb5OldMusicRecordMap } from "../../models/rb5/music_record"
 import { IRb5Mylist } from "../../models/rb5/mylist"
 import { generateRb5BattleRoyale, generateRb5MyCourseLog, IRb5BattleRoyale, IRb5Derby, IRb5Minigame, IRb5MyCourseLog, IRb5Player, IRb5PlayerAccount, IRb5PlayerBase, IRb5PlayerClasscheckLog, IRb5PlayerConfig, IRb5PlayerCustom, IRb5PlayerParameters, IRb5PlayerReleasedInfo, IRb5PlayerStageLog, Rb5PlayerReadMap, Rb5PlayerWriteMap } from "../../models/rb5/profile"
 import { KRb5ShopInfo } from "../../models/rb5/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, toBigInt } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb5Profile } from "../../models/rb5/profile"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
-import { getMusicId } from "../../data/musicinfo/rb_music_info"
+import { ClearType, findAllBestMusicRecord, GaugeType } from "../utility/find_music_record"
 import { isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 
@@ -87,7 +86,7 @@ export namespace Rb5HandlersCommon {
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
             if (account.mpc == null) account.mpc = 0
-            if (base.comment == null) base.comment = "Welcome to REFLEC BEAT VOLZZA!"
+            if ((base.comment == null) || (base.comment == "")) base.comment = "Welcome to REFLEC BEAT VOLZZA!"
             if (base.abilityPointTimes100 == null) base.abilityPointTimes100 = base["averagePrecisionTimes100"] // For compatibility
             if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             if (battleRoyale == null) battleRoyale = generateRb5BattleRoyale()
@@ -224,51 +223,43 @@ export namespace Rb5HandlersCommon {
     }
     export const ReadPlayerScoreOldVersion: EPR = async (_, data, send) => {
         let rid: string = $(data).str("rid")
-        let metas = await findMusicRecordMetadatas(rid)
 
         let result = {
             pdata: {
-                recordOld: { rec: <IRb5MusicRecord[]>[] },
-                record: { rec: <IRb5MusicRecord[]>[] }
+                recordOld: { rec: <IRb5MusicRecord[]>[] }
             }
         }
 
-        for (let mk of metas) {
-            let midstr = mk.split(":")[0]
-            let chart = parseInt(mk.split(":")[1])
-            let mid = getMusicId(midstr, 5)
-            let bestRecord = await findBestMusicRecord(rid, midstr, chart, 5)
-            if (bestRecord == null) continue
+        let oldRecords = await findAllBestMusicRecord(rid, 5)
+        for (let r of oldRecords) {
             result.pdata.recordOld.rec.push({
                 collection: "rb.rb5.playData.musicRecord",
-                musicId: mid,
-                chartType: chart,
-                playCount: bestRecord.playCount,
-                param: bestRecord.param,
-                clearType: translateRb5ClearType(bestRecord.clearType, bestRecord.gaugeType),
-                achievementRateTimes100: bestRecord.achievementRateTimes100,
-                score: bestRecord.score,
-                missCount: bestRecord.missCount,
-                combo: bestRecord.combo,
-                time: Math.trunc(Date.now() / 1000),
-                bestAchievementRateUpdateTime: Math.trunc(Date.now() / 1000),
-                bestComboUpdateTime: Math.trunc(Date.now() / 1000),
-                bestMissCountUpdateTime: Math.trunc(Date.now() / 1000),
-                bestScoreUpdateTime: Math.trunc(Date.now() / 1000),
+                musicId: r.musicId,
+                chartType: r.chartType,
+                playCount: r.playCount,
+                clearType: translateRb5ClearType(r.clearType, r.gaugeType),
+                achievementRateTimes100: r.achievementRateTimes100,
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                param: r.param,
+                bestAchievementRateUpdateTime: r.achievementRateUpdateTime,
+                bestComboUpdateTime: r.comboUpdateTime,
+                bestScoreUpdateTime: r.scoreUpdateTime,
+                bestMissCountUpdateTime: r.missCountUpdateTime,
+                version: r.scoreVersion,
+                time: r.comboUpdateTime,
                 kFlag: 0,
                 isHasGhostBlue: false,
                 isHasGhostRed: false
             })
-            let newRecord: IRb5MusicRecord = await DB.FindOne<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord" })
-            if (newRecord == null) result.pdata.record.rec.push(generateRb5MusicRecord(mid, chart))
-            else result.pdata.record.rec.push(newRecord)
         }
-        if (result.pdata.record.rec.length == 0) delete result.pdata.record.rec
-        if (result.pdata.recordOld.rec.length == 0) delete result.pdata.recordOld.rec
         send.object(mapKObject(result, {
             pdata: {
-                record: { rec: { 0: Rb5MusicRecordMap } },
-                recordOld: { rec: { 0: Rb5MusicRecordMap }, $targetKey: "record_old" }
+                recordOld: {
+                    rec: { 0: Rb5OldMusicRecordMap },
+                    $targetKey: "record_old"
+                }
             }
         }))
     }

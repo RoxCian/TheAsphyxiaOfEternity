@@ -1,6 +1,7 @@
 import { rb6MusicChartInfo } from "../../data/musicinfo/rb6_music_info"
 import { IRb6CharacterCard } from "../../models/rb6/character_card"
 import { IRb6ClasscheckRecord } from "../../models/rb6/classcheck_record"
+import { IRb6MiscSettings } from "../../models/rb6/misc_settings"
 import { generateRb6MusicRecord, IRb6MusicRecord } from "../../models/rb6/music_record"
 import { IRb6Mylist } from "../../models/rb6/mylist"
 import { IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerConfig, IRb6PlayerCustom } from "../../models/rb6/profile"
@@ -35,8 +36,7 @@ export namespace Rb6HandlersWebUI {
         highSpeed: number
         color: number
         isLobbyEnabled?: string
-        lobbyDuration: number | ""
-        lobbyRivalSearchingInterval: number | ""
+        rankingQuestIndex: number
         pastelEquipHead: number
         pastelEquipTop: number
         pastelEquipUnder: number
@@ -116,8 +116,6 @@ export namespace Rb6HandlersWebUI {
             rb6Base.pastelParts = [data.pastelEquipHead, data.pastelEquipTop, data.pastelEquipUnder, data.pastelEquipArm]
 
             rb6LobbySettings.isEnabled = data.isLobbyEnabled != null
-            if ((data.lobbyDuration != "") && (data.lobbyDuration != null)) rb6LobbySettings.duration = <number>data.lobbyDuration
-            if ((data.lobbyRivalSearchingInterval != "") && (data.lobbyRivalSearchingInterval != null)) rb6LobbySettings.rivalSearchingInterval = <number>data.lobbyRivalSearchingInterval
 
             let rb6Mylist: IRb6Mylist = {
                 collection: "rb.rb6.player.mylist",
@@ -125,11 +123,17 @@ export namespace Rb6HandlersWebUI {
                 mylist: JSON.parse(data.mylist)
             }
 
+            let rb6MiscSettings: IRb6MiscSettings = {
+                collection: "rb.rb6.player.misc",
+                rankingQuestIndex: data.rankingQuestIndex
+            }
+
             await DBM.update<IRb6PlayerBase>(data.refid, { collection: "rb.rb6.player.base" }, rb6Base)
             await DBM.update<IRb6PlayerConfig>(data.refid, { collection: "rb.rb6.player.config" }, rb6Config)
             await DBM.update<IRb6PlayerCustom>(data.refid, { collection: "rb.rb6.player.custom" }, rb6Custom)
             await DBM.upsert<IRb6Mylist>(data.refid, { collection: "rb.rb6.player.mylist" }, rb6Mylist)
             await DBM.upsert<IRbLobbySettings<6>>(null, { collection: "rb.rb6.player.lobbySettings#userId", userId: rb6Account.userId }, rb6LobbySettings)
+            await DBM.upsert<IRb6MiscSettings>(data.refid, { collection: "rb.rb6.player.misc" }, rb6MiscSettings)
             UtilityHandlersWebUI.pushMessage("Save RB Reflesia settings succeeded!", 6, WebUIMessageType.success, data.refid)
         } catch (e) {
             UtilityHandlersWebUI.pushMessage("Error occurred while saving RB Reflesia settings: " + e.message, 6, WebUIMessageType.error, data.refid)

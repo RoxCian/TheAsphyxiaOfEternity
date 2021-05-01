@@ -1,4 +1,4 @@
-import { getAvaliableMusicChartInfo, getMusicId, getMusicIdStr, RbMusicChartInfoElement } from "../../data/musicinfo/rb_music_info"
+import { getAvaliableMusicChartInfo, getAvaliableMusicChartInfoFromMusicId, getMusicId, getMusicIdStr, rbMusicChartInfo, RbMusicChartInfoElement } from "../../data/musicinfo/rb_music_info"
 import { IRb1MusicRecord } from "../../models/rb1/profile"
 import { IRb2MusicRecord } from "../../models/rb2/profile"
 import { IRb3MusicRecord } from "../../models/rb3/music_record"
@@ -27,6 +27,38 @@ export interface IRbBestMusicRecord {
     comboVersion?: number
     missCountVersion?: number
     achievementRateVersion?: number
+    clearTypeUpdateTime?: number
+    scoreUpdateTime?: number
+    comboUpdateTime?: number
+    missCountUpdateTime?: number
+    achievementRateUpdateTime?: number
+}
+export function rbr(musicId: number, chartType: number): IRbBestMusicRecord {
+    return {
+        musicId: musicId,
+        chartType: chartType,
+        clearType: 0,
+        gaugeType: 0,
+        score: 0,
+        combo: 0,
+        missCount: -1,
+        achievementRateTimes100: 0,
+        param: 0,
+        playCount: 0,
+        winCount: 0,
+        loseCount: 0,
+        drawCount: 0,
+        clearTypeVersion: 100,
+        scoreVersion: 100,
+        comboVersion: 100,
+        missCountVersion: 100,
+        achievementRateVersion: 100,
+        comboUpdateTime: 2147483647,
+        scoreUpdateTime: 2147483647,
+        clearTypeUpdateTime: 2147483647,
+        missCountUpdateTime: 2147483647,
+        achievementRateUpdateTime: 2147483647,
+    }
 }
 
 export enum ClearType {
@@ -196,10 +228,269 @@ export async function findBestMusicRecord(rid: string, musicIdStr: string, chart
 
 export async function findAllBestMusicRecord(rid: string, forVersion: 1 | 2 | 3 | 4 | 5): Promise<IRbBestMusicRecord[]> {
     let result: IRbBestMusicRecord[] = []
-    let m = findMusicRecordMetadatas(rid)
-
-    // TODO
-
+    let map: { [key: string]: IRbBestMusicRecord[] } = {}
+    let keys: ["basic", "medium", "hard", "special"] = ["basic", "medium", "hard", "special"]
+    let max = Math.max
+    let min = Math.min
+    let updateScore = (prev: IRbBestMusicRecord, next: Partial<IRbBestMusicRecord>) => {
+        if (next.scoreVersion != null) prev.scoreVersion = ((prev.score < next.score) || ((prev.score == next.score) && (prev.scoreVersion > next.scoreVersion))) ? next.scoreVersion : prev.scoreVersion
+        if (next.comboVersion != null) prev.comboVersion = ((prev.combo < next.combo) || ((prev.combo == next.combo) && (prev.comboVersion > next.comboVersion))) ? next.scoreVersion : prev.comboVersion
+        if (next.clearTypeVersion != null) prev.clearTypeVersion = ((prev.clearType < next.clearType) || ((prev.clearType == next.clearType) && (prev.clearTypeVersion > next.clearTypeVersion))) ? next.clearTypeVersion : prev.clearTypeVersion
+        if (next.missCountVersion != null) prev.missCountVersion = ((((prev.missCount > next.missCount) || (prev.missCount < 0)) && (next.missCount >= 0)) || ((prev.missCount == next.missCount) && (prev.missCountVersion > next.missCountVersion))) ? next.missCountVersion : prev.missCountVersion
+        if (next.achievementRateVersion != null) prev.achievementRateVersion = ((prev.achievementRateTimes100 < next.achievementRateTimes100) || ((prev.achievementRateTimes100 == next.achievementRateTimes100) && (prev.achievementRateVersion > next.achievementRateVersion))) ? next.achievementRateVersion : prev.achievementRateVersion
+        if (next.scoreUpdateTime != null) prev.scoreUpdateTime = ((prev.score < next.score) || ((prev.score == next.score) && (prev.scoreUpdateTime > next.scoreUpdateTime))) ? next.scoreUpdateTime : prev.scoreUpdateTime
+        if (next.comboUpdateTime != null) prev.comboUpdateTime = ((prev.combo < next.combo) || ((prev.combo == next.combo) && (prev.comboUpdateTime > next.comboUpdateTime))) ? next.scoreUpdateTime : prev.comboUpdateTime
+        if (next.clearTypeUpdateTime != null) prev.clearTypeUpdateTime = ((prev.clearType < next.clearType) || ((prev.clearType == next.clearType) && (prev.clearTypeUpdateTime > next.clearTypeUpdateTime))) ? next.clearTypeUpdateTime : prev.clearTypeUpdateTime
+        if (next.missCountUpdateTime != null) prev.missCountUpdateTime = ((((prev.missCount > next.missCount) || (prev.missCount < 0)) && (next.missCount >= 0)) || ((prev.missCount == next.missCount) && (prev.missCountUpdateTime > next.missCountUpdateTime))) ? next.missCountUpdateTime : prev.missCountUpdateTime
+        if (next.achievementRateUpdateTime != null) prev.achievementRateUpdateTime = ((prev.achievementRateTimes100 < next.achievementRateTimes100) || ((prev.achievementRateTimes100 == next.achievementRateTimes100) && (prev.achievementRateUpdateTime > next.achievementRateUpdateTime))) ? next.achievementRateUpdateTime : prev.achievementRateUpdateTime
+        if (next.clearType != null) prev.clearType = max(prev.clearType, next.clearType)
+        if (next.gaugeType != null) prev.gaugeType = max(prev.gaugeType, next.gaugeType)
+        if (next.score != null) prev.score = max(prev.score, next.score)
+        if (next.combo != null) prev.combo = max(prev.score, next.combo)
+        if (next.missCount != null) prev.missCount = next.missCount == -1 ? prev.missCount : min(next.missCount, prev.missCount)
+        if (next.achievementRateTimes100 != null) prev.achievementRateTimes100 = max(next.achievementRateTimes100, prev.achievementRateTimes100)
+        if (next.playCount != null) prev.playCount += next.playCount
+        if (next.winCount != null) prev.winCount += next.winCount
+        if (next.loseCount != null) prev.loseCount += next.loseCount
+        if (next.drawCount != null) prev.drawCount += next.drawCount
+        if (next.param != null) prev.param = max(prev.param, next.param)
+    }
+    let version: number
+    version = 1
+    if (forVersion != version) for (let r of await DB.Find<IRb1MusicRecord>(rid, { collection: "rb.rb1.playData.musicRecord" })) {
+        let infos = getAvaliableMusicChartInfoFromMusicId(r.musicId, version)
+        let thisInfo: RbMusicChartInfoElement = infos[`rb${forVersion}`]
+        if ((thisInfo == null) || (thisInfo.chartsInfo[keys[r.chartType]] == null) || (infos[`rb${version}`] == null) || (infos[`rb${version}`].chartsInfo[keys[r.chartType]] == null) || (thisInfo.status != "avaliable")) continue
+        let key = keys[r.chartType]
+        let ctTranslate = (clearType: number) => {
+            switch (clearType) {
+                case 2: return ClearType.cleared
+                case 3: return ClearType.fullCombo
+                default: return ClearType.notPlayed
+            }
+        }
+        if (infos[`rb${version}`].chartsInfo[key].version == thisInfo.chartsInfo[key].version) {
+            let records = map[thisInfo.id]
+            if (records == null) {
+                records = []
+                map[thisInfo.id] = records
+            }
+            let record: IRbBestMusicRecord = records[r.chartType] || rbr(thisInfo.order, r.chartType)
+            updateScore(record, {
+                clearType: ctTranslate(r.clearType),
+                gaugeType: GaugeType.normal,
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                achievementRateTimes100: r.achievementRateTimes10 * 10,
+                playCount: r.playCount,
+                winCount: r.winCount,
+                loseCount: r.loseCount,
+                drawCount: r.drawCount,
+                comboVersion: version,
+                scoreVersion: version,
+                missCountVersion: version,
+                clearTypeVersion: version,
+                achievementRateVersion: version
+            })
+            records[r.chartType] = record
+        }
+    }
+    version = 2
+    if (forVersion != version) for (let r of await DB.Find<IRb2MusicRecord>(rid, { collection: "rb.rb2.playData.musicRecord" })) {
+        let infos = getAvaliableMusicChartInfoFromMusicId(r.musicId, version)
+        let thisInfo: RbMusicChartInfoElement = infos[`rb${forVersion}`]
+        if ((thisInfo == null) || (thisInfo.chartsInfo[keys[r.chartType]] == null) || (infos[`rb${version}`] == null) || (infos[`rb${version}`].chartsInfo[keys[r.chartType]] == null) || (thisInfo.status != "avaliable")) continue
+        let key = keys[r.chartType]
+        let ctTranslate = (clearType: number) => {
+            switch (clearType) {
+                case 2: return ClearType.failed
+                case 3: return ClearType.cleared
+                case 4: return ClearType.fullCombo
+                default: return ClearType.notPlayed
+            }
+        }
+        if (infos[`rb${version}`].chartsInfo[key].version == thisInfo.chartsInfo[key].version) {
+            let records = map[thisInfo.id]
+            if (records == null) {
+                records = []
+                map[thisInfo.id] = records
+            }
+            let record: IRbBestMusicRecord = records[r.chartType] || rbr(thisInfo.order, r.chartType)
+            updateScore(record, {
+                clearType: ctTranslate(r.newRecord.clearType),
+                gaugeType: GaugeType.normal,
+                score: r.newRecord.score,
+                combo: r.newRecord.combo,
+                missCount: r.newRecord.missCount,
+                achievementRateTimes100: r.newRecord.achievementRateTimes10 * 10,
+                playCount: r.newRecord.playCount,
+                winCount: r.newRecord.winCount,
+                loseCount: r.newRecord.loseCount,
+                drawCount: r.newRecord.drawCount,
+                comboVersion: version,
+                scoreVersion: version,
+                missCountVersion: version,
+                clearTypeVersion: version,
+                achievementRateVersion: version
+            })
+            records[r.chartType] = record
+        }
+    }
+    version = 3
+    if (forVersion != version) for (let r of await DB.Find<IRb3MusicRecord>(rid, { collection: "rb.rb3.playData.musicRecord" })) {
+        let infos = getAvaliableMusicChartInfoFromMusicId(r.musicId, version)
+        let thisInfo: RbMusicChartInfoElement = infos[`rb${forVersion}`]
+        if ((thisInfo == null) || (thisInfo.chartsInfo[keys[r.chartType]] == null) || (infos[`rb${version}`] == null) || (infos[`rb${version}`].chartsInfo[keys[r.chartType]] == null) || (thisInfo.status != "avaliable")) continue
+        let key = keys[r.chartType]
+        let ctTranslate = (clearType: number, missCount: number) => {
+            if (missCount == 0) return ClearType.fullCombo
+            switch (clearType) {
+                case 1: return ClearType.failed
+                case 2: return ClearType.failed
+                case 3: return ClearType.cleared
+                default: return ClearType.notPlayed
+            }
+        }
+        if (infos[`rb${version}`].chartsInfo[key].version == thisInfo.chartsInfo[key].version) {
+            let records = map[thisInfo.id]
+            if (records == null) {
+                records = []
+                map[thisInfo.id] = records
+            }
+            let record: IRbBestMusicRecord = records[r.chartType] || rbr(thisInfo.order, r.chartType)
+            updateScore(record, {
+                clearType: ctTranslate(r.clearType, r.missCount),
+                gaugeType: GaugeType.normal,
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                achievementRateTimes100: r.achievementRateTimes100,
+                playCount: r.playCount,
+                comboVersion: version,
+                scoreVersion: version,
+                missCountVersion: version,
+                clearTypeVersion: version,
+                achievementRateVersion: version,
+                comboUpdateTime: r.bestComboUpdateTime,
+                scoreUpdateTime: r.bestScoreUpdateTime,
+                achievementRateUpdateTime: r.bestAchievementRateUpdateTime,
+                missCountUpdateTime: r.bestMissCountUpdateTime
+            })
+            records[r.chartType] = record
+        }
+    }
+    version = 4
+    if (forVersion != version) for (let r of await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })) {
+        let infos = getAvaliableMusicChartInfoFromMusicId(r.musicId, version)
+        let thisInfo: RbMusicChartInfoElement = infos[`rb${forVersion}`]
+        if ((thisInfo == null) || (thisInfo.chartsInfo[keys[r.chartType]] == null) || (infos[`rb${version}`] == null) || (infos[`rb${version}`].chartsInfo[keys[r.chartType]] == null) || (thisInfo.status != "avaliable")) continue
+        let key = keys[r.chartType]
+        let ctTranslate = (clearType: number, missCount: number) => {
+            if (missCount == 0) return ClearType.fullCombo
+            switch (clearType) {
+                case 1: return ClearType.failed
+                case 2: return ClearType.failed
+                case 3: return ClearType.failed
+                case 9: return ClearType.cleared
+                case 10: return ClearType.hardCleared
+                case 11: return ClearType.sHardCleared
+                default: return ClearType.notPlayed
+            }
+        }
+        let ggTranslate = (clearType: number) => {
+            switch (clearType) {
+                case 2: return GaugeType.hard
+                case 3: return GaugeType.sHard
+                case 10: return GaugeType.hard
+                case 11: return GaugeType.sHard
+                default: return GaugeType.normal
+            }
+        }
+        if (infos[`rb${version}`].chartsInfo[key].version == thisInfo.chartsInfo[key].version) {
+            let records = map[thisInfo.id]
+            if (records == null) {
+                records = []
+                map[thisInfo.id] = records
+            }
+            let record: IRbBestMusicRecord = records[r.chartType] || rbr(thisInfo.order, r.chartType)
+            updateScore(record, {
+                clearType: ctTranslate(r.clearType, r.missCount),
+                gaugeType: ggTranslate(r.clearType),
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                achievementRateTimes100: r.achievementRateTimes100,
+                playCount: r.playCount,
+                comboVersion: version,
+                scoreVersion: version,
+                missCountVersion: version,
+                clearTypeVersion: version,
+                achievementRateVersion: version,
+                comboUpdateTime: r.bestComboUpdateTime,
+                scoreUpdateTime: r.bestScoreUpdateTime,
+                achievementRateUpdateTime: r.bestAchievementRateUpdateTime,
+                missCountUpdateTime: r.bestMissCountUpdateTime
+            })
+            records[r.chartType] = record
+        }
+    }
+    version = 5
+    if (forVersion != version) for (let r of await DB.Find<IRb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord" })) {
+        let infos = getAvaliableMusicChartInfoFromMusicId(r.musicId, version)
+        let thisInfo: RbMusicChartInfoElement = infos[`rb${forVersion}`]
+        if ((thisInfo == null) || (thisInfo.chartsInfo[keys[r.chartType]] == null) || (infos[`rb${version}`] == null) || (infos[`rb${version}`].chartsInfo[keys[r.chartType]] == null) || (thisInfo.status != "avaliable")) continue
+        let key = keys[r.chartType]
+        let ctTranslate = (clearType: number, missCount: number) => {
+            if (missCount == 0) return ClearType.fullCombo
+            switch (clearType) {
+                case 1: return ClearType.failed
+                case 2: return ClearType.failed
+                case 3: return ClearType.failed
+                case 9: return ClearType.cleared
+                case 10: return ClearType.hardCleared
+                case 11: return ClearType.sHardCleared
+                default: return ClearType.notPlayed
+            }
+        }
+        let ggTranslate = (clearType: number) => {
+            switch (clearType) {
+                case 2: return GaugeType.hard
+                case 3: return GaugeType.sHard
+                case 10: return GaugeType.hard
+                case 11: return GaugeType.sHard
+                default: return GaugeType.normal
+            }
+        }
+        if (infos[`rb${version}`].chartsInfo[key].version == thisInfo.chartsInfo[key].version) {
+            let records = map[thisInfo.id]
+            if (records == null) {
+                records = []
+                map[thisInfo.id] = records
+            }
+            let record: IRbBestMusicRecord = records[r.chartType] || rbr(thisInfo.order, r.chartType)
+            updateScore(record, {
+                clearType: ctTranslate(r.clearType, r.missCount),
+                gaugeType: ggTranslate(r.clearType),
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                achievementRateTimes100: r.achievementRateTimes100,
+                playCount: r.playCount,
+                comboVersion: version,
+                scoreVersion: version,
+                missCountVersion: version,
+                clearTypeVersion: version,
+                achievementRateVersion: version,
+                comboUpdateTime: r.bestComboUpdateTime,
+                scoreUpdateTime: r.bestScoreUpdateTime,
+                achievementRateUpdateTime: r.bestAchievementRateUpdateTime,
+                missCountUpdateTime: r.bestMissCountUpdateTime
+            })
+            records[r.chartType] = record
+        }
+    }
+    for (let k in map) result.push(...map[k].filter((v) => v))
     return result
 }
 

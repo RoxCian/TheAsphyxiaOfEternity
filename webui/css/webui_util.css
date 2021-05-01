@@ -1,3 +1,10 @@
+input.input {
+    min-width: 100%
+}
+select {
+    text-overflow: ellipsis;
+}
+
 #tab-content, .tab-content {
     display: none;
 }
@@ -15,6 +22,11 @@ tr#tab-content.is-active, tr.tab-content.is-active {
     border-color: #c0c0c0;
     color: #7f7f7f;
     cursor: default;
+}
+
+#tabs-mask { /* for mobiles */
+    position: relative;
+    margin-bottom: 24px;
 }
 
 #form-pagination ul.pagination-list {
@@ -116,6 +128,22 @@ a {
     color: white;
 }
 
+.checkmark.invisible {
+    opacity: 0;
+}
+.button.is-link.is-light .checkmark.invisible {
+    color: #edf8ff;
+}
+.button.is-danger.is-light .checkmark.invisible {
+    color: #feecf0;
+}
+.button.is-link.is-light.is-hovered .checkmark.invisible, .button.is-link.is-light:hover .checkmark.invisible {
+    color: #e0f1fc;
+}
+.button.is-danger.is-light.is-hovered .checkmark.invisible, .button.is-danger.is-light:hover .checkmark.invisible {
+    color: #fde0e6;
+}
+
 .modal-card {
     display: flex;
 }
@@ -124,10 +152,27 @@ a {
         flex-wrap: nowrap;
         justify-content: left;
     }
+    .select {
+        max-width: 100% !important;
+    }
+}
+.pagination-ellipsis{
+    width: 2.25em;
+}
+.pagination-link {
+    min-height: 2.25em;
 }
 @media screen and (max-width: 500px) {
     .pagination-previous span, .pagination-next span {
         display: none
+    }
+    .paginated-container .pagination-link, .paginated-container .pagination-ellipsis, .paginated-container .pagination-previous, .paginated-container .pagination-next {
+        width: 25px;
+        min-width: 25px !important;
+        height: 25px;
+        min-height: 25px !important;
+        font-size: 0.75em !important;
+        padding: 0;
     }
 }
 @media print, screen and (min-width: 900px) {
@@ -145,6 +190,9 @@ a {
     }
 }
 
+.pagination {
+    min-height: 3em;
+}
 .pagination-list {
     flex-wrap: nowrap;
     list-style: none!important;
@@ -166,21 +214,31 @@ a {
 }
 @media only screen and (max-width: 1023px) {
     .one-quarter#forwide {
-    display: none;
+        display: none;
     }
     .one-quarter#fornarrow {
-    display: block;
+        display: block;
     }
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 768px) {
     .one-third#forwide {
-    display: none;
+        display: none;
     }
     .one-third#fornarrow {
-    display: block;
+        display: block;
+    }
+    #tabs-mask::after { /* for mobiles */
+        content: "";
+        z-index: 1;
+        height: 100%;
+        background: linear-gradient(90deg, white 0, transparent 10px, transparent 90%, white 100%);
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        pointer-events: none;
     }
 }
-
 
 @keyframes notification-fadeout {
     0% {
@@ -211,15 +269,15 @@ a {
 .modal {
     padding-bottom: 13px;
 }
-@media screen and (max-width:1024px) {
+@media screen and (max-width: 1024px) {
     .modal {
-    transition: padding-left .2s ease-in-out 50ms;
+        transition: padding-left .2s ease-in-out 50ms;
     }
 }
-@media screen and (min-width:1023px) {
+@media screen and (min-width: 1023px) {
     .modal {
-    padding-left: 256px;
-    transition: padding-left .2s ease-in-out 50ms;
+        padding-left: 256px;
+        transition: padding-left .2s ease-in-out 50ms;
     }
 }
 .tag {
@@ -276,9 +334,27 @@ a.pagination-next {
 tr.is-selected td .selected-shadow {
     box-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white
 }
+tr.is-selected td .selected-shadow-text {
+    text-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white
+}
 
-input.input {
-    min-width: 100%
+.toggled-radio input[type="radio"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    z-index: -1;
+}
+.field .toggled-radio ul {
+    margin: 0;
+}
+.field .toggled-radio .toggle {
+    height: 36px;
+}
+.toggled-radio input[type="radio"]:checked + .toggle {
+    color: white;
+    background: #209CEE;
+    border-color: #209CEE;
 }
 
 .nomargin {

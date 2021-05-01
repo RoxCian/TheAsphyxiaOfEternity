@@ -1,17 +1,17 @@
 import { generateRb4ClasscheckRecord, IRb4ClasscheckRecord } from "../../models/rb4/classcheck_record"
 import { getExampleEventControl, Rb4EventControlMap } from "../../models/rb4/event_control"
 import { initializePlayer } from "./initialize_player"
-import { generateRb4MusicRecord, IRb4MusicRecord, Rb4MusicRecordMap } from "../../models/rb4/music_record"
+import { generateRb4MusicRecord, IRb4MusicRecord, Rb4MusicRecordMap, Rb4OldMusicRecordMap } from "../../models/rb4/music_record"
 import { IRb4Mylist } from "../../models/rb4/mylist"
 import { generateRb4Episode, IRb4Episode, IRb4Player, IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerClasscheckLog, IRb4PlayerConfig, IRb4PlayerCustom, IRb4PlayerParameters, IRb4PlayerReleasedInfo, IRb4PlayerStageLog, IRb4Quest, IRb4Stamp, Rb4EpisodeMap, Rb4PlayerReadMap, Rb4PlayerReleasedInfoMap, Rb4PlayerWriteMap } from "../../models/rb4/profile"
 import { KRb4ShopInfo } from "../../models/rb4/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, toBigInt } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { generateRb4Profile } from "../../models/rb4/profile"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
-import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, GaugeType } from "../utility/find_music_record"
-import { getMusicId, isNewMusic } from "../../data/musicinfo/rb_music_info"
+import { ClearType, findAllBestMusicRecord, GaugeType } from "../utility/find_music_record"
+import { isNewMusic } from "../../data/musicinfo/rb_music_info"
 import { isToday, shiftjisToUtf8 } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 
@@ -134,10 +134,6 @@ export namespace Rb4HandlersCommon {
             if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             if (mylist?.index < 0) mylist.index = 0
             let scores: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(readParam.rid, { collection: "rb.rb4.playData.musicRecord" })
-
-
-            base.upperPoints = 1000000
-
 
             base.totalBestScore = 0
             base.totalBestScoreRival = 0
@@ -296,64 +292,41 @@ export namespace Rb4HandlersCommon {
         let scores: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })
         let result = {
             pdata: {
-                record: (scores?.length > 0) ? { rec: scores } : {}, record_old: {}
+                record: (scores?.length > 0) ? { rec: scores } : {}, recordOld: { rec: [] }
             }
         }
 
-        send.object(mapKObject(result, {
-            pdata: {
-                record: { rec: { 0: Rb4MusicRecordMap } },
-                record_old: { rec: { 0: Rb4MusicRecordMap } }
-            }
-        }))
-    }
-    export const ReadPlayerScoreOldVersion: EPR = async (_, data, send) => {
-        let rid: string = $(data).str("rid")
-        let metas = await findMusicRecordMetadatas(rid)
-
-        let result = {
-            pdata: {
-                recordOld: { rec: <IRb4MusicRecord[]>[] },
-                record: { rec: <IRb4MusicRecord[]>[] }
-            }
-        }
-
-        for (let mk of metas) {
-            let midstr = mk.split(":")[0]
-            let chart = parseInt(mk.split(":")[1])
-            let mid = getMusicId(midstr, 5)
-            let bestRecord = await findBestMusicRecord(rid, midstr, chart, 5)
-            if (bestRecord == null) continue
+        let oldRecords = await findAllBestMusicRecord(rid, 4)
+        for (let r of oldRecords) {
             result.pdata.recordOld.rec.push({
                 collection: "rb.rb4.playData.musicRecord",
-                musicId: mid,
-                chartType: chart,
-                playCount: bestRecord.playCount,
-                param: bestRecord.param,
-                clearType: translateRb4ClearType(bestRecord.clearType, bestRecord.gaugeType),
-                achievementRateTimes100: bestRecord.achievementRateTimes100,
-                score: bestRecord.score,
-                missCount: bestRecord.missCount,
-                combo: bestRecord.combo,
-                time: Math.trunc(Date.now() / 1000),
-                bestAchievementRateUpdateTime: Math.trunc(Date.now() / 1000),
-                bestComboUpdateTime: Math.trunc(Date.now() / 1000),
-                bestMissCountUpdateTime: Math.trunc(Date.now() / 1000),
-                bestScoreUpdateTime: Math.trunc(Date.now() / 1000),
+                musicId: r.musicId,
+                chartType: r.chartType,
+                playCount: r.playCount,
+                clearType: translateRb4ClearType(r.clearType, r.gaugeType),
+                achievementRateTimes100: r.achievementRateTimes100,
+                score: r.score,
+                combo: r.combo,
+                missCount: r.missCount,
+                param: r.param,
+                bestAchievementRateUpdateTime: r.achievementRateUpdateTime,
+                bestComboUpdateTime: r.comboUpdateTime,
+                bestScoreUpdateTime: r.scoreUpdateTime,
+                bestMissCountUpdateTime: r.missCountUpdateTime,
+                version: (r.scoreVersion >= 4) ? 1 : r.scoreVersion,
+                time: r.comboUpdateTime,
                 kFlag: 0,
                 isHasGhostBlue: false,
                 isHasGhostRed: false
             })
-            let newRecord: IRb4MusicRecord = await DB.FindOne<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })
-            if (newRecord == null) result.pdata.record.rec.push(generateRb4MusicRecord(mid, chart))
-            else result.pdata.record.rec.push(newRecord)
         }
-        if (result.pdata.record.rec.length == 0) delete result.pdata.record.rec
+
         if (result.pdata.recordOld.rec.length == 0) delete result.pdata.recordOld.rec
+
         send.object(mapKObject(result, {
             pdata: {
                 record: { rec: { 0: Rb4MusicRecordMap } },
-                recordOld: { rec: { 0: Rb4MusicRecordMap }, $targetKey: "record_old" }
+                recordOld: { rec: { 0: Rb4OldMusicRecordMap }, $targetKey: "record_old" }
             }
         }))
     }
@@ -418,7 +391,6 @@ export namespace Rb4HandlersCommon {
         if (newFlag < 0) return
 
         if (musicRecord == null) {
-
             musicRecord = generateRb4MusicRecord(stageLog.musicId, stageLog.chartType)
             musicRecord.clearType = stageLog.clearType
             musicRecord.achievementRateTimes100 = stageLog.achievementRateTimes100

@@ -16,8 +16,6 @@ export namespace Rb1HandlersWebUI {
         background: number
         backgroundBrightness: number
         isLobbyEnabled?: string
-        lobbyDuration: number | ""
-        lobbyRivalSearchingInterval: number | ""
     }) => {
         try {
             let base = await DB.FindOne<IRb1PlayerBase>(data.refid, { collection: "rb.rb1.player.base" })
@@ -31,8 +29,6 @@ export namespace Rb1HandlersWebUI {
             }
 
             lobbySettings.isEnabled = data.isLobbyEnabled != null
-            if ((data.lobbyDuration != "") && (data.lobbyDuration != null)) lobbySettings.duration = <number>data.lobbyDuration
-            if ((data.lobbyRivalSearchingInterval != "") && (data.lobbyRivalSearchingInterval != null)) lobbySettings.rivalSearchingInterval = <number>data.lobbyRivalSearchingInterval
 
             custom.stageShotSound = data.shotSound
             custom.stageShotVolume = data.shotVolume

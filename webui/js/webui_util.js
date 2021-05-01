@@ -11,7 +11,7 @@ function initializePaginatedContent() {
         let flags = { isFirst: true }
         let refreshEllipsis = (param) => {
             if (flags.isFirst) return
-            let maxWidth = container.offsetWidth / 2
+            let maxWidth = container.offsetWidth / 1.8
             for (let pagination of paginations) {
                 let buttons = pagination.querySelector("ul.pagination-list")
                 if (buttons.childElementCount == 0) return
@@ -21,9 +21,6 @@ function initializePaginatedContent() {
                 let nextButton = pagination.querySelector("a.pagination-next")
                 let leftEllipsis = buttons.querySelector("li.ellipsis-left")
                 let rightEllipsis = buttons.querySelector("li.ellipsis-right")
-                let width = buttons.firstChild.offsetWidth.toString()
-                leftEllipsis.style.width = width + "px"
-                rightEllipsis.style.width = width + "px"
                 let count = buttons.childElementCount - 2
                 let maxButtonCount = Math.max((buttons.firstChild.offsetWidth == 0) ? 5 : Math.trunc(maxWidth / buttons.firstChild.offsetWidth), 5)
                 let current = (param instanceof HTMLElement) ? param : buttons.querySelector("li.is-active")
@@ -91,7 +88,8 @@ function initializePaginatedContent() {
                     let buttons = pagination.querySelector("ul.pagination-list")
                     let a = document.createElement("a")
                     a.classList.add("pagination-link")
-                    a.innerText = i + 1
+                    if (i >= 999) a.innerHTML = `<span style="font-size: 0.5em !important">${i + 1}</span>`
+                    else a.innerText = i + 1
                     let li = document.createElement("li")
                     li.appendChild(a)
                     if ((i == 0) && (flags.isFirst || (flags.pageCount != pageCount))) {
@@ -149,7 +147,8 @@ function initializePaginatedContent() {
 }
 
 function initializeTabs() {
-    let tabs = document.querySelectorAll("#tabs li")
+    let tabs = document.querySelectorAll("#tabs li, #tabs #tab")
+    let tabsSelect = document.querySelectorAll(".select select#select-tabs")
     let tabContents = document.querySelectorAll("#tab-content, .tab-content")
     let updateActiveTab = (tabGroup, tabIndex) => {
         for (let t of tabs) if (t && (t.getAttribute("tab-group") == tabGroup)) {
@@ -160,6 +159,10 @@ function initializeTabs() {
                 t.classList.add("is-active")
                 for (let a of t.querySelectorAll("a")) a.classList.add("is-current")
             }
+        }
+        for (let s of tabsSelect) for (let t of s.querySelectorAll("option")) if (t && (t.getAttribute("tab-group") == tabGroup)) {
+            if (t.getAttribute("tab-index") == tabIndex) t.selected = true
+            else t.selected = null
         }
     }
 
@@ -176,6 +179,16 @@ function initializeTabs() {
         if (!t.classList.contains("disabled") && !t.classList.contains("ignore")) t.addEventListener("click", () => {
             let group = t.getAttribute("tab-group")
             let index = t.getAttribute("tab-index")
+            updateActiveTab(group, index)
+            updateActiveContent(group, index)
+        })
+    }
+    for (let s of tabsSelect) {
+        s.addEventListener("change", (e) => {
+            let tab = e.target.options[e.target.selectedIndex]
+            let group = tab.getAttribute("tab-group")
+            let index = tab.getAttribute("tab-index")
+            tab.onclick(tab)
             updateActiveTab(group, index)
             updateActiveContent(group, index)
         })
@@ -531,7 +544,10 @@ function initializeMultiSelectTables() {
         let lines = table.querySelectorAll("tbody tr")
         let refresh = () => {
             let fallbackValue = JSON.parse(valueInput.getAttribute("fallback"))
-            let value = trimValues(JSON.parse(valueInput.value), fallbackValue)
+            let value = []
+            try {
+                value = trimValues(JSON.parse(valueInput.value), fallbackValue)
+            } catch { }
             let title = []
             for (let l of lines) {
                 let lvalue = JSON.parse(l.getAttribute("multi-select-value"))
@@ -691,7 +707,7 @@ function initializeMarqueeLabels(scope) {
                     marquee.style.textAlign = "left"
                     c.style.justifyContent = "left"
                     marquee.style.transform = ""
-                    return marquee.animate([
+                    marquee.animate([
                         { transform: "translateX(0)", offset: 0 },
                         { transform: "translateX(0)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: stopingTime / duration },
                         { transform: "translateX(" + (c.offsetWidth - marquee.offsetWidth - hpad) + "px)", easing: "cubic-bezier(0.67, 0, 0.33, 1)", offset: 1 - stopingTime / duration },

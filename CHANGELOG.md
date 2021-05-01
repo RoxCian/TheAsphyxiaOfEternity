@@ -1,3 +1,23 @@
+- v1.0.6
+
+  Added the feature of view old scores for RB colette / RB groovin'!! / RB VOLZZA. You can view your highest score through RB1 to VOLZZA 2 (except the version you are playing) for each played charts.
+
+  Added game settings for RB colette / RB VOLZZA on webui.
+
+  Fixed the lobby feature and adjusted related settings on webui.
+
+  Did some componentization works for webui and depleted the size of webui file.
+
+  Added 6th KAC quests and ranking quests for RB Reflesia.
+    - You can modify the ranking quest group on webui.
+
+  Now the songs revived after 2018/04/05 are avaliable by default for RB Reflesia.
+
+  Optimize the webui for mobile devices.
+
+  Data structure changes:
+    - `stageClearGaugeType <-> stageAchievementRateDisplayingType` (swaped, breaking change)
+
 - v1.0.5
 
   Fixed the lobby feature for all RB titles.
@@ -43,7 +63,7 @@
 
   Fixed webui issues, organized webui codes.
 
-  Database entry changes
+  Database entry changes:
     - `averagePrecisionTimes100` (removed, breaking change)
 
 - v0.12.0-beta
@@ -116,7 +136,7 @@
 
   Added settings for RB1.
 
-  Added feature of view old scores for limelight. You can view your highest score of RB1 and RB VOLZZA (and other versions to be supported in future) for each played charts.
+  Added the feature of view old scores for limelight. You can view your highest score of RB1 and RB VOLZZA (and other versions to be supported in future) for each played charts.
 
   Fixed bugs.
 

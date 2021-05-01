@@ -27,8 +27,6 @@ export namespace Rb4HandlersWebUI {
         isAutoBywordLeft?: string
         isAutoBywordRight?: string
         isLobbyEnabled?: string
-        lobbyDuration: number | ""
-        lobbyRivalSearchingInterval: number | ""
         pastelEquipHead: number
         pastelEquipTop: number
         pastelEquipUnder: number
@@ -62,8 +60,6 @@ export namespace Rb4HandlersWebUI {
             rb4Config.isAutoBywordRight = (data.isAutoBywordRight == null) ? false : true
 
             rb4LobbySettings.isEnabled = data.isLobbyEnabled != null
-            if ((data.lobbyDuration != "") && (data.lobbyDuration != null)) rb4LobbySettings.duration = <number>data.lobbyDuration
-            if ((data.lobbyRivalSearchingInterval != "") && (data.lobbyRivalSearchingInterval != null)) rb4LobbySettings.rivalSearchingInterval = <number>data.lobbyRivalSearchingInterval
 
             let rb4Mylist: IRb4Mylist = {
                 collection: "rb.rb4.player.mylist",

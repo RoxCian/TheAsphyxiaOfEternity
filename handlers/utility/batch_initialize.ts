@@ -33,7 +33,6 @@ export function initializeBatch() {
     })
     Batch.register("batch#0.12.0", "0.12.0", async () => {
         let a = await DB.Find<IRb3PlayerAccount>(null, { collection: "rb.rb3.player.account" })
-        log(a)
         for (let account of a) {
             if (account.playCountToday == null) account.playCountToday = account.dpc
             if (account.dayCount == null) account.dayCount = account.tdc
@@ -42,7 +41,6 @@ export function initializeBatch() {
     })
     Batch.register("batch#0.12.0.part2", "1.4.0", async () => {
         let a = await DB.Find<IRb3PlayerAccount>(null, { collection: "rb.rb3.player.account" })
-        log(a)
         for (let account of a) {
             delete account["dpc"]
             delete account["tdc"]

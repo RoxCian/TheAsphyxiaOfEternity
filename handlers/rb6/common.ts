@@ -1,6 +1,6 @@
 import { generateRb6CharactorCard, IRb6CharacterCard } from "../../models/rb6/character_card"
 import { generateRb6ClasscheckRecord, IRb6ClasscheckRecord } from "../../models/rb6/classcheck_record"
-import { getExampleCourse, Rb6QuestMap } from "../../models/rb6/course"
+import { Rb6QuestMap } from "../../models/rb6/course"
 import { getExampleEventControl, Rb6EventControlMap } from "../../models/rb6/event_control"
 import { initializePlayer } from "./initialize_player"
 import { IRb6JustCollection, IRb6ReadJustCollection, Rb6ReadJustCollectionMap } from "../../models/rb6/just_collection"
@@ -8,13 +8,16 @@ import { generateRb6MusicRecord, IRb6MusicRecord, Rb6MusicRecordMap } from "../.
 import { IRb6Mylist } from "../../models/rb6/mylist"
 import { generateRb6PlayerConfig, generateRb6PlayerCustom, generateRb6Profile, IRb6Ghost, IRb6Player, IRb6PlayerAccount, IRb6PlayerBase, IRb6PlayerClasscheckLog, IRb6PlayerConfig, IRb6PlayerCustom, IRb6PlayerParameters, IRb6PlayerReleasedInfo, IRb6PlayerStageLog, IRb6QuestRecord, Rb6GhostMap, Rb6PlayerReadMap, Rb6PlayerReleasedInfoMap, Rb6PlayerWriteMap } from "../../models/rb6/profile"
 import { KRb6ShopInfo } from "../../models/rb6/shop_info"
-import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, strme, toBigInt, u8me } from "../../utility/mapping"
+import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, s32me, toBigInt } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { base64ToBuffer, bufferToBase64, isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
 import { BigIntProxy, s8me } from "../../utility/mapping"
+import { IRb6MiscSettings } from "../../models/rb6/misc_settings"
+import { getExampleCourse, kUnlockedItems } from "../../data/specified/rb6"
+import { IRb6ItemControl, Rb6ItemControlMap } from "../../models/rb6/item_control"
 
 export namespace Rb6HandlersCommon {
     export const BootPcb: EPR = async (_, _data, send) => {
@@ -64,25 +67,21 @@ export namespace Rb6HandlersCommon {
         }))
     }
 
-
     export const StartPlayer: EPR = async (_, _data, send) => {
         // await Rb6HandlersCommon.bat()
         let rid = $(_data).str("rid")
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
+        let misc: IRb6MiscSettings = await DB.FindOne<IRb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
         let result = {
             plyid: (account != null) ? account.playerId : -1,
             start_time: BigInt(0),
             event_ctrl: { data: getExampleEventControl() },
-            item_lock_ctrl: {
-                data: {
-                    type: 0,
-                    id: 0,
-                    param: 15
-                }
+            item_lock_ctrl: {},
+            item_ctrl: {
+                data: <IRb6ItemControl[]>[]
             },
-            quest_ctrl: { data: getExampleCourse() },
+            quest_ctrl: { data: getExampleCourse(misc ? misc.rankingQuestIndex : 0) },
         }
-
         let map = {
             plyid: { $type: <"s32">"s32" },
             start_time: { $type: <"u64">"u64" },
@@ -90,17 +89,18 @@ export namespace Rb6HandlersCommon {
                 data: { 0: Rb6EventControlMap }
             },
             item_lock_ctrl: {
-                data: {
-                    type: { $type: <"u8">"u8" },
-                    id: { $type: <"u8">"u8" },
-                    param: { $type: <"u8">"u8" }
-                }
+                item: {}
+            },
+            item_ctrl: {
+                data: { 0: Rb6ItemControlMap }
             },
             quest_ctrl: {
                 data: { 0: Rb6QuestMap }
             }
         }
-        send.object(mapKObject(result, map))
+        let k = mapKObject(result, map)
+        k.item_ctrl.data = kUnlockedItems
+        send.object(k)
     }
 
     export const ReadPlayer: EPR = async (_, data: KITEM2<IPlayerReadParameters>, send) => {
@@ -130,7 +130,13 @@ export namespace Rb6HandlersCommon {
             let releasedInfos = (await DB.Find<IRb6PlayerReleasedInfo>(readParam.rid, { collection: "rb.rb6.player.releasedInfo" }))
             let param = (await DB.Find<IRb6PlayerParameters>(readParam.rid, { collection: "rb.rb6.player.parameters" }))
             let mylist = await DB.FindOne<IRb6Mylist>(readParam.rid, { collection: "rb.rb6.player.mylist" })
-            let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, { collection: "rb.rb6.playData.quest" })
+            let misc = await DB.FindOne<IRb6MiscSettings>(readParam.rid, { collection: "rb.rb6.player.misc" })
+            let questRecords = await DB.Find<IRb6QuestRecord>(readParam.rid, {
+                collection: "rb.rb6.playData.quest", $or: [
+                    { dungeonId: { $ne: 47 } },
+                    { dungeonId: 47, rankingId: misc ? misc.rankingQuestIndex || 0 : 0 }
+                ]
+            })
             let ghosts = [] // await DB.Find<IRb6Ghost>({ collection: "rb.rb6.playData.ghost#userId", userId: account.userId })
             if (mylist?.index < 0) mylist.index = 0
 
@@ -304,8 +310,22 @@ export namespace Rb6HandlersCommon {
             if (player.pdata.released?.info?.length > 0) for (let i of player.pdata.released.info) opm.upsert<IRb6PlayerReleasedInfo>(rid, { collection: "rb.rb6.player.releasedInfo", type: i.type, id: i.id }, i)
             if (player.pdata.playerParam?.item?.length > 0) for (let i of player.pdata.playerParam.item) opm.upsert<IRb6PlayerParameters>(rid, { collection: "rb.rb6.player.parameters", type: i.type, bank: i.bank }, i)
             if (player.pdata.mylist?.list != null) opm.upsert<IRb6Mylist>(rid, { collection: "rb.rb6.player.mylist", index: player.pdata.mylist.list.index }, player.pdata.mylist.list)
-            if (player.pdata.quest?.list?.length > 0) for (let q of player.pdata.quest.list) opm.upsert<IRb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade }, q)
-            if (player.pdata.ghost?.list?.length > 0) for (let g of player.pdata.ghost.list) await updateGhostScore(player.pdata.account.userId, g, opm)
+            if (player.pdata.quest?.list?.length > 0) for (let q of player.pdata.quest.list) {
+                let now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
+                if ((q.dungeonId == 47) && player.pdata?.stageLogs?.log) { // Ranking Quest
+                    let misc = await DB.FindOne<IRb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
+                    let score = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1] ? player.pdata.stageLogs.log[1].score : 0) + (player.pdata.stageLogs.log[2] ? player.pdata.stageLogs.log[2].score : 0)
+                    q.rankingId = misc ? misc.rankingQuestIndex || 0 : 0
+                    let oldRecord = await DB.FindOne<IRb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: 47, dungeonGrade: q.dungeonGrade, rankingId: q.rankingId })
+                    if (!oldRecord || (oldRecord.score < score)) {
+                        q.updateTime = now
+                        q.score = score
+                    } else q.score = oldRecord.score
+                }
+                q.lastPlayTime = now
+                opm.upsert<IRb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId == 47) ? [{ rankingId: q.rankingId }] : [] }, q)
+            }
+            // if (player.pdata.ghost?.list?.length > 0) for (let g of player.pdata.ghost.list) await updateGhostScore(player.pdata.account.userId, g, opm) // TODO: fix it
         }
 
         await DBM.operate(opm)

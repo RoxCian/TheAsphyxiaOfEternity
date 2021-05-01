@@ -5,10 +5,12 @@ import { Rb6HandlersCommon } from "./handlers/rb6/common"
 import { Rb1HandlersWebUI } from "./handlers/rb1/webui"
 import { Rb2HandlersWebUI } from "./handlers/rb2/webui"
 import { Rb4HandlersWebUI } from "./handlers/rb4/webui"
+import { Rb5HandlersWebUI } from "./handlers/rb5/webui"
 import { Rb6HandlersWebUI } from "./handlers/rb6/webui"
 import { UtilityHandlersCommon } from "./handlers/utility/common"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 import { initialize } from "./handlers/utility/initialize"
+import { Rb3HandlersWebUI } from "./handlers/rb3/webui"
 
 export function register() {
     R.GameCode("KBR")
@@ -20,10 +22,6 @@ export function register() {
     R.Config("unlock_all_songs", { type: "boolean", default: false })
     R.Config("unlock_all_items", { type: "boolean", default: false })
 
-    R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
-    R.WebUIEvent("rb4UpdateSettings", Rb4HandlersWebUI.updateSettings)
-    R.WebUIEvent("rb2UpdateSettings", Rb2HandlersWebUI.updateSettings)
-    R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
     R.WebUIEvent("removeWebUIMessage", UtilityHandlersWebUI.removeWebUIMessage)
 
     routeRb6()
@@ -51,7 +49,8 @@ function routeRb6() {
     R.Route("lobby.rb6_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(6))
     R.Route("shop.rb6_shop_write_info", UtilityHandlersCommon.WriteShopInfo)
     R.Route("player.rb6_player_read_gs", Rb6HandlersCommon.ReadGhostScore)
-    R.Route("eventlog.write", true)
+
+    R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
 }
 
 function routeRb5() {
@@ -64,6 +63,8 @@ function routeRb5() {
     R.Route("lobby.rb5_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(5))
     R.Route("lobby.rb5_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(5))
     R.Route("lobby.rb5_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(5))
+
+    R.WebUIEvent("rb5UpdateSettings", Rb5HandlersWebUI.updateSettings)
 }
 
 function routeRb4() {
@@ -77,6 +78,8 @@ function routeRb4() {
     R.Route("lobby.rb4read", UtilityHandlersCommon.getReadLobbyHandler(4))
     R.Route("lobby.rb4delete", UtilityHandlersCommon.getDeleteLobbyHandler(4))
     R.Route("player.rb4succeed", Rb4HandlersCommon.PlayerSucceeded)
+
+    R.WebUIEvent("rb4UpdateSettings", Rb4HandlersWebUI.updateSettings)
 }
 
 function routeRb1Rb2Rb3() {
@@ -88,4 +91,8 @@ function routeRb1Rb2Rb3() {
     R.Route("lobby.entry", Rb1Rb2Rb3HandlersDispatcher.DispatchAddLobby)
     R.Route("lobby.read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadLobby)
     R.Route("lobby.delete", Rb1Rb2Rb3HandlersDispatcher.DispatchDeleteLobby)
+
+    R.WebUIEvent("rb3UpdateSettings", Rb3HandlersWebUI.updateSettings)
+    R.WebUIEvent("rb2UpdateSettings", Rb2HandlersWebUI.updateSettings)
+    R.WebUIEvent("rb1UpdateSettings", Rb1HandlersWebUI.updateSettings)
 }

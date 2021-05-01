@@ -2,7 +2,7 @@ import { ICollection } from "../utility/definitions"
 import { appendMappingElement, BigIntProxy, boolme, getCollectionMappingElement, ignoreme, KObjectMappingRecord, s16me, s32me, s64me, s8me, strme, u16me, u64me, u8me } from "../../utility/mapping"
 import { IRb3Mylist, Rb3MylistMap } from "./mylist"
 import { generateRb2LincleLink, IRb2LincleLink, Rb2LincleLinkMap } from "../rb2/profile"
-import { IRb3MusicRecord, Rb3MusicRecordMap } from "./music_record"
+import { IRb3MusicRecord, Rb3MusicRecordMap, Rb3OldMusicRecordMap } from "./music_record"
 
 export interface IRb3PlayerAccount extends ICollection<"rb.rb3.player.account"> {
     userId: number
@@ -207,7 +207,7 @@ export interface IRb3PlayerConfig extends ICollection<"rb.rb3.player.config"> {
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />
 }
 export const Rb3PlayerConfigMap: KObjectMappingRecord<IRb3PlayerConfig> = {
-    collection: getCollectionMappingElement("rb.rb3.player.config"),
+    collection: getCollectionMappingElement<IRb3PlayerConfig>("rb.rb3.player.config"),
     iconId: s16me("icon_id"),
     tabSelected: u8me("tab_sel"),
     rivalPanelType: u8me("rival_panel_type"),
@@ -262,7 +262,6 @@ export function generateRb3PlayerConfig(): IRb3PlayerConfig {
 }
 
 export interface IRb3PlayerCustom extends ICollection<"rb.rb3.player.custom"> {
-
     // First page of customization
     stageShotSound: number
     stageShotVolume: number
@@ -284,7 +283,6 @@ export interface IRb3PlayerCustom extends ICollection<"rb.rb3.player.custom"> {
     stageJudgeDisplayingType: number
     stageTouchMarkerDisplayingType: number
     stageRandom: number // ?
-
 }
 export const Rb3PlayerCustomMap: KObjectMappingRecord<IRb3PlayerCustom> = {
     collection: getCollectionMappingElement<IRb3PlayerCustom>("rb.rb3.player.custom"),
@@ -573,7 +571,7 @@ export const Rb3PlayerReadMap: KObjectMappingRecord<IRb3Player> = {
         config: Rb3PlayerConfigMap,
         custom: Rb3PlayerCustomMap,
         record: { rec: { 0: Rb3MusicRecordMap } },
-        recordOld: { rec: { 0: Rb3MusicRecordMap }, $targetKey: "record_old" },
+        recordOld: { rec: { 0: Rb3OldMusicRecordMap }, $targetKey: "record_old" },
         stageLogs: {
             log: { 0: Rb3PlayerStageLogMap },
             $targetKey: "kignore"

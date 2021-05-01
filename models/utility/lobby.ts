@@ -62,18 +62,20 @@ export async function generateRbLobbyEntryElement<TVersion extends number>(versi
         entryId = Math.trunc(Math.random() * 99999999)
         checker = await DB.Find<IRbLobbyEntryElement<TVersion>>({ collection: <`rb.rb${TVersion}.temporary.lobbyEntry`>`rb.rb${version}.temporary.lobbyEntry`, entryId: entryId })
     } while (checker.length > 0)
-    return Object.assign<Partial<IRbLobbyEntryElement<TVersion>>, IRbLobbyEntryElement<TVersion>>({ name: readParam.userId.toString(), matchingGrade: 24, uattr: 0, entryId: entryId, isHanging: false, ticking: 0 }, readParam)
+    return Object.assign<IRbLobbyEntryElement<TVersion>, Partial<IRbLobbyEntryElement<TVersion>>>(readParam, { entryId: entryId })
 }
 
 export interface IRbLobbyEntry<TVersion extends number> {
     interval: number
     intervalP: number
+    entryId?: number
     entry: IRbLobbyEntryElement<TVersion>[]
 }
 export function getRbLobbyEntryMap<TVersion extends number>(version: TVersion): KObjectMappingRecord<IRbLobbyEntry<TVersion>> {
     return {
         interval: s32me(),
         intervalP: s32me("interval_p"),
+        entryId: s32me("eid"),
         entry: { 0: getRbLobbyEntryElementMap(version), $targetKey: "e" }
     }
 }
@@ -88,15 +90,11 @@ export async function generateRbLobbyEntry<TVersion extends number>(version: TVe
 export interface IRbLobbySettings<TVersion extends number> extends ICollection<`rb.rb${TVersion}.player.lobbySettings#userId`> {
     userId: number
     isEnabled: boolean
-    duration: number
-    rivalSearchingInterval: number
 }
 export function generateRbLobbySettings<TVersion extends number>(version: TVersion, userId: number): IRbLobbySettings<TVersion> {
     return {
         collection: <`rb.rb${TVersion}.player.lobbySettings#userId`>`rb.rb${version}.player.lobbySettings#userId`,
         userId: userId,
         isEnabled: true,
-        duration: 24000,
-        rivalSearchingInterval: 500
     }
 }

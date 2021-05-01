@@ -210,7 +210,7 @@ export interface IRb6PlayerConfig extends ICollection<"rb.rb6.player.config"> {
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />
 }
 export const Rb6PlayerConfigMap: KObjectMappingRecord<IRb6PlayerConfig> = {
-    collection: getCollectionMappingElement("rb.rb6.player.config"),
+    collection: getCollectionMappingElement<IRb6PlayerConfig>("rb.rb6.player.config"),
     musicSelectBgm: u8me("msel_bgm"),
     narrowDownType: u8me("narrowdown_type"),
     musicLevelDisplayingType: u8me("musiclvdisp_type"),
@@ -304,7 +304,7 @@ export const Rb6PlayerCustomMap: KObjectMappingRecord<IRb6PlayerCustom> = {
     stageShotVolume: u8me("st_shot_vol"),
     stageBackgroundBrightness: u8me("st_bg_bri"),
     stageObjectSize: u8me("st_obj_size"),
-    stageClearGaugeType: u8me("st_clr_gauge"),
+    stageClearGaugeType: u8me("st_hazard"),
     stageRandom: u8me("st_rnd"),
     stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),
     stageScoreDisplayingType: u8me("st_score_disp_type"),
@@ -316,7 +316,7 @@ export const Rb6PlayerCustomMap: KObjectMappingRecord<IRb6PlayerCustom> = {
     stageHighSpeed: u8me("high_speed"),
     stageColorSpecified: u8me("color_type"),
     stageJustCollectionDisplayingType: u8me("justcol_type"),
-    stageAchievementRateDisplayingType: u8me("st_hazard"),
+    stageAchievementRateDisplayingType: u8me("st_clr_gauge"),
     stageClearCondition: u8me("st_clr_cond")
 }
 export function generateRb6PlayerCustom(): IRb6PlayerCustom {
@@ -469,17 +469,25 @@ export const Rb6PlayerParametersMap: KObjectMappingRecord<IRb6PlayerParameters> 
 export interface IRb6QuestRecord extends ICollection<"rb.rb6.playData.quest"> {
     dungeonId: number
     dungeonGrade: number
+    rankingId: number
     clearCount: number
     playCount: number
     isCleared: boolean
+    score?: number
+    lastPlayTime: number
+    updateTime: number
 }
 export const Rb6QuestRecordMap: KObjectMappingRecord<IRb6QuestRecord> = {
     collection: getCollectionMappingElement<IRb6QuestRecord>("rb.rb6.playData.quest"),
     dungeonId: s32me("dungeon_id"),
     dungeonGrade: s8me("dungeon_grade"),
+    rankingId: ignoreme(),
     clearCount: s32me("clear_num"),
     playCount: s32me("play_num"),
-    isCleared: boolme("clear_flg")
+    isCleared: boolme("clear_flg"),
+    score: ignoreme(),
+    lastPlayTime: ignoreme(),
+    updateTime: ignoreme(),
 }
 
 export interface IRb6Ghost extends ICollection<"rb.rb6.playData.ghost#userId"> {

@@ -200,7 +200,7 @@ export interface IRb5PlayerConfig extends ICollection<"rb.rb5.player.config"> {
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />
 }
 export const Rb5PlayerConfigMap: KObjectMappingRecord<IRb5PlayerConfig> = {
-    collection: getCollectionMappingElement("rb.rb5.player.config"),
+    collection: getCollectionMappingElement<IRb5PlayerConfig>("rb.rb5.player.config"),
     iconId: s16me("icon_id"),
     tabSel: u8me("tab_sel"),
     rivalPanelType: u8me("rival_panel_type"),
@@ -309,7 +309,7 @@ export const Rb5PlayerCustomMap: KObjectMappingRecord<IRb5PlayerCustom> = {
     stageShotVolume: u8me("st_shot_vol"),//
     stageBackgroundBrightness: u8me("st_bg_bri"),//
     stageObjectSize: u8me("st_obj_size"),//
-    stageClearGaugeType: u8me("st_clr_gauge"),//
+    stageClearGaugeType: u8me("st_hazard"),//
     stageColorRandom: u8me("st_rnd"),//
     stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),//
     stageScoreDisplayingType: u8me("st_score_disp_type"),//
@@ -318,7 +318,7 @@ export const Rb5PlayerCustomMap: KObjectMappingRecord<IRb5PlayerCustom> = {
     stageTopAssistDisplayingType: u8me("st_topassist_type"),//
     stageHighSpeed: u8me("high_speed"),//
     stageColorSpecified: u8me("color_type"),
-    stageAchievementRateDisplayingType: u8me("st_hazard"),//
+    stageAchievementRateDisplayingType: u8me("st_clr_gauge"),//
     stageClearCondition: u8me("st_clr_cond"),//
     voiceMessageSet: s16me("voice_message_set"),
     voiceMessageVolume: u8me("voice_message_volume")

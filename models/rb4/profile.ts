@@ -225,7 +225,7 @@ export interface IRb4PlayerConfig extends ICollection<"rb.rb4.player.config"> {
     isTwitterLinked: boolean // <is_link_twitter __type="bool" />
 }
 export const Rb4PlayerConfigMap: KObjectMappingRecord<IRb4PlayerConfig> = {
-    collection: getCollectionMappingElement("rb.rb4.player.config"),
+    collection: getCollectionMappingElement<IRb4PlayerConfig>("rb.rb4.player.config"),
     iconId: s16me("icon_id"),
     tabSel: u8me("tab_sel"),
     rivalPanelType: u8me("rival_panel_type"),
@@ -314,25 +314,25 @@ export interface IRb4PlayerCustom extends ICollection<"rb.rb4.player.custom"> {
 }
 export const Rb4PlayerCustomMap: KObjectMappingRecord<IRb4PlayerCustom> = {
     collection: getCollectionMappingElement<IRb4PlayerCustom>("rb.rb4.player.custom"),
-    stageMainGaugeType: u8me("st_jr_gauge"),//
+    stageMainGaugeType: u8me("st_jr_gauge"),
 
-    stageShotSound: u8me("st_shot"),//
-    stageFrameType: u8me("st_frame"),//
-    stageExplodeType: u8me("st_expl"),//
-    stageBackground: u8me("st_bg"),//
-    stageShotVolume: u8me("st_shot_vol"),//
-    stageBackgroundBrightness: u8me("st_bg_bri"),//
-    stageObjectSize: u8me("st_obj_size"),//
-    stageClearGaugeType: u8me("st_clr_gauge"),//
-    stageRandom: u8me("st_rnd"),//
-    stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),//
-    stageScoreDisplayingType: u8me("st_score_disp_type"),//
-    stageBonusType: u8me("st_bonus_type"),//
-    stageRivalObjectsDisplayingType: u8me("st_rivalnote_type"),//
-    stageJudgeDisplayingType: u8me("st_jdg_disp"),//
+    stageShotSound: u8me("st_shot"),
+    stageFrameType: u8me("st_frame"),
+    stageExplodeType: u8me("st_expl"),
+    stageBackground: u8me("st_bg"),
+    stageShotVolume: u8me("st_shot_vol"),
+    stageBackgroundBrightness: u8me("st_bg_bri"),
+    stageObjectSize: u8me("st_obj_size"),
+    stageClearGaugeType: u8me("st_hazard"),
+    stageRandom: u8me("st_rnd"),
+    stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),
+    stageScoreDisplayingType: u8me("st_score_disp_type"),
+    stageBonusType: u8me("st_bonus_type"),
+    stageRivalObjectsDisplayingType: u8me("st_rivalnote_type"),
+    stageJudgeDisplayingType: u8me("st_jdg_disp"),
     stageTouchMarkerDisplayingType: u8me("st_tm_disp"),
-    stageAchievementRateDisplayingType: u8me("st_hazard"),//
-    stageClearCondition: u8me("st_clr_cond"),//
+    stageAchievementRateDisplayingType: u8me("st_clr_gauge"),
+    stageClearCondition: u8me("st_clr_cond"),
     chatStickersBeforeMatching: s16me("schat_0"),
     chatStickersAfterMatching: s16me("schat_1"),
     cheerVoice: u8me()
