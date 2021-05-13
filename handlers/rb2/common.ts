@@ -9,6 +9,7 @@ import { IRb2StageLogStandalone, IRb2StageLogStandaloneElement, Rb2StageLogStand
 import { ClearType, findBestMusicRecord, findMusicRecordMetadatas, MusicRecordMetadatas } from "../utility/find_music_record"
 import { getMusicId } from "../../data/musicinfo/rb_music_info"
 import { generateUserId } from "../utility/generate_user_id"
+import { Rb2EventStatusMap } from "../../models/rb2/event_status"
 
 export namespace Rb2HandlersCommon {
     export const ReadInfo: EPR = async (info, data, send) => {
@@ -202,11 +203,17 @@ export namespace Rb2HandlersCommon {
         await DBM.operate(opm)
     }
 
-    export const LogPlayer: EPR = async (info, data: KITEM2<IRb2StageLogStandalone>, send) => {
+    export const LogPlayer: EPR = async (info, data, send) => {
         if (!info.model.startsWith("LBR")) return send.deny()
         let log = mapBackKObject(data, Rb2StageLogStandaloneMap)[0]
         StageLogManager.pushStandaloneStageLog(log)
         StageLogManager.update()
+        send.success()
+    }
+
+    export const UpdateEventStatus: EPR = async (info, data, send) => {
+        if (!info.model.startsWith("LBR")) return send.deny()
+        await DBM.upsert(null, { collection: "rb.rb2.player.event.status#userId", userId: $(data).number("uid") }, mapBackKObject(data, Rb2EventStatusMap)[0])
         send.success()
     }
 

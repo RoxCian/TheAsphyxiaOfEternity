@@ -11,6 +11,7 @@ import { UtilityHandlersCommon } from "./handlers/utility/common"
 import { UtilityHandlersWebUI } from "./handlers/utility/webui"
 import { initialize } from "./handlers/utility/initialize"
 import { Rb3HandlersWebUI } from "./handlers/rb3/webui"
+import { Rb2HandlersCommon } from "./handlers/rb2/common"
 
 export function register() {
     R.GameCode("KBR")
@@ -44,11 +45,14 @@ function routeRb6() {
     R.Route("player.rb6_player_read_score", Rb6HandlersCommon.ReadPlayerScore)
     R.Route("player.rb6_player_read_jc", Rb6HandlersCommon.ReadPlayerJustCollections)
     R.Route("player.rb6_player_succeed", Rb6HandlersCommon.PlayerSucceeded)
+    R.Route("player.rb6_player_read_gs", Rb6HandlersCommon.ReadGhostScore)
+    R.Route("player.rb6_player_read_rank", Rb6HandlersCommon.ReadRank)
     R.Route("lobby.rb6_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(6))
     R.Route("lobby.rb6_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(6))
-    R.Route("lobby.rb6_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(6))
+    R.Route("lobby.rb6_lobby_delete_entry", UtilityHandlersCommon.getDeleteLobbyHandler(6))
     R.Route("shop.rb6_shop_write_info", UtilityHandlersCommon.WriteShopInfo)
-    R.Route("player.rb6_player_read_gs", Rb6HandlersCommon.ReadGhostScore)
+    R.Route("info.rb6pzlcmt_read", UtilityHandlersCommon.getReadCommentHandler(6))
+    R.Route("info.rb6pzlcmt_write", UtilityHandlersCommon.getWriteCommentHandler(6))
 
     R.WebUIEvent("rb6UpdateSettings", Rb6HandlersWebUI.updateSettings)
 }
@@ -63,6 +67,8 @@ function routeRb5() {
     R.Route("lobby.rb5_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(5))
     R.Route("lobby.rb5_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(5))
     R.Route("lobby.rb5_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(5))
+    R.Route("info.rb5pzlcmt_read", UtilityHandlersCommon.getReadCommentHandler(5))
+    R.Route("info.rb5pzlcmt_write", UtilityHandlersCommon.getWriteCommentHandler(5))
 
     R.WebUIEvent("rb5UpdateSettings", Rb5HandlersWebUI.updateSettings)
 }
@@ -78,6 +84,8 @@ function routeRb4() {
     R.Route("lobby.rb4read", UtilityHandlersCommon.getReadLobbyHandler(4))
     R.Route("lobby.rb4delete", UtilityHandlersCommon.getDeleteLobbyHandler(4))
     R.Route("player.rb4succeed", Rb4HandlersCommon.PlayerSucceeded)
+    R.Route("info.rb4pzlcmt_read", UtilityHandlersCommon.getReadCommentHandler(4))
+    R.Route("info.rb4pzlcmt_write", UtilityHandlersCommon.getWriteCommentHandler(4))
 
     R.WebUIEvent("rb4UpdateSettings", Rb4HandlersWebUI.updateSettings)
 }
@@ -91,6 +99,11 @@ function routeRb1Rb2Rb3() {
     R.Route("lobby.entry", Rb1Rb2Rb3HandlersDispatcher.DispatchAddLobby)
     R.Route("lobby.read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadLobby)
     R.Route("lobby.delete", Rb1Rb2Rb3HandlersDispatcher.DispatchDeleteLobby)
+    R.Route("info.pzlcmt_read", Rb1Rb2Rb3HandlersDispatcher.DispatchReadComment)
+    R.Route("info.pzlcmt_write", Rb1Rb2Rb3HandlersDispatcher.DispatchWriteComment)
+    R.Route("event_w.add_comment", Rb1Rb2Rb3HandlersDispatcher.DispatchWriteComment)
+    R.Route("event_r.get_all", Rb1Rb2Rb3HandlersDispatcher.DispatchReadComment)
+    R.Route("event_w.update_status", Rb2HandlersCommon.UpdateEventStatus)
 
     R.WebUIEvent("rb3UpdateSettings", Rb3HandlersWebUI.updateSettings)
     R.WebUIEvent("rb2UpdateSettings", Rb2HandlersWebUI.updateSettings)

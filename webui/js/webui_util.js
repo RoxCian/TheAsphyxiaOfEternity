@@ -11,7 +11,7 @@ function initializePaginatedContent() {
         let flags = { isFirst: true }
         let refreshEllipsis = (param) => {
             if (flags.isFirst) return
-            let maxWidth = container.offsetWidth / 1.8
+            let maxWidth = container.offsetWidth / 1.6
             for (let pagination of paginations) {
                 let buttons = pagination.querySelector("ul.pagination-list")
                 if (buttons.childElementCount == 0) return
@@ -467,12 +467,12 @@ function initializeFormSlotedArrays() {
                 if (newValue[i] == fallbackValue) {
                     modButton.style.display = "block"
                     tag.style.display = "none"
-                    tag.querySelector("#form-array-tag-title").innerText = ""
+                    tag.querySelector("#form-array-tag-title").innerHTML = ""
                     tag.setAttribute("value", newValue[i])
                 } else {
                     modButton.style.display = "none"
                     tag.style.display = "block"
-                    tag.querySelector("#form-array-tag-title").innerText = newTitle[i]
+                    tag.querySelector("#form-array-tag-title").innerHTML = newTitle[i]
                     tag.setAttribute("value", newValue[i])
                 }
             }
@@ -648,17 +648,6 @@ function initializeUploader() {
     }
 }
 
-function checkImg() {
-    let imgs = document.querySelectorAll("#exist-or-not")
-    for (let img of imgs) {
-        let general = img.querySelector("img#general")
-        let specified = img.querySelector("img#specified")
-
-        if (specified.width == 0) specified.style.display = "none"
-        else general.style.display = "none"
-    }
-}
-
 function initializePastel() {
     let pastel = document.querySelector(".pastel")
     if (pastel == null) return
@@ -796,26 +785,32 @@ function removeLoadingModal() {
     } catch { }
 }
 
-$(document).ready(() => {
-    initializeNotificatioAnimation()
-    initializePaginatedContent()
-    initializeTabs()
-    initializeToggles()
-    initializeModals()
-    initializeFormSelects()
-    initializeFormNumerics()
-    initializeFormPaginations()
-    initializeFormValidation()
-    initializeFormCollections()
-    initializeMultiSelectTables()
-    initializeFormSlotedArrays()
-    initializeSingleSelectTables()
-    initializeUploader()
-    checkImg()
-    initializePastel()
-    initializeMarqueeLabels()
-    initializeCheckBoxes()
+function tryfunctions(...functions) {
+    for (let f of functions) try {
+        f()
+    } catch { }
+}
 
-    removeLoadingModal()
+$(document).ready(() => {
+    tryfunctions(
+        initializeNotificatioAnimation,
+        initializePaginatedContent,
+        initializeTabs,
+        initializeToggles,
+        initializeModals,
+        initializeFormSelects,
+        initializeFormNumerics,
+        initializeFormPaginations,
+        initializeFormValidation,
+        initializeFormCollections,
+        initializeMultiSelectTables,
+        initializeFormSlotedArrays,
+        initializeSingleSelectTables,
+        initializeUploader,
+        initializePastel,
+        initializeMarqueeLabels,
+        initializeCheckBoxes,
+        removeLoadingModal
+    )
 })
 

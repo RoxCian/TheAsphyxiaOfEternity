@@ -135,11 +135,12 @@ export namespace Rb3HandlersCommon {
             if (account.lpc == null) account.lpc = 0
             if (account.cpc == null) account.cpc = 0
             if (account.mpc == null) account.mpc = 0
-            if (base.comment == null) base.comment = "Welcome to REFLEC BEAT colette!"
+            if ((base.comment == null) || (base.comment == "")) base.comment = "Welcome to REFLEC BEAT colette!"
             if (base.teamId == null) base.teamId = -1
             if (base.teamName == null) base.teamName = "Asphyxia"
             if (base.uattr == null) base.uattr = 0
             if (base.abilityPointTimes100 == null) base.abilityPointTimes100 = base["averagePrecisionTimes100"] // For compatibility
+            if (custom.stageClearGaugeType == null) custom.stageClearGaugeType = 0 // Fix for v1.1.0
             let scores: IRb3MusicRecord[] = await DB.Find<IRb3MusicRecord>(readParam.rid, { collection: "rb.rb3.playData.musicRecord" })
             stamp = init(stamp, generateRb3Stamp())
 

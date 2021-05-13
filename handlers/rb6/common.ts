@@ -68,7 +68,6 @@ export namespace Rb6HandlersCommon {
     }
 
     export const StartPlayer: EPR = async (_, _data, send) => {
-        // await Rb6HandlersCommon.bat()
         let rid = $(_data).str("rid")
         let account: IRb6PlayerAccount = await DB.FindOne<IRb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
         let misc: IRb6MiscSettings = await DB.FindOne<IRb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
@@ -80,7 +79,7 @@ export namespace Rb6HandlersCommon {
             item_ctrl: {
                 data: <IRb6ItemControl[]>[]
             },
-            quest_ctrl: { data: getExampleCourse(misc ? misc.rankingQuestIndex : 0) },
+            quest_ctrl: { data: getExampleCourse(misc ? (misc.rankingQuestIndex || 0) : 0) },
         }
         let map = {
             plyid: { $type: <"s32">"s32" },
@@ -412,6 +411,17 @@ export namespace Rb6HandlersCommon {
         chartType: s8me("note_grade"),
         matchingGrade: s32me("matching_greade"), // greade!
         composerType: s32me("composer_type")
+    }
+
+    export const ReadRank: EPR = async (_, data, send) => {
+        return {
+            player: {
+                tbs: {
+                    new_rank: K.ARRAY("s32", [1, 1, 1, 1, 1]),
+                    old_rank: K.ARRAY("s32", [-1, -1, -1, -1, -1])
+                }
+            }
+        }
     }
 
     export const WriteComment: EPR = async (_, data, send) => {

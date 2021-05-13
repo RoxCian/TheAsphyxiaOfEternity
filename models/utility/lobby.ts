@@ -1,5 +1,4 @@
-import { ignoreme } from "../../../bst@asphyxia/utility/mapping"
-import { getCollectionMappingElement, KObjectMappingElement, KObjectMappingRecord, s16me, s32me, s8me, strme, TypeForKItem, u16me, u8me } from "../../utility/mapping"
+import { getCollectionMappingElement, KObjectMappingElement, KObjectMappingRecord, s16me, s32me, s8me, strme, TypeForKItem, u16me, u8me, ignoreme } from "../../utility/mapping"
 import { ICollection } from "./definitions"
 
 export interface IRbLobbyEntryElement<TVersion extends number> extends ICollection<`rb.rb${TVersion}.temporary.lobbyEntry`> {

@@ -1,3 +1,15 @@
+- v1.1.0
+
+  The in-game comment system is now avaliable for RB limelight ~ RB Reflesia. The comments sended by everyone in any game can be showed in all RB titles.
+
+  Fixed bugs on webui which can cause an error while loading data for RB colette / RB Reflesia.
+    - Now you can change ar displaying type on webui for RB colette
+
+  Did more componentization works for the webui page.
+    - Added a lovely game version select box for mobile devices.
+
+  All of the jackets have received quality updates.
+
 - v1.0.6
 
   Added the feature of view old scores for RB colette / RB groovin'!! / RB VOLZZA. You can view your highest score through RB1 to VOLZZA 2 (except the version you are playing) for each played charts.

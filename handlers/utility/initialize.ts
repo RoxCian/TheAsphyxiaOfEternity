@@ -5,7 +5,7 @@ import { Batch } from "./batch"
 import { DBM } from "./db_manager"
 import { IRbLobbyEntryElement } from "../../models/utility/lobby"
 
-export const currentVersion: string = "1.0.6"
+export const currentVersion: string = "1.1.0"
 export async function initialize() {
     let version = await DB.FindOne<IPluginVersion>({ collection: "rb.pluginVersion" })
     if ((version == null) || isHigherVersion(version.version, currentVersion)) {

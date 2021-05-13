@@ -1,5 +1,6 @@
-import { IRbComment, RbCommentMap } from "../../models/utility/comment"
-import { generateRbLobbyEntry, generateRbLobbySettings, getRbLobbyEntryMap, IRbLobbyEntry, IRbLobbyEntryElement, IRbLobbySettings } from "../../models/utility/lobby"
+import { generateRb2EventStatus, IRb2EventStatus, Rb2EventStatusMap } from "../../models/rb2/event_status"
+import { IRbComment, Rb2CommentMap, Rb3CommentMap, Rb4CommentMap, Rb6CommentMap } from "../../models/utility/comment"
+import { generateRbLobbyEntry, generateRbLobbySettings, getRbLobbyEntryMap, IRbLobbyEntryElement, IRbLobbySettings } from "../../models/utility/lobby"
 import { KObjectMappingRecord, s32me, u8me, strme, mapKObject, mapBackKObject } from "../../utility/mapping"
 import { DBM } from "./db_manager"
 
@@ -44,21 +45,6 @@ export namespace UtilityHandlersCommon {
             let lobbies: IRbLobbyEntryElement<TVersion>[] = await DB.Find<IRbLobbyEntryElement<TVersion>>(query)
             result.entry.concat(lobbies)
             return await send.object(mapKObject(result, getRbLobbyEntryMap(closure.version)))
-            // findLobbyCallbacks.set(param.entry[0].userId, null)
-            // let time = 0
-            // let schedule: NodeJS.Timeout[] = []
-            // let query: Query<IRbLobbyEntryElement<TVersion>> = { $not: { userId: param.entry[0].userId }, $and: [{ collection: <`rb.rb${TVersion}.temporary.lobbyEntry`>`rb.rb${closure.version}.temporary.lobbyEntry`, matchingGrade: { $gte: param.entry[0].matchingGrade - 5, $lte: param.entry[0].matchingGrade + 5 } }, myLobbies ? myLobbies[closure.version]?.pside ? { pside: (myLobbies[closure.version].pside == 0) ? 1 : 0 } : {} : {}] } // pside may represents color (red == 0 / blue == 1)
-            // while (time <= Math.min(settings.duration, 60000)) {
-            //     schedule.push(setTimeout(async () => {
-            //         let lobbies: IRbLobbyEntryElement<TVersion>[] = await DB.Find<IRbLobbyEntryElement<TVersion>>(query)
-            //         if (lobbies.length == 0) return
-            //         result.entry.concat(lobbies)
-            //         setTimeout(() => send.object(mapKObject(result, getRbLobbyEntryMap(closure.version))), 3000)
-            //         for (let e of schedule) clearTimeout(e)
-            //     }, time))
-            //     time += settings.rivalSearchingInterval
-            // }
-            // schedule.push(setTimeout(async () => await send.success(), Math.min(settings.duration, 60000) + 1))
         }
     }
     export function getReadLobbyHandler<TVersion extends number>(version: TVersion): EPR {
@@ -90,31 +76,102 @@ export namespace UtilityHandlersCommon {
         let closure = { version: version }
         return async (_, data, send) => {
             let param = mapBackKObject(data, ReadCommentParamMap)[0]
-            let comments: IRbComment[] = await DB.Find<IRbComment>({ collection: "rb.comment" })
+            let comments: IRbComment[] = await DB.Find<IRbComment>({ collection: "rb.info.comment" })
+            comments.sort((l, r) => r.time - l.time)
+            let commentMap: KObjectMappingRecord<IRbComment>
+            switch (closure.version) {
+                case 6:
+                    commentMap = Rb6CommentMap
+                    break
+                case 5:
+                    commentMap = Rb4CommentMap
+                    break
+                case 4:
+                    commentMap = Rb4CommentMap
+                    break
+                case 3:
+                    commentMap = Rb3CommentMap
+                    break
+                case 2:
+                    commentMap = Rb2CommentMap
+                    break
+                default:
+                    return await send.deny()
+            }
             let result = {
-                comment: { time: <number>param.time },
+                comment: { time: <number>Date.now() },
                 c: param.limit ? comments.slice(0, param.limit) : comments,
                 cf: <IRbComment[]>[],
-                cs: <IRbComment[]>[]
+                cs: <IRbComment[]>[],
+                ct: <IRbComment[]>[],
             }
-            for (let cmt of result.c) {
-                if ((cmt.version <= 5) && (closure.version == 6)) cmt.characterId = cmt.version + 7 // chara 8 is Level 1 CPU
+            let resultRb2 = {
+                time: <number>Date.now(),
+                comment: {
+                    c: param.limit ? comments.slice(0, param.limit) : comments,
+                    cf: <IRbComment[]>[]
+                },
+                status: {
+                    s: <IRb2EventStatus[]>[]
+                }
+            }
+            for (let cmt of (closure.version == 2) ? resultRb2.comment.c : result.c) {
+                if ((cmt.version <= 5) && (closure.version == 6)) cmt.characterId = cmt.version + 7 // chara == 8 -> Level 1 CPU
                 if ((cmt.version == 6) && (closure.version <= 5)) cmt.iconId = cmt.characterId
 
-                // Friends' comment
+                // Favorite comments
+                // Team members' comments
+                // Shop comments
 
                 if (cmt.userId == param.userId) result.cs.push(cmt)
+                if (closure.version == 2) resultRb2.status.s.push(resultRb2.status.s.find((v) => v.userId == cmt.userId) || await DB.FindOne<IRb2EventStatus>({ collection: "rb.rb2.player.event.status#userId", userId: cmt.userId }) || generateRb2EventStatus(cmt.userId, cmt.name))
             }
 
-            return await send.object(mapKObject(result, { comment: { time: s32me<number>() }, c: { 0: RbCommentMap }, cf: { 0: RbCommentMap }, cs: { 0: RbCommentMap } }))
+            if (result.c.length == 0) delete result.c
+            if (result.cf.length == 0) delete result.cf
+            if (result.cs.length == 0) delete result.cs
+            if (result.ct.length == 0) delete result.ct
+            if (resultRb2.comment.c.length == 0) delete resultRb2.comment.c
+            if (resultRb2.comment.cf.length == 0) delete resultRb2.comment.cf
+
+            if (closure.version == 2) return await send.object(mapKObject(resultRb2, { time: s32me<number>(), comment: { c: { 0: commentMap }, cf: { 0: commentMap } }, status: { s: { 0: Rb2EventStatusMap } } }))
+            else return await send.object(mapKObject(result, { comment: { time: s32me<number>() }, c: { 0: commentMap }, cf: { 0: commentMap }, cs: { 0: commentMap }, ct: { 0: commentMap } }))
         }
     }
     export function getWriteCommentHandler<TVersion extends number>(version: TVersion): EPR {
         let closure = { version: version }
         return async (_, data, send) => {
-            let comment = mapBackKObject<IRbComment>(data, RbCommentMap)[0]
+            let commentMap: KObjectMappingRecord<IRbComment>
+            switch (closure.version) {
+                case 6:
+                    commentMap = Rb6CommentMap
+                    break
+                case 5:
+                    commentMap = Rb4CommentMap
+                    break
+                case 4:
+                    commentMap = Rb4CommentMap
+                    break
+                case 3:
+                    commentMap = Rb3CommentMap
+                    break
+                case 2:
+                    commentMap = Rb2CommentMap
+                    break
+                default:
+                    return await send.deny()
+            }
+            let comment = mapBackKObject<IRbComment>(data, commentMap)[0]
             comment.version = closure.version
             if (!comment.balloon) comment.balloon = 0
+            if (!comment.experience) comment.experience = 0
+            if (!comment.shopName) comment.shopName = ""
+            if (!comment.lobbyId) comment.lobbyId = "ea"
+            if (!comment.teamId) comment.teamId = -1
+            if (!comment.teamName) comment.teamName = "ASPHYXIA"
+            do {
+                comment.entryId = Math.round(Math.random() * 99999999)
+            } while (await DB.FindOne<IRbComment>({ collection: "rb.info.comment", entryId: comment.entryId }))
             await DBM.insert<IRbComment>(null, comment)
             return await send.success()
         }

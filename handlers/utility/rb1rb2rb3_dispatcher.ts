@@ -50,4 +50,16 @@ export namespace Rb1Rb2Rb3HandlersDispatcher {
         else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getDeleteLobbyHandler(3)(info, data, send)
         else send.deny()
     }
+    export const DispatchReadComment: EPR = async (info, data, send) => {
+        if (info.model.startsWith("KBR")) return await send.deny()
+        else if (info.model.startsWith("LBR")) return await UtilityHandlersCommon.getReadCommentHandler(2)(info, data, send)
+        else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getReadCommentHandler(3)(info, data, send)
+        else send.deny()
+    }
+    export const DispatchWriteComment: EPR = async (info, data, send) => {
+        if (info.model.startsWith("KBR")) return await send.deny()
+        else if (info.model.startsWith("LBR")) return await UtilityHandlersCommon.getWriteCommentHandler(2)(info, data, send)
+        else if (info.model.startsWith("MBR")) return await UtilityHandlersCommon.getWriteCommentHandler(3)(info, data, send)
+        else send.deny()
+    }
 }

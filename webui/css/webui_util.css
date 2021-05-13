@@ -4,6 +4,16 @@ input.input {
 select {
     text-overflow: ellipsis;
 }
+.select select {
+    max-width: 53vw;
+}
+.select option {
+    max-width: 100%
+}
+
+tr td {
+    vertical-align: middle !important;
+}
 
 #tab-content, .tab-content {
     display: none;
@@ -155,6 +165,9 @@ a {
     .select {
         max-width: 100% !important;
     }
+    .select select {
+        max-width: 100% !important;
+    }
 }
 .pagination-ellipsis{
     width: 2.25em;
@@ -227,7 +240,7 @@ a {
     .one-third#fornarrow {
         display: block;
     }
-    #tabs-mask::after { /* for mobiles */
+    #tabs-mask::before { /* for mobiles */
         content: "";
         z-index: 1;
         height: 100%;
@@ -236,6 +249,14 @@ a {
         position: absolute;
         left: 0;
         top: 0;
+        pointer-events: none;
+    }
+    #tabs-mask .tabs::after {
+        content: "";
+        min-width: 30px;
+        border: none !important;
+        display: block;
+        position: relative;
         pointer-events: none;
     }
 }
@@ -268,6 +289,9 @@ a {
 }
 .modal {
     padding-bottom: 13px;
+}
+.modal .modal-card-body {
+    overscroll-behavior: contain;
 }
 @media screen and (max-width: 1024px) {
     .modal {

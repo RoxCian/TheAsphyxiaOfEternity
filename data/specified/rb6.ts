@@ -364,6 +364,7 @@ const unlockedItems: IRb6ItemControl[] = [
     { type: 0, id: 808, param: 15, isNoticing: true, isCardOnly: true },
     { type: 0, id: 772, param: 15, isNoticing: true, isCardOnly: true },
     { type: 0, id: 804, param: 15, isNoticing: true, isCardOnly: true },
-    { type: 0, id: 835, param: 15, isNoticing: true, isCardOnly: true }
+    { type: 0, id: 835, param: 15, isNoticing: true, isCardOnly: true },
+    { type: 0, id: 892, param: 15, isNoticing: true, isCardOnly: true }
 ]
 export const kUnlockedItems: KITEM2<IRb6ItemControl[]> = mapKObject(unlockedItems, { 0: Rb6ItemControlMap })

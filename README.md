@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v1.0.6** 
+Plugin Version: **v1.1.0** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -72,6 +72,6 @@ This project used some data for web UI and game from several external websites/p
 
 - <a href="http://bemaniwiki.com/">BEMANIWiki</a> for web UI data.
 - <a href="http://remywiki.com/">RemyWiki</a> for some missing jackets.
-- <a href="https://github.com/DragonMinded/bemaniutils">Bemaniutils</a> for lobby structures/RB colette event progress saving/RB groovin' episode data.<br/>
+- <a href="https://github.com/DragonMinded/bemaniutils">Bemaniutils</a> for lobby structures/comment structures/RB colette event progress saving/RB groovin' episode data.<br/>
 
 I'm appreciated for their help.
