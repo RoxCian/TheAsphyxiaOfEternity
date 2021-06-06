@@ -226,6 +226,7 @@ export namespace Rb4HandlersCommon {
                     playerAccountForPlayCountQuery.dayCount++
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
+                playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
                 if (player.pdata.base) player.pdata.base.name = (await opm.findOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
 

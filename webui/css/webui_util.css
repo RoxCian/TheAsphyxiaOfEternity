@@ -217,27 +217,27 @@ a {
     margin-top: 0;
 }
 
-.one-quarter#forwide, .one-third#forwide {
+.one-quarter.for-wide, .one-third.for-wide {
     display: block;
     min-width: 100px;
 }
-.one-quarter#fornarrow, .one-third#fornarrow {
+.one-quarter.for-narrow, .one-third.for-narrow {
     display: none;
     min-width: 50px;
 }
 @media only screen and (max-width: 1023px) {
-    .one-quarter#forwide {
+    .one-quarter.for-wide {
         display: none;
     }
-    .one-quarter#fornarrow {
+    .one-quarter.for-narrow {
         display: block;
     }
 }
 @media only screen and (max-width: 768px) {
-    .one-third#forwide {
+    .one-third.for-wide {
         display: none;
     }
-    .one-third#fornarrow {
+    .one-third.for-narrow {
         display: block;
     }
     #tabs-mask::before { /* for mobiles */

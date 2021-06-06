@@ -22,6 +22,7 @@ export function register() {
 
     R.Config("unlock_all_songs", { type: "boolean", default: false })
     R.Config("unlock_all_items", { type: "boolean", default: false })
+    R.Config("comment_feature", { type: "boolean", default: true })
 
     R.WebUIEvent("removeWebUIMessage", UtilityHandlersWebUI.removeWebUIMessage)
 
@@ -61,9 +62,11 @@ function routeRb5() {
     R.Route("pcb.rb5_pcb_boot", Rb5HandlersCommon.BootPcb)
     R.Route("player.rb5_player_start", Rb5HandlersCommon.StartPlayer)
     R.Route("player.rb5_player_read", Rb5HandlersCommon.ReadPlayer)
-    R.Route("player.rb5_player_read_score_5", Rb5HandlersCommon.ReadPlayerScore)
+    R.Route("player.rb5_player_read_score_5", Rb5HandlersCommon.ReadPlayerScore) // VOLZZA 2
+    R.Route("player.rb5_player_read_score", Rb5HandlersCommon.ReadPlayerScore) // VOLZZA
     R.Route("player.rb5_player_read_score_old_5", Rb5HandlersCommon.ReadPlayerScoreOldVersion)
-    R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer)
+    R.Route("player.rb5_player_write_5", Rb5HandlersCommon.WritePlayer) // VOLZZA 2
+    R.Route("player.rb5_player_write", Rb5HandlersCommon.WritePlayer) // VOLZZA
     R.Route("lobby.rb5_lobby_entry", UtilityHandlersCommon.getAddLobbyHandler(5))
     R.Route("lobby.rb5_lobby_read", UtilityHandlersCommon.getReadLobbyHandler(5))
     R.Route("lobby.rb5_lobby_delete", UtilityHandlersCommon.getDeleteLobbyHandler(5))

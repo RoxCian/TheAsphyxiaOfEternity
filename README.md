@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v1.1.0** 
+Plugin Version: **v1.1.1** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -22,13 +22,14 @@ Supported versions:
     - Web UI
     - Asphyxia savedata importing<br/><br/>
 
-- **REFLEC BEAT VOLZZA 2**
+- **REFLEC BEAT VOLZZA / VOLZZA 2**
 
     Supported features:
 
     - Account & settings & mylist saving
     - Score saving
     - Reftis
+    - Dokidoki Rhythm Lab (VOLZZA)
     - Classcheck
     - Web UI<br/><br/>
 

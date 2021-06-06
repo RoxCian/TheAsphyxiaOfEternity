@@ -243,11 +243,11 @@ export namespace Rb3HandlersCommon {
             } else {
                 playerAccountForPlayCountQuery.isFirstFree = false
                 playerAccountForPlayCountQuery.playCount++
-                playerAccountForPlayCountQuery.st = player.pdata.account.st
                 if (!isToday(toBigInt(playerAccountForPlayCountQuery.st))) {
                     playerAccountForPlayCountQuery.dayCount++
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
+                playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
 
                 opm.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)

@@ -18,14 +18,14 @@ export const Rb4EventControlMap: KObjectMappingRecord<IRb4EventControl> = {
 }
 export function getExampleEventControl(): IRb4EventControl[] {
     let result: IRb4EventControl[] = []
-    let limit = [100, 100, 100]
+    let limit = [100, 100, 100, 30, 30]
     for (let i = 0; i < limit.length; i++) {
         for (let j = 0; j < limit[i]; j++) {
             result.push({
                 type: i,
                 index: j,
-                value: 99,
-                value2: 99,
+                value: 3,
+                value2: 3,
                 startTime: 1533749833,
                 endTime: 2147483647
             })

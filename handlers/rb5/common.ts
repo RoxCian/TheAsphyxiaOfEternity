@@ -100,10 +100,13 @@ export namespace Rb5HandlersCommon {
                 base.totalBestScore += s.score
                 base.totalBestScoreEachChartType[s.chartType] += s.score
             }
+            base.totalBestScoreV2 = base.totalBestScore
+            base.totalBestScoreEachChartTypeV2 = base.totalBestScoreEachChartType
 
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
+            // TODO: Yurukome
 
             result = {
                 pdata: {
@@ -176,6 +179,7 @@ export namespace Rb5HandlersCommon {
                     playerAccountForPlayCountQuery.dayCount++
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
+                playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
 
                 opm.update(rid, { collection: "rb.rb5.player.account" }, playerAccountForPlayCountQuery)
@@ -185,13 +189,27 @@ export namespace Rb5HandlersCommon {
                 if (oldBase != null) {
                     if (oldBase.name) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
+                    if (player.pdata.base.skillPointTimes10 == null) player.pdata.base.skillPointTimes10 = oldBase.skillPointTimes10 // VOLZZA 2
                 } else {
                     if (player.pdata.base.comment == "Welcome to REFLEC BEAT VOLZZA!") player.pdata.base.comment = ""
+
                 }
                 opm.upsert<IRb5PlayerBase>(rid, { collection: "rb.rb5.player.base" }, player.pdata.base)
             }
             if (player.pdata.config) opm.upsert<IRb5PlayerConfig>(rid, { collection: "rb.rb5.player.config" }, player.pdata.config)
-            if (player.pdata.custom) opm.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
+            if (player.pdata.custom) {
+                let oldCustom = await opm.findOne<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" })
+                if (oldCustom != null) {
+                    // VOLZZA 2
+                    if (player.pdata.custom.stageSameTimeObjectsDisplayingType == null) player.pdata.custom.stageSameTimeObjectsDisplayingType == oldCustom.stageSameTimeObjectsDisplayingType
+                    if (player.pdata.custom.stageScoreDisplayingType == null) player.pdata.custom.stageScoreDisplayingType == oldCustom.stageScoreDisplayingType
+                    if (player.pdata.custom.stageBonusType == null) player.pdata.custom.stageBonusType == oldCustom.stageBonusType
+                    if (player.pdata.custom.stageRivalObjectsDisplayingType == null) player.pdata.custom.stageRivalObjectsDisplayingType == oldCustom.stageRivalObjectsDisplayingType
+                    if (player.pdata.custom.stageTopAssistDisplayingType == null) player.pdata.custom.stageTopAssistDisplayingType == oldCustom.stageTopAssistDisplayingType
+                    if (player.pdata.custom.stageHighSpeed == null) player.pdata.custom.stageHighSpeed = oldCustom.stageHighSpeed
+                }
+                opm.upsert<IRb5PlayerCustom>(rid, { collection: "rb.rb5.player.custom" }, player.pdata.custom)
+            }
             if (player.pdata.stageLogs?.log?.length > 0) for (let i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, opm)
             if ((<IRb5PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
                 (player.pdata.classcheck as IRb5PlayerClasscheckLog).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1] == null ? 0 : player.pdata.stageLogs.log[1].score) + (player.pdata.stageLogs.log[2] == null ? 0 : player.pdata.stageLogs.log[2].score)

@@ -1,4 +1,3 @@
-
 import { ICollection } from "../utility/definitions"
 
 export interface IRb6MiscSettings extends ICollection<"rb.rb6.player.misc"> {

@@ -217,6 +217,8 @@ function initializeToggles() {
     }
 }
 
+let modalImageBuffer = []
+let maxModalImageBufferSize = 50
 function initializeModals(trigger, modal) {
     if (trigger && modal) {
         let c = modal.querySelectorAll("#close")
@@ -230,7 +232,22 @@ function initializeModals(trigger, modal) {
         for (let t of modaltriggers) {
             let m = t.querySelector(".modal")
             let c = m.querySelectorAll("#close")
-            t.addEventListener("click", () => { m.style.display = "flex" })
+            let imgs = t.querySelectorAll("img")
+            t.addEventListener("click", () => {
+                m.style.display = "flex"
+                for (let img of imgs) {
+                    let src = img.getAttribute("src")
+                    let lateSrc = img.getAttribute("late-src")
+                    if (lateSrc && (!src || (src != lateSrc))) {
+                        img.setAttribute("src", img.getAttribute("late-src"))
+                        if (modalImageBuffer.length >= Math.max(maxModalImageBufferSize, imgs.length)) {
+                            modalImageBuffer[0].setAttribute("src", modalImageBuffer[0].getAttribute("placeholder-src"))
+                            modalImageBuffer.splice(0, 1)
+                        }
+                        modalImageBuffer.push(img)
+                    }
+                }
+            })
             for (let v of c) v.addEventListener("click", (e) => {
                 m.style.display = "none"
                 e.stopPropagation()
@@ -720,21 +737,15 @@ function initializeNotificatioAnimation() {
     for (let n of notifications) {
         let remove = n.querySelector(".delete")
         let startSubmitter = n.querySelector("form.start")
-        let startPath = startSubmitter.getAttribute("action")
-        let startRequest = new XMLHttpRequest()
-        startRequest.open("POST", startPath, true)
-        startRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        let startPath = startSubmitter ? startSubmitter.getAttribute("action") : null
 
         let endSubmitter = n.querySelector("form.end")
-        let endPath = startSubmitter.getAttribute("action")
-        let endRequest = new XMLHttpRequest()
-        endRequest.open("POST", endPath, true)
-        endRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        let endPath = endSubmitter ? endSubmitter.getAttribute("action") : null
 
-        if (startSubmitter != null) startRequest.send()
+        if (startPath != null) axios.post(startPath)
         let end = () => {
-            n.style.display = "none"
-            if (endSubmitter != null) endRequest.send()
+            n.remove()
+            if (endPath != null) axios.post(endPath)
         }
 
         n.style.animationPlayState = "running"
@@ -772,7 +783,7 @@ function initializeCheckBoxes() {
 }
 
 function removeLoadingModal() {
-    let loading = document.querySelector(".loading")
+    var loading = document.querySelector(".loading")
     setTimeout(() => (loading == null) ? null : loading.remove(), 505)
     try {
         let a = loading.animate([

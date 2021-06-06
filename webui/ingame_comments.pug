@@ -1,0 +1,116 @@
+//DATA//
+  comments: DB.Find({ collection: "rb.info.comment" })
+
+-
+  let now = Date.now()
+
+  function toHalfWidth(s) {
+    let resultCharCodes = []
+    for (let i = 0; i < s.length; i++) {
+        let cc = s.charCodeAt(i)
+        if ((cc >= 65281) && (cc <= 65374)) resultCharCodes.push(cc - 65281 + 33)
+        else if (cc == 12288) resultCharCodes.push(32) // Full-width space
+        else resultCharCodes.push(cc)
+    }
+    return String.fromCharCode(...resultCharCodes)
+  }
+
+  function getIconPath(version, id) {
+    switch (version) {
+      case 6: return `static/img/characards/characard_${id}.webp`
+    }
+    return "static/img/jackets/noimage.svg"
+  }
+
+  let iconStyles = [null, null, "", "", "", "", ""]
+
+  comments.sort((l, r) => r.time - l.time)
+  
+mixin rb2Badge()
+  .is-active(tab-group = "version", tab-index = "2")
+    .option-content
+      .option-label
+        span.p1 lime
+        span.p2 light
+      .option-background.gradient(style = "background: linear-gradient(90deg, #FFF014 4%, #17D4FF 4%, #17D4FF 8%, #FF04F3 8%, #FF04F3 14%, #82FF00 14%);")
+mixin rb3Badge()
+  .is-active(tab-group = "version", tab-index = "3")
+    .option-content
+      .option-label
+        span.p1 c
+        span.p2 o
+        span.p3 l
+        span.p4 e
+        span.p5 t
+        span.p6 t
+        span.p7 e
+      .option-background.gradient(style = "background: linear-gradient(161deg, #DEDFF366 12%, #CBBED566 29%, #AED2DD66 30%, #AED2DD66 40%, #D9B08D66 40%, #D9B08D66 50%, #E2D09866 50%, #E2D09866 60%, #96B9E066 60%, #96B9E066 70%, #C2D4A066 70%, #C2D4A066 77%, #E0C9D666 80%, #DEDFF366 90%);")
+mixin rb4Badge()
+  .is-active(tab-group = "version", tab-index = "4")
+    .option-content
+      .option-label(style = "width: 50px; height: 18px;") groovin'!!
+      .option-background
+mixin rb5Badge()
+  .is-active(tab-group = "version", tab-index = "5")
+    .option-content
+      .option-label(style = "width: 50px; height: 18px; perspective: 162px")
+        .wrapper(style = "position: relative;")
+          span VOL
+          span.p1 ZZ
+          span A　
+          svg.background1(style = "position: absolute; left: -12.5px; top: 0; z-index: -1;", height = "15", width = "70")
+            polygon(style = "fill: black;", points = "8,3.5 65,3.5 61,13.5 14,13.5")
+      .option-background.background2
+mixin rb6Badge()
+  .is-active(tab-group = "version", tab-index = "6")
+    .option-content
+      .option-label(style = "position: relative"): p
+        span.p1 悠
+        span.p2 久
+        span.p3 の
+        span.p4 リ
+        span.p5 フ
+        span.p6 レ
+        span.p7 シ
+        span.p8 ア
+      .option-background.gradient(style = "background: linear-gradient(0deg, #2BA4F8 0%, #2BA4F800 50%, #2BA4F8 100%), linear-gradient(90deg, #2BA4F8 0%, #8E30E8 48%, #8E30E8 52%, #2BA4F8 100%);")
+mixin commentBox(src, version, userId, name, time, balloon, comment)
+  article.media.box
+    .columns.is-mobile.media-content
+      .column.is-narrow
+        figure.image.is-128x128: img(src = src)
+      .column
+        .content
+          .level.is-mobile
+            .level-left
+              - let e = now - time
+              strong #{name}
+              small #{`RB-${userId.toString().padStart(8, "0").slice(0, 4)}-${userId.toString().padStart(8, "0").slice(4, 8)}`}
+              small #{(e <= 60000) ? "just now" : (e <= 60000 * 60) ? `${Math.round(e / 60000)}m` : (e <= 60000 * 60 * 24) ? `${Math.round(e / 60000 / 60)}h` : (e <= 60000 * 60 * 24 * 7) ? `${Math.round(e / 60000 / 60 / 24)}d` : new Date(time).toLocaleString().split(" ")[0]}
+              small
+            .level-right
+              case version
+                when 2
+                  +rb2Badge
+                when 3
+                  +rb3Badge
+                when 4
+                  +rb4Badge
+                when 5
+                  +rb5Badge
+                when 6
+                  +rb6Badge
+          div(class = `comment-box balloon${balloon}`)
+            .box(style = "box-shadow: none") #{comment}
+
+link(rel="stylesheet", href="static/css/webui_util.css", type="text/css")
+link(rel="stylesheet", href="static/css/switch_version.css", type="text/css")
+link(rel="stylesheet", href="static/css/ingame_comments.css", type="text/css")
+//- svg(width = 0, height = 0)
+//-   defs
+//-     clipPath#balloon2-path
+//-       svg
+//-         g(transform = "scale(1, 1)")
+//-           ellipse(cx = "5%", cy = "50%", rx = "5%", ry = "44%")
+each c in comments
+  +commentBox(getIconPath(c.version, (c.version == 6) ? c.characterId : c.iconId), c.version, c.userId, toHalfWidth(c.name), c.time * 1000, c.balloon, c.comment)

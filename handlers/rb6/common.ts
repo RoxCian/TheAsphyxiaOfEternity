@@ -14,7 +14,7 @@ import { DBM } from "../utility/db_manager"
 import { tryFindPlayer } from "../utility/try_find_player"
 import { base64ToBuffer, bufferToBase64, isToday } from "../../utility/utility_functions"
 import { generateUserId } from "../utility/generate_user_id"
-import { BigIntProxy, s8me } from "../../utility/mapping"
+import { s8me } from "../../utility/mapping"
 import { IRb6MiscSettings } from "../../models/rb6/misc_settings"
 import { getExampleCourse, kUnlockedItems } from "../../data/specified/rb6"
 import { IRb6ItemControl, Rb6ItemControlMap } from "../../models/rb6/item_control"
@@ -73,7 +73,7 @@ export namespace Rb6HandlersCommon {
         let misc: IRb6MiscSettings = await DB.FindOne<IRb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
         let result = {
             plyid: (account != null) ? account.playerId : -1,
-            start_time: BigInt(0),
+            start_time: BigInt(Date.now()),
             event_ctrl: { data: getExampleEventControl() },
             item_lock_ctrl: {},
             item_ctrl: {
@@ -175,6 +175,10 @@ export namespace Rb6HandlersCommon {
             if ((base.comment == null) || (base?.comment == "")) base.comment = "Welcome to the land of Reflesia!"
             if (base.abilityPointTimes100 == null) base.abilityPointTimes100 = base["averagePrecisionTimes100"]  // For compatibility
             for (let c of characterCards) if (c.level == null) c.level = 0
+            base.rankQuestScore = [0, 0, 0]
+            for (let q of questRecords) if (q.dungeonId == 47) {
+                // TODO
+            }
 
             let scores: IRb6MusicRecord[] = await DB.Find<IRb6MusicRecord>(readParam.rid, { collection: "rb.rb6.playData.musicRecord" })
 
@@ -188,25 +192,14 @@ export namespace Rb6HandlersCommon {
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
-            // Twitter support test
-            config.isTwitterLinked = true
-            config.isTweet = true
-            //
-
-            // Classcheck unlock test
-            base.uattr = 2
-            account.crd = 3
-            account.playCountToday = 3
-            account.brd = 3
-            account.dayCount = 3
-            //
-
             // Ghost binary data
             for (let g of ghosts) {
                 if (g.blueDataBase64) g.blueData = base64ToBuffer(g.blueDataBase64, 10240)
                 if (g.redDataBase64) g.redData = base64ToBuffer(g.redDataBase64, 10240)
             }
             //
+
+            base.uattr = 7
 
             result = {
                 pdata: {
@@ -276,8 +269,8 @@ export namespace Rb6HandlersCommon {
                     playerAccountForPlayCountQuery.dayCount++
                     playerAccountForPlayCountQuery.playCountToday = 0
                 }
+                playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
-                playerAccountForPlayCountQuery.st = BigIntProxy(BigInt(Date.now()))
 
                 opm.update(rid, { collection: "rb.rb6.player.account" }, playerAccountForPlayCountQuery)
             }
@@ -414,18 +407,14 @@ export namespace Rb6HandlersCommon {
     }
 
     export const ReadRank: EPR = async (_, data, send) => {
-        return {
+        return await send.object({
             player: {
                 tbs: {
                     new_rank: K.ARRAY("s32", [1, 1, 1, 1, 1]),
                     old_rank: K.ARRAY("s32", [-1, -1, -1, -1, -1])
                 }
             }
-        }
-    }
-
-    export const WriteComment: EPR = async (_, data, send) => {
-
+        })
     }
 
     interface IPlayerReadParameters {

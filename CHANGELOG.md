@@ -1,9 +1,17 @@
+- v1.1.1
+
+  Added a webui page for in-game comments.
+
+  Fixed support for RB VOLZZA 1.
+
+  Fixed bugs.
+
 - v1.1.0
 
-  The in-game comment system is now avaliable for RB limelight ~ RB Reflesia. The comments sended by everyone in any game can be showed in all RB titles.
+  The in-game comment system is now available for RB limelight ~ RB Reflesia. The comments sended by everyone in any game can be showed in all RB titles.
 
   Fixed bugs on webui which can cause an error while loading data for RB colette / RB Reflesia.
-    - Now you can change ar displaying type on webui for RB colette
+    - Now you can change ar displaying type on webui for RB colette.
 
   Did more componentization works for the webui page.
     - Added a lovely game version select box for mobile devices.
@@ -23,7 +31,7 @@
   Added 6th KAC quests and ranking quests for RB Reflesia.
     - You can modify the ranking quest group on webui.
 
-  Now the songs revived after 2018/04/05 are avaliable by default for RB Reflesia.
+  Now the songs revived after 2018/04/05 are available by default for RB Reflesia.
 
   Optimize the webui for mobile devices.
 
@@ -45,7 +53,7 @@
 
   Adjusted the webui.
     - Skill rate can be displayed now. (RB VOLZZA 2 & RB Reflesia)
-    - Fixed scorll displaying for modals.
+    - Fixed scroll displaying for modals.
     - All bosses' name can be displayed. (RB groovin'!!)
 
 - v1.0.3

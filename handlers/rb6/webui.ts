@@ -15,32 +15,32 @@ export namespace Rb6HandlersWebUI {
         refid: string
         name: string
         comment: string
-        gaugeType: number
-        achievementRateDisplayingType: number
-        objectSize: number
-        sameTimeObjectsDisplayingType: number
-        shotSound: number
-        shotVolume: number
-        explodeType: number
-        frameType: number
-        background: number
-        backgroundBrightness: number
-        bywordLeft: number
-        bywordRight: number
+        gaugeType: string
+        achievementRateDisplayingType: string
+        objectSize: string
+        sameTimeObjectsDisplayingType: string
+        shotSound: string
+        shotVolume: string
+        explodeType: string
+        frameType: string
+        background: string
+        backgroundBrightness: string
+        bywordLeft: string
+        bywordRight: string
         isAutoBywordLeft?: string
         isAutoBywordRight?: string
-        bigBangEffectPerformingType: number
-        rivalObjectsDisplayingType: number
-        topAssistDisplayingType: number
-        chatSoundSwitch: number
-        highSpeed: number
-        color: number
+        bigBangEffectPerformingType: string
+        rivalObjectsDisplayingType: string
+        topAssistDisplayingType: string
+        chatSoundSwitch: string
+        highSpeed: string
+        color: string
         isLobbyEnabled?: string
-        rankingQuestIndex: number
-        pastelEquipHead: number
-        pastelEquipTop: number
-        pastelEquipUnder: number
-        pastelEquipArm: number
+        rankingQuestIndex: string
+        pastelEquipHead: string
+        pastelEquipTop: string
+        pastelEquipUnder: string
+        pastelEquipArm: string
         mylist: string
         textToOverride: string
         asphyxiaProfileTextToImport: string
@@ -69,51 +69,34 @@ export namespace Rb6HandlersWebUI {
                 rb6Base = await importAsphyxia(rb6Base, p, s, data.refid)
             }
 
-            // const mapCharacters = (s: string) => {
-            //     let patternLc = /[a-z]/
-            //     let patternUc = /[A-Z]/
-            //     let patternNum = /[0-9]/
-            //     let resultCharCodes: number[] = []
-            //     for (let i = 0; i < s.length; i++) {
-            //         let c = s[i]
-            //         let cc = s.charCodeAt(i)
-            //         if (patternUc.test(c)) resultCharCodes.push(cc - "A".charCodeAt(0) + 65313)
-            //         else if (patternLc.test(c)) resultCharCodes.push(cc - "a".charCodeAt(0) + 65345)
-            //         else if (patternNum.test(c)) resultCharCodes.push(cc - "0".charCodeAt(0) + 65296)
-            //         else if (c == " ") resultCharCodes.push(12288)
-            //         else resultCharCodes.push(cc)
-            //     }
-            //     return String.fromCharCode(...resultCharCodes)
-            // }
-
             rb6Base.name = data.name.trim()
             rb6Base.comment = data.comment
             // Customize page 1
-            rb6Custom.stageClearGaugeType = data.gaugeType
-            rb6Custom.stageAchievementRateDisplayingType = data.achievementRateDisplayingType
-            rb6Custom.stageObjectSize = data.objectSize
-            rb6Custom.stageSameTimeObjectsDisplayingType = data.sameTimeObjectsDisplayingType
+            if (data.gaugeType) rb6Custom.stageClearGaugeType = parseInt(data.gaugeType)
+            if (data.achievementRateDisplayingType) rb6Custom.stageAchievementRateDisplayingType = parseInt(data.achievementRateDisplayingType)
+            if (data.objectSize) rb6Custom.stageObjectSize = parseInt(data.objectSize)
+            if (data.sameTimeObjectsDisplayingType) rb6Custom.stageSameTimeObjectsDisplayingType = parseInt(data.sameTimeObjectsDisplayingType)
             // Customize page 2
-            rb6Custom.stageShotSound = data.shotSound
-            rb6Custom.stageShotVolume = data.shotVolume
-            rb6Custom.stageExplodeType = data.explodeType
-            rb6Custom.stageFrameType = data.frameType
-            rb6Custom.stageBackground = data.background
-            rb6Custom.stageBackgroundBrightness = data.backgroundBrightness
+            if (data.shotSound) rb6Custom.stageShotSound = parseInt(data.shotSound)
+            if (data.shotVolume) rb6Custom.stageShotVolume = parseInt(data.shotVolume)
+            if (data.explodeType) rb6Custom.stageExplodeType = parseInt(data.explodeType)
+            if (data.frameType) rb6Custom.stageFrameType = parseInt(data.frameType)
+            if (data.background) rb6Custom.stageBackground = parseInt(data.background)
+            if (data.backgroundBrightness) rb6Custom.stageBackgroundBrightness = parseInt(data.backgroundBrightness)
             // Customize page 3
-            rb6Config.bywordLeft = data.bywordLeft
-            rb6Config.bywordRight = data.bywordRight
-            rb6Config.isAutoBywordLeft = (data.isAutoBywordLeft == null) ? false : true
-            rb6Config.isAutoBywordRight = (data.isAutoBywordRight == null) ? false : true
+            if (data.bywordLeft) rb6Config.bywordLeft = parseInt(data.bywordLeft)
+            if (data.bywordRight) rb6Config.bywordRight = parseInt(data.bywordRight)
+            rb6Config.isAutoBywordLeft = data.isAutoBywordLeft ? true : false
+            rb6Config.isAutoBywordRight = data.isAutoBywordRight ? true : false
             // Customize page 4
-            rb6Custom.stageBigBangEffectPerformingType = data.bigBangEffectPerformingType
-            rb6Custom.stageRivalObjectsDisplayingType = data.rivalObjectsDisplayingType
-            rb6Custom.stageTopAssistDisplayingType = data.topAssistDisplayingType
-            rb6Custom.stageChatSoundSwitch = data.chatSoundSwitch
+            if (data.bigBangEffectPerformingType) rb6Custom.stageBigBangEffectPerformingType = parseInt(data.bigBangEffectPerformingType)
+            if (data.rivalObjectsDisplayingType) rb6Custom.stageRivalObjectsDisplayingType = parseInt(data.rivalObjectsDisplayingType)
+            if (data.topAssistDisplayingType) rb6Custom.stageTopAssistDisplayingType = parseInt(data.topAssistDisplayingType)
+            if (data.chatSoundSwitch) rb6Custom.stageChatSoundSwitch = parseInt(data.chatSoundSwitch)
 
-            rb6Custom.stageHighSpeed = data.highSpeed
-            rb6Custom.stageColorSpecified = data.color
-            rb6Base.pastelParts = [data.pastelEquipHead, data.pastelEquipTop, data.pastelEquipUnder, data.pastelEquipArm]
+            if (data.highSpeed) rb6Custom.stageHighSpeed = parseInt(data.highSpeed)
+            if (data.color) rb6Custom.stageColorSpecified = parseInt(data.color)
+            if (data.pastelEquipArm) rb6Base.pastelParts = [parseInt(data.pastelEquipHead), parseInt(data.pastelEquipTop), parseInt(data.pastelEquipUnder), parseInt(data.pastelEquipArm)]
 
             rb6LobbySettings.isEnabled = data.isLobbyEnabled != null
 
@@ -125,7 +108,7 @@ export namespace Rb6HandlersWebUI {
 
             let rb6MiscSettings: IRb6MiscSettings = {
                 collection: "rb.rb6.player.misc",
-                rankingQuestIndex: data.rankingQuestIndex
+                rankingQuestIndex: data.rankingQuestIndex ? parseInt(data.rankingQuestIndex) : 0
             }
 
             await DBM.update<IRb6PlayerBase>(data.refid, { collection: "rb.rb6.player.base" }, rb6Base)

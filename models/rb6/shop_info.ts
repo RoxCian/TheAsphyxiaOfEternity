@@ -25,8 +25,8 @@ export const KRb6ShopInfo = mapKObject(Rb6ShopInfo, Rb6ShopInfoMap)
 
 export const KRb6ShopInfoOriginal = {
     name: K.ITEM("str", "Asphysia Core"),
-    cl_enbl: K.ITEM("bool", 0),
+    cl_enbl: K.ITEM("bool", 1),
     ch_h: K.ITEM("u8", 0),
     ch_m: K.ITEM("u8", 0),
-    shop_flag: K.ITEM("bool", 0)
+    shop_flag: K.ITEM("bool", 1)
 }

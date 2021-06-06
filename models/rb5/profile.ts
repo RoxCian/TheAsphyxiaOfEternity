@@ -3,6 +3,8 @@ import { appendMappingElement, boolme, getCollectionMappingElement, ignoreme, KO
 import { IRb5ClasscheckRecord, Rb5ClasscheckRecordMappingRecord } from "./classcheck_record"
 import { IRb5Mylist, Rb5MylistMap } from "./mylist"
 
+let noNull = (source) => (source == null) ? 0 : source
+
 export interface IRb5PlayerAccount extends ICollection<"rb.rb5.player.account"> {
     userId: number
     playerId: number
@@ -125,6 +127,8 @@ export interface IRb5PlayerBase extends ICollection<"rb.rb5.player.base"> {
     comment: string
     totalBestScore: number
     totalBestScoreEachChartType: number[]
+    totalBestScoreV2: number
+    totalBestScoreEachChartTypeV2: number[]
     name: string
     matchingGrade: number // <mg />
     abilityPointTimes100: number // <ap />
@@ -140,8 +144,10 @@ export const Rb5PlayerBaseMap: KObjectMappingRecord<IRb5PlayerBase> = {
     collection: getCollectionMappingElement<IRb5PlayerBase>("rb.rb5.player.base"),
     money: s32me(),
     comment: strme("cmnt"),
-    totalBestScore: s32me("tbs_5"),
-    totalBestScoreEachChartType: s32me("tbgs_5"),
+    totalBestScore: s32me("tbs"),
+    totalBestScoreEachChartType: s32me("tbgs"),
+    totalBestScoreV2: s32me("tbs_5"),
+    totalBestScoreEachChartTypeV2: s32me("tbgs_5"),
     name: strme(),
     matchingGrade: s32me("mg"),
     abilityPointTimes100: s32me("ap"),
@@ -149,7 +155,7 @@ export const Rb5PlayerBaseMap: KObjectMappingRecord<IRb5PlayerBase> = {
     isTutorialEnabled: boolme("is_tut"),
     class: s32me(),
     classAchievrementRateTimes100: s32me("class_ar"),
-    skillPointTimes10: s32me("skill_point"),
+    skillPointTimes10: s32me("skill_point", noNull),
     mlog: s16me()
 }
 export function generateRb5PlayerBase(): IRb5PlayerBase {
@@ -159,6 +165,8 @@ export function generateRb5PlayerBase(): IRb5PlayerBase {
         comment: "",
         totalBestScore: 0,
         totalBestScoreEachChartType: [0, 0, 0, 0],
+        totalBestScoreV2: 0,
+        totalBestScoreEachChartTypeV2: [0, 0, 0, 0],
         name: "",
         matchingGrade: 0,
         abilityPointTimes100: 0,
@@ -299,27 +307,27 @@ export interface IRb5PlayerCustom extends ICollection<"rb.rb5.player.custom"> {
 }
 export const Rb5PlayerCustomMap: KObjectMappingRecord<IRb5PlayerCustom> = {
     collection: getCollectionMappingElement<IRb5PlayerCustom>("rb.rb5.player.custom"),
-    stageMainGaugeType: u8me("st_jr_gauge"),//
+    stageMainGaugeType: u8me("st_jr_gauge"),
     type: u8me(),
 
-    stageShotSound: u8me("st_shot"),//
-    stageFrameType: u8me("st_frame"),//
-    stageExplodeType: u8me("st_expl"),//
-    stageBackground: u8me("st_bg"),//
-    stageShotVolume: u8me("st_shot_vol"),//
-    stageBackgroundBrightness: u8me("st_bg_bri"),//
-    stageObjectSize: u8me("st_obj_size"),//
-    stageClearGaugeType: u8me("st_hazard"),//
-    stageColorRandom: u8me("st_rnd"),//
-    stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp"),//
-    stageScoreDisplayingType: u8me("st_score_disp_type"),//
-    stageBonusType: u8me("st_bonus_type"),//
-    stageRivalObjectsDisplayingType: u8me("st_rivalnote_type"),//
-    stageTopAssistDisplayingType: u8me("st_topassist_type"),//
-    stageHighSpeed: u8me("high_speed"),//
+    stageShotSound: u8me("st_shot"),
+    stageFrameType: u8me("st_frame"),
+    stageExplodeType: u8me("st_expl"),
+    stageBackground: u8me("st_bg"),
+    stageShotVolume: u8me("st_shot_vol"),
+    stageBackgroundBrightness: u8me("st_bg_bri"),
+    stageObjectSize: u8me("st_obj_size"),
+    stageClearGaugeType: u8me("st_hazard"),
+    stageColorRandom: u8me("st_rnd"),
+    stageSameTimeObjectsDisplayingType: u8me("same_time_note_disp", noNull), // VOLZZA 2
+    stageScoreDisplayingType: u8me("st_score_disp_type", noNull), // VOLZZA 2
+    stageBonusType: u8me("st_bonus_type", noNull), // VOLZZA 2
+    stageRivalObjectsDisplayingType: u8me("st_rivalnote_type", noNull), // VOLZZA 2
+    stageTopAssistDisplayingType: u8me("st_topassist_type", noNull), // VOLZZA 2
+    stageHighSpeed: u8me("high_speed", noNull), // VOLZZA 2
     stageColorSpecified: u8me("color_type"),
-    stageAchievementRateDisplayingType: u8me("st_clr_gauge"),//
-    stageClearCondition: u8me("st_clr_cond"),//
+    stageAchievementRateDisplayingType: u8me("st_clr_gauge"),
+    stageClearCondition: u8me("st_clr_cond"),
     voiceMessageSet: s16me("voice_message_set"),
     voiceMessageVolume: u8me("voice_message_volume")
 }
@@ -628,7 +636,7 @@ interface IRb5PlayerData {
     share: {}
     battleRoyale: IRb5BattleRoyale
     derby: IRb5Derby
-    yurukomeList: [number, number, number, number]
+    yurukomeList: [number, number, number, number] // ゆるゆるコメント -> special comments shown on result screen
     myCourse: IRb5MyCourseLog
     myCourseF: IRb5MyCourseLog
     challengeEventCard: {

@@ -1,0 +1,89 @@
+.option-content {
+    font-size: 0.75em;
+    border-radius: 100px;
+    width: 100px;
+    text-align: center;
+}
+
+small {
+    padding: 0 0 0 1em;
+}
+
+figure {
+    border-radius: 5%;
+    overflow: hidden;
+}
+
+.comment-box {
+    box-shadow: none !important;
+    filter: drop-shadow(0 0 5px #7F7F7F7F);
+    position: relative;
+}
+.comment-box.balloon0 div {
+    border-radius: 500px;
+}
+/* .comment-box.balloon2 div {
+    clip-path: url(#balloon2-path);
+} */
+
+.comment-box.balloon0::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 0.7em solid white;
+    left: -0.4em;
+    top: 1.3em;
+    transform: scaleY(0.7) rotate(45deg);
+    position: absolute;
+}
+.comment-box.balloon1::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 0.5em solid white;
+    left: -0.5em;
+    top: 1.5em;
+    transform: rotate(45deg);
+    position: absolute;
+}
+.comment-box.balloon2::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 0.5em solid white;
+    left: -0.5em;
+    top: 1.5em;
+    transform: rotate(45deg);
+    position: absolute;
+}
+.comment-box.balloon3::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 0.5em solid white;
+    left: -0.5em;
+    top: 1.5em;
+    transform: rotate(45deg);
+    position: absolute;
+}
+.comment-box.balloon4::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 0.5em solid white;
+    left: -0.5em;
+    top: 1.5em;
+    transform: rotate(45deg);
+    position: absolute;
+}
+
+.is-active[tab-index="4"] .option-label {
+    margin-left: 24px;
+}
+.is-active[tab-index="5"] .option-label {
+    transform: scale(0.85);
+    margin-left: 24px;
+}
+.is-active[tab-index="6"] p {
+    transform: scale(0.75);
+}

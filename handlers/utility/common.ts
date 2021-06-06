@@ -73,6 +73,7 @@ export namespace UtilityHandlersCommon {
     }
 
     export function getReadCommentHandler<TVersion extends number>(version: TVersion): EPR {
+        if (!U.GetConfig("comment_feature")) return async (_0, _1, send) => await send.deny()
         let closure = { version: version }
         return async (_, data, send) => {
             let param = mapBackKObject(data, ReadCommentParamMap)[0]
@@ -139,6 +140,7 @@ export namespace UtilityHandlersCommon {
         }
     }
     export function getWriteCommentHandler<TVersion extends number>(version: TVersion): EPR {
+        if (!U.GetConfig("comment_feature")) return async (_0, _1, send) => await send.deny()
         let closure = { version: version }
         return async (_, data, send) => {
             let commentMap: KObjectMappingRecord<IRbComment>
