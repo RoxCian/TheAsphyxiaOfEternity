@@ -1,0 +1,518 @@
+[
+    {
+        "id": 0,
+        "name":"イフィリア",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 1,
+        "name":"ウィスカ",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 2,
+        "name":"クラン",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 3,
+        "name":"パステルくん",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 4,
+        "name":"アルペラ",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 5,
+        "name":"イルシア",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 6,
+        "name":"エメラルダ",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 7,
+        "name":"NxxK",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 8,
+        "name":"Level 1 CPU",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 9,
+        "name":"Level 2 CPU",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 10,
+        "name":"Level 3 CPU",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 11,
+        "name":"Level 4 CPU",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 12,
+        "name":"Level 5 CPU",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 13,
+        "name":"Level 6 CPU",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 14,
+        "name":"Level 7 CPU",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 15,
+        "name":"Level 8 CPU",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 16,
+        "name":"DJ YOSHITAKA",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 17,
+        "name":"Qrispy",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 18,
+        "name":"Des-ROW",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 19,
+        "name":"DJ TOTTO",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 20,
+        "name":"dj TAKA",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 21,
+        "name":"L.E.D.",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 22,
+        "name":"Sota Fujimori",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 23,
+        "name":"猫叉Master",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 24,
+        "name":"wac",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 25,
+        "name":"PON",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 26,
+        "name":"TAG",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 27,
+        "name":"村井聖夜",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 28,
+        "name":"YUEI",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 29,
+        "name":"TOMOSUKE",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 30,
+        "name":"SUPER STAR -満-",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 31,
+        "name":"96",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 32,
+        "name":"あさき",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 33,
+        "name":"Cody",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 34,
+        "name":"U-1",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 35,
+        "name":"Akhuta",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 36,
+        "name":"肥塚良彦",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 37,
+        "name":"泉 陸奥彦",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 38,
+        "name":"ショッチョー",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 39,
+        "name":"Hu∑eR",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 40,
+        "name":"Dory",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 41,
+        "name":"劇団レコード",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 42,
+        "name":"リチェルカ",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 43,
+        "name":"STAFF1",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 44,
+        "name":"STAFF2",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 45,
+        "name":"STAFF3",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 46,
+        "name":"STAFF4",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 47,
+        "name":"STAFF5",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 48,
+        "name":"STAFF6",
+        "element":"aqua",
+        "isAccessable": false
+    },
+    {
+        "id": 49,
+        "name":"STAFF7",
+        "element":"wood",
+        "isAccessable": false
+    },
+    {
+        "id": 50,
+        "name":"STAFF",
+        "element":"fire",
+        "isAccessable": false
+    },
+    {
+        "id": 51,
+        "name":"ノール・ブラウン",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 52,
+        "name":"イグナーツ",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 53,
+        "name":"シャトン",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 54,
+        "name":"時の花売り",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 55,
+        "name":"白銀の乙女",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 56,
+        "name":"山形 まり花",
+        "element":"light",
+        "isAccessable": true
+    },
+    {
+        "id": 57,
+        "name":"和泉 一舞",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 58,
+        "name":"芽兎 めう",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 59,
+        "name":"春日 咲子",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 60,
+        "name":"霜月 凛",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 61,
+        "name":"東雲 夏陽",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 62,
+        "name":"東雲 心菜",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 63,
+        "name":"Noah",
+        "element":"light",
+        "isAccessable": true
+    },
+    {
+        "id": 64,
+        "name":"牡丹",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 65,
+        "name":"パステルくん",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 66,
+        "name":"涼風青葉",
+        "element":"light",
+        "isAccessable": true
+    },
+    {
+        "id": 67,
+        "name":"八神コウ",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 68,
+        "name":"遠山りん",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 69,
+        "name":"滝本ひふみ",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 70,
+        "name":"篠田はじめ",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 71,
+        "name":"飯島ゆん",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 72,
+        "name":"桜ねね",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 73,
+        "name":"阿波根うみこ",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 74,
+        "name":"葉月しずく",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 75,
+        "name":"望月紅葉",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 76,
+        "name":"鳴海ツバメ",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 77,
+        "name":"メフィウス",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 78,
+        "name":"リオネル",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 79,
+        "name":"山形 まり花",
+        "element":"light",
+        "isAccessable": true
+    },
+    {
+        "id": 80,
+        "name":"和泉 一舞",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 81,
+        "name":"芽兎 めう",
+        "element":"aqua",
+        "isAccessable": true
+    },
+    {
+        "id": 82,
+        "name":"春日 咲子",
+        "element":"wood",
+        "isAccessable": true
+    },
+    {
+        "id": 83,
+        "name":"霜月 凛",
+        "element":"dark",
+        "isAccessable": true
+    },
+    {
+        "id": 84,
+        "name":"東雲 夏陽",
+        "element":"fire",
+        "isAccessable": true
+    },
+    {
+        "id": 85,
+        "name":"東雲 心菜",
+        "element":"aqua",
+        "isAccessable": true
+    }
+]

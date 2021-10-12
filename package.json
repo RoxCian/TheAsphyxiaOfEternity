@@ -1,6 +1,6 @@
 {
   "name": "the-asphyxia-of-eternity",
-  "version": "v1.1.1",
+  "version": "v1.1.11",
   "description": "A plugin for RB supporting run on Asphyxia CORE.",
   "main": "index.ts",
   "author": {
@@ -19,5 +19,3 @@
     "@types/lodash": "^4.14.153"
   }
 }
-
-

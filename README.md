@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v1.1.1** 
+Plugin Version: **v1.1.11** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 

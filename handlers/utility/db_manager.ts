@@ -120,13 +120,13 @@ export namespace DBM {
         return result
     }
 
-    async function checkData<T extends ICollection<any>>(data: T): Promise<void> {
+    async function checkData<T extends ICollection<any>>(data: Partial<T>): Promise<void> {
         for (let k in data) if (k.startsWith("__")) delete data[k]
         if (await DB.FindOne<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }) == null) {
             await DB.Insert<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection })
         }
     }
-    export async function update<T extends ICollection<any>>(refid: string | null, query: Query<T>, data: Doc<T>, isPublicDoc: boolean = true) {
+    export async function update<T extends ICollection<any>>(refid: string | null, query: Query<T>, data: Doc<T> | Update<T>, isPublicDoc: boolean = true) {
         checkData(data)
         if (refid == null) return isPublicDoc ? await DB.Update(query, data) : await DB.Update(null, query, data)
         else return await DB.Update(refid, query, data)

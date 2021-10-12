@@ -92,6 +92,7 @@ export namespace Rb5HandlersCommon {
             if (battleRoyale == null) battleRoyale = generateRb5BattleRoyale()
             if (myCourse == null) myCourse = generateRb5MyCourseLog()
             if (mylist.index < 0) mylist.index = 0
+            for (let i of released) if (i.insertTime == null) i.insertTime = Date.now()
             let scores: IRb5MusicRecord[] = await DB.Find<IRb5MusicRecord>(readParam.rid, { collection: "rb.rb5.playData.musicRecord" })
 
             base.totalBestScore = 0

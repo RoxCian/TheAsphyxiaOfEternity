@@ -365,10 +365,6 @@ export namespace Rb4HandlersCommon {
         }
     }
 
-    export const WriteComment: EPR = async (_, data, send) => {
-
-    }
-
     interface IPlayerReadParameters {
         rid: string
         lid: string

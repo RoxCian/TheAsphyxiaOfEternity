@@ -1,7 +1,10 @@
 "use strict"
 
+const qs = (selectors) => document.querySelector(selectors)
+const qsa = (selectors) => document.querySelectorAll(selectors)
+
 function initializePaginatedContent() {
-    let containers = document.querySelectorAll(".paginated-container")
+    let containers = qsa(".paginated-container")
 
     for (let container of containers) {
         let pageSizeInput = container.querySelector("input.page-size")
@@ -147,9 +150,9 @@ function initializePaginatedContent() {
 }
 
 function initializeTabs() {
-    let tabs = document.querySelectorAll("#tabs li, #tabs #tab")
-    let tabsSelect = document.querySelectorAll(".select select#select-tabs")
-    let tabContents = document.querySelectorAll("#tab-content, .tab-content")
+    let tabs = qsa("#tabs li, #tabs #tab")
+    let tabsSelect = qsa(".select select#select-tabs")
+    let tabContents = qsa("#tab-content, .tab-content")
     let updateActiveTab = (tabGroup, tabIndex) => {
         for (let t of tabs) if (t && (t.getAttribute("tab-group") == tabGroup)) {
             if (t.getAttribute("tab-index") != tabIndex) {
@@ -196,8 +199,8 @@ function initializeTabs() {
 }
 
 function initializeToggles() {
-    let toggles = document.querySelectorAll(".card-header .card-toggle")
-    let contents = document.querySelectorAll(".card-content")
+    let toggles = qsa(".card-header .card-toggle")
+    let contents = qsa(".card-content")
 
     for (let t of toggles) {
         let card = t.getAttribute("card")
@@ -228,7 +231,7 @@ function initializeModals(trigger, modal) {
             e.stopPropagation()
         })
     } else {
-        let modaltriggers = $(".modal-trigger")
+        let modaltriggers = qsa(".modal-trigger")
         for (let t of modaltriggers) {
             let m = t.querySelector(".modal")
             let c = m.querySelectorAll("#close")
@@ -252,12 +255,13 @@ function initializeModals(trigger, modal) {
                 m.style.display = "none"
                 e.stopPropagation()
             })
+            c = null
         }
     }
 }
 
 function initializeFormSelects() {
-    let formSelects = document.querySelectorAll("#form-select")
+    let formSelects = qsa("#form-select")
     for (let s of formSelects) {
         let input = s.querySelector("input#form-select-input")
         let select = s.querySelector("select#form-select-select")
@@ -283,7 +287,7 @@ function initializeFormSelects() {
 }
 
 function initializeFormPaginations() {
-    let formPags = document.querySelectorAll("#form-pagination")
+    let formPags = qsa("#form-pagination")
     for (let p of formPags) {
         let input = p.querySelector("input#form-pagination-input")
         let options = p.querySelectorAll("ul.pagination-list li a.pagination-link")
@@ -307,7 +311,7 @@ function clipFloat(v) {
 }
 
 function initializeFormValidation() {
-    let forms = document.querySelectorAll("form#validatable")
+    let forms = qsa("form#validatable")
     for (let f of forms) {
         let validatableFields = f.querySelectorAll(".field#validatable")
         let validatableButtons = f.querySelectorAll("button#validatable")
@@ -388,7 +392,7 @@ function initializeFormValidation() {
 }
 
 function initializeFormCollections() {
-    let collections = document.querySelectorAll("#form-collection")
+    let collections = qsa("#form-collection")
     for (let c of collections) {
         let maxLength = parseInt(c.getAttribute("max-length"))
         let fallbackValue = JSON.parse(c.getAttribute("fallback"))
@@ -439,7 +443,7 @@ function initializeFormCollections() {
 }
 
 function initializeFormSlotedArrays() {
-    let arrays = document.querySelectorAll("#form-sloted-array")
+    let arrays = qsa("#form-sloted-array")
     for (let a of arrays) {
         let elements = a.querySelectorAll("#form-array-slot")
         let fallbackValue = JSON.parse(a.getAttribute("fallback"))
@@ -500,7 +504,7 @@ function initializeFormSlotedArrays() {
 }
 
 function initializeSingleSelectTables() {
-    let tables = document.querySelectorAll("table#single-select")
+    let tables = qsa("table#single-select")
     for (let table of tables) {
         let valueInput = table.querySelector("input#select-input")
         let titleInput = table.querySelector("input#select-title")
@@ -545,7 +549,7 @@ function initializeSingleSelectTables() {
 }
 
 function initializeMultiSelectTables() {
-    let tables = document.querySelectorAll("table#multi-select")
+    let tables = qsa("table#multi-select")
     for (let table of tables) {
         let valueInput = table.querySelector("input#multi-select-input")
         let titleInput = table.querySelector("input#multi-select-title")
@@ -602,7 +606,7 @@ function initializeMultiSelectTables() {
 }
 
 function initializeFormNumerics() {
-    let numerics = document.querySelectorAll("#form-numeric")
+    let numerics = qsa("#form-numeric")
     for (let n of numerics) {
         let add = n.querySelector("#form-numeric-add")
         let sub = n.querySelector("#form-numeric-sub")
@@ -636,7 +640,7 @@ function initializeFormNumerics() {
 }
 
 function initializeUploader() {
-    let uploaders = document.querySelectorAll("div#uploader")
+    let uploaders = qsa("div#uploader")
     for (let uploader of uploaders) {
         let input = uploader.querySelector("input#uploader-input")
         let text = uploader.querySelector("input#uploader-text")
@@ -666,7 +670,7 @@ function initializeUploader() {
 }
 
 function initializePastel() {
-    let pastel = document.querySelector(".pastel")
+    let pastel = qs(".pastel")
     if (pastel == null) return
     let body = pastel.querySelector(".pastel-body")
     let headInput = pastel.querySelector("input.pastel-head-input")
@@ -733,7 +737,7 @@ function initializeMarqueeLabels(scope) {
 }
 
 function initializeNotificatioAnimation() {
-    let notifications = document.querySelectorAll(".notification.temporary")
+    let notifications = qsa(".notification.temporary")
     for (let n of notifications) {
         let remove = n.querySelector(".delete")
         let startSubmitter = n.querySelector("form.start")
@@ -756,7 +760,7 @@ function initializeNotificatioAnimation() {
 }
 
 function initializeCheckBoxes() {
-    let checks = document.querySelectorAll(".checkbox")
+    let checks = qsa(".checkbox")
     for (let c of checks) {
         let input = c.querySelector("input[type=checkbox]")
         let mark = c.querySelector(".checkmark")
@@ -783,7 +787,7 @@ function initializeCheckBoxes() {
 }
 
 function removeLoadingModal() {
-    var loading = document.querySelector(".loading")
+    var loading = qs(".loading")
     setTimeout(() => (loading == null) ? null : loading.remove(), 505)
     try {
         let a = loading.animate([
@@ -796,14 +800,14 @@ function removeLoadingModal() {
     } catch { }
 }
 
-function tryfunctions(...functions) {
+function tryFunctions(...functions) {
     for (let f of functions) try {
         f()
     } catch { }
 }
 
-$(document).ready(() => {
-    tryfunctions(
+$(document).ready(() =>
+    tryFunctions(
         initializeNotificatioAnimation,
         initializePaginatedContent,
         initializeTabs,
@@ -823,5 +827,4 @@ $(document).ready(() => {
         initializeCheckBoxes,
         removeLoadingModal
     )
-})
-
+)

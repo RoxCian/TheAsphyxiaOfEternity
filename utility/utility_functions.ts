@@ -40,9 +40,11 @@ export async function log(data: any, file?: string) {
 export function base64ToBuffer(str: string, size?: number): Buffer {
     if (size != null) {
         let rem = size - Math.trunc(size / 3) * 3
-        str = str.replace("=", "A").replace("=", "A").padEnd(Math.trunc(size / 3) * 4 + rem + 1, "A")
-        if (rem == 1) str += "=="
-        else if (rem == 2) str += "="
+        if (rem > 0) {
+            str = str.replace("=", "A").replace("=", "A").padEnd(Math.trunc(size / 3) * 4 + rem + 1, "A")
+            if (rem == 1) str += "=="
+            else if (rem == 2) str += "="
+        }
         let result = Buffer.alloc(size, str, "base64")
         return result
     }

@@ -1,10 +1,14 @@
+- v1.1.11
+
+  Fixed webui bugs for newer version of RB Reflesia.
+
 - v1.1.1
 
   Added a webui page for in-game comments.
 
   Fixed support for RB VOLZZA 1.
 
-  Fixed bugs.
+  Fixed bugs, webui can be loaded more quicker now.
 
 - v1.1.0
 

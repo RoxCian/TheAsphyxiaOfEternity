@@ -41,7 +41,7 @@ const rankingQuests: IRb6Quest[] = [
     { questId: 22, dungeonId: 47, questType: 3, value: 1, endTime: 2147483647, rankingId: 34, musicId0: 388, musicId1: 386, musicId2: 390, chartType0: 2, chartType1: 3, chartType2: 3 },
     { questId: 22, dungeonId: 47, questType: 3, value: 1, endTime: 2147483647, rankingId: 35, musicId0: 59, musicId1: 63, musicId2: 48, chartType0: 2, chartType1: 3, chartType2: 3 },
 ]
-export function getExampleCourse(rankingQuestIndex: number = 0): IRb6Quest[] {
+export function getExampleQuests(rankingQuestIndex: number = 0): IRb6Quest[] {
     return [
         { questId: 0, dungeonId: 0, questType: 1, value: 1, endTime: 2147483647, rankingId: 0, musicId0: -1, musicId1: -1, musicId2: -1, chartType0: -1, chartType1: -1, chartType2: -1 },
         { questId: 0, dungeonId: 1, questType: 1, value: 1, endTime: 2147483647, rankingId: 0, musicId0: -1, musicId1: -1, musicId2: -1, chartType0: -1, chartType1: -1, chartType2: -1 },
@@ -365,6 +365,10 @@ const unlockedItems: IRb6ItemControl[] = [
     { type: 0, id: 772, param: 15, isNoticing: true, isCardOnly: true },
     { type: 0, id: 804, param: 15, isNoticing: true, isCardOnly: true },
     { type: 0, id: 835, param: 15, isNoticing: true, isCardOnly: true },
-    { type: 0, id: 892, param: 15, isNoticing: true, isCardOnly: true }
+    { type: 0, id: 892, param: 15, isNoticing: true, isCardOnly: true },
+    { type: 0, id: 941, param: 15, isNoticing: true, isCardOnly: true },
+    { type: 0, id: 942, param: 15, isNoticing: true, isCardOnly: true },
+    { type: 0, id: 943, param: 15, isNoticing: true, isCardOnly: true },
+    { type: 0, id: 944, param: 15, isNoticing: true, isCardOnly: true }
 ]
 export const kUnlockedItems: KITEM2<IRb6ItemControl[]> = mapKObject(unlockedItems, { 0: Rb6ItemControlMap })

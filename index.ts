@@ -37,6 +37,10 @@ export function register() {
 }
 
 function routeRb6() {
+    R.Route("package.list", Rb6HandlersCommon.ListPackage)
+    R.Route("message.get", Rb6HandlersCommon.GetMessage)
+    R.Route("facility.get", Rb6HandlersCommon.GetFacility)
+    R.Route("info.rb6_info_read", Rb6HandlersCommon.ReadInfo)
     R.Route("info.rb6_info_read_hit_chart", Rb6HandlersCommon.ReadHitChartInfo)
     R.Route("pcb.rb6_pcb_boot", Rb6HandlersCommon.BootPcb)
     R.Route("player.rb6_player_start", Rb6HandlersCommon.StartPlayer)
