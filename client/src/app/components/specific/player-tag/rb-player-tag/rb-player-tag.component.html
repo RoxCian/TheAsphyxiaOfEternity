@@ -1,0 +1,15 @@
+@if (!isRival()) {
+    <div class="tag player rb{{ version() }} {{ specialClass() }}" [class.complete-name]="isShowCompleteName()" [class.has-title]="!isShowCompleteName() && specialTitle()" [bungTooltip]="isShowCompleteName() ? undefined : specialTitle()">
+        {{ nameDisplay() }}
+    </div>
+}
+@if (!isHideMatchingGrade()) {
+    <div class="tag mg is-light" [rbColor]="color()" [isRival]="isRival()">
+        <rb-matching-grade [version]="version()" [matchingGrade]="matchingGrade()" design="white" />
+    </div>
+}
+@if (isRival()) {
+    <div class="tag player rb{{ version() }} {{ specialClass() }}" [class.complete-name]="isShowCompleteName()" [class.has-title]="!isShowCompleteName() && specialTitle()" [bungTooltip]="isShowCompleteName() ? undefined : specialTitle()">
+        {{ nameDisplay() }}
+    </div>
+}

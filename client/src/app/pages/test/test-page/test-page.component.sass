@@ -1,0 +1,30 @@
+:host
+    display: block
+.page-container
+    display: grid
+    grid-template: 1fr / minmax(0, 100%)
+
+    > *
+        grid-area: 1 / 1
+
+    .enter
+        animation: page-content-enter-animation calc(var(--animation-duration-lv1) * 2) var(--ease-in)
+    .leave
+        animation: page-content-leave-animation var(--animation-duration-lv1) var(--ease-in)
+@keyframes page-content-enter-animation
+    from
+        opacity: 0
+        transform: translateY(50vh)
+    50%
+        opacity: 0
+        transform: translateY(50vh)
+    to
+        opacity: 1
+        transform: none
+@keyframes page-content-leave-animation
+    from
+        opacity: 1
+        transform: none
+    to
+        opacity: 0
+        transform: translateY(10vh)

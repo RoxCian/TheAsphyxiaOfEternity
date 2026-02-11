@@ -1,17 +1,61 @@
+# Compiled output
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+.angular
+.sass-cache/
+/client/connect.lock
+/client/coverage
+/client/libpeerconnection.log
+testem.log
+/client/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
 # Editor configs
 .vscode
 
 # External modules
-node_modules
+*/node_modules
 
 # Project files
 package-lock.json
 
-# Debugging
+# Dev
+dev/config
 bin
 obj
 
 # Package
 *.tgz
 *.zip
-dist
+
+# Asphyxia definitions
+asphyxia-core.d.ts

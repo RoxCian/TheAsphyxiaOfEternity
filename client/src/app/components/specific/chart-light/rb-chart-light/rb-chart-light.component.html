@@ -1,0 +1,11 @@
+<div class="chart-light-container blur">
+    <div class="background {{ clearType() }}" [rbChartType]="chartType()" [version]="version()" [class.show]="isVisible()" animate.enter="enter" animate.leave="leave"></div>
+</div>
+<div class="chart-light-container">
+    <div class="background {{ clearType() }}" [rbChartType]="chartType()" [version]="version()" [class.show]="isVisible()" animate.enter="enter" animate.leave="leave"></div>
+</div>
+<div class="chart-light-container">
+    <div class="chart-light-container text-container" [class.show]="isVisible()" animate.enter="enter" animate.leave="leave">
+        <span class="text {{ clearType() }}" [rbChartType]="chartType()" [version]="version()">{{ clearTypeName() }}</span>
+    </div>
+</div>

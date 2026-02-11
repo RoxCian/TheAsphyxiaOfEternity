@@ -1,0 +1,16 @@
+<span class="rate-red is-red-side">{{ red() }}%</span>
+<div class="progress-box">
+    <div class="progress progress-background">
+        <div class="progress-part progress-red is-red-side" [style.--scale-factor]="'100%'"></div>
+        <div class="progress-part progress-blue is-blue-side" [style.--scale-factor]="'100%'"></div>
+    </div>
+    <div class="progress">
+        <div class="divider"></div>
+        <div class="progress-part progress-red is-red-side" [style.--scale-factor]="red() + '%'" animate.enter="enter"></div>
+        <div class="progress-part progress-blue is-blue-side" [style.--scale-factor]="blue() + '%'" animate.enter="enter"></div>
+        @if (red() >= 100 && blue() >= 100) {
+            <div class="progress-fulfilled" animate.enter="enter">Fulfilled</div>
+        }
+    </div>
+</div>
+<span class="rate-blue is-blue-side">{{ blue() }}%</span>

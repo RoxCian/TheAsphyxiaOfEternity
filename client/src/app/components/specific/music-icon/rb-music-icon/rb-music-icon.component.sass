@@ -1,0 +1,40 @@
+:host
+    display: inline-flex
+    flex-direction: column
+    width: 8em
+:host .music
+    display: flex
+    flex-direction: column
+    padding: 0.5em
+    gap: 0.5em
+    margin-bottom: -8px
+    z-index: 1
+:host figure.jacket
+    margin: 0
+    min-width: 7em
+    min-height: 7em
+    width: 7em
+    height: 7em
+    border-radius: 8px
+    overflow: clip
+    user-select: none
+.music-info
+    display: flex
+    flex-direction: column
+    overflow-x: hidden
+
+    .music-title
+        font-weight: bold
+    rb-music-title
+        width: 100%
+    .music-artist
+        opacity: 0.7
+    .charts-level
+        opacity: 0.7
+    .chart-name
+        color: var(--rb-chart-color)
+    rb-level:not(:first-child)
+        margin-left: 0.5em
+.extra-content
+    width: 100%
+    min-height: 8px

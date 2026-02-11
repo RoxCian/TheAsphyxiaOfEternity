@@ -1,0 +1,10 @@
+@if (isFloated()) {
+    <button class="button is-rounded {{ levelDisplay() === 'level' ? 'lv' : 'sr' }}" (click)="onToggleLevelDisplay($event)">
+        <span class="heading" [class.hide]="isMobile()">Show</span>
+        <span class="lv" [class.hide]="levelDisplay() !== 'level'">{{ isMobile() ? "Lv" : "Level" }}</span>
+        <span class="sr" [class.hide]="levelDisplay() !== 'skillRate'">{{ isMobile() ? "SR" : "Skill Rate" }}</span>
+    </button>
+} @else {
+    <button class="button is-size-7" [class.is-info]="levelDisplay() === 'level'" [class.is-selected]="levelDisplay() === 'level'" (click)="onChangeLevelDisplay($event, 'level')">{{ isMobile() ? "Lv" : "Show level" }}</button>
+    <button class="button is-size-7" [class.is-info]="levelDisplay() === 'skillRate'" [class.is-selected]="levelDisplay() === 'skillRate'" (click)="onChangeLevelDisplay($event, 'skillRate')">{{ isMobile() ? "SR" : "Show skill rate" }}</button>
+}

@@ -1,0 +1,232 @@
+:host
+    display: flex
+    position: relative
+    min-width: 300px
+
+    &:has(.music:hover), &:has(.score.wide:hover:not(.disabled):not(.not-played))
+        .score.wide:hover
+            width: calc(3.5em + var(--rb-chart-slots) * 0.5em)
+        .score.wide:not(:hover)
+            width: 3.5em
+    & > *
+        transition: width var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000)
+    & > :not(.error-info)
+        cursor: pointer
+
+    @for $i from 1 through 6
+        :nth-child(#{$i})
+            z-index: #{6 - $i}
+.error-info
+    display: flex
+    width: 100%
+    padding: 1em
+    gap: 1em
+    align-items: center
+    justify-content: center
+    opacity: 0.7
+
+.music
+    flex: 1
+    z-index: 10
+    overflow-x: clip
+    min-width: 0 // firefox compatibility
+    
+    .content
+        position: relative
+        display: grid
+        grid-template: 1fr / 1fr minmax(0, 100%)
+        justify-content: start
+        align-items: center
+        margin-bottom: 0
+        padding: 1.25em
+        gap: 1.25em
+
+        .jacket
+            margin: 0
+            min-width: 5em
+            min-height: 5em
+            width: 5em
+            height: 5em
+            border-radius: 8px
+            overflow: clip
+            user-select: none
+        .music-info
+            overflow-x: hidden
+        .music-title
+            font-weight: bold
+            margin-bottom: 0
+        rb-music-title
+            width: 100%
+        .music-artist
+            opacity: 0.7
+        rb-level
+            margin-right: 0.5em
+            opacity: 0.7
+
+.score.wide
+    display: flex
+    position: relative
+    width: 4em
+    margin-left: -1em
+    padding: 1.25em 0
+    padding-left: 1em
+    justify-content: center
+    align-items: center
+    overflow: clip
+    color: white
+    background: var(--rb-chart-color)
+
+    p
+        text-orientation: revert
+        writing-mode: vertical-lr
+        transform: rotate(180deg)
+        text-transform: uppercase
+        margin-bottom: 0 // bypass style for "content p"
+
+    .chart-name
+        position: absolute
+        opacity: 0.3
+        right: 0
+        top: 0.2em
+        user-select: none
+        font-size: 1.25em
+
+    .chart-score
+        font-weight: bold
+    
+    &.not-played:not(.disabled)
+        background: color-mix(in srgb, var(--rb-chart-color) 15%, white)
+        
+        .chart-score
+            color: color-mix(in srgb, var(--rb-chart-color) 50%, white)
+
+    &.disabled
+        background: #eaeaea20
+        opacity: 0.5
+
+        .chart-score
+            color: #bbbbbb90
+        .chart-name
+            color: var(--black-text)
+            opacity: 0.15
+
+    &.disabled, &.not-played
+        cursor: not-allowed
+
+        .chart-score
+            font-size: 0.75rem !important
+            font-weight: normal
+            white-space: nowrap
+        .hover-background
+            background: transparent
+.score-container-narrow
+    position: absolute
+    right: 1.25em
+    bottom: -0.75em
+    display: none
+    gap: 0.5em
+.score.narrow
+    display: flex
+    position: relative
+    width: 4em
+    height: 3em
+    padding-top: 1.25em
+    justify-content: center
+    align-items: center
+    overflow: clip
+    border-radius: 0 0 8px 8px !important
+    color: white
+    background: var(--rb-chart-color)
+    transition: padding-top var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000), transform var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000)
+
+    .chart-score
+        font-weight: bold
+        margin-bottom: 0 // asphyxia fix
+
+    &.not-played
+        background: color-mix(in srgb, var(--rb-chart-color) 15%, white)
+    &.disabled
+        background: #eaeaea
+    
+    &.disabled, &.not-played
+        cursor: not-allowed
+
+        .chart-score
+            font-weight: normal
+        .hover-background
+            background: transparent
+    &:hover:not(.disabled):not(.not-played)
+        transform: translateY(1em)
+        padding-top: 0.25em
+.score.just-collected
+    .chart-score
+        animation: just-collect-animation 2s ease alternate infinite
+.hover-background
+    position: absolute
+    inset: 0
+    background: color-mix(in srgb, var(--rb-chart-color, white) 75%, black)
+    opacity: 0
+    z-index: 0
+    transition: opacity var(--animation-duration-lv3)
+    border-radius: 8px
+
+    .card:hover &
+        opacity: 0.3
+    .card:active &
+        opacity: 0.6
+@media screen and (width < 768px)
+    :host .card.music, :host .placeholder
+        margin-bottom: 0.5em
+
+        .content
+            padding: 0.5em
+            gap: 0.5em
+
+            .jacket
+                width: 4em
+                height: 4em
+                min-width: 4em
+                min-height: 4em
+            .music-info .music-title
+                font-size: 1.25em !important
+            .music-info .music-artist
+                font-size: 0.75em !important
+            .charts-level
+                font-size: 0.75em !important
+    .score.wide
+        display: none
+    .score-container-narrow
+        display: flex
+@media (prefers-color-scheme: dark)
+    .score.wide
+        &.not-played:not(.disabled)
+            background: color-mix(in srgb, var(--rb-chart-color) 8%, #0a0a0a)
+            
+            .chart-score
+                color: color-mix(in srgb, var(--rb-chart-color) 30%, #0a0a0a)
+        &.disabled
+            background: #0a0a0a30
+            opacity: 0.3
+            .chart-name
+                color: var(--white-text)
+                opacity: 0.1
+            .chart-score
+                color: #b5b5b570
+        .chart-name
+            opacity: 0.08
+        .chart-score
+            opacity: 0.7
+    .score.narrow
+        &.not-played
+            background: color-mix(in srgb, var(--rb-chart-color) 8%, #0a0a0a)
+            color: color-mix(in srgb, var(--rb-chart-color) 30%, #0a0a0a)
+        &.disabled
+            background: #0a0a0a30
+            color: #202020
+    .hover-background
+        background: #fffa
+@keyframes just-collect-animation
+    from
+        filter: drop-shadow(0 0 12px white) drop-shadow(0 0 18px white)
+    to
+        filter: drop-shadow(0 0 6px white) drop-shadow(0 0 8px #fff5)

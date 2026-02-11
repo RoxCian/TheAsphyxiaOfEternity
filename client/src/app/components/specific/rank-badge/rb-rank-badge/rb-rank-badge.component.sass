@@ -1,0 +1,65 @@
+:host
+    display: block
+    position: relative
+    font-size: 2.5em
+    &.has-deco
+        width: 1.1em
+        height: 1.1em
+        font-size: 3.5em
+
+        .rank-box
+            position: absolute
+            inset: 0
+            color: var(--rank-color)
+        .rank-box-inner
+            transform: scale(var(--inner-scale))
+            letter-spacing: var(--spacing-adjust)
+.rank-box.enter, .deco-box.enter
+    animation: rank-badge-animation 0.4s var(--ease-in) forwards
+
+.rank-box
+    display: flex
+    align-items: center
+    justify-content: center
+    color: transparent
+    background: linear-gradient(120deg, color-mix(in srgb, var(--rank-color), white 33.3%), var(--rank-color))
+    background-clip: text
+.deco-box
+    position: absolute
+    inset: 0
+    border-radius: 9999px
+    background: linear-gradient(120deg, color-mix(in srgb, var(--rank-color), white 33.3%), var(--rank-color))
+    filter: drop-shadow(2px 4px 6px color-mix(in srgb, var(--rank-color), transparent 50%))
+    .deco-box-inner
+        position: absolute
+        inset: 0.1em
+        border-radius: 9999px
+        background: white
+            
+.is-rank-c
+    --rank-color: var(--text-color)
+.is-rank-b
+    --rank-color: #68b2f2
+.is-rank-a
+    --rank-color: #f26881
+.is-rank-aa
+    --rank-color: #f27cad
+.is-rank-aaa
+    --rank-color: #d96ac8
+.is-rank-aaa⁺
+    --rank-color: #b469f5
+.is-rank-s
+    --rank-color: #f2c968
+
+@media (prefers-color-scheme: dark)
+    .deco-box-inner
+        display: none
+    :host.has-deco .rank-box
+        color: white
+@keyframes rank-badge-animation
+    from
+        opacity: 0
+        transform: scale(1.5) rotate(-60deg)
+    to
+        opacity: 1
+        transform: none

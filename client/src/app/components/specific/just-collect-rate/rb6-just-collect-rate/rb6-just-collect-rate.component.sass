@@ -1,0 +1,88 @@
+:host
+    display: inline-flex
+    width: 100%
+    align-items: center
+    justify-content: center
+
+span
+    flex: 1
+    // max-width: 4em
+    color: var(--rb-color)
+    opacity: 0.7
+
+    &.rate-blue
+        text-align: end
+
+.progress-box
+    flex: 2
+    position: relative
+    height: 1em
+    margin: 0
+    transform: scale(0.8)
+
+.progress
+    display: grid
+    position: absolute
+    inset: 0
+    height: 1em
+    grid-template: 1fr / 1fr 1fr
+    // max-width: 8em
+
+    .divider
+        position: absolute
+        inset: 0 calc(50% - 1px)
+    .progress-part
+        width: var(--scale-factor)
+        height: 100%
+        background: var(--rb-color)
+        opacity: 0.7
+
+        &.enter
+            animation: progress-part-animation 1.2s var(--ease-in) forwards
+    .progress-red
+        grid-area: 1 / 1
+        justify-self: end
+        border-radius: 1em 0 0 1em
+    .progress-blue
+        grid-area: 1 / 2
+        border-radius: 0 1em 1em 0
+    .progress-fulfilled
+        position: absolute
+        inset: 0
+        line-height: 1em
+        text-align: center
+        color: white
+        font-style: italic
+        overflow: hidden
+        animation: just-collect-fulfilled-background-animation 0.1s steps(2, jump-both) infinite
+
+        &.enter
+            animation: just-collect-fulfilled-enter-animation 1.8s var(--ease-in) forwards, just-collect-fulfilled-background-animation 0.1s steps(2, jump-both) infinite
+.progress-background
+    inset: 0
+    opacity: 0.3
+@keyframes progress-part-animation
+    from
+        width: 0
+    66.67%
+        width: 0
+    to
+        width: var(--scale-factor)
+@keyframes just-collect-fulfilled-enter-animation
+    from
+        transform: translateY(-100%)
+    77.78%
+        transform: translateY(-100%)
+    to
+        transform: none
+@keyframes just-collect-fulfilled-background-animation
+    from
+        background: #209CEE
+    to
+        background: #FF3860
+
+@media screen and (width < 768px)
+    span
+        min-width: auto
+    .progress
+        width: 6em

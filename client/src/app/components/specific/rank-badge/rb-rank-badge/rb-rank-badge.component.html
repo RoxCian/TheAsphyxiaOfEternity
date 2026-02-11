@@ -1,0 +1,12 @@
+@if (isVisible() && hasDecoration()) {
+  <div class="deco-box is-rank-{{ rank().toLowerCase() }}" [animate.enter]="hasAnimation() ? 'enter' : ''">
+    <div class="deco-box-inner"></div>
+  </div>
+}
+@if (isVisible()) {
+  <div class="rank-box is-rank-{{ rank().toLowerCase() }}" [animate.enter]="hasAnimation() ? 'enter' : ''">
+    <div class="rank-box-inner" [style.--inner-scale]="0.7 - rank().length * 0.08" [style.--spacing-adjust]="-(0.02 * rank().length) + 'em'">
+      {{ rank() }}
+    </div>
+  </div>
+}

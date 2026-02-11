@@ -1,0 +1,6 @@
+@if (!noLeftPart()) { 
+    <span class="tag left is-danger" [class.no-right-part]="noRightPart()"><span class="tag-content {{ leftRarity() | rbBywordRarityLiteral }}" [class.has-rarity]="leftRarity() >= 0">{{ leftBywordText() }}</span></span>
+}
+@if (!noRightPart()) {
+    <span class="tag right is-info" [class.no-left-part]="noLeftPart()"><span class="tag-content {{ rightRarity() | rbBywordRarityLiteral }}" [class.has-rarity]="rightRarity() >= 0">{{ rightBywordText() }}</span></span>
+}

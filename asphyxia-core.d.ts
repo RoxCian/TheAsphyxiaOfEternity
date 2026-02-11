@@ -1,5 +1,5 @@
 /// <reference types="node" />
-///// <reference types="lodash" />
+/// <reference types="lodash" />
 
 /**
  * Version string of Asphyxia CORE, for example "v1.19"
@@ -123,7 +123,7 @@ declare interface FileOption {
   accept?: string;
   /**
    * Whether the file is required for the plugin to work, defaults to false.
-   * 
+   *
    * Note that this only provides visual hint for the file in WebUI.
    */
   required?: boolean;
@@ -243,6 +243,61 @@ declare interface EamuseSend {
  */
 declare type EamusePluginRoute = (req: EamuseInfo, data: any, send: EamuseSend) => Promise<any>;
 
+declare interface WebUISend {
+  /**
+   * Respond with json data
+   *
+   * @param data Plain JavaScript object
+   */
+  json: (data: any) => void;
+
+  /**
+   * Respond with string
+   *
+   * @param data String
+   */
+  text: (data: string) => void;
+
+  /**
+   * Respond with file
+   *
+   * @param path Relative file path to this plugin's directory
+   */
+  file: (path: string) => void;
+
+  /**
+   * Respond with binary data
+   *
+   * @param buffer Binary data
+   */
+  buffer: (buffer: Buffer) => void;
+
+  /**
+   * Respond with redirect calls
+   * This is useful for progressing your WebUI to the next page when using form.
+   *
+   * @param url Target url
+   */
+  redirect: (url: string) => void;
+
+  /**
+   * Respond with error
+   *
+   * @param code HTTP Code. Like 404, for example
+   * @param message String message
+   */
+  error: (code: number, message: string) => void;
+}
+
+/**
+ * Helper type for typing your WebUIEvent.
+ *
+ * If you don't need to send anything. You can ignore send parameter.
+ * By default, if the handler don't send anything manually, it will send a
+ * redirect response to refresh the page when using form.
+ */
+declare type WebUIEventHandler = (data: any, send?: WebUISend) => Promise<void>;
+
 /**
  * Helper type for typing your custom route.
  *
@@ -327,7 +382,39 @@ declare namespace R {
    *
    * Callback can be async function if you want to use await for your DB operations.
    */
-  function WebUIEvent(event: string, callback: (data: any) => void | Promise<void>): void;
+  function WebUIEvent(event: string, callback: WebUIEventHandler): void;
+
+  /**
+   * Register a handler for adding extra modules
+   *
+   * Core has the following modules built-in:
+   *
+   * - `cardmng`
+   * - `facility`
+   * - `message`
+   * - `numbering`
+   * - `package`
+   * - `pcbevent`
+   * - `pcbtracker`
+   * - `pkglist`
+   * - `posevent`
+   * - `userdata`
+   * - `userid`
+   * - `eacoin`
+   * - `local`
+   * - `local2`
+   * - `lobby`
+   * - `lobby2`
+   * - `dlstatus`
+   * - `netlog`
+   * - `sidmgr`
+   * - `globby`
+   *
+   * Callback can be async function if you want to use await for your DB operations.
+   */
+  function ExtraModuleHandler(
+    handler: (model: string) => Promise<string[] | string> | string[] | string
+  ): void;
 }
 
 /**
@@ -683,31 +770,31 @@ declare namespace $ {
 /** @ignore */
 declare interface KITEM<
   S extends
-  | KNumberType
-  | KBigIntType
-  | KNumberGroupType
-  | KBigIntGroupType
-  | 'str'
-  | 'bool'
-  | 'bin'
-  | 'ip4'
-  > {
+    | KNumberType
+    | KBigIntType
+    | KNumberGroupType
+    | KBigIntGroupType
+    | 'str'
+    | 'bool'
+    | 'bin'
+    | 'ip4'
+> {
   '@attr': {
     __type: S;
   };
   '@content': S extends 'str'
-  ? string
-  : S extends 'bin'
-  ? Buffer
-  : S extends KNumberType | 'ip4' | 'bool'
-  ? [number]
-  : S extends KBigIntType
-  ? [bigint]
-  : S extends KNumberGroupType
-  ? number[]
-  : S extends KBigIntGroupType
-  ? bigint[]
-  : unknown;
+    ? string
+    : S extends 'bin'
+    ? Buffer
+    : S extends KNumberType | 'ip4' | 'bool'
+    ? [number]
+    : S extends KBigIntType
+    ? [bigint]
+    : S extends KNumberGroupType
+    ? number[]
+    : S extends KBigIntGroupType
+    ? bigint[]
+    : unknown;
 }
 
 /** @ignore */
@@ -856,7 +943,7 @@ declare namespace IO {
    * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
    * @param options An object that may contain an optional flag.
    * If a flag is not provided, it defaults to `'r'`.
-   * 
+   *
    * Returns null if any error occurs while reading a file
    */
   function ReadFile(
@@ -870,7 +957,7 @@ declare namespace IO {
    * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
    * @param options Either the encoding for the result, or an object that contains the encoding and an optional flag.
    * If a flag is not provided, it defaults to `'r'`.
-   * 
+   *
    * Returns null if any error occurs while reading a file
    */
   function ReadFile(
@@ -884,7 +971,7 @@ declare namespace IO {
    * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
    * @param options Either the encoding for the result, or an object that contains the encoding and an optional flag.
    * If a flag is not provided, it defaults to `'r'`.
-   * 
+   *
    * Returns null if any error occurs while reading a file
    */
   function ReadFile(
@@ -896,7 +983,7 @@ declare namespace IO {
    * Asynchronously reads the entire contents of a file.
    * @param path A path to a file.
    * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
-   * 
+   *
    * Returns null if any error occurs while reading a file.
    */
   function ReadFile(path: string): Promise<Buffer | null>;
@@ -931,7 +1018,7 @@ declare namespace U {
 
   /**
    * Convert Card Number / Data Transfer Number to NFC serial
-   * 
+   *
    * returns null if the card number is invalid
    * @param card Card Number / Data Transfer Number
    */
@@ -939,11 +1026,29 @@ declare namespace U {
 
   /**
    * Convert NFC serial to Card Number or Data Transfer Number
-   * 
+   *
    * returns null if the nfc serial is invalid
    * @param card Card Number or Data Transfer Number
    */
   function NFC2Card(nfc: string): string | null;
+
+  /**
+   * Encode a string into a specified encoding
+   *
+   * returns a binary buffer
+   * @param str string to encode
+   * @param encoding see [[KEncoding]]
+   */
+  function EncodeString(str: string, encoding: KEncoding): Buffer;
+
+  /**
+   * Decode a string from a specified encoding
+   *
+   * returns a string
+   * @param buffer binary data to  decode
+   * @param encoding see [[KEncoding]]
+   */
+  function DecodeString(buffer: Buffer, encoding: KEncoding): string;
 }
 
 /** @ignore */
@@ -953,23 +1058,23 @@ type ProfileDoc<T> = { _id?: string; __refid?: string } & T;
 /** @ignore */
 type Query<T> = {
   [P in keyof T]?:
-  | T[P]
-  | (T[P] extends Array<infer E>
-    ? { $elemMatch: Query<E[]> } | { $size: number }
-    : T[P] extends number | string
-    ?
-    | { $lt: T[P] }
-    | { $lte: T[P] }
-    | { $gt: T[P] }
-    | { $gte: T[P] }
-    | { $in: T[P][] }
-    | { $ne: any }
-    | { $nin: any[] }
-    | { $regex: RegExp }
-    : T[P] extends object
-    ? Query<T[P]>
-    : T[P])
-  | { $exists: boolean };
+    | T[P]
+    | (T[P] extends Array<infer E>
+        ? { $elemMatch: Query<E[]> } | { $size: number }
+        : T[P] extends number | string
+        ?
+            | { $lt: T[P] }
+            | { $lte: T[P] }
+            | { $gt: T[P] }
+            | { $gte: T[P] }
+            | { $in: T[P][] }
+            | { $ne: any }
+            | { $nin: any[] }
+            | { $regex: RegExp }
+        : T[P] extends object
+        ? Query<T[P]>
+        : T[P])
+    | { $exists: boolean };
 } & {
   $or?: Query<T>[];
   $and?: Query<T>[];

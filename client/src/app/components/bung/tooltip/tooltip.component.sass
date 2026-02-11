@@ -1,0 +1,29 @@
+bung-tooltip
+    position: absolute
+    transform: translate(var(--tooltip-init-left, 0), var(--tooltip-init-top, 0))
+    padding: 0.5em 1em
+    font-size: 0.75em
+    border-radius: 4px
+    opacity: 0
+    box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
+    background: var(--card-background)
+
+    &.show
+        animation: bung-show-tooltip-animation var(--animation-duration-lv3) var(--ease-in) forwards
+    &.out
+        animation: bung-hide-tooltip-animation var(--animation-duration-lv3) var(--ease-in) forwards !important
+
+@keyframes bung-show-tooltip-animation
+    from
+        opacity: 0
+        transform: translate(var(--tooltip-init-left, 0), var(--tooltip-init-top, 0))
+    to
+        opacity: 1
+        transform: translate(var(--tooltip-left, 0), var(--tooltip-top, 0))
+@keyframes bung-hide-tooltip-animation
+    from
+        opacity: 1
+        transform: translate(var(--tooltip-left, 0), var(--tooltip-top, 0))
+    to
+        opacity: 0
+        transform: translate(var(--tooltip-init-left, 0), var(--tooltip-init-top, 0))

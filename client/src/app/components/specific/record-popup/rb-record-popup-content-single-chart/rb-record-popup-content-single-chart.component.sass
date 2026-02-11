@@ -1,0 +1,196 @@
+@forward "./rb-record-popup-content-single-chart.animation"
+.modal-body.single-chart
+    display: flex
+    width: 45em
+    height: 13.5em
+    max-width: 45em
+    max-height: 13.5em
+    overflow: visible
+
+.modal-card-body
+    position: relative
+    display: flex
+    overflow: visible
+    border-radius: 8px
+    background: transparent
+    max-width: 43em
+    padding: 0
+    z-index: 1
+
+    .modal-card-background
+        --color: white
+        position: absolute
+        inset: 0
+        border-radius: 8px
+        z-index: 0
+    .jacket
+        flex: 0
+        position: relative
+        margin: 1.5em
+        margin-right: 0
+        min-width: 10.5em
+        min-height: 10.5em
+        width: 10.5em
+        height: 10.5em
+        border-radius: 8px
+        user-select: none
+        transform-origin: top left
+        z-index: 1
+
+        img
+            position: absolute
+            inset: 0
+            border-radius: 8px
+            width: 100%
+            height: 100%
+        .rank
+            position: absolute
+            left: -1em
+            top: 7.5em
+
+    .info-container
+        flex: 1
+        display: flex
+        flex-direction: column
+        justify-content: center
+        max-width: 31em
+        padding: 0 2em
+
+    .music-info-wrapper
+        overflow: clip
+    .music-info
+        overflow: visible
+    .score-info
+        display: flex
+        flex-direction: column
+        position: relative
+        height: 6em
+        align-items: stretch
+        z-index: 1
+
+        &.extra-info
+            height: 7.5em
+        .score-info-wrapper
+            display: flex
+            overflow: clip
+
+            &.delayed
+                width: 0
+                height: 0
+
+            .score-info-container
+                display: flex
+                flex-direction: column
+                width: 100%
+                height: 100%
+                overflow: visible
+            bung-icon
+                position: relative
+            bung-icon:first-child
+                margin-left: 0
+            bung-icon::before
+                content: ""
+                position: absolute
+                inset: 0
+                background: #7773
+                opacity: 0
+                pointer-events: none
+                border-radius: 4px
+                transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+            bung-icon:hover::before
+                opacity: 1
+        .chart-info
+            white-space: nowrap
+            opacity: 0.7
+        .chart-type
+            margin-right: 0.5em
+            color: var(--rb-chart-color)
+    .music-title
+        font-weight: bold
+        margin-bottom: 0
+    rb-music-title
+        width: 100%
+
+.music-artist
+    opacity: 0.7
+
+.modal-body.single-chart rb-chart-light
+    margin-left: -8px
+
+    ::ng-deep & .text-container
+        padding-left: 8px
+
+rb-rank
+    transform: rotate(11deg)
+
+.score-data
+    display: grid
+    grid-template: 1fr / 1fr 1fr 1fr 1fr
+    grid-auto-flow: row
+    column-gap: 0.5em
+
+    > *
+        flex: 1
+
+.play-time
+    display: grid
+    grid-template: 1fr / 1fr 1fr
+    grid-auto-flow: row
+    column-gap: 0.5em
+
+.just-collection bung-icon::ng-deep span.icon-content
+    flex: 0.643
+
+rb6-just-collect
+    justify-content: start
+@media screen and (width < 768px)
+    .modal-body.single-chart
+        width: 11.5em
+        height: unset
+        max-width: 11.5em
+        max-height: unset
+        flex-direction: column
+
+        .score-data
+            grid-template: 1fr 1fr / 1fr 1fr
+
+        rb-chart-light
+            margin-top: -8px
+            margin-left: 0
+            font-size: 0.75em
+
+            ::ng-deep & .text-container
+                padding-top: 8px
+
+        .modal-card-body
+            flex-direction: column
+            // overflow: clip
+
+            .info-container
+                padding: 0.5em
+                max-width: 13.5em
+            .jacket
+                margin: 0.5em
+                margin-right: auto
+                margin-bottom: 0
+            .jacket .rank
+                font-size: 0.75em
+                left: -0.5em
+                top: 10.5em
+            .music-info .music-title
+                font-size: 1.25em !important
+            .music-info .music-artist
+                font-size: 0.75em !important
+            .score-info-wrapper
+                max-width: 100%
+
+            .score-info
+                height: 7.5em
+                font-size: 0.75em
+            .score-info.extra-info
+                height: 9em
+
+    .just-collection bung-icon::ng-deep span.icon-content
+        flex: 1
+

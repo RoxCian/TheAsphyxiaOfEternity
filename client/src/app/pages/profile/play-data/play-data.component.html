@@ -1,0 +1,336 @@
+<ng-template #placeholder>
+    <div class="rb-panel"></div>
+</ng-template>
+@let v = versionService.version();
+@let loading = profileService.isLoading();
+@let p = profileService.rbProfiles()[v];
+@let noProfile = profileService.error()[v] || !p;
+<!-- <bung-toggle class="is-rounded" />
+<button class="button">Button</button> -->
+@if (!noProfile) {
+    <bung-tabs activated="overview" [class.has-error]="noProfile" (indexChanged)="checkLevelDisplaySwitchVisible()" animate.leave="leave" #mainTabs>
+        <bung-tab header="Overview" index="overview" [disabled]="loading || noProfile" (activated)="onActivateTab()">
+            <bung-divider prompt="Activity" />
+            <rb-activity-grid class="has-rb{{ versionService.version() }}-background" [activity]="playerPerformanceService.playerPerformance.value()?.activity ?? {}" />
+            <div class="performance-two-columns">
+                <div class="stat">
+                    <bung-divider prompt="Performance" />
+                    <div class="stat-grid" [style.--max-item-width]="v === 4 || v === 5 || v === 6 ? 'calc(25% - 1.5em)' : 'calc(33.33% - 1.33em)'">
+                        <bung-menu-def #menuDef>
+                            <ng-template #menu3Content>
+                                <div>Menu3</div>
+                                <code>Menu3</code>
+                            </ng-template>
+                            <bung-menu-item content="Menu" (click)="msg('Menu clicked')" icon="abacus" />
+                            <bung-menu-item content="Menu2" (click)="msg('Menu2 clicked')" iconUrl="static/assets/icons/onigiri.svg">
+                                <bung-menu-item content="Menu sub1">
+                                    <bung-menu-item content="Menu sub sub1" />
+                                    <bung-menu-item content="Menu sub sub2">
+                                        <bung-menu-item content="Menu sub sub sub1">
+                                            <bung-menu-item content="Menu sub sub sub sub1" />
+                                            <bung-menu-item content="Menu sub sub sub sub2" />
+                                            <bung-menu-item content="Menu sub sub sub sub3">
+                                                <bung-menu-item content="Menu sub sub sub sub sub1" />
+                                                <bung-menu-item content="Menu sub sub sub sub sub2" />
+                                            </bung-menu-item>
+                                        </bung-menu-item>
+                                        <bung-menu-item content="Menu sub sub sub2" />
+                                        <bung-menu-item content="Menu sub sub sub3">
+                                            <bung-menu-item content="Menu sub sub sub sub1" />
+                                            <bung-menu-item content="Menu sub sub sub sub2" />
+                                        </bung-menu-item>
+                                        <bung-menu-item content="Menu sub sub sub4" />
+                                        <bung-menu-item content="Menu sub sub3" />
+                                        <bung-menu-item content="Menu sub sub4" />
+                                        <bung-menu-item content="Menu sub sub5" />
+                                        <bung-menu-item content="Menu sub sub6" />
+                                        <bung-menu-item content="Menu sub sub7" />
+                                        <bung-menu-item content="Menu sub sub8" />
+                                        <bung-menu-item content="Menu sub sub9" />
+                                        <bung-menu-item content="Menu sub sub10" />
+                                        <bung-menu-item content="Menu sub sub11" />
+                                        <bung-menu-item content="Menu sub sub12" />
+                                    </bung-menu-item>
+                                </bung-menu-item>
+                                <bung-menu-item content="Menu sub2" isActive />
+                                <bung-menu-item content="Menu sub3" />
+                            </bung-menu-item>
+                            <bung-menu-item [content]="menu3Content" (click)="msg('Menu3 clicked')" iconUrl="static/assets/icons/garage-key.svg" />
+                            <bung-menu-item isDivider />
+                            <bung-menu-item content="Menu static" isStatic />
+                            <bung-menu-item isDivider />
+                            <bung-menu-item content="Menu disabled" disabled (click)="msg('Menu clicked')" icon="cross" />
+                            <bung-menu-item content="Menu activated" isActive (click)="msg('Menu activated clicked')" icon="account" />
+                            <bung-menu-item content="Menu last" isActive (click)="msg('Menu last clicked')">
+                                <bung-menu-item content="Menu last sub" isActive (click)="msg('Menu last sub clicked')" />
+                            </bung-menu-item>
+                        </bung-menu-def>
+                        <div class="stat-item has-text-centered" [bungDropdown]="menuDef" triggerMethod="contextmenu">
+                            <div class="heading">Ability Point</div>
+                            <div class="title">{{ p.abilityPoint }}</div>
+                        </div>
+                        @if (v === 5 || v === 6) {
+                            <div class="stat-item has-text-centered">
+                                <div class="heading">Skill Point</div>
+                                <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
+                            </div>
+                        }
+                        <bung-menu-def #menuDef2>
+                            <bung-menu-item content="Menu2" (click)="msg('Menu2 clicked')">
+                                <bung-menu-item content="Menu sub1">
+                                    <bung-menu-item content="Menu sub sub1" />
+                                </bung-menu-item>
+                            </bung-menu-item>
+                            <bung-menu-item isDivider />
+                            <bung-menu-item content="Menu static" isStatic />
+                        </bung-menu-def>
+                        <div class="stat-item has-text-centered" [bungDropdown]="menuDef2" triggerMethod="contextmenu">
+                            <div class="heading">Play Count</div>
+                            <div class="title">{{ p.playCount }}</div>
+                        </div>
+                        @if (v === 4) {
+                        <div class="stat-item has-text-centered">
+                            <div class="heading">Pastel Level</div>
+                            <div class="title">{{ p.level }}</div>
+                        </div>
+                        }
+                        <div class="stat-item has-text-centered">
+                            @switch (v) {
+                                @case (6) {
+                                    <div class="heading">Pastel Level</div>
+                                    <div class="title">
+                                        @let level = p.level;
+                                        @let progress = (p.extraValues?.[0] ?? 0) / (p.extraValues?.[1] ?? 1) * 100;
+                                        {{ level }}
+                                        <span class="is-size-7" bungTooltip="Experiences percentage to next level">({{ level >= 99 ? "MAX" : level >= 42 ? progress.toFixed(1) : progress.toFixed(0) }}%)</span>
+                                    </div>
+                                } @case (5) {
+                                    <div class="heading">Volzza Keys</div>
+                                    <div class="title">
+                                        <span>{{ p.extraValues?.[0] ?? 0 }}</span><bung-icon class="is-size-5" iconUrl="static/assets/icons/garage-key.svg" />
+                                    </div>
+                                } @case (4) {
+                                    <div class="heading">Refle</div>
+                                    <div class="title">
+                                        {{ p.extraValues?.[0] ?? 0 }}<span class="is-size-5">Rf.</span>
+                                    </div>
+                                } @case (3) {
+                                    <div class="heading">Rice Balls</div>
+                                    <div class="title">
+                                        <span>{{ p.extraValues?.[0] ?? 0 }}</span><bung-icon class="is-size-5" iconUrl="static/assets/icons/onigiri.svg" />
+                                    </div>
+                                } @case (2) {
+                                    <div class="heading">Limes</div>
+                                    <div class="title">
+                                        <span>{{ (p.extraValues?.[0] ?? 0) | trunc }}</span><bung-icon class="is-size-5" iconUrl="static/assets/icons/lime-slice.svg" />
+                                    </div>
+                                } @case (1) {
+                                    <div class="heading">Level</div>
+                                    <div class="title">{{ p.level }}</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="stat-grid" [style.--max-item-width]="'100%'">
+                        <div class="stat-item has-text-centered">
+                            <div class="heading">Total Score</div>
+                            <div class="title">{{ playerPerformanceService.playerPerformance.value()?.totalScore ?? "-" }}</div>
+                        </div>
+                    </div>
+                    <div class="stat-grid" [style.--max-item-width]="v === 4 || v === 5 || v === 6 ? 'calc(25% - 1.5em)' : 'calc(33.33% - 1.33em)'">
+                        <div class="stat-item rb-chart has-text-centered">
+                            <div class="heading is-basic-chart rb">Basic Score</div>
+                            <div class="title is-basic-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[0] ?? "-" }}</div>
+                        </div>
+                        <div class="stat-item rb-chart has-text-centered">
+                            <div class="heading is-medium-chart rb">Medium Score</div>
+                            <div class="title is-medium-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[1] ?? "-" }}</div>
+                        </div>
+                        <div class="stat-item rb-chart has-text-centered">
+                            <div class="heading is-hard-chart rb">Hard Score</div>
+                            <div class="title is-hard-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[2] ?? "-" }}</div>
+                        </div>
+                        @if (v === 6 || v === 5 || v === 4) {
+                            <div class="stat-item rb-chart has-text-centered">
+                                <div class="heading is-{{ v === 6 ? 'whitehard' : 'special' }}-chart rb">{{ v === 6 ? "WhiteHard Score" : "Special Score" }}</div>
+                                <div class="title is-{{ v === 6 ? 'whitehard' : 'special' }}-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[3] ?? "-" }}</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="rb-highlight">
+                    <bung-divider prompt="Recent Highlight" />
+                    @let highlights = playerPerformanceService.playerPerformance.value()?.recentHighlightPlay;
+                    @if (!highlights?.length) {
+                        <lets-play text="A bit of quiet these days." />
+                    } @else {
+                        <div class="rb-list">
+                            @for (h of highlights; track h) {
+                                <rb-stage-log-panel [stageLog]="h" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </bung-tab>
+        <bung-tab header="Music Records" index="record" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)">
+            @if (musicRecordService.data.hasValue()) {
+                <auto-load-panel class="rb-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
+                    @for (record of musicRecordPaginated(); track record.musicId) {
+                    <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                        <rb-record [record]="record" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                    </bung-insertion>
+                    }
+                </auto-load-panel>
+            }
+            @if (musicRecordPaginated.isFinished() && !musicRecordService.data.isLoading()) {
+                <bung-divider prompt="End of play records" />
+            }
+        </bung-tab>
+        @if (versionService.version() >= 4) {
+            <ng-template #tabHeader>
+                @if (versionService.version() === 4) {
+                    <p class="dojo serif">Reflec Dojo</p>
+                    <p class="dojo-orig serif" lang="jp">リフレク道場</p>
+                } @else { Classcheck }
+            </ng-template>
+            <bung-tab [header]="tabHeader" index="classcheck" [disabled]="loading || noProfile" (activated)="onActivateClasscheckTab($event)">
+                <div class="classcheck-wrapper">
+                    @if (classcheckService.data.hasValue()) {
+                    @if (versionService.version() === 4) {
+                    <div class="classcheck-container" animate.leave="rb-panel-leave">
+                        @if (classcheckService.data.value().length === 0) {
+                            <lets-play [text]="'リフレク道場を挑戦しよう！\r\nNothing\'s here yet. Let\'s play!'" />
+                        } @else {
+                        <div class="rb-classcheck-list-two-columns serif">
+                            @let dojoFiltered = rb4DojoFilter(classcheckService.data.value());
+                            @if (dojoFiltered.classcheck.length > 0) {
+                                <div>
+                                    <bung-divider lang="jp" prompt="認定試験　Classcheck" />
+                                    <div class="rb-dojo">
+                                        @for (dojo of dojoFiltered.classcheck; track dojo.class) {
+                                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                                <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                            </bung-insertion>
+                                        }
+                                    </div>
+                                </div>
+                            } @else {
+                                <div class="centered-vertical"><lets-play lang="jp" text="認定試験はまだ挑戦しない\nNo Classcheck has been challenged" /></div>
+                            }
+                            @if (dojoFiltered.examination.length > 0) {
+                                <div>
+                                    <bung-divider lang="jp" prompt="検定試験　Examination" />
+                                    <div class="rb-dojo">
+                                        @for (dojo of dojoFiltered.examination; track dojo.class) {
+                                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                                <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                            </bung-insertion>
+                                        }
+                                    </div>
+                                </div>
+                            } @else {
+                                <div class="centered-vertical"><lets-play lang="jp" text="検定試験はまだ挑戦しない\nNo Examination has been challenged" /></div>
+                            }
+                        </div>
+                        }
+                        @if (!classcheckService.data.isLoading()) {
+                            <ng-template #dividerPrompt>
+                                <span lang="jp" style="margin-right: 2em">以上</span>
+                                <span>End of Reflec Dojo records</span>
+                            </ng-template>
+                            <bung-divider class="serif" [prompt]="dividerPrompt" />
+                        }
+                    </div>
+                    } @else {
+                        <div class="classcheck-container" animate.leave="rb-panel-leave">
+                            <div class="rb-classcheck-list">
+                                @for (classcheck of classcheckService.data.value(); track classcheck.class) {
+                                    <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                        <rb-classcheck [classcheck]="classcheck" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                    </bung-insertion>
+                                }
+                            </div>
+                            @if (!classcheckService.data.isLoading()) {
+                                <bung-divider prompt="End of classcheck records" />
+                            }
+                        </div>
+                    }
+                }
+                </div>
+            </bung-tab>
+        }
+        <bung-tab header="Play History" index="stglog" [disabled]="loading || noProfile" (activated)="onActivateStageLogTab($event)">
+            @if (stageLogService.data.hasValue()) {
+            <auto-load-panel class="rb-list" (loading)="loadStageLog($event)" animate.leave="rb-panel-leave" #stageLogPanel>
+                @for (stglog of stageLogPaginated(); track stglog.time) {
+                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                    <rb-stage-log-panel [stageLog]="stglog" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                </bung-insertion>
+                }
+            </auto-load-panel>
+            }
+            @if (stageLogPaginated.isFinished() && !stageLogService.data.isLoading()) {
+                <bung-divider prompt="End of play history" />
+            }
+        </bung-tab>
+        @if (versionService.version() >= 5) {
+            <bung-tab header="Skill Point" index="skillpoint" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)">
+                <bung-divider prompt="Total Skill Point" />
+                <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
+                    <div class="stat-item has-text-centered" bungTooltip="Songs not unlocked are also included">
+                        <div class="heading">Computed Skill Point</div>
+                        <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ skillPointService.entries().total.toFixed(1) }}</div>
+                    </div>
+                    <div class="stat-item has-text-centered">
+                        <div class="heading">Skill Point In Profile</div>
+                        <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
+                    </div>
+                </div>
+                <bung-divider prompt="Top New Songs" />
+                <div class="rb-list">
+                    @for (entry of skillPointService.entries().newTop; track `${entry?.record?.musicId}_${entry?.chartType}`) {
+                        <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                            <rb-skill-point-panel [entry]="entry" [rank]="$index" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                        </bung-insertion>
+                    }
+                </div>
+                <bung-divider prompt="Top Old Songs" />
+                <div class="rb-list">
+                    @for (entry of skillPointService.entries().oldTop; track `${entry?.record?.musicId}_${entry?.chartType}`) {
+                        <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                            <rb-skill-point-panel [entry]="entry" [rank]="$index" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                        </bung-insertion>
+                    }
+                </div>
+                @if (skillPointService.entries().newPotential.length > 0 || skillPointService.entries().oldPotential.length > 0) {
+                    <bung-divider />
+                    @if (skillPointService.entries().newPotential.length > 0) {
+                        <bung-divider prompt="Potential New Songs" />
+                        <div class="rb-list">
+                            @for (entry of skillPointService.entries().newPotential; track `${entry?.record?.musicId}_${entry?.chartType}`) {
+                                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                    <rb-skill-point-panel [entry]="entry" [rank]="undefined" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                </bung-insertion>
+                            }
+                        </div>
+                    }
+                    @if (skillPointService.entries().oldPotential.length > 0) {
+                        <bung-divider prompt="Potential Old Songs" />
+                        <div class="rb-list">
+                            @for (entry of skillPointService.entries().oldPotential; track `${entry?.record?.musicId}_${entry?.chartType}`) {
+                                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                    <rb-skill-point-panel [entry]="entry" [rank]="undefined" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                </bung-insertion>
+                            }
+                        </div>
+                    }
+                }
+                <bung-divider prompt="End of Skill Point List" />
+            </bung-tab>
+        }
+    </bung-tabs>
+    @if (v === 5 || v === 6) {
+        <rb-level-display-switch isFloated />
+    }
+}

@@ -1,0 +1,74 @@
+@let error = errorInfoHTML();
+@if (error) {
+<div class="rb-panel error-info card">
+    <div class="error-icon">
+        <span class="icon is-large">
+            <i class="mdi mdi-alert-circle mdi-48px"></i>
+        </span>
+    </div>
+    <div class="error-text">
+        <p [innerHTML]="error"></p>
+        <p>Maybe create new issue on GitHub?</p>
+    </div>
+</div>
+} @else {
+@let color = stageLog().color;
+@let music = stageLog().music;
+<ng-template #marqueeContent>
+    <div class="music-title-artist">
+        <div class="music-title is-size-4">
+            <rb-music-title [music]="music" isMarqueedisabled />
+        </div>
+        <span class="by">by</span>
+        <div class="music-artist">
+            <span>{{ music.artist }}</span>
+        </div>
+    </div>
+</ng-template>
+<div class="stage-log" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave">
+    <div class="card stage-log-content you-{{ matchingResult() }} rb-panel">
+        <div class="play-data your-play-data" [rbColor]="color">
+            <rb-player [version]="stageLog().version" [color]="color" [matchingGrade]="stageLog().matchingGrade" player="You" />
+            <span class="score is-size-4">
+                @if (matchingResult() === "win") {
+                <bung-icon icon="crown">{{ stageLog().score }}</bung-icon>
+                } @else {
+                {{ stageLog().score }}
+                }
+            </span>
+        </div>
+        <div class="music-info">
+            @let chartName = stageLog().chart.chartType | rbChartTypeLiteral : stageLog().version;
+            <!-- <bung-marquee [content]="marqueeContent" contentAlign="center" /> -->
+            <div class="music-title is-size-4">
+                <rb-music-title [music]="music" />
+            </div>
+            <div class="music-artist">
+                <bung-marquee [content]="music.artist" [delay]="1500" />
+            </div>
+            <div class="chart is-{{ chartName | lowercase }}-chart">
+                <div class="chart-name">{{ chartName }}</div>
+                <rb-level [version]="stageLog().version" [level]="stageLog().chart.level" [skillRate]="stageLog().chart.skillRate" />
+            </div>
+        </div>
+        <div class="play-data rival-play-data" [rbColor]="color" isRival>
+            <rb-player [version]="stageLog().version" [color]="color" isRival [matchingGrade]="stageLog().rivalMatchingGrade" [name]="stageLog().rivalUserName" [cpuId]="stageLog().rivalCpuId" [musicId]="stageLog().musicId" isRival />
+            <span class="score is-size-4">
+                @if (matchingResult() === "lose") {
+                <bung-icon icon="crown" isLayoutReversed>{{ stageLog().rivalScore }}</bung-icon>
+                } @else {
+                {{ stageLog().rivalScore }}
+                }
+            </span>
+        </div>
+        <div class="deco" [rbColor]="color" [isRival]="matchingResult() === 'win'">
+            <div class="jacket">
+                <img class="image-background" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+                <img class="image-foreground" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+            </div>
+            <div class="gradient-background"></div>
+        </div>
+    </div>
+    <div class="hover-background"></div>
+</div>
+}

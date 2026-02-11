@@ -1,0 +1,132 @@
+@use "sass:color"
+:host
+    display: inline-flex
+    flex-wrap: nowrap
+    filter: drop-shadow(0 2px 3px var(--card-shadow-color)) drop-shadow(0 0 0 var(--card-shadow-color))
+
+    &:last-child, &:not(:last-child)
+        margin: 0
+.tag
+    margin: 0
+.tag.player
+    font-weight: bold
+    min-width: 8em
+.tag.player.has-title::before
+    content: ""
+    position: absolute
+    inset: 0
+    border-radius: 4px
+    background: #fff5
+    opacity: 0
+    pointer-events: none
+    transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+.tag.player.has-title:hover::before
+    opacity: 1
+
+.tag.mg
+    width: 3em
+    background: var(--rb-color)
+
+.tag.player.rb3
+    &.pwt:not(.joker)
+        color: white
+        background: var(--npc-color)
+
+        &.complete-name
+            color: var(--npc-color)
+            background: color-mix(in srgb, var(--npc-color), var(--card-background) 90%)
+    &.rose
+        --npc-color: #CE0088
+    &.francis
+        --npc-color: #1B8C02
+    &.lily
+        --npc-color: #C30202
+    &.cecil
+        --npc-color: #8402F0
+    &.joker
+        color: #EAED30
+        background: linear-gradient(-30deg, #000076, #3D4CF8 45%, #00009E 46.5%)
+.tag.player.rb4
+    &.pwq, &.meijin
+        color: white
+        background: var(--npc-color)
+    &.ms
+        --npc-shadow-color-box: color-mix(in srgb, var(--npc-shadow-color), transparent)
+        color: var(--card-background)
+        background: transparent
+        text-shadow: 0 0 4px var(--npc-shadow-color), 0 0 4px var(--npc-shadow-color), 0 0 4px var(--npc-shadow-color)
+        box-shadow: 0 0 2px var(--npc-shadow-color-box) inset, 0 0 2px var(--npc-shadow-color-box) inset, 0 0 2px var(--npc-shadow-color-box) inset
+
+    &.meijin
+        --npc-color: #B38542
+    &.rose
+        --npc-color: #CE0088
+    &.merly
+        --npc-color: #87947F
+    &.francis
+        --npc-color: #1B8C02
+    &.jack
+        --npc-color: #FF5C00
+    &.lily
+        --npc-color: #C30202
+    &.alice
+        --npc-color: #D89DD8
+    &.cecil
+        --npc-color: #8402F0
+    &.colette-joker
+        color: #EAED30
+        background: linear-gradient(-30deg, #000076, #3D4CF8 45%, #00009E 46.5%)
+    &.hanzo
+        --npc-color: #940000
+    &.chaos-joker
+        color: #FF5858
+        background: linear-gradient(-30deg, #000 0, #646464 45%, #4B4B4B 46.5%)
+
+    &.asura
+        --npc-shadow-color: #6B0B02
+    &.chimera
+        --npc-shadow-color: #BC0091
+    &.leviathan
+        --npc-shadow-color: #023C89
+    &.vampire
+        --npc-shadow-color: #66007E
+    &.cyclops
+        --npc-shadow-color: #C90819
+    &.griffin
+        --npc-shadow-color: #288205
+    &.bahamut
+        --npc-shadow-color: black
+@media screen and (width < 768px)
+    .tag.player
+        font-size: 0.6em
+    .tag.player:not(.complete-name)
+        min-width: 5em
+        max-width: 5em
+        overflow: clip
+        text-overflow: ellipsis
+    .tag.mg
+        width: 2em
+        font-size: 0.6em
+@media (prefers-color-scheme: dark)
+    .tag.player
+        background: #363636
+        color: #f5f5f5
+    .tag.player.rb3
+        &.pwt:not(.joker).complete-name
+            color: color-mix(in srgb, var(--npc-color), var(--invert-card-background) 70%)
+    .tag.player.rb4
+        &.asura
+            --npc-shadow-color: #f3b5ae
+        &.chimera
+            --npc-shadow-color: #f1bae3
+        &.leviathan
+            --npc-shadow-color: #9ac3f5
+        &.vampire
+            --npc-shadow-color: #cdadd4
+        &.cyclops
+            --npc-shadow-color: #e9cacc
+        &.griffin
+            --npc-shadow-color: #b7ccae
+        &.bahamut
+            --npc-shadow-color: white

@@ -1,0 +1,15 @@
+@switch (stageLog().version) {
+    @case (1) {
+        <rb1-stage-log-popup-content [stageLog]="castStageLog(1, stageLog())!" />
+    } @case (2) {
+        <rb2-stage-log-popup-content [stageLog]="castStageLog(2, stageLog())!" />
+    } @case (3) {
+        <rb3-stage-log-popup-content [stageLog]="castStageLog(3, stageLog())!" />
+    } @case (4) {
+        <rb4-stage-log-popup-content [stageLog]="castStageLog(4, stageLog())!" />
+    } @case (5) {
+        <rb5-stage-log-popup-content [stageLog]="castStageLog(5, stageLog())!" />
+    } @case (6) {
+        <rb6-stage-log-popup-content [stageLog]="castStageLog(6, stageLog())!" />
+    }
+}

@@ -1,0 +1,92 @@
+:host
+    display: block
+.classcheck
+    display: grid
+    grid-template: 1fr / minmax(0, 100%) auto auto auto
+    position: relative
+    padding: 1.25em
+    align-content: center
+    align-items: center
+    gap: 1.25em
+    white-space: nowrap
+    overflow: clip
+
+    .classcheck-name
+        display: flex
+        flex-direction: column
+        flex-wrap: nowrap
+        overflow: hidden
+
+        .sub-name
+            font-size: 1em
+            opacity: 0.7
+        .main-name
+            font-size: 2em
+            font-weight: bold
+    .classcheck-clear-info
+        display: flex
+        flex-direction: column
+        z-index: 1
+
+        .sub-info
+            font-size: 1em
+            opacity: 0.7
+            text-align: end
+        .main-info
+            font-size: 2em
+            font-weight: bold
+            text-align: end
+    bung-divider
+        width: 1px
+        height: 100%
+        z-index: 1
+
+    .classcheck-score-info
+        display: grid
+        grid-template: auto 1.25em 1.25em / 5em 5em
+        gap: 0 0.5em
+        z-index: 1
+
+        > *
+            font-size: 0.75em
+            line-height: 1.25em
+        .classcheck-ar
+            grid-area: 1 / span 2
+            font-size: 2em
+            font-weight: bold
+            justify-self: center
+        .classcheck-score
+            grid-area: 2 / 1
+        .classcheck-play-count
+            grid-area: 2 / 2
+        .classcheck-update
+            grid-area: 3 / 1
+        .classcheck-last-play
+            grid-area: 3 / 2
+    .deco-background
+        position: absolute
+        inset: 0
+        left: min(50%, calc(100% - 16em))
+        mask-image: linear-gradient(to right, transparent, black)
+        background: var(--rb-background)
+        opacity: 0.7
+        z-index: 0
+        
+    .deco-background-blur-box
+        position: absolute
+        inset: 0
+        filter: blur(160px)
+@media screen and (width < 768px)
+    .classcheck
+        padding: 0.5em
+        gap: 0.5em
+        .classcheck-name .main-name, .classcheck-clear-info .main-info, .classcheck-score-info .classcheck-ar
+            font-size: 1.25em
+        .classcheck-name .sub-name, .classcheck-clear-info .sub-info
+            font-size: 0.75em
+        .classcheck-score-info
+            grid-template: auto 1.25em 1.25em / 5em
+            gap: 0
+        .classcheck-play-count, .classcheck-last-play
+            display: none
+        

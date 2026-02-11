@@ -1,0 +1,53 @@
+rb-byword-tag.tags
+    // clip-path: polygon(0.3em 0, calc(100% - 0.3em) 0, calc(100% - 0.1em) 10%, 100% 30%, 100% 70%, calc(100% - 0.1em) 90%, calc(100% - 0.3em) 100%, 0.3em 100%, 0.1em 90%, 0 70%, 0 30%,0.1em 10%)
+    
+    margin-bottom: 0 !important
+    .tag
+        padding: 0 0.5em
+        margin-bottom: 0
+
+        .tag-content
+            height: 100%
+            vertical-align: middle
+            align-content: space-around
+        .tag-content.has-rarity
+            $g: var(--gradient1), var(--gradient2)
+            background: conic-gradient($g, $g, $g, $g, $g, $g, var(--gradient1))
+        &.left
+            clip-path: polygon(0.5em 0, 100% 0, 100% 100%, 0.5em 100%, 0 calc(100% - 0.25em), 0 0.25em)
+        &.right
+            clip-path: polygon(0 0, calc(100% - 0.5em) 0, 100% 0.25em, 100% calc(100% - 0.25em), calc(100% - 0.5em) 100%, 0 100%)
+        &.left.no-right-part
+            border-top-right-radius: 0
+            border-bottom-right-radius: 0
+        &.right.no-left-part
+            border-top-left-radius: 0
+            border-bottom-left-radius: 0
+        &.left .tag-content.has-rarity
+            padding: 0 0.5em
+            margin-right: -0.5em
+            // clip-path: polygon(0.4em 0, 100% 0, 100% 100%, 0.4em 100%, 0 55%, 0 45%)
+        &.right .tag-content.has-rarity
+            padding: 0 0.5em
+            margin-left: calc(-0.5em - 1px)
+            // clip-path: polygon(0 0, calc(100% - 0.8em) 0, 100% 20%, 100% 80%, calc(100% - 0.8em) 100%, 0 100%)
+        .bronze
+            --gradient1: #f7ebe5
+            --gradient2: #e1cec7
+            color: #6c483d
+        .silver
+            --gradient1: #e9eced
+            --gradient2: #c7d1d2
+            color: #515c61
+        .gold
+            --gradient1: #fceab3
+            --gradient2:#eadda4
+            color: #7d6f46
+        .platinum
+            --gradient1: #fae9f9
+            --gradient2: #edb5f8
+            color: #74467d
+
+@media screen and (width < 768px)
+    rb-byword-tag.tags .tag
+        font-size: 0.75em

@@ -1,0 +1,394 @@
+@if (settingsService.settings() && settingsService.items.hasValue()) {
+    @let version = versionService.version();
+    @let form = settingsService.settingsForm;
+    <form>
+        <rb-settings-section name="General">
+            <bung-field label="Name" help="1~8 character(s) in SHIFT-JIS." [field]="form.name" [class.is-danger]="form.name().invalid()">
+                <input class="input" type="text" [class.is-danger]="form.name().invalid()" [field]="form.name" size="10">
+            </bung-field>
+            <bung-field label="Comment" [help]="version === 6 ? 'Comment will only be displayed on your webui profile now.' : 'Comment will be displayed while matching. No more than 50 characters.'">
+                <input class="input" type="text" [field]="form.comment" [placeholder]="version | rbDefaultComment">
+            </bung-field>
+            @if (version >= 2) {
+                @let casted=settingsService.cast(form, 2);
+                <bung-field label="Bywords" [isDirty]="casted.isAutoBywordLeft().dirty() || casted.bywordLeft().dirty() || casted.bywordRight().dirty() || casted.isAutoBywordRight().dirty()">
+                    <div class="byword-field">
+                        @let autoWearLeft = casted.isAutoBywordLeft().value();
+                        @let autoWearRight = casted.isAutoBywordRight().value();
+                        <div class="byword-left">
+                            <button class="button byword-auto-wear-button byword-auto-wear-left is-danger-accent" [class.is-selected]="autoWearLeft" (click)="casted.isAutoBywordLeft().setControlValue(!autoWearLeft)" bungTooltip="Left byword auto wear is {{ autoWearLeft ? 'on' : 'off' }}.">
+                                @if (autoWearLeft) { <bung-icon iconUrl="static/assets/icons/byword-auto-renew.svg" /> }
+                                @else { <bung-icon iconUrl="static/assets/icons/byword-auto-renew-off.svg" /> }
+                            </button>
+                            <bung-select class="byword-select byword-left-select is-danger" isReversed dropdownClass="byword-select-dropdown" [field]="casted.bywordLeft" [equalFn]="selectOptionEq">
+                                @for (byword of filterBywords(settingsService.bywords.value(), 0); track byword.id) {
+                                    <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 0)"><rb-byword-tag class="byword-left-select-tag" [leftByword]="byword" noRightPart /></bung-option>
+                                }
+                            </bung-select>
+                        </div>
+                        <div class="byword-right">
+                            <bung-select class="byword-select byword-right-select is-info" dropdownClass="byword-select-dropdown" [field]="casted.bywordRight" [equalFn]="selectOptionEq">
+                                @for (byword of filterBywords(settingsService.bywords.value(), 1); track byword.id) {
+                                    <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 1)"><rb-byword-tag noLeftPart [rightByword]="byword" /></bung-option>
+                                }
+                            </bung-select>
+                            <button class="button byword-auto-wear-button byword-auto-wear-right is-info-accent" [class.is-selected]="autoWearRight" (click)="casted.isAutoBywordRight().setControlValue(!autoWearRight)" bungTooltip="Right byword auto wear is {{ autoWearRight ? 'on' : 'off' }}.">
+                                @if (autoWearRight) { <bung-icon iconUrl="static/assets/icons/byword-auto-renew.svg" /> }
+                                @else { <bung-icon iconUrl="static/assets/icons/byword-auto-renew-off.svg" /> }
+                            </button>
+                        </div>
+                    </div>
+                </bung-field>
+            }
+        </rb-settings-section>
+        <rb-settings-section name="In game">
+            @if (version >= 5) {
+                @let casted = settingsService.cast(form, 5);
+                <bung-field label="Hi-speed" [field]="casted.highSpeed">
+                    @if (version === 5) {
+                        <rb5-hi-speed-select [field]="casted.highSpeed" />
+                    } @else {
+                        <bung-number-input [field]="casted.highSpeed" [step]="0.1" [rounding]="0.1" [formatter]="formatHighSpeed" />
+                    }
+                </bung-field>
+            }
+            @if (version >= 4) {
+                @let casted = settingsService.cast(form, 4);
+                <bung-field label="Mode" [field]="casted.clearGaugeType">
+                    <bung-select [field]="casted.clearGaugeType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Normal</bung-option>
+                        <bung-option [value]="1">Hard</bung-option>
+                        @if (version === 4 || version === 5) {
+                            <bung-option [value]="2">S-Hard</bung-option>
+                        }
+                    </bung-select>
+                </bung-field>
+            }
+            @if (version >= 2 && version < 6) {
+                @let casted = settingsService.cast(form, 2);
+                <bung-field label="Primary Gauge" [field]="casted.mainGaugeType">
+                    <bung-select [field]="casted.mainGaugeType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Clear / Life</bung-option>
+                        <bung-option [value]="1">Just Reflec</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+            @if (version === 3) {
+                @let casted = settingsService.cast(form, 3);
+                <bung-field label="AR Displaying" [field]="casted.clearGaugeType">
+                    <bung-select [field]="casted.clearGaugeType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Type A (Normal)</bung-option>
+                        <bung-option [value]="1">Type B (Average)</bung-option>
+                        <bung-option [value]="2">Type C (Hazard)</bung-option>
+                        <bung-option [value]="3">Stealth</bung-option>
+                    </bung-select>
+                </bung-field>
+            } @else if (version >= 4) {
+                @let casted = settingsService.cast(form, 4);
+                <bung-field label="AR Displaying" [field]="casted.achievementRateDisplayingType">
+                    <bung-select [field]="casted.achievementRateDisplayingType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Normal</bung-option>
+                        <bung-option [value]="1">Average</bung-option>
+                        <bung-option [value]="2">Hazard</bung-option>
+                        <bung-option [value]="3">Stealth</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+            @if (version >= 3) {
+                @let casted = settingsService.cast(form, 3);
+                <bung-field label="Object Size" [field]="casted.objectSize">
+                    <rb-object-size-select [field]="casted.objectSize" />
+                </bung-field>
+            }
+            @if (version >= 4) {
+                @let casted = settingsService.cast(form, 4);
+                <bung-field label="Chord Objects Marker" [field]="casted.sameTimeObjectsDisplayingType">
+                    <bung-select [field]="casted.sameTimeObjectsDisplayingType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Standard</bung-option>
+                        <bung-option [value]="1">Classic</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+            <bung-field label="Hit sound" [field]="form.shotSound">
+                <bung-select [field]="form.shotSound" noOptionsPlaceholder="No options" [equalFn]="selectOptionEq">
+                    @for (item of filterItems(settingsService.items.value(), "shotSound"); track item.value) {
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                    }
+                </bung-select>
+            </bung-field>
+            <bung-field label="SFX volume" [field]="form.shotVolume">
+                <bung-number-input [field]="form.shotVolume" [rounding]="1" />
+            </bung-field>
+            @if (version !== 6) {
+                @let casted = settingsService.cast(form, 1);
+                <bung-field label="Music select BGM" [field]="casted.backgroundMusic">
+                    <bung-select [field]="casted.backgroundMusic" [equalFn]="selectOptionEq">
+                        @for (item of filterItems(settingsService.items.value(), "backgroundMusic"); track item.value) {
+                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        }
+                    </bung-select>
+                </bung-field>
+            }
+            <bung-field label="Object explode effect" [field]="form.explodeEffect">
+                <bung-select [field]="form.explodeEffect" [equalFn]="selectOptionEq">
+                    @for (item of filterItems(settingsService.items.value(), "explodeEffect"); track item.value) {
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                    }
+                </bung-select>
+            </bung-field>
+            <bung-field label="Stage frame" [field]="form.frame">
+                <bung-select [field]="form.frame" [equalFn]="selectOptionEq">
+                    @for (item of filterItems(settingsService.items.value(), "frame"); track item.value) {
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                    }
+                </bung-select>
+            </bung-field>
+            <bung-field label="Stage background" [field]="form.background">
+                <bung-select [field]="form.background" [equalFn]="selectOptionEq">
+                    @for (item of filterItems(settingsService.items.value(), "background"); track item.value) {
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                    }
+                </bung-select>
+            </bung-field>
+            <bung-field label="Background brightness" [field]="form.backgroundBrightness">
+                <bung-number-input [field]="form.backgroundBrightness" [rounding]="1" />
+            </bung-field>
+            @if (version === 3 || version === 4) {
+                @let casted = settingsService.cast(form, 3);
+                <bung-field label="Touch Marker" [field]="casted.touchMarkerDisplayingType">
+                    <bung-select [field]="casted.touchMarkerDisplayingType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Show</bung-option>
+                        <bung-option [value]="1">Hide</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+            @if (version >= 5) {
+                @let casted = settingsService.cast(form, 5);
+                <bung-field label="Objects To Rival" [field]="casted.rivalObjectsDisplayingType">
+                    <bung-select [field]="casted.rivalObjectsDisplayingType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Show</bung-option>
+                        <bung-option [value]="1">Hide</bung-option>
+                    </bung-select>
+                </bung-field>
+                <bung-field label="Top Object Prompt" [field]="casted.topAssistDisplayingType">
+                    <bung-select [field]="casted.topAssistDisplayingType" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">Show</bung-option>
+                        <bung-option [value]="1">Hide</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+            @if (version === 5) {
+                @let casted = settingsService.cast(form, 5);
+                <bung-field label="Voice Message Set" [field]="casted.voiceMessageSet">
+                    <bung-select [field]="casted.voiceMessageSet" [equalFn]="selectOptionEq">
+                        @for (item of filterItems(settingsService.items.value(), "voiceMessageSet"); track item.value) {
+                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        }
+                    </bung-select>
+                </bung-field>
+                <bung-field label="Voice Message Volume" [field]="casted.voiceMessageVolume">
+                    <bung-number-input [field]="casted.voiceMessageVolume" />
+                </bung-field>
+            }
+            @if (version === 6) {
+                @let casted = settingsService.cast(form, 6);
+                <bung-field label="Color" [field]="casted.colorSpecified">
+                    <rb6-color-specification-select [field]="casted.colorSpecified" />
+                </bung-field>
+            }
+        </rb-settings-section>
+        <rb-settings-section name="Miscellaneous">
+            <bung-field label="Lobby feature" help="Turn on to enable online matching{{ version === 1 ? '' :  ' / in-game comment'}}." [field]="form.isLobbyEnabled">
+                <div class="field-body">
+                    <bung-toggle class="is-primary is-rounded" [field]="form.isLobbyEnabled" />
+                </div>
+            </bung-field>
+            @if (version === 6) {
+                @let casted = settingsService.cast(form, 6);
+                <bung-field label="Ranking Quest" help="Ranking quest can be accessed from Reflesia Mode in game." [field]="casted.rankingQuestIndex">
+                    <bung-select [field]="casted.rankingQuestIndex" [equalFn]="selectOptionEq" dropdownClass="ranking-quest-select-dropdown">
+                        <ng-template #rankingQuestOptionPlaceholder>
+                            <div class="music-icon-placeholder">
+                                <div class="figure"></div>
+                                <div class="text">&nbsp;</div>
+                                <div class="text">&nbsp;</div>
+                                <div class="text">&nbsp;</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-q #rankingQuestOptionTemplate>
+                            <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder">
+                                <div class="ranking-quest-option-content">
+                                    <span class="group-label is-size-7">Group {{ q.id + 1 }}</span>
+                                    @for (c of q.charts; track c) {
+                                        @let music = findMusic(c.musicId);
+                                        @if (!music) { 
+                                            <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
+                                        } @else {
+                                            <rb-music-icon class="ranking-quest-option" [music]="music" [chartType]="c.chartType" isVirtualized />
+                                        }
+                                    }
+                                </div>
+                            </bung-insertion>
+                        </ng-template>
+
+                        @for (q of settingsService.rankingQuests.value(); track q.id) {
+                            <bung-option [value]="q.id" [content]="rankingQuestOptionTemplate" [context]="q | implicit" />
+                        }
+                    </bung-select>
+                </bung-field>
+            }
+        </rb-settings-section>
+        @if (version === 6) {
+            @let casted = settingsService.cast(form, 6);
+            @let parts = casted.pastelParts().value();
+            <rb-settings-section name="Appearance">
+                <bung-field label="Pastel-kun Equips" [field]="casted.pastelParts">
+                    <div class="pastel-kun">
+                        <div class="pastel-kun-selects">
+                            <bung-select class="pastel-kun-head" [value]="parts[0]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(0, $event)">
+                                @for (equip of filterEquips(settingsService.equips.value(), 0); track equip.id) {
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                }
+                            </bung-select>
+                            <bung-select class="pastel-kun-top" [value]="parts[1]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(1, $event)">
+                                @for (equip of filterEquips(settingsService.equips.value(), 1); track equip.id) {
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                }
+                            </bung-select>
+                            <bung-select class="pastel-kun-under" [value]="parts[2]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(2, $event)">
+                                @for (equip of filterEquips(settingsService.equips.value(), 2); track equip.id) {
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                }
+                            </bung-select>
+                        </div>
+                        <div class="pastel-kun-body">
+                            <img class="base-body" src="static/assets/pastel_equips/pastel.webp">
+                            <img class="head" src="static/assets/pastel_equips/head_{{ parts[0] }}.webp">
+                            <img class="top" src="static/assets/pastel_equips/top_{{ parts[1] }}.webp">
+                            <img class="under" src="static/assets/pastel_equips/under_{{ parts[2] }}.webp">
+                            <img class="left-arm" src="static/assets/pastel_equips/arm_l_{{ parts[3] }}.webp">
+                            <img class="right-arm" src="static/assets/pastel_equips/arm_r_{{ parts[3] }}.webp">
+                        </div>
+                        <div class="pastel-kun-selects">
+                            <bung-select class="pastel-kun-arms" [value]="parts[3]" [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(3, $event)">
+                                @for (equip of filterEquips(settingsService.equips.value(), 3); track equip.id) {
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                }
+                            </bung-select>
+                        </div>
+                    </div>
+                </bung-field>
+                <bung-field label="Character Card" [field]="casted.characterCardId">
+                    <bung-select class="characard-select" [field]="casted.characterCardId" [equalFn]="selectOptionEq">
+                        @for (charaCard of settingsService.characterCards.value(); track charaCard.id) {
+                            <bung-option [value]="charaCard.id" [isHidden]="!isCharacterCardAvailable(charaCard)">
+                                <div class="characard-option-content">
+                                    <img class="card" src="static/assets/characards/characard_{{ charaCard.id }}.webp">
+                                    <div class="characard-element-icon">
+                                        @switch (charaCard.element) {
+                                            @case (0) { <i class="mdi mdi-fire fire-element is-danger-accent"></i> }
+                                            @case (1) { <i class="mdi mdi-water aqua-element is-info-accent"></i> }
+                                            @case (2) { <i class="mdi mdi-tree wood-element is-success-accent"></i> }
+                                            @case (3) { <i class="mdi mdi-white-balance-sunny light-element is-warning-accent"></i> }
+                                            @case (4) { <i class="mdi mdi-moon-waning-crescent dark-element"></i> }
+                                        }
+                                    </div>
+                                    <div class="characard-title">{{ charaCard.name }}</div>
+                                </div>
+                            </bung-option>
+                        }
+                    </bung-select>
+                </bung-field>
+            </rb-settings-section>
+        }
+        @if (version >= 2) {
+            <rb-settings-section name="Favorate">
+                @let casted = settingsService.cast(form, 2);
+                <ng-template let-slot #mylistEditTemplate>
+                    <rb-mylist-editor [slot]="slot" (mylistSlotChanged)="onMylistSlotChanged()" />
+                </ng-template>
+                <bung-field class="is-fullwidth" label="Favorate List" [field]="casted.mylist">
+                    <div class="mylist-list">
+                        @if (version === 2) {
+                            @let casted = settingsService.cast(form, 2);
+                            @for (id of casted.mylist().value(); track id) {
+                                @let music = id < 0 ? undefined : findMusic(id);
+                                @if (music) {
+                                    <div class="mylist-icon-box">
+                                        <rb-music-icon [music]="music" isVirtualized>
+                                            <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylistSlot($index)">
+                                                <bung-icon icon="delete">Remove</bung-icon>
+                                            </button>
+                                        </rb-music-icon>
+                                    </div>
+                                } @else {
+                                    <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates Slot {{ $index + 1 }}" [body]="mylistEditTemplate" [bodyContext]="$index | implicit" [options]="{}" #mylistModalTrigger>
+                                        <div class="music-icon-placeholder">
+                                            <div class="figure"></div>
+                                            <div class="text">&nbsp;</div>
+                                            <div class="text">&nbsp;</div>
+                                            <div class="text">&nbsp;</div>
+                                            <button class="button addon mylist-remove-button is-small">
+                                                <bung-icon icon="delete">Remove</bung-icon>
+                                            </button>
+                                        </div>
+                                        <div class="edit-button-content">
+                                            <p>
+                                                <span class="icon is-large">
+                                                    <i class="mdi mdi-pen mdi-36px"></i>
+                                                </span>
+                                            </p>
+                                            <p class="is-size-7">Edit Slot {{ $index + 1 }}</p>
+                                        </div>
+                                    </a>
+                                }
+                            }
+                        } @else if (version >= 3) {
+                            @let casted = settingsService.cast(form, 3);
+                            @for (id of filterMylist(casted.mylist().value()); track id) {
+                                @let music = findMusic(id);
+                                @if (music) {
+                                    <div class="mylist-icon-box" animate.leave="leave">
+                                        <rb-music-icon [music]="music" isVirtualized>
+                                            <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylist(id)">
+                                                <bung-icon icon="delete">Remove</bung-icon>
+                                            </button>
+                                        </rb-music-icon>
+                                    </div>
+                                }
+                            }
+                            <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates" [body]="mylistEditTemplate" [options]="{ values: { 'confirm': { value: 0, elementClass: 'is-success', content: 'Confirm' } } }">
+                                <div class="music-icon-placeholder">
+                                    <div class="figure"></div>
+                                    <div class="text">&nbsp;</div>
+                                    <div class="text">&nbsp;</div>
+                                    <div class="text">&nbsp;</div>
+                                    <button class="button addon mylist-remove-button is-small"></button>
+                                </div>
+                                <div class="edit-button-content">
+                                    <p>
+                                        <span class="icon is-large">
+                                            <i class="mdi mdi-pen mdi-36px"></i>
+                                        </span>
+                                    </p>
+                                    <p class="is-size-7">Edit Favorites</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </bung-field>
+
+            </rb-settings-section>
+
+        }
+        <div class="submit-footer">
+            <bung-divider />
+            <button type="submit" class="button is-primary" [disabled]="!form().dirty() || form().invalid()">
+                <bung-icon icon="check">Submit</bung-icon>
+            </button>
+        </div>
+    </form>
+    @if (versionService.version() === 5 || versionService.version() === 6) {
+        <rb-level-display-switch isFloated />
+    }
+}

@@ -1,0 +1,86 @@
+@forward "./badges"
+@forward "./record-popup"
+
+.is-basic-chart
+    --rb-chart-color: #2ECC71
+    --rb-chart-foreground: white
+.is-medium-chart
+    --rb-chart-color: #e9c915
+    --rb-chart-foreground: white
+.is-hard-chart
+    --rb-chart-color: #FF3860
+    --rb-chart-foreground: white
+.is-special-chart
+    --rb-chart-color: #209CEE
+    --rb-chart-foreground: white
+.is-whitehard-chart, .is-whiteHard-chart
+    --rb-chart-color: #f5359f
+    --rb-chart-foreground: white
+
+.is-red-side
+    --rb-color: #FF3860
+    --rb-color-foreground: white
+.is-blue-side
+    --rb-color: #209CEE
+    --rb-color-foreground: white
+
+.has-rb1-background
+    --rb-background: #8d75bd
+.has-rb2-background
+    --rb-background: linear-gradient(90deg, #fdf781 0.43em, #8dd1ff 0.43em, #8dd1ff 0.86em, #ff9fe8 0.86em, #ff9fe8 1.5em, #C3FF85 1.5em)
+.has-rb3-background
+    --rb-background: linear-gradient(161deg, #F2F2FA 37.3%, #EAE3DA 43.2%, #DFEDF1 43.2%, #DFEBDD 46.62%, #F0DDBD 46.62%, #F0DDBD 49.95%, #F3EAC2 49.95%, #F3EAC2 53.28%, #D5E1DF 53.28%, #D5E1DF 56.61%, #E7ECC5 56.61%, #E7ECC5 59.94%, #F3E7DB 59.94%, #F2F0E6 63.27%)
+.has-rb4-background
+    --rb-background: #fdf781
+.has-rb5-background
+    --rb-background: #8dd1ff
+.has-rb6-background
+    --rb-background: linear-gradient(to right bottom, #ffffff 9%, 30%, #c3daff 52%, 66%, #ecf6ff 77%, 88%, #c4eeb2)
+
+.rb-panel
+    height: 7.5em
+@media screen and (width < 768px)
+    .rb-panel
+        height: 5em
+@media (prefers-color-scheme: dark)
+    .is-basic-chart
+        --rb-chart-color: #57ac7a
+        --rb-chart-foreground: #1f2d25
+        // --rb-chart-color: #1e5f39
+    .is-medium-chart
+        // --rb-chart-color: #806f12
+        --rb-chart-color: #a8993e
+        --rb-chart-foreground: #3d3a2f
+    .is-hard-chart
+        --rb-chart-color: #d2798b
+        --rb-chart-foreground: #2f2225
+        // --rb-chart-color: #a0354b
+    .is-special-chart
+        --rb-chart-color: #6190b0
+        --rb-chart-foreground: #242d32
+        // --rb-chart-color: #1d5981
+    .is-whitehard-chart, .is-whiteHard-chart
+        --rb-chart-color: #c97aa6
+        --rb-chart-foreground: #3a2932
+        // --rb-chart-color: #a7427a
+
+    .is-red-side
+        --rb-color: #FF3860
+    .is-blue-side
+        --rb-color: #209CEE
+
+    .has-rb1-background
+        --rb-background: #4b298f
+    .has-rb2-background
+        --rb-background: linear-gradient(90deg, #938c00 0.43em, #1377b9 0.43em, #1377b9 0.86em, #92008b 0.86em, #92008b 1.5em, #448500 1.5em)
+    .has-rb3-background
+        --rb-background: linear-gradient(161deg, #F2F2FAB0 37.3%, #EAE3DAB0 43.2%, #DFEDF1B0 43.2%, #DFEBDDB0 46.62%, #F0DDBDB0 46.62%, #F0DDBDB0 49.95%, #F3EAC2B0 49.95%, #F3EAC2B0 53.28%, #D5E1DFB0 53.28%, #D5E1DFB0 56.61%, #E7ECC5B0 56.61%, #E7ECC5B0 59.94%, #F3E7DBB0 59.94%, #F2F0E6B0 63.27%)
+    .has-rb4-background
+        --rb-background: #938c00
+    .has-rb5-background
+        --rb-background: #1377b9
+    .has-rb6-background
+        --rb-background: linear-gradient(to right bottom, #dcdcdc 9%, 30%, #678fd6 52%, 66%, #8299ae 77%, 88%, #418c1f)
+
+    .rb-prompt
+        color: var(--rb-chart-color, #363636)

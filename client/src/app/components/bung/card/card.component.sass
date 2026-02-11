@@ -1,0 +1,65 @@
+bung-card
+    display: block
+    overflow: clip
+    transition: transform var(--animation-duration-lv3) cubic-bezier(0, 0.055, 0, 1)
+
+    // &:has(.card-hover-background:active, .card-header-title:active)
+    //     transform: scale(0.98)
+    .card-header
+        position: relative
+        overflow: clip
+        cursor: pointer
+        transition: transform var(--animation-duration-lv3) cubic-bezier(0, 0.055, 0, 1)
+
+        .card-header-chevron
+            margin-left: 0.5em
+            transition: transform var(--animation-duration-lv2) var(--ease-in)
+
+        &.is-folded .card-header-chevron
+            transform: rotate(180deg)
+
+        &.is-mobile
+            .card-header-title, .card-header-icon
+                padding: 0.4em 0.5em
+    .card-content
+        padding: 0
+        overflow: clip
+    .card-content-wrapper
+        padding: 1.5em
+    .card-content-wrapper.is-mobile
+        padding: 0.5em
+    .card-hover-background
+        display: block
+        position: absolute
+        inset: 0
+        background: #777
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3), transform var(--animation-duration-lv3) cubic-bezier(0, 0.055, 0, 1)
+        &:hover
+            opacity: 0.05
+
+        &:active
+            opacity: 0.15
+
+    .card-content.card-expand
+        animation: expand-card var(--animation-duration-lv2) var(--ease-in) forwards
+    .card-content.card-collapse
+        animation: expand-card var(--animation-duration-lv2) var(--ease-out) forwards reverse
+
+    .card-content-wrapper.card-expand
+        animation: translate-card-content var(--animation-duration-lv2) var(--ease-in) forwards
+    .card-content-wrapper.card-collapse
+        animation: translate-card-content var(--animation-duration-lv2) var(--ease-out) forwards reverse
+
+@keyframes expand-card
+    from
+        height: 0
+    99.9999%
+        height: var(--card-content-height)
+    to
+        height: auto
+@keyframes translate-card-content
+    from
+        transform: translateY(-2em)
+    to
+        transform: translateY(0)

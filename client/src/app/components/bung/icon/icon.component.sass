@@ -1,0 +1,31 @@
+bung-icon
+    display: flex
+    align-items: center
+    &.no-wrap
+        flex-wrap: nowrap
+    &.is-reversed
+        flex-flow: row-reverse
+    .icon-element
+        display: inline-flex
+        width: 1.5rem
+        align-items: center
+        justify-content: center
+    span, i
+        line-height: 1.5em
+        flex-shrink: 0
+    .icon-svg
+        width: 1em
+        display: flex
+        align-items: center
+        justify-content: center
+
+        svg .icon-fill
+            fill: var(--bung-icon-color, var(--text-color)) !important
+        svg .icon-stroke
+            stroke: var(--bung-icon-color, var(--text-color)) !important
+        svg .icon-fill-invert
+            fill: var(--bung-icon-color, var(--invert-text-color)) !important
+        svg .icon-stroke-invert
+            stroke: var(--bung-icon-color, var(--invert-text-color)) !important
+bung-icon:first-child, bung-icon.is-first-child
+    margin-left: calc(-0.375em - 1px)

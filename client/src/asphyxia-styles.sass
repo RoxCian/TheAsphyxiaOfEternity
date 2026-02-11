@@ -1,0 +1,14 @@
+@use "@mdi/font"
+@forward "bulma.min.stylefix"
+
+html
+    overflow-y: hidden
+body
+    margin: 0 !important
+    padding: 3em
+    width: 100vw
+    height: 100vh
+    overflow: auto
+@media (prefers-color-scheme: dark)
+    .modal-card-body
+        background-color: #111

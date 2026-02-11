@@ -1,0 +1,49 @@
+@let eq = equalFn();
+<bung-menu-def #optionsDropdownDef class="{{ getSizeClass() }} {{ getPaletteClass() }} {{ dropdownClass() }}">
+    @if (options().length === 0 && noOptionsPlaceholder()) {
+        <bung-menu-item isStatic [content]="noOptionsPlaceholder()" [context]="noOptionsPlaceholderContext()" />
+    } @else {
+        @for (option of options(); track option.value()) {
+            @if (!option.isHidden()) {
+                <bung-menu-item [content]="option.content() ?? cloneElement(option.element.nativeElement)" [context]="option.content() ? option.context() : undefined" [icon]="option.icon()" [iconUrl]="option.iconUrl()" [isStatic]="option.isStatic()" [disabled]="!!option.disabled()" [isActive]="equalFn()(option.value(), value())" (click)="onChange(option.value())" />
+                <!-- <bung-menu-item [content]="option.element.nativeElement" [icon]="option.icon()" [iconUrl]="option.iconUrl()" [isStatic]="option.isStatic()" [disabled]="!!option.disabled()" [isActive]="option.value() === value()" (click)="value.set(option.value())" /> -->
+            }
+        }
+    }
+</bung-menu-def>
+<div class="dropdown-trigger bung-input-content" [class.has-clear-button]="hasClearButton()"
+    [bungDropdown]="optionsDropdownDef"
+    [disabled]="disabled() || isLoading() || readonly()"
+    [triggerMethod]="triggerMethod() === 'click' ? 'click' : 'mouseenter'"
+    [closeTriggerMethod]="triggerMethod() === 'click' ? 'click' : 'mouseleave'"
+    [isReversed]="isReversed()"
+    activeClass="is-active"
+    [options]="{ backdropOptions: { hasBackdrop: triggerMethod() === 'click', backdropOpacity: 0 }}" #dropdownTrigger>
+    <ng-template #selectContent>
+        <div class="dropdown-trigger-content">
+            @if (value() == undefined) {
+                <bung-insertion class="placeholder" [content]="placeholder()" [context]="placeholderContext()" animate.enter="enter" animate.leave="leave" />
+            } @else {
+                @for (option of options(); track option.value()) {
+                    @if (eq(option.value(), value())) {
+                        <bung-insertion class="is-active option" [class.is-visible]="option.value() === value()" [content]="option.content() ?? option.element.nativeElement" [context]="option.content() ? option.context() : undefined" animate.enter="enter" animate.leave="leave" />
+                    }
+                }
+            }
+        </div>
+    </ng-template>
+    @if (icon() || iconUrl()) {
+        <bung-icon [icon]="icon()" [iconUrl]="iconUrl()">
+            <ng-container *ngTemplateOutlet="selectContent" />
+        </bung-icon>
+    } @else {
+        <ng-container *ngTemplateOutlet="selectContent" />
+    }
+    <div class="tail-icon-grid">
+        @if (hasClearButton() && value() != undefined) {
+            <button class="delete" (click)="onClearButtonClicked($event)" animate.enter="enter" animate.leave="leave"></button>
+        }
+        <i class="loading-icon mdi mdi-loading"></i>
+        <i class="dropdown-item-chevron mdi mdi-chevron-down"></i>
+    </div>
+</div>

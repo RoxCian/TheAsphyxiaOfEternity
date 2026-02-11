@@ -1,0 +1,112 @@
+$acc-s: color-mix(in srgb, var(--accent-color) 25%, transparent 75%)
+:root
+    --white-text: #b5b5b5
+    --black-text: #4a4a4a
+    --text-color: #4a4a4a
+    --invert-text-color: #b5b5b5
+    --title-white-text: #dbdbdb
+    --title-black-text: #363636
+    --accent-color: #3273dc
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+    --background: #f8f8f8
+    --card-background: white
+    --invert-card-background: #0a0a0a
+    --card-shadow-color: color-mix(in srgb, var(--invert-card-background) 10%, transparent 90%)
+    --border-color: #dbdbdb
+    --border-color-hover: #b5b5b5
+    --border-color-active: #4a4a4a
+    --ease-in: cubic-bezier(0.100, 0.485, 0.185, 1.000)
+    --ease-out: cubic-bezier(0.485, 0.100, 1.000, 0.185)
+    --animation-duration-lv1: 0.55s
+    --animation-duration-lv2: 0.4s
+    --animation-duration-lv3: 0.25s
+.title
+    --text-color: #363636
+    --invert-text-color: #dbdbdb
+
+.is-primary, .is-info, .is-link, .is-success, .is-danger
+    --text-color: white
+    --accent-hover-background: color-mix(in srgb, var(--bulma-color), #0a0a0a 10%)
+    --accent-active-background: color-mix(in srgb, var(--bulma-color), #0a0a0a 20%)
+    --accent-hover-border-color: color-mix(in srgb, var(--bulma-color), var(--text-color) 30%)
+    --accent-active-border-color: color-mix(in srgb, var(--bulma-color), var(--text-color) 50%)
+.is-warning
+    --text-color: var(--black-text)
+    --accent-hover-background: color-mix(in srgb, var(--bulma-color), #0a0a0a 10%)
+    --accent-active-background: color-mix(in srgb, var(--bulma-color), #0a0a0a 20%)
+    --accent-hover-border-color: color-mix(in srgb, var(--bulma-color), var(--text-color) 50%)
+    --accent-active-border-color: color-mix(in srgb, var(--bulma-color), var(--text-color) 50%)
+
+.is-primary, .is-primary-accent
+    --bulma-color: #00d1b2
+    --accent-color: #00d1b2
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+.is-info, .is-info-accent
+    --bulma-color: #209cee
+    --accent-color: #209cee
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+.is-link, .is-link-accent
+    --bulma-color: #3273dc
+    --accent-color: #3273dc
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+.is-success, .is-success-accent
+    --bulma-color: #23d160
+    --accent-color: #23d160
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+.is-warning, .is-warning-accent
+    --bulma-color: #ffdd57
+    --accent-color: #ffdd57
+    --accent-text-color: var(--black-text)
+    --accent-shadow-color: #{$acc-s}
+.is-danger, .is-danger-accent
+    --bulma-color: #ff3860
+    --accent-color: #ff3860
+    --accent-text-color: white
+    --accent-shadow-color: #{$acc-s}
+.no-animations, .no-anim
+    --animation-duration-lv1: 0s
+    --animation-duration-lv2: 0s
+    --animation-duration-lv3: 0s
+@media (prefers-color-scheme: dark)
+    :root
+        --text-color: #b5b5b5
+        --invert-text-color: #4a4a4a
+        --accent-color: var(--bulma-color, #5ea3e4)
+        --background: #17181c
+        --card-background: #0a0a0a
+        --invert-card-background: white
+        --border-color: #363636
+        --border-color-hover: #4a4a4a
+        --border-color-active: #b5b5b5
+    .title
+        --text-color: #dbdbdb
+        --invert-text-color: #363636
+    .is-primary, .is-primary-accent
+        --bulma-color: #009e86
+        --accent-color: #009e86
+        --accent-shadow-color: #{$acc-s}
+    .is-info, .is-info-accent
+        --bulma-color: #0f81cc
+        --accent-color: #0f81cc
+        --accent-shadow-color: #{$acc-s}
+    .is-link, .is-link-accent
+        --bulma-color: #205bbc
+        --accent-color: #205bbc
+        --accent-shadow-color: #{$acc-s}
+    .is-success, .is-success-accent
+        --bulma-color: #1ca64c
+        --accent-color: #1ca64c
+        --accent-shadow-color: #{$acc-s}
+    .is-warning, .is-warning-accent
+        --bulma-color: #ffd324
+        --accent-color: #ffd324
+        --accent-shadow-color: #{$acc-s}
+    .is-danger, .is-danger-accent
+        --bulma-color: #ff0537
+        --accent-color: #ff0537
+        --accent-shadow-color: #{$acc-s}

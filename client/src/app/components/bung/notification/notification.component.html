@@ -1,0 +1,39 @@
+<ng-template #contentTemplate>
+    <bung-insertion class="content" [content]="content()" [context]="context()" />
+</ng-template>
+<ng-template let-data #buttonReturnTemplate>
+    <button class="button {{ data?.elementClass }} is-small" [bungReturn]="data?.value">
+        <bung-insertion [content]="isSignal(data?.content) ? data.content() : data?.content" [context]="isSignal(data?.context) ? data.context() : data?.context" />
+    </button>
+</ng-template>
+<ng-template let-data #noButtonReturnTemplate>
+    <bung-insertion [class]="data?.elementClass" [content]="isSignal(data?.content) ? data.content() : data?.content" [context]="isSignal(data?.context) ? data.context() : data?.context" />
+</ng-template>
+<ng-template #returnContextsTemplate>
+    @if (returnContext()) {
+        <div class="return-buttons buttons">
+            @for (kv of returnContext() | keyvalue; track kv.key) {
+                @if (kv.value) {
+                    <ng-container [ngTemplateOutlet]="kv.value.isStatic ? noButtonReturnTemplate : buttonReturnTemplate" [ngTemplateOutletContext]="kv.value | implicit" />
+                }
+            }
+        </div>
+    }
+</ng-template>
+
+@if (hasDelete()) {
+    <button class="delete" (click)="close()"></button>
+}
+@if (isSingleLine()) {
+    <div class="singleline-wrapper">
+        <div class="content">
+            <ng-container *ngTemplateOutlet="contentTemplate" />
+        </div>
+        <div class="returns">
+            <ng-container *ngTemplateOutlet="returnContextsTemplate" />
+        </div>
+    </div>
+} @else {
+    <ng-container *ngTemplateOutlet="contentTemplate" />
+    <ng-container *ngTemplateOutlet="returnContextsTemplate" />
+}

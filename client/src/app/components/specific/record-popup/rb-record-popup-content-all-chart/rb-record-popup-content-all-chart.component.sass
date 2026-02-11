@@ -1,0 +1,278 @@
+@forward "./rb-record-popup-content-all-chart.animation.sass"
+
+.modal-body.all-chart
+    display: block
+    position: relative
+    width: 32em
+    height: unset
+    max-width: 32em
+    max-height: unset
+    overflow: visible
+
+.jacket
+    width: 28em
+    height: 28em
+
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: 0 0
+        border-radius: 8px
+        // filter: blur(8px)
+.background-container
+    position: absolute
+    inset: 0
+    margin: 0 2em
+.category-tag
+    position: absolute
+    left: 1.5em
+    top: 5.25em
+    overflow: clip
+
+    .tag
+        padding: 0 2.125em
+        transform: translateX(-100%)
+        animation: category-enter 0.4s 0.2s var(--ease-in) forwards
+        animation-play-state: paused
+        background: var(--card-background)
+        span
+            opacity: 0.7
+
+    .tag.enter
+        animation-play-state: running
+.modal-card-background
+    position: absolute
+    inset: 0
+    border-top: 0
+    background: linear-gradient(to bottom, transparent 5em, white 9em)
+    backdrop-filter: blur(8px)
+    pointer-events: none
+
+.info-container
+    padding-top: 6em
+    display: flex
+    flex-direction: column
+
+.music-info-wrapper
+    margin: 1em 3em
+.chart-info-wrapper
+    display: flex
+    flex-direction: column
+    gap: 1em
+
+// charts score item
+.chart-score-container
+    display: flex
+
+    &:last-child
+        margin-bottom: 1em
+
+.chart-score-animation-wrapper
+    margin-left: 0
+    margin-right: -4px
+    border-radius: 8px
+    overflow: clip
+    filter: drop-shadow(2px 4px 6px #7777)
+    z-index: 2
+
+.chart-score-wrapper
+    position: relative
+    height: 6em
+    width: calc(30em + 8px)
+
+    .chart-jacket
+        width: 8em
+        height: 6em
+        padding: 1em
+        padding-right: 3em
+        flex-shrink: 0
+        background: color-mix(in srgb, var(--rb-chart-color) 70%, #fff3)
+
+        img
+            width: 4em
+            height: 4em
+            border-radius: 4px
+    .chart-info-background
+        position: absolute
+        left: 0
+        top: 0
+        width: 2em
+        height: 100%
+        background: var(--rb-chart-color)
+    .chart-info
+        position: absolute
+        display: flex
+        left: 0.29em
+        top: 0
+        bottom: 0
+        font-size: 0.75em
+        justify-content: center
+        align-items: center
+        flex-wrap: nowrap
+        text-orientation: revert
+        writing-mode: vertical-lr
+        transform: rotate(180deg)
+        text-transform: uppercase
+        opacity: 0.7
+        z-index: 2
+        .chart-name
+            color: white
+            margin-bottom: 0.5em
+    .score-info
+        position: absolute
+        left: calc(2em - 8px)
+        top: 0
+        width: calc(28em + 16px)
+        height: 6em
+        flex-shrink: 0
+        z-index: 1
+
+        .score-info-wrapper
+            display: flex
+            position: relative
+            overflow: clip
+            padding: calc(1em + 4px)
+            width: 100%
+            height: 100%
+            border-radius: 8px
+
+            &.not-played > *
+                opacity: 0.3
+                filter: blur(2px)
+
+            .score-info-container
+                display: flex
+                flex-direction: column
+                justify-content: center
+                width: 100%
+                height: 100%
+                overflow: visible
+            bung-icon
+                position: relative
+            bung-icon:first-child
+                margin-left: 0
+            bung-icon::before
+                content: ""
+                position: absolute
+                inset: 0
+                background: #7773
+                opacity: 0
+                pointer-events: none
+                border-radius: 4px
+                transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+            bung-icon:hover::before
+                opacity: 1
+        .chart-info
+            white-space: nowrap
+            opacity: 0.7
+        .chart-type
+            margin-right: 0.5em
+            color: var(--rb-chart-color)
+        .rank
+            position: absolute
+            right: 0
+            bottom: 0
+            width: 8em
+            height: 8em
+            display: flex
+            align-items: center
+            justify-content: center
+            font-size: 0.75em
+        .not-played-box
+            position: absolute
+            inset: 0
+            display: flex
+            flex-direction: column
+            align-items: center
+            justify-content: center
+            opacity: 0.7
+
+        .score-data
+            display: grid
+            grid-template: 1fr / 1fr 1fr 1fr 1fr
+            grid-auto-flow: row
+            column-gap: 0.5em
+
+            > *
+                flex: 1
+        .play-time
+            display: grid
+            grid-template: 1fr / 1fr 1fr
+            grid-auto-flow: row
+            column-gap: 0.5em
+rb-chart-light
+    margin-left: -8px
+    flex: 1
+    height: 6em
+
+    ::ng-deep & .text-container
+        padding-left: 12px
+
+rb-rank
+    transform: rotate(11deg)
+
+.music-title
+    font-weight: bold
+    margin-bottom: 0
+rb-music-title
+    width: 100%
+.music-artist
+    opacity: 0.7
+
+.just-collection bung-icon::ng-deep span.icon-content
+    flex: 0.643
+
+rb6-just-collect
+    justify-content: start
+
+@media screen and (width < 768px)
+    .modal-body.all-chart
+        width: 24em
+        max-width: 24em
+        font-size: 0.75em !important
+    .jacket
+        width: 20em
+        height: 20em
+    .category-tag
+        top: 4.75em
+
+        .tag
+            padding: 0 1.25em
+    .music-info-wrapper
+        margin: 0.6667em 2.6667em
+
+        .music-info .music-title
+            font-size: 1.6667em !important // 1.25em / 0.75
+        .music-info .music-artist
+            font-size: 1em !important // 0.75em / 0.75
+    .chart-info-wrapper
+        gap: 0.6667em
+    .chart-score-wrapper
+        width: calc(22em + 8px)
+        .chart-jacket
+            padding: 0.6667em
+            padding-right: 2.3333em
+
+            img
+                width: 4.6667em
+                height: 4.6667em
+        .score-info
+            width: 22em
+            max-width: 22em
+
+            .score-info-wrapper
+                padding: calc(0.5em + 2px)
+            .score-data
+                grid-template: 1fr 1fr / 1fr 1fr
+    rb6-just-collect
+                width: auto
+@media (prefers-color-scheme: dark)
+    .modal-card-background
+        background: linear-gradient(to bottom, transparent 5em, #111 9em)
+@keyframes category-enter
+    0%
+        transform: translateX(-100%)
+    100%
+        transform: none

@@ -1,0 +1,1 @@
+export type Rb3PlayerSpecialLabel = "valanga" | "straymarch" | "wadatsumi" | "fallenleaves" | "clamare"

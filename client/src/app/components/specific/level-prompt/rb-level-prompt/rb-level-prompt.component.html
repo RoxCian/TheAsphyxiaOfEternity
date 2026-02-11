@@ -1,0 +1,5 @@
+@if (levelDisplay() === 'level' || !hasSkillRate()) {
+    <div class="level is-rb{{ version() }}" animate.enter="enter" animate.leave="leave">{{ (version() >= 5) ? level() : (level() | rb2LevelLiteral) }}</div>
+} @else {
+    <div class="skill-rate is-rb{{ version() }}" animate.enter="enter" animate.leave="leave">{{ skillRate() }}</div>
+}

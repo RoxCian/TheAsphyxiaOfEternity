@@ -1,0 +1,261 @@
+:host
+    display: block
+    margin: -1.5rem // Asphyxia CORE default page padding
+    padding: 1.5rem
+    margin-bottom: calc(-16vh + 2em)
+    padding-bottom: 16vh
+    overflow: clip
+.large-card
+    min-height: 33.33vh
+    position: relative
+
+.bg-container
+    position: absolute
+    inset: -3rem
+    pointer-events: none
+    user-select: none
+    z-index: 0
+
+    &.enter
+        opacity: 0
+.bg
+    --opacity: 0.4
+    position: absolute
+    inset: 0
+    width: 100%
+    height: 100%
+    object-fit: cover
+    filter: blur(2vh)
+    opacity: 0
+
+    &.is-loaded
+        animation: player-card-content-enter-animation var(--animation-duration-lv2) var(--ease-in) forwards
+
+    &.is-rb1
+        object-position: center 45%
+    &.is-rb2
+        object-position: center 48%
+    &.is-rb3
+        object-position: center 48%
+    &.is-rb4
+        object-position: center 50%
+        --opacity: 0.3
+    &.is-rb5
+        object-position: center 50%
+        --opacity: 0.35
+    &.is-rb6
+        object-position: center 50%
+.player-card-container
+    position: absolute
+    display: grid
+    grid-template: 1fr auto / auto
+    inset: 0
+    overflow: clip
+    align-items: end
+.player-card-content
+    grid-area: 1 / 1
+    display: flex
+    padding: 2em
+    gap: 1em
+    overflow: clip
+    z-index: 1
+
+    &.enter
+        opacity: 0
+
+    &.error-info-content
+        position: absolute
+        left: 0
+        bottom: 0
+
+    > *
+        z-index: 1
+
+.player-card-content.enter, .bg-container.enter, .rb-nav-buttons.enter
+    animation: player-card-content-enter-animation var(--animation-duration-lv2) var(--animation-duration-lv2) var(--ease-in)
+.player-card-content.leave, .bg-container.leave, .rb-nav-buttons.leave
+    animation: player-card-content-leave-animation var(--animation-duration-lv2) var(--ease-in)
+
+.name-grid
+    display: grid
+    grid-template: auto auto auto / auto 1fr
+.user-id
+    grid-area: 1 / 1
+    opacity: 0.7
+.name
+    grid-area: 2 / 1
+    font-weight: bold
+
+    &.rb3-player-event-level1
+        color: #660DDCB2
+    &.rb3-player-event-level2
+        color: #E70DA7B2
+    &.rb3-player-event-level3
+        color: #00C4E0B2
+    &.rb3-player-event-level4
+        color: #EE5E00B2
+    &.rb3-player-event-level5
+        color: #00009EB2
+rb-byword-tag
+    grid-area: 2 / 2
+    opacity: 0.7
+    margin-left: 1em
+.comment
+    grid-area: 3 / span 2
+bung-divider
+    flex: 0
+.class-and-mg
+    grid-area: 3 / span 2
+    display: flex
+    justify-content: start
+    align-items: stretch
+    gap: 1em
+    opacity: 0.9
+
+    > *
+        display: grid
+        grid-template: auto 1fr / 1fr
+        padding: 0.5em
+        width: 4em
+        background: color-mix(in srgb, var(--card-background) 40%, transparent 60%)
+        white-space: nowrap
+        .heading
+            grid-area: 1 / 1
+        .title
+            grid-area: 2 / 1
+            align-self: center
+    .class .has-character-count-2
+        font-size: 1.5rem
+    .class .has-character-count-3, .class .has-character-count-4
+        font-size: 1rem
+        white-space: normal
+rb-matching-grade
+    display: flex
+    justify-content: center
+.comment
+    opacity: 0.7
+.error-info
+    display: flex
+    align-items: center
+    gap: 1em
+.rb-nav
+    grid-area: 2 / 1
+    display: flex
+    margin-top: -2em
+    padding: 2em
+    flex-wrap: wrap
+    gap: 2em
+    z-index: 1
+.rb-nav-container
+    flex: 1
+    display: flex
+    align-items: stretch
+.rb-nav-buttons
+    margin: 0
+    flex-wrap: nowrap
+
+    &.enter
+        opacity: 0
+.rb-nav-item
+    background: color-mix(in srgb, var(--card-background), transparent 40%)
+    margin: 0
+    transition: background var(--animation-duration-lv3) var(--ease-in), color var(--animation-duration-lv3) var(--ease-in), border-color var(--animation-duration-lv3) var(--ease-in), box-shadow var(--animation-duration-lv3) var(--ease-in)
+
+    &.is-selected
+        background: color-mix(in srgb, var(--accent-color), transparent 40%)
+        color: var(--accent-text-color)
+
+// .rb-nav-item
+//     position: relative
+//     padding: 1em
+//     align-content: center
+//     color: var(--text-color)
+//     transition: color var(--animation-duration-lv3) var(--ease-in)
+//     z-index: 6
+
+//     &::before
+//         content: ""
+//         position: absolute
+//         inset: 0
+//         top: 1em
+//         border-radius: 8px 8px 0 0
+//         background: var(--invert-card-background)
+//         opacity: 0
+//         transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+//     &:hover
+//         color: var(--accent-color)
+//     &:hover::before
+//         opacity: 0.1
+//     &:active::before
+//         opacity: 0.2
+
+@media (prefers-color-scheme: dark)
+    .name-and-byword .name
+        &.rb3-player-event-level1
+            color: #986ecdb2
+        &.rb3-player-event-level2
+            color: #c372abb2
+        &.rb3-player-event-level3
+            color: #72acb5b2
+        &.rb3-player-event-level4
+            color: #de7e3fb2
+        &.rb3-player-event-level5
+            color: #6868deb2
+@media screen and (width < 768px)
+    :host
+        margin-bottom: calc(-16vh + 0.5em)
+    .player-card-content
+        flex-direction: column
+        padding: 1em
+        gap: 0.5em
+    .large-card
+        min-height: 25vh
+        padding: 0.5em 1em
+        > *
+            font-size: 0.75em
+
+        .name
+            font-size: 1.5rem !important
+
+        .tag
+            font-size: 0.75em
+    .name-grid
+        grid-auto-flow: row
+    .class-and-mg
+        grid-area: 4 / 1
+        align-items: stretch
+        gap: 0.5em
+
+        .heading
+            font-size: 0.75em
+            margin: 0
+        .title
+            font-size: 1.5em
+
+        .class .has-character-count-2, .class .has-character-count-3, .class .has-character-count-4
+            font-size: 1em
+    .rb-nav
+        margin-top: -1em
+        padding: 1em
+        gap: 1em
+
+    // .rb-nav-item
+    //     padding: 1em
+
+    // rb-version
+    //     padding: 1em
+@keyframes player-card-content-enter-animation
+    from
+        opacity: 0
+        transform: translateX(4rem)
+    to
+        opacity: var(--opacity, 1)
+        transform: none
+@keyframes player-card-content-leave-animation
+    from
+        opacity: var(--opacity, 1)
+        transform: none
+    to
+        opacity: 0
+        transform: translateX(-4rem)

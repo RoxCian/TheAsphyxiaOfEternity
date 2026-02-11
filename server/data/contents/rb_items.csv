@@ -1,0 +1,348 @@
+version,type,typeId,value,name,nameOrig,isUnlockedByDefault
+,,,,,,
+int,string,int,int,string,string?,boolean
+6,shotSound,1,0,Default,,TRUE
+6,shotSound,1,1,Legacy 1,,TRUE
+6,shotSound,1,2,Legacy 2,,TRUE
+6,shotSound,1,3,Legacy 3,,TRUE
+6,shotSound,1,4,Legacy 4,,TRUE
+6,shotSound,1,5,Legacy 5,,TRUE
+6,shotSound,1,6,Electro,,TRUE
+6,shotSound,1,7,Table Tennis,,TRUE
+6,shotSound,1,8,Clap,,TRUE
+6,shotSound,1,9,Hockey,,TRUE
+6,shotSound,1,10,Japan,,TRUE
+6,shotSound,1,11,Powerful Pro,パワプロ,TRUE
+6,shotSound,1,12,Tennis,,TRUE
+5,shotSound,1,0,Default 1,,TRUE
+5,shotSound,1,1,Default 2,,TRUE
+5,shotSound,1,2,Default 3,,TRUE
+5,shotSound,1,3,groovin'!!,,TRUE
+5,shotSound,1,4,groovin'!! Upper,,TRUE
+5,shotSound,1,5,Clap,,TRUE
+5,shotSound,1,6,Tambourine,,TRUE
+5,shotSound,1,7,Tennis,,TRUE
+5,shotSound,1,8,Table Tennis,,TRUE
+5,shotSound,1,9,Hockey,,TRUE
+5,shotSound,1,10,Japan,,TRUE
+5,shotSound,1,11,Japan 2,,TRUE
+5,shotSound,1,12,Sword,,TRUE
+5,shotSound,1,13,Steel,,TRUE
+5,shotSound,1,14,Light,,TRUE
+5,shotSound,1,15,Fireworks,,TRUE
+5,shotSound,1,16,Electro,,TRUE
+5,shotSound,1,17,Electro 2,,TRUE
+5,shotSound,1,18,Electro 3,,TRUE
+5,shotSound,1,19,Bell,,TRUE
+5,shotSound,1,20,Volleyball,,TRUE
+5,shotSound,1,21,Powerful Pro,パワプロ,TRUE
+5,shotSound,1,22,8bit,,FALSE
+5,shotSound,1,23,DJ TOTTO,,FALSE
+5,shotSound,1,24,SUPER STAR,,FALSE
+4,shotSound,1,0,Default 1,,TRUE
+4,shotSound,1,1,Default 2,,TRUE
+4,shotSound,1,2,Clap,,TRUE
+4,shotSound,1,3,Tamborine,,TRUE
+4,shotSound,1,4,Tennis,,TRUE
+4,shotSound,1,5,Table Tennis,,TRUE
+4,shotSound,1,6,Hockey,,TRUE
+4,shotSound,1,7,Japan,,TRUE
+4,shotSound,1,8,Sword,,TRUE
+4,shotSound,1,9,Steel,,TRUE
+4,shotSound,1,10,Light,,TRUE
+4,shotSound,1,11,Electro,,FALSE
+4,shotSound,1,12,Fireworks,,FALSE
+4,shotSound,1,13,Electro 2,,FALSE
+4,shotSound,1,14,Bell,,FALSE
+4,shotSound,1,15,Volleybell,,FALSE
+4,shotSound,1,16,Electro 3,,FALSE
+4,shotSound,1,17,Default 3,,FALSE
+4,shotSound,1,18,Powerful Pro,パワプロ,FALSE
+3,shotSound,1,0,Default 1,,TRUE
+3,shotSound,1,1,Default 2,,TRUE
+3,shotSound,1,2,Clap,,TRUE
+3,shotSound,1,3,Tambourine,,TRUE
+3,shotSound,1,4,Tennis,,TRUE
+3,shotSound,1,5,Table Tennis,,TRUE
+3,shotSound,1,6,Hockey,,TRUE
+3,shotSound,1,7,Japan,,TRUE
+3,shotSound,1,8,Sword,,TRUE
+3,shotSound,1,9,Steel,,TRUE
+3,shotSound,1,10,Light,,TRUE
+3,shotSound,1,11,Electro,,TRUE
+3,shotSound,1,12,Fireworks,,TRUE
+3,shotSound,1,13,Electro 2,,FALSE
+3,shotSound,1,14,Japan 2,,FALSE
+3,shotSound,1,15,Bell,,FALSE
+3,shotSound,1,16,Volleyball,,FALSE
+3,shotSound,1,17,Electro 3,,FALSE
+3,shotSound,1,18,Powerful Pro,パワプロ,FALSE
+2,shotSound,1,0,Default 1,,TRUE
+2,shotSound,1,1,Default 2,,TRUE
+2,shotSound,1,2,Clap,,TRUE
+2,shotSound,1,3,Tambourine,,TRUE
+2,shotSound,1,4,Tennis,,TRUE
+2,shotSound,1,5,Table Tennis,,TRUE
+2,shotSound,1,6,Hockey,,TRUE
+2,shotSound,1,7,Japan,,TRUE
+2,shotSound,1,8,Sword,,TRUE
+2,shotSound,1,9,Steel,,FALSE
+2,shotSound,1,10,Light,,FALSE
+2,shotSound,1,11,Electro,,FALSE
+2,shotSound,1,12,Fireworks,,FALSE
+2,shotSound,1,13,Qrispy,,FALSE
+2,shotSound,1,14,Sota,,FALSE
+2,shotSound,1,15,96,,FALSE
+1,shotSound,1,0,Default 1,,TRUE
+1,shotSound,1,1,Default 2,,TRUE
+1,shotSound,1,2,Default 3,,TRUE
+1,shotSound,1,3,Hockey,,TRUE
+1,shotSound,1,4,Volley Ball,,TRUE
+1,shotSound,1,5,Tennis,,TRUE
+1,shotSound,1,6,Baseball,,FALSE
+1,shotSound,1,7,Table Tennis,,FALSE
+1,shotSound,1,8,Electro 1,,TRUE
+1,shotSound,1,9,Electro 2,,TRUE
+1,shotSound,1,10,Electro 3,,TRUE
+1,shotSound,1,11,Electro 4,,FALSE
+1,shotSound,1,12,Electro 5,,FALSE
+1,shotSound,1,13,Clap,,TRUE
+1,shotSound,1,14,Tambourine,,TRUE
+1,shotSound,1,15,Japan,,TRUE
+1,shotSound,1,16,Percussion,,FALSE
+1,shotSound,1,17,Latin,,FALSE
+1,shotSound,1,18,Hit,,TRUE
+1,shotSound,1,19,Sword,,TRUE
+1,shotSound,1,20,Bomb,,FALSE
+1,shotSound,1,21,Fight,,FALSE
+5,backgroundMusic,2,0,Default,,TRUE
+5,backgroundMusic,2,1,Classic,,TRUE
+5,backgroundMusic,2,2,limelight,,TRUE
+5,backgroundMusic,2,3,colette,,TRUE
+5,backgroundMusic,2,4,groovin'!!,,TRUE
+5,backgroundMusic,2,5,Nekomata Master,猫叉Master,FALSE
+5,backgroundMusic,2,6,Akhuta,,FALSE
+5,backgroundMusic,2,7,L.E.D.,,FALSE
+5,backgroundMusic,2,8,DJ TOTTO,,FALSE
+5,backgroundMusic,2,9,dj TAKA,,FALSE
+5,backgroundMusic,2,10,VOLZZA,,TRUE
+5,backgroundMusic,2,11,Qrispy Joybox,,TRUE
+5,backgroundMusic,2,12,PON,,TRUE
+5,backgroundMusic,2,13,Sota Fujimori,,TRUE
+4,backgroundMusic,2,0,Default,,TRUE
+4,backgroundMusic,2,1,REFLEC DOJO,リフレク道場,FALSE
+4,backgroundMusic,2,2,DJ TOTTO,,FALSE
+4,backgroundMusic,2,3,Sota Fujimori,Sota Fujimori "A",FALSE
+4,backgroundMusic,2,4,Qrispy Joybox,Sota Fujimori "Um",FALSE
+4,backgroundMusic,2,5,Sota Fujimori "A",藤森崇多 阿,FALSE
+4,backgroundMusic,2,6,Sota Fujimori "Um",藤森崇多 吽,FALSE
+4,backgroundMusic,2,7,Classic,,FALSE
+4,backgroundMusic,2,8,limelight,,FALSE
+4,backgroundMusic,2,9,colette,,FALSE
+4,backgroundMusic,2,10,groovin'!!,,FALSE
+4,backgroundMusic,2,11,PENDUAL (Present) / Back to chronos,,FALSE
+4,backgroundMusic,2,12,PENDUAL (Future) / KAIROS IN THE SPACE TIME,,FALSE
+3,backgroundMusic,2,0,Default,,TRUE
+3,backgroundMusic,2,1,Qrispy Joybox,,FALSE
+3,backgroundMusic,2,2,TAG,,FALSE
+3,backgroundMusic,2,3,PON,,FALSE
+3,backgroundMusic,2,4,2B-Waves,,FALSE
+3,backgroundMusic,2,5,Crimson Rose Knight "Prim",,FALSE
+3,backgroundMusic,2,6,dj silverberg,,FALSE
+3,backgroundMusic,2,7,Nekomata Master,猫叉Master,FALSE
+3,backgroundMusic,2,8,VENUS,,FALSE
+3,backgroundMusic,2,9,MAX MAXIMIZER,,FALSE
+3,backgroundMusic,2,10,VENUS -ZEUS-,,FALSE
+3,backgroundMusic,2,11,Akhuta,,FALSE
+3,backgroundMusic,2,12,Spade,,FALSE
+3,backgroundMusic,2,13,Heart,,FALSE
+3,backgroundMusic,2,14,Club,,FALSE
+3,backgroundMusic,2,15,Dia,,FALSE
+3,backgroundMusic,2,16,Joker,,FALSE
+2,backgroundMusic,2,0,Default,,TRUE
+2,backgroundMusic,2,1,Qrispy,,FALSE
+2,backgroundMusic,2,2,Nekomata Master,猫叉Master,FALSE
+2,backgroundMusic,2,3,dj TAKA,,FALSE
+2,backgroundMusic,2,4,TOMOSUKE,,FALSE
+2,backgroundMusic,2,5,DJ YOSHITAKA,,FALSE
+2,backgroundMusic,2,6,Qrispy 2,,FALSE
+2,backgroundMusic,2,7,Sota,,FALSE
+2,backgroundMusic,2,8,S-C-U,,FALSE
+2,backgroundMusic,2,9,Classic,,FALSE
+1,backgroundMusic,2,0,Default,,TRUE
+1,backgroundMusic,2,1,TAG,,FALSE
+1,backgroundMusic,2,2,Qrispy,,FALSE
+1,backgroundMusic,2,3,Yukky,,FALSE
+1,backgroundMusic,2,4,L.E.D,,FALSE
+1,backgroundMusic,2,5,96,,FALSE
+6,frame,3,0,Default,,TRUE
+6,frame,3,1,Green,,TRUE
+6,frame,3,2,Yellow,,TRUE
+6,frame,3,3,Blue,,TRUE
+6,frame,3,4,Red,,TRUE
+6,frame,3,5,Black,,TRUE
+5,frame,3,0,Default,,TRUE
+5,frame,3,1,Pink,,FALSE
+5,frame,3,2,Yellow,,FALSE
+5,frame,3,3,Green,,FALSE
+5,frame,3,4,Red,,FALSE
+5,frame,3,5,Purple,,FALSE
+5,frame,3,6,White,,FALSE
+5,frame,3,7,Black,,FALSE
+5,frame,3,8,Gold,,FALSE
+5,frame,3,9,DJ TOTTO,,FALSE
+4,frame,3,0,Default,,TRUE
+4,frame,3,1,REFLEC DOJO,リフレク道場,FALSE
+4,frame,3,2,Pink,,FALSE
+4,frame,3,3,Blue,,FALSE
+4,frame,3,4,Green,,FALSE
+4,frame,3,5,Purple,,FALSE
+4,frame,3,6,Black,,FALSE
+4,frame,3,15,Classic,,FALSE
+4,frame,3,16,limelight,,FALSE
+4,frame,3,17,colette,,FALSE
+4,frame,3,19,Mystical Strike,,FALSE
+3,frame,3,0,Winter,,TRUE
+3,frame,3,1,Green,,FALSE
+3,frame,3,2,Yellow,,FALSE
+3,frame,3,3,Blue,,FALSE
+3,frame,3,4,Red,,FALSE
+3,frame,3,5,"""Tentei""",天庭,FALSE
+3,frame,3,6,IIDX,,TRUE
+3,frame,3,7,pop'n,,TRUE
+3,frame,3,8,Classic,,FALSE
+3,frame,3,9,limelight,,FALSE
+3,frame,3,10,Spring,,TRUE
+3,frame,3,11,Summer,,TRUE
+3,frame,3,12,Autumn,,TRUE
+3,frame,3,13,All Seasons,,TRUE
+3,frame,3,14,Spade,,FALSE
+3,frame,3,15,Heart,,FALSE
+3,frame,3,16,Club,,FALSE
+3,frame,3,17,Dia,,FALSE
+3,frame,3,18,Joker,,FALSE
+2,frame,3,0,Default,,TRUE
+2,frame,3,1,Yellow,,FALSE
+2,frame,3,2,Blue,,FALSE
+2,frame,3,3,Red,,FALSE
+2,frame,3,4,Black,,FALSE
+2,frame,3,5,Purple,,FALSE
+2,frame,3,6,copius,,FALSE
+2,frame,3,7,Pastel-kun,,FALSE
+2,frame,3,8,Classic,,FALSE
+1,frame,3,0,Default,,TRUE
+1,frame,3,1,Bronze,,FALSE
+1,frame,3,2,Silver,,FALSE
+1,frame,3,3,Gold,,FALSE
+1,frame,3,4,Platinum,,FALSE
+1,frame,3,5,Black,,FALSE
+1,frame,3,6,Crimson,,FALSE
+6,explodeEffect,4,0,Default,,TRUE
+6,explodeEffect,4,1,Mild,,TRUE
+5,explodeEffect,4,0,Default,,TRUE
+5,explodeEffect,4,1,Classic,,TRUE
+5,explodeEffect,4,2,limelight,,TRUE
+5,explodeEffect,4,3,colette,,TRUE
+5,explodeEffect,4,4,groovin'!!,,TRUE
+5,explodeEffect,4,5,groovin'!! Upper,,TRUE
+5,explodeEffect,4,6,Snow,,TRUE
+5,explodeEffect,4,7,Flower,,TRUE
+5,explodeEffect,4,8,Fireworks,,TRUE
+5,explodeEffect,4,9,Maple,,TRUE
+5,explodeEffect,4,10,quaver♪,,TRUE
+5,explodeEffect,4,11,Heart,,TRUE
+5,explodeEffect,4,12,Rose,,TRUE
+5,explodeEffect,4,13,DJ TOTTO,,FALSE
+4,explodeEffect,4,0,Default,,TRUE
+4,explodeEffect,4,1,Classic,,FALSE
+4,explodeEffect,4,2,limelight,,FALSE
+4,explodeEffect,4,3,colette,,FALSE
+4,explodeEffect,4,4,Snow,,FALSE
+4,explodeEffect,4,5,Flower,,FALSE
+4,explodeEffect,4,6,Fireworks,,FALSE
+4,explodeEffect,4,7,Maple,,FALSE
+4,explodeEffect,4,8,quaver♪,,FALSE
+4,explodeEffect,4,9,Heart,,FALSE
+4,explodeEffect,4,10,Rose,,FALSE
+4,explodeEffect,4,11,groovin'!!,,FALSE
+3,explodeEffect,4,0,Default,,TRUE
+3,explodeEffect,4,1,Snow,,FALSE
+3,explodeEffect,4,2,Fireworks,,FALSE
+3,explodeEffect,4,3,quaver♪,,FALSE
+3,explodeEffect,4,4,Heart,,FALSE
+3,explodeEffect,4,5,Rose,,FALSE
+3,explodeEffect,4,6,"""Tentei""",天庭,FALSE
+3,explodeEffect,4,7,Flower,,FALSE
+3,explodeEffect,4,8,Maple,,FALSE
+3,explodeEffect,4,9,IIDX,,TRUE
+3,explodeEffect,4,10,pop'n,,TRUE
+2,explodeEffect,4,0,Default,,TRUE
+2,explodeEffect,4,1,Fireworks,,FALSE
+2,explodeEffect,4,2,Star,,FALSE
+2,explodeEffect,4,3,quaver♪,,FALSE
+2,explodeEffect,4,4,Heart,,FALSE
+2,explodeEffect,4,5,Rose,,FALSE
+2,explodeEffect,4,6,copius,,FALSE
+2,explodeEffect,4,7,Pastel-kun,,FALSE
+2,explodeEffect,4,8,Classic,,FALSE
+1,explodeEffect,4,0,Default,,TRUE
+1,explodeEffect,4,1,Flame,,FALSE
+1,explodeEffect,4,2,Ice,,FALSE
+1,explodeEffect,4,3,Plasma,,FALSE
+1,explodeEffect,4,4,Tornado,,FALSE
+1,explodeEffect,4,5,Hearts,,FALSE
+1,explodeEffect,4,6,Rose,,FALSE
+6,background,5,0,Default,,TRUE
+6,background,5,1,Static,,TRUE
+6,background,5,2,New Game!!,,TRUE
+5,background,5,0,Default,,TRUE
+5,background,5,1,Pink,,TRUE
+5,background,5,2,Yellow,,TRUE
+5,background,5,3,Green,,TRUE
+5,background,5,4,Red,,TRUE
+5,background,5,5,Purple,,TRUE
+5,background,5,6,Blue,,TRUE
+5,background,5,7,New Game!!,,FALSE
+5,background,5,8,DJ TOTTO,,FALSE
+4,background,5,0,Default,,TRUE
+4,background,5,1,Pink,,FALSE
+4,background,5,2,Blue,,FALSE
+4,background,5,3,Green,,FALSE
+4,background,5,4,Purple,,FALSE
+4,background,5,5,Mystical Strike,,FALSE
+3,background,5,0,Winter,,TRUE
+3,background,5,8,Spring,,TRUE
+3,background,5,9,Summer,,TRUE
+3,background,5,10,Autumn,,TRUE
+3,background,5,11,All Seasons,,TRUE
+3,background,5,1,Green,,FALSE
+3,background,5,2,Yellow,,FALSE
+3,background,5,3,Blue,,FALSE
+3,background,5,4,Red,,FALSE
+3,background,5,5,"""Tentei""",天庭,FALSE
+3,background,5,6,Classic,,FALSE
+3,background,5,7,limelight,,FALSE
+3,background,5,12,Spade,,FALSE
+3,background,5,13,Heart,,FALSE
+3,background,5,14,Club,,FALSE
+3,background,5,15,Dia,,FALSE
+3,background,5,16,Joker,,FALSE
+2,background,5,0,Default,,TRUE
+2,background,5,1,Yellow,,FALSE
+2,background,5,2,Blue,,FALSE
+2,background,5,3,Red,,FALSE
+2,background,5,4,Black,,FALSE
+2,background,5,5,Purple,,FALSE
+2,background,5,6,copius,,FALSE
+2,background,5,7,Pastel-kun,,FALSE
+2,background,5,8,Classic,,FALSE
+1,background,5,0,Default,,TRUE
+1,background,5,1,Bronze,,FALSE
+1,background,5,2,Silver,,FALSE
+1,background,5,3,Gold,,FALSE
+1,background,5,4,Platinum,,FALSE
+1,background,5,5,Black,,FALSE
+5,voiceMessageSet,8,0,Basic,,TRUE
+5,voiceMessageSet,8,1,SUPER STAR,,FALSE
+5,voiceMessageSet,8,2,Pastel-kun,,FALSE
+5,voiceMessageSet,8,3,Koyaji,こやじ,FALSE

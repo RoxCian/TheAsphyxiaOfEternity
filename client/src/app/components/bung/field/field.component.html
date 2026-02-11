@@ -1,0 +1,21 @@
+<div class="field-label is-normal">
+    <label class="label" [class.is-dirty]="field()?.()?.dirty() || isDirty()">
+        @if (field()?.()?.required()) { * }
+        <bung-insertion [content]="label()" [context]="labelContext()" />
+    </label>
+</div>
+<div class="field-body">
+    <div class="control">
+        <ng-content />
+        @if (help()) {
+            <p class="help">
+                <bung-insertion [content]="help()" [context]="helpContext()" />
+            </p>
+            @for (error of field()?.()?.errors(); track error) {
+                <p class="help is-danger">
+                    {{ error.message }}
+                </p>
+            }
+        }
+    </div>
+</div>

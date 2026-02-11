@@ -1,0 +1,148 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "webuiv2": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass",
+                    "skipTests": true
+                }
+            },
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/webuiv2"
+                        },
+                        "index": "src/webui.html",
+                        "tsConfig": "tsconfig.app.json",
+                        "inlineStyleLanguage": "sass",
+                        "assets": [
+                            "src/assets"
+                        ],
+                        "styles": [
+                            {
+                                "bundleName": "styles",
+                                "input": "src/styles.sass",
+                                "inject": false
+                            },
+                            {
+                                "bundleName": "asphyxia-styles",
+                                "input": "src/asphyxia-styles.sass",
+                                "inject": false
+                            }
+                        ],
+                        "scripts": [],
+                        "browser": "src/main.ts"
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kb",
+                                    "maximumError": "1mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "10kb",
+                                    "maximumError": "50kb"
+                                }
+                            ],
+                            "outputHashing": "all",
+                            "optimization": true
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/env/env.ts",
+                                    "with": "src/env/env.dev.ts"
+                                }
+                            ]
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "configurations": {
+                        "production": {
+                            "port": 57357,
+                            "buildTarget": "webuiv2:build:production"
+                        },
+                        "development": {
+                            "port": 57357,
+                            "buildTarget": "webuiv2:build:development"
+                        }
+                    },
+                    "options": {
+                        "proxyConfig": "ngserve.proxy.conf.mjs"
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "extract-i18n": {
+                    "builder": "@angular/build:extract-i18n",
+                    "options": {
+                        "buildTarget": "webuiv2:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:karma",
+                    "options": {
+                        "tsConfig": "tsconfig.spec.json",
+                        "inlineStyleLanguage": "sass",
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets"
+                        ],
+                        "styles": [
+                            "src/styles.sass",
+                            "src/asphyxia-styles.sass"
+                        ],
+                        "scripts": []
+                    }
+                }
+            }
+        }
+    },
+    "cli": {
+        "analytics": false
+    },
+    "schematics": {
+        "@schematics/angular:component": {
+            "type": "component"
+        },
+        "@schematics/angular:directive": {
+            "type": "directive"
+        },
+        "@schematics/angular:service": {
+            "type": "service"
+        },
+        "@schematics/angular:guard": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+            "typeSeparator": "."
+        }
+    }
+}

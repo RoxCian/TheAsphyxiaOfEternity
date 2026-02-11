@@ -1,0 +1,58 @@
+@let music = stageLog().music;
+@let chart = stageLog().chart;
+@let color = stageLog().color;
+<div class="stage-info">
+    <div class="stage-index">{{ stageLog().stageIndex | rbStageIndex : 1 }}</div>
+    <div class="round-label">ROUND</div>
+</div>
+<div class="card music-card">
+    <div class="score-label">Score</div>
+    <figure class="jacket">
+        <img [src]="(music.musicUid | rbJacket : chart.chartType)()">
+    </figure>
+    <div class="info-container" [rbChartType]="chart.chartType" [version]="1">
+        <div class="music-rank-info">
+            <div class="music-info">
+                <div class="title-info">
+                    <rb-music-title [music]="music" [variation]="chart.variation" contentAlign="center" />
+                </div>
+                <div class="splitter"></div>
+                <div class="artist-info">
+                    <bung-marquee class="artist-value" [content]="chart.variation?.artist ?? music.artist" [delay]="1500" />
+                </div>
+                <div class="chart-info">
+                    <div class="chart-label">DIFFICULTY</div>
+                    <div class="chart-label">></div>
+                    <div class="chart-type">{{ chart.chartType | rbChartTypeLiteral : 2 | uppercase }}</div>
+                    <rb-level class="level-value" [version]="1" [level]="chart.level" />
+                </div>
+            </div>
+            <div class="rank-info">
+                <div class="rank-label">RANK</div>
+                <rb-rank [version]="1" [achievementRate]="stageLog().achievementRate" isVisible />
+            </div>
+        </div>
+        <div class="matching-info">
+            <div class="you-label">YOU</div>
+            <div class="rival-label">RIVAL</div>
+            <div class="result-label">RESULT</div>
+            <progress class="progress your-ratio" max="100" [value]="stageLog().achievementRate" [rbColor]="color"></progress>
+            <progress class="progress rival-ratio" max="100" [value]="stageLog().rivalAchievementRate" [rbColor]="color" isRival></progress>
+            <div class="your-score score" [rbColor]="color">
+                <span class="padding">{{ stageLog().score < 10 ? "000" : stageLog().score < 100 ? "00" : stageLog().score < 1000 ? "0" : "" }}</span>
+                <span>{{ stageLog().score }}</span>
+            </div>
+            <div class="rival-score score" [rbColor]="color" isRival>
+                <span class="padding">{{ stageLog().rivalScore < 10 ? "000" : stageLog().rivalScore < 100 ? "00" : stageLog().rivalScore < 1000 ? "0" : "" }}</span>
+                <span>{{ stageLog().rivalScore }}</span>
+            </div>
+            <div class="result-value">
+                {{ stageLog().score > stageLog().rivalScore ? "You Win" : stageLog().score === stageLog().rivalScore ? "Draw" : "You Lose" }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card result-details">
+    <rb-stage-log-judge-grid [stageLog]="stageLog()" />
+</div>

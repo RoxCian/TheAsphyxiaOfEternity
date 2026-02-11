@@ -1,0 +1,32 @@
+@if (isCard()) {
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">
+                <bung-insertion [content]="header()" [context]="headerContext()" />
+            </p>
+            <button class="delete" (click)="close()"></button>
+        </header>
+        <section class="modal-card-body">
+            <bung-insertion [content]="content()" [context]="context()" />
+        </section>
+        @if (isCard()) {
+            <footer class="modal-card-foot">
+                @for (kv of returnContext() | keyvalue; track kv.key) {
+                    @let v = kv.value;
+                    @if (v) {
+                        @if (!v.isStatic) {
+                            <button class="button {{ v.elementClass }} is-small" [bungReturn]="v.value">
+                                <bung-insertion [content]="isSignal(v.content) ? v.content() : v.content" [context]="isSignal(v.context) ? v.context() : v.context" />
+                            </button>
+                        } @else {
+                            <bung-insertion class="{{ v.elementClass }}" [content]="isSignal(v.content) ? v.content() : v.content" [context]="isSignal(v.context) ? v.context() : v.context" />
+                        }
+                    }
+                }
+            </footer>
+        }
+    </div>
+} @else {
+    <bung-insertion class="model-content" [content]="content()" [context]="context()" />
+    <button class="modal-close is-large" (click)="close()"></button>
+}

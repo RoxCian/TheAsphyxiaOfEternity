@@ -1,0 +1,5 @@
+@if (chartType() != undefined) {
+    <rb-record-popup-content-single-chart [(record)]="record" [chartType]="chartType()!" [(recordPanelElement)]="recordPanelElement" />
+} @else {
+    <rb-record-popup-content-all-chart [(record)]="record" [(recordPanelElement)]="recordPanelElement" />
+}

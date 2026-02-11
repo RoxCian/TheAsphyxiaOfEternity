@@ -1,0 +1,28 @@
+:host
+    overflow: clip
+.badge-background
+    width: 300%
+    height: 300%
+    left: -100% !important
+    top: -100% !important
+    background: linear-gradient( 161deg, #F2F2FA 37.3%, #EAE3DA 43.2%, #DFEDF1 43.2%, #DFEBDD 46.62%, #F0DDBD 46.62%, #F0DDBD 49.95%, #F3EAC2 49.95%, #F3EAC2 53.28%, #D5E1DF 53.28%, #D5E1DF 56.61%, #E7ECC5 56.61%, #E7ECC5 59.94%, #F3E7DB 59.94%, #F2F0E6 63.27%)
+    transform: translate(-33.3%, 33.3%)
+    transition: transform 0.2s , opacity 0.2s
+:host.is-active:not(.is-disabled), :host.enter:not(.is-disabled)
+    .badge-label
+        .c
+            color: #E083AB
+        .o
+            color: #79A337
+        .l
+            color: #199A4A
+        .e1
+            color: #1996D0
+        .t1
+            color: #E6A62D
+        .t2
+            color: #E9804C
+        .e2
+            color: #B282B1
+    .badge-background
+        transform: none

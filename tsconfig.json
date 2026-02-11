@@ -1,16 +1,19 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "lib": [
-      "es6"
-    ],
-    "sourceMap": true,
-    "types": [
-      "./asphyxia-core"
+    "compilerOptions": {
+        "module": "es2015",
+        "target": "es2018",
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "types": [
+            "./asphyxia-core"
+        ],
+        "sourceMap": false,
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules",
+        "client",
+        "./dev",
+        "./dist"
     ]
-  },
-  "exclude": [
-    "node_modules"
-  ]
 }

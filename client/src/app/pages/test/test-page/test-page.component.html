@@ -1,0 +1,11 @@
+<ng-template #placeholder>
+    <div class="rb-panel"></div>
+</ng-template>
+<rb-player-card [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" />
+<div class="page-container">
+    @for (p of fakeSubpageParams(); track p.random) {
+        <div class="page-content" animate.enter="enter" animate.leave="leave">
+            <ng-container *ngComponentOutlet="p.subpage" />
+        </div>
+    }
+</div>

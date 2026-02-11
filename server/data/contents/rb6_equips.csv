@@ -1,0 +1,116 @@
+id,part,name,nameOrig
+,,,
+int,head|body|under|arm,string,string
+0,head,Traveller hat,旅人の帽子
+1,head,Leather helmet,皮の兜
+2,head,Hunting hat,狩人のぼうし
+3,head,Wizard hood,魔導師のフード
+4,head,Fuma scarf,風魔頭巾
+5,head,Dancer hat,踊り子の帽子
+6,head,Silver knight helmet,銀騎士の兜
+7,head,Elegant hat,風雅のぼうし
+8,head,Hades helmet,邪滅王の兜
+9,head,Zeus helmet,裁きの兜
+10,head,6th KAC cap,6th KAC キャップ
+11,head,Christmas Eve hat,聖夜の帽子
+12,head,Chewy hood,もちもちフード
+15,head,Hat of Double Third Festival,上巳の冠
+16,head,Meu Meu hair,めうめうヘアー
+17,head,Sakura head,桜ヘッド
+18,head,Dragon head,ドラゴンヘッド
+19,head,Steady helmet,丈夫の兜
+20,head,Rain hood,レインフード
+21,head,Cowherd head,牛飼いの冠
+22,head,Memory of fight,戦いの記憶
+23,head,Kaijin's cap,海神のキャップ
+24,head,Red hare scarf,赤兎の頭巾
+25,head,Ultra cap,ウルトラキャップ
+29,head,Artist hat,アーティストハット
+30,head,Reindeer mask,トナカイマスク
+32,head,Helmet of evil god,邪神の兜
+33,head,Graduate cap,学帽
+0,body,Traveller clothing,旅人の服
+1,body,Leather armor,皮の鎧
+2,body,Hunting costume,狩人の服
+3,body,Wizard rope,魔導師のローブ
+4,body,Fuma costume,風魔装束
+5,body,Dancer jacket,踊り子ジャケット
+6,body,Silver knight top armor,銀騎士の鎧上
+7,body,Graceful jacket,典雅なジャケット
+8,body,Infernal top armor,冥麗の鎧上
+9,body,Sacret top armor,聖裁の鎧上
+10,body,6th KAC T-shirt,6th KAC Tシャツ
+11,body,Christmas eve coat,聖夜のコート
+12,body,Chewy armor,もちもちの鎧
+16,body,Magical Chikuwa maiden dress,魔法ちくわ少女の服
+17,body,Wood vest,ウッドベスト
+18,body,Dragon suit top,ドラゴンスーツ上
+19,body,Steady armor,丈夫の鎧上
+20,body,Rain coat top,レインコート上
+21,body,Hikoboshi upper body clothing,彦星の着物上
+22,body,Memory of fight,戦いの記憶
+23,body,Kaijin's shirt,海神のシャツ
+24,body,Red hare sweatshirt,赤兎のスウェット上
+25,body,Gym clothing,体操服
+29,body,Artist shirt,アーティストシャツ
+30,body,Reindeer suit,トナカイスーツ
+31,body,Haori,羽織
+33,body,Graduate uniform top,学ラン上
+0,under,Traveller pants,旅人のズボン
+1,under,Leather pants,皮のズボン
+2,under,Hunting pants,狩人のズボン
+3,under,Wizard pants,魔導師のズボン
+4,under,Fuma hakama,風魔の袴
+5,under,Dancer pants,踊り子パンツ
+6,under,Silver knight leg armor,銀騎士の鎧下
+7,under,Noble pants,大雅のパンツ
+8,under,Underworld leg armor,黄泉の鎧下
+9,under,Judgement leg armor,裁断の鎧下
+10,under,6th KAC pants,6th KAC パンツ
+11,under,Christmas eve pants,聖夜のズボン
+12,under,Chewy pants,もちもちパンツ
+14,under,Oni pants,鬼のパンツ
+16,under,Magical Chikuwa maiden skirt,魔法ちくわ少女のスカート
+17,under,Wood pants,ウッドパンツ
+18,under,Dragon suit lower body,ドラゴンスーツ下
+19,under,Steady leg armor,丈夫の鎧下
+20,under,Rain coat lower body,レインコート下
+21,under,Hikoboshi lower body clothing,彦星の着物下
+22,under,Memory of fight,戦いの記憶
+23,under,Kaijin's pants,海神のパンツ
+24,under,Red hare sweatpants,赤兎のスウェット下
+25,under,Shorts,ハーフパンツ
+29,under,Artist pants,アーティストパンツ
+30,under,Reindeer pants,トナカイパンツ
+31,under,Hakama,袴
+33,under,Graduate uniform lower body,学ラン下
+0,arm,Iron sword,鉄の剣
+1,arm,Iron spear,鉄の槍
+2,arm,Falcon bow,隼の弓
+3,arm,Crystal wand,水晶の杖
+4,arm,Dual dragon knife,双竜刀
+5,arm,Moon night jotel,月夜のショーテル
+6,arm,Grate axe,グレートアックス
+7,arm,Decorous sword,端雅の剣
+8,arm,Purgatorial blade,煉獄の大剣
+9,arm,Heavenly saber,天命の剣
+10,arm,6th KAC sword,6th KAC ソード
+11,arm,Reindeer,トナカイ
+12,arm,Hagoita,羽子板
+13,arm,Sword of challenger,挑戦者の剣
+16,arm,Chikuwa stick,ちくわステッキ
+17,arm,Dango,だんご
+18,arm,Primitive hammer,原始のハンマー
+19,arm,Iris gunbai,菖蒲の軍配
+20,arm,Colorful umbrella,カラフルアンブレラ
+21,arm,Whip of prayer,祈りのムチ
+22,arm,Memory of fight,戦いの記憶
+23,arm,Floating link,フローティングリング
+24,arm,Cool pestle,クール杵
+25,arm,Pom-pom,ポンポン
+26,arm,Iphilia's sword,イフィリアの大剣
+27,arm,Uesce's wand,ウィスカの杖
+28,arm,Crann's hammer,クランの槌
+29,arm,Artist brush,アーティストブラシ
+30,arm,Dream bag,ドリームバッグ
+33,arm,Diploma,卒業証書

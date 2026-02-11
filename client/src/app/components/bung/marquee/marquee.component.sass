@@ -1,0 +1,71 @@
+bung-marquee
+    display: block
+    position: relative
+    width: 100%
+
+    .animation-wrapper
+        display: flex
+        position: relative
+        width: 100%
+        height: 100%
+        flex-wrap: nowrap
+        overflow-x: clip
+        overflow-y: visible
+        animation: none
+        justify-content: var(--marquee-align)
+
+        .content
+            margin-bottom: 0
+        .content.cloned
+            position: absolute
+            left: 0
+            top: 0
+            transform: translateX(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
+            user-select: none
+        &.is-overflowed
+            .content:not(.cloned)
+                animation: marquee-animation-x var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
+            .content.cloned
+                animation: marquee-animation-cloned-x var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
+    bung-insertion
+        white-space: nowrap
+    .animation-wrapper.is-vertical
+        flex-direction: column
+        overflow-y: clip
+        overflow-x: visible
+
+        .content.cloned
+            position: absolute
+            left: 0
+            top: 0
+            transform: translateY(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
+        &.is-overflowed
+            .content:not(.cloned), .spacer
+                animation: marquee-animation-y var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
+            .content.cloned
+                animation: marquee-animation-cloned-y var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
+bung-marquee:has(.animation-wrapper.is-vertical)
+    width: auto
+    height: 100%
+    
+@keyframes marquee-animation-x
+    from
+        transform: none
+    to
+        transform: translateX(calc(-100% * var(--marquee-factor) - var(--marquee-spacing)))
+@keyframes marquee-animation-cloned-x
+    from
+        transform: translateX(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
+    to
+        transform: none
+@keyframes marquee-animation-y
+    from
+        transform: none
+    to
+        transform: translateY(calc(-100% * var(--marquee-factor) - var(--marquee-spacing)))
+@keyframes marquee-animation-cloned-y
+    from
+        transform: translateY(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
+    to
+        transform: none
+        

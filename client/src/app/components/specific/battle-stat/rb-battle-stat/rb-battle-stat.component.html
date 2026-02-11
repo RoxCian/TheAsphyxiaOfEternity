@@ -1,0 +1,8 @@
+<span class="text">
+    <span class="win text" bungTooltip="Win">{{ win() }}</span><span>/</span><span class="draw text" bungTooltip="Draw">{{ draw() }}</span><span>/</span><span class="lose text" bungTooltip="Lose">{{ lose() }}</span>
+</span>
+<div class="progress" animate.enter="enter" animate.leave="leave">
+    <div class="win progress-part" [style.--scale-factor]="(win() / total() * 100) + '%'" bungTooltip="Win" float="bottom"></div>
+    <div class="draw progress-part" [style.--scale-factor]="(draw() / total() * 100) + '%'" bungTooltip="Draw" float="bottom"></div>
+    <div class="lose progress-part" [style.--scale-factor]="(lose() / total() * 100) + '%'" bungTooltip="Lose" float="bottom"></div>
+</div>

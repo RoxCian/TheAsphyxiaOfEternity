@@ -1,0 +1,59 @@
+:host
+    display: flex
+    align-items: center
+    justify-content: center
+.calendar-grid
+    display: grid
+    grid-template: repeat(7, 1em) / repeat(var(--weeks-count), 1em)
+    padding: 2em
+    gap: 0.4em
+    overflow: auto
+
+.day
+    display: flex
+    position: relative
+    align-items: center
+    justify-content: center
+    overflow: clip
+    border-radius: 4px
+    grid-area: var(--row) / var(--column)
+    color: var(--text-color)
+    background: #dddddd50
+
+    &::before
+        content: ""
+        position: absolute
+        inset: 0
+        background: #7773
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        z-index: 3
+    &:hover::before
+        opacity: 1
+
+    span
+        font-size: 0.75em
+        user-select: none
+        z-index: 1
+    span.no-activity
+        opacity: 0.7
+    .day-background
+        position: absolute
+        inset: 0
+        background: var(--rb-background)
+        background-size: calc(var(--weeks-count) * 1.2em) 8.2em
+        background-position: calc(calc(var(--column) - 1) * -1.2em) calc(calc(var(--row) - 1) * -1.2em)
+
+        &.activity-level0
+            opacity: 0
+        &.activity-level1
+            opacity: 0.4
+        &.activity-level2
+            opacity: 0.53
+        &.activity-level3
+            opacity: 0.7
+        &.activity-level4
+            opacity: 1
+@media (prefers-color-scheme: dark)
+    .day
+        background: #11111150

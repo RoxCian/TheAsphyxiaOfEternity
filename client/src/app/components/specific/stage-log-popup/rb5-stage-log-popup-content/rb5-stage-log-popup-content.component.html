@@ -1,0 +1,143 @@
+<ng-template #clearMarqueeContent>
+    <div class="marquee-content">
+        @for (_ of [0, 1, 2, 3]; track _) {
+        <div class="clear-label">
+            <span class="ca">C</span>
+            <span class="l">L</span>
+            <span class="ex">E</span>
+            <span class="ca">A</span>
+            <span class="r">R</span>
+            <span class="ex">!!</span>
+        </div>
+        <div class="clear-label">
+            <span class="ca">🅲</span>
+            <span class="l">𝓵</span>
+            <span class="ex">𝗲</span>
+            <span class="ca">🅐</span>
+            <span class="r">🅁</span>
+            <span class="ex">‼</span>
+        </div>
+        }
+    </div>
+</ng-template>
+<ng-template #failedMarqueeContent>
+    <div class="marquee-content">
+        @for (_ of [0, 1, 2, 3]; track _) {
+        <div class="failed-label">
+            <span class="fl">F</span>
+            <span class="ad">A</span>
+            <span class="i">I</span>
+            <span class="fl">L</span>
+            <span class="e">E</span>
+            <span class="ad">D</span>
+            <span class="fl">...</span>
+        </div>
+        <div class="failed-label">
+            <span class="fl">𝕱</span>
+            <span class="ad">🅐</span>
+            <span class="i">𝕀</span>
+            <span class="fl">🅻</span>
+            <span class="e">Ⓔ</span>
+            <span class="ad">🄳</span>
+            <span class="fl">...</span>
+        </div>
+        }
+    </div>
+</ng-template>
+
+@let music = stageLog().music;
+@let color = stageLog().color;
+@let chart = stageLog().chart;
+<div class="card music-card">
+    <div class="result-deco">
+        <div class="result-label">
+            RESULT
+            <div class="result-label-text-deco">
+                <p>(noun)</p>
+                <p>Scene to show how did you play</p>
+            </div>
+        </div>
+        <div class="deco-background">
+            <img src="static/assets/images/rb5-res-deco.svg">
+        </div>
+    </div>
+    <figure class="jacket">
+        <img [src]="(music.musicUid | rbJacket : chart.chartType)()">
+    </figure>
+    <div class="music-info" [rbChartType]="chart.chartType" [version]="5">
+        <div class="info-block stage-info">
+            <span class="info-label round-label">ROUND</span>
+            <span class="info-value stage-index">{{ stageLog().stageIndex | rbStageIndex : 5 }}</span>
+        </div>
+        <div class="info-block music-title">
+            <div class="info-label title-label">MUSIC</div>
+            <rb-music-title [music]="music" [variation]="chart.variation" />
+        </div>
+        <div class="info-block music-artist">
+            <div class="info-label artist-label">ARTIST</div>
+            <bung-marquee class="artist-value" [content]="chart.variation?.artist ?? music.artist" [delay]="1500" />
+        </div>
+        <div class="info-block chart-info">
+            <div class="chart-type-block">
+                <div class="info-label chart-label">DIFFICULTY</div>
+                <div class="chart-type" [rbChartType]="chart.chartType" [version]="5">{{ chart.chartType | rbChartTypeLiteral : 5 | uppercase }}</div>
+            </div>
+            <rb-level [version]="5" [level]="chart.level" [skillRate]="chart.skillRate" />
+        </div>
+        <div class="music-info-deco"></div>
+    </div>
+</div>
+<div class="clear-info">
+    @if (stageLog().clearType && stageLog().clearType !== "f") {
+    <bung-marquee class="clear-marquee" [content]="clearMarqueeContent" [spacing]="0" />
+    } @else {
+    <bung-marquee class="failed-marquee" [content]="failedMarqueeContent" [spacing]="0" />
+    }
+</div>
+<div class="card matching-result">
+    <div class="shadow-wrapper">
+        <div class="your-result" [rbColor]="color">
+            <div class="you-and-score-label">
+                <div class="you-label">
+                    <div>YOU</div>
+                </div>
+                <div class="score-label">SCORE</div>
+                <div class="fc-label" [class.hide]="stageLog().clearType !== 'fc'">FULL COMBO</div>
+            </div>
+            <div class="ar-label">ACHIEVEMENT RATE & RANK</div>
+            <div class="score-info">
+                <div class="player-info">
+                    <div class="you-text">YOU</div>
+                </div>
+                <div class="score-value">{{ stageLog().score }}</div>
+                <div class="ar-value">
+                    <div class="ar-integer">{{ stageLog().achievementRate | trunc }}.</div>
+                    <div class="ar-decimal">{{ stageLog().achievementRate | decimalPart : 1 }}%</div>
+                </div>
+                <rb-rank [version]="5" [achievementRate]="stageLog().achievementRate" isVisible />
+            </div>
+        </div>
+    </div>
+    <div class="shadow-wrapper">
+        <div class="rival-result" [rbColor]="color" isRival>
+            <div class="rival-label">
+                <div>RIVAL</div>
+            </div>
+            <div class="score-info">
+                <div class="player-info">
+                    <div class="rival-text"></div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">
+                        <div>SCORE</div>
+                    </div>
+                    <div class="score-value">{{ stageLog().rivalScore }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card result-details">
+    <rb-stage-log-judge-grid [stageLog]="stageLog()" />
+</div>

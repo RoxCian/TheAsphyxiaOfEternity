@@ -1,0 +1,47 @@
+<ng-template #mylistEditorMusicPlaceholder>
+    <div class="mylist-editor-music-placeholder">
+        <div class="figure"></div>
+        <div class="text">&nbsp;</div>
+        <div class="text">&nbsp;</div>
+        <div class="text">&nbsp;</div>
+    </div>
+</ng-template>
+
+
+@let l = mylist?.()?.value() ?? [];
+@for (music of musicsSorted(); track music.musicId) {
+    <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-mylist-editor" [placeholder]="mylistEditorMusicPlaceholder">
+        <div class="mylist-icon-box" animate.leave="leave">
+            <rb-music-icon [music]="music" isVirtualized>
+                @let s = slot();
+                @if (s == undefined) {
+                    <!-- list mode -->
+                    @if (l.includes(music.musicId)) {
+                        <button class="button is-danger-accent mylist-button mylist-remove-button is-small" (click)="onRemoveMylist(music.musicId)">
+                            <bung-icon icon="delete">Remove</bung-icon>
+                        </button>
+                    } @else if (mylistCount() < 30) {
+                        <button class="button mylist-button mylist-add-button is-small" [disabled]="mylistCount() >= 30" (click)="onAddMylist(music.musicId)">
+                            <bung-icon icon="heart-outline">Like it</bung-icon>
+                        </button>
+                    } @else {
+                        <button class="button mylist-button mylist-add-button is-small" disabled>
+                            <bung-icon icon="cancel">List is full</bung-icon>
+                        </button>
+                    }
+                } @else {
+                    <!-- slot mode -->
+                    @if (l[s] === music.musicId) {
+                        <button class="button is-danger-accent mylist-button mylist-remove-button is-small" (click)="onRemoveMylistSlot(s)">
+                            <bung-icon icon="delete">Remove</bung-icon>
+                        </button>
+                    } @else {
+                        <button class="button mylist-button mylist-add-button is-small" [disabled]="mylistCount() >= 30" (click)="onSetMylistSlot(s, music.musicId)">
+                            <bung-icon icon="heart-outline">Like it</bung-icon>
+                        </button>
+                    }
+                }
+            </rb-music-icon>
+        </div>
+    </bung-insertion>
+}

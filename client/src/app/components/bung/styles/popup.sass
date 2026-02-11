@@ -1,0 +1,49 @@
+@forward "popup.animation"
+
+.bung-popup-layer-top, .bung-popup-layer
+    position: fixed
+    inset: 0
+    pointer-events: none
+    z-index: 4999
+.bung-popup-layer.is-absolute
+    position: absolute
+.bung-popup-layer > *
+    pointer-events: all
+.bung-backdrop
+    position: fixed
+    inset: 0
+    z-index: -1
+    overscroll-behavior: contain
+.bung-popup-layer.bung-notification
+    display: grid
+    grid-template: 1fr 1fr / 1fr 1fr 1fr
+    flex-direction: column
+    padding: 2em
+    align-items: start
+    justify-content: start
+
+    bung-notification
+        &[float="top-left"], &[float="left"]
+            grid-area: 1 / 1
+        &[float="bottom-left"]
+            grid-area: 2 / 1
+            align-self: end
+        &[float="top"]
+            grid-area: 1 / 2
+        &[float="bottom"]
+            grid-area: 2 / 2
+            align-self: end
+        &[float="top-right"], &[float="right"], &[float="none"], &[float=""], &:not([float])
+            grid-area: 1 / 3
+        &[float="bottom-right"]
+            grid-area: 2 / 3
+            align-self: end
+    @media screen and (width < 768px)
+        &
+            grid-template: 1fr 1fr / 1fr
+
+            bung-notification
+                &[float="top-left"], &[float="left"], &[float="top"], &[float="top-right"], &[float="right"], &[float="none"], &[float=""], &:not([float])
+                    grid-area: 1 / 1
+                &[float="bottom-left"], &[float="bottom"], &[float="bottom-right"]
+                    grid-area: 2 / 1

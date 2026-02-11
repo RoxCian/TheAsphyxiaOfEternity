@@ -1,0 +1,124 @@
+.stage-info
+    display: flex
+    align-items: baseline
+    gap: 0.5em
+    margin-bottom: 0.5em
+    
+    .stage-index
+        font-size: 1.25em
+    .round-label
+        font-size: 0.75em
+
+.music-card.card
+    position: relative
+    display: grid
+    grid-template: 1fr auto / auto minmax(0, 1fr)
+    width: 48em
+    padding: 1.25em
+    justify-content: start
+    gap: 1.25em
+    margin-bottom: 1.25em
+
+    .score-label
+        grid-area: 1 / span 2
+        font-size: 1.25em
+        text-align: center
+    .jacket
+        grid-area: 2 / 1
+        width: 13.5em
+        height: 13.5em
+
+        img
+            border-radius: 8px
+    .info-container
+        grid-area: 2 / 2
+        display: flex
+        flex-direction: column
+
+        .music-rank-info
+            display: flex
+            gap: 1em
+            align-items: flex-end
+
+        .music-info
+            flex: 1
+            display: flex
+            flex-direction: column
+            justify-content: center
+            align-items: center
+            min-width: 0
+
+            .title-info
+                display: flex
+                justify-content: center
+                width: 100%
+                color: var(--rb-chart-color)
+                font-size: 1.5em
+            rb-music-title
+                width: 100%
+            .splitter
+                width: 100%
+                height: 2px
+                background: var(--rb-chart-color)
+            .chart-info
+                display: flex
+                align-items: baseline
+                gap: 0.5em
+
+                .chart-label
+                    font-size: 0.75em
+                .chart-type
+                    color: var(--rb-chart-color)
+        .rank-info
+            display: flex
+            flex-direction: column
+            align-items: center
+            .rank-label
+                font-size: 0.75em
+                letter-spacing: 1px
+
+        .matching-info
+            display: grid
+            grid-template: 1fr 1fr auto / auto 1fr auto
+            align-items: center
+            justify-content: center
+            gap: 0 0.5em
+
+            .you-label
+                grid-area: 1 / 1
+                font-size: 0.75em
+            .rival-label
+                grid-area: 2 / 1
+                font-size: 0.75em
+            .result-label
+                grid-area: 3 / 1
+                font-size: 0.75em
+            progress
+                margin: 0
+                height: 0.75em
+                
+            progress::-moz-progress-bar
+                background: var(--rb-color)
+            progress::-webkit-progress-value
+                background: var(--rb-color)
+            .your-ratio
+                grid-area: 1 / 2
+            .rival-ratio
+                grid-area: 2 / 2
+            .score
+                color: var(--rb-color)
+                font-size: 1.5em
+
+                .padding
+                    opacity: 0.5
+            .result-value
+                grid-area: 3 / 2 / span 1 / span 2
+                justify-self: end
+                font-size: 2em
+.result-details
+    padding: 1.25em
+@media screen and (width < 768px)
+    :host
+        font-size: 0.75em
+    .music-card.card
+        width: 40em

@@ -1,0 +1,101 @@
+.stage-info
+    display: flex
+    justify-content: flex-end
+    align-items: baseline
+    margin-bottom: 0.5em
+
+    .round-label
+        margin-right: 0.5em
+        font-size: 0.75em
+    .stage-index
+        font-size: 1.25em
+.music-card
+    display: flex
+    width: 48em
+    justify-content: center
+    align-items: stretch
+    padding: 1.25em
+    gap: 1.25em
+.jacket, .jacket img
+    width: 13.5em
+    height: 13.5em
+    border-radius: 8px
+.music-info
+    display: flex
+    flex-direction: column
+    flex: 1
+    min-width: 0
+    .info-block:not(:last-child)
+        margin-bottom: 0.75em
+    .info-label
+        margin-bottom: 0.25em
+        font-weight: bold
+    .tempo-info
+        font-size: 0.75em
+    .bpm-label
+        margin-right: 0.5em
+    .music-title, .music-artist, .chart-info
+        color: var(--rb-chart-color)
+rb-music-title, bung-marquee
+    width: 100%
+.clear-info
+    position: absolute
+    display: flex
+    right: 0
+    top: 0
+    bottom: 0
+    padding: 0.333em
+    justify-content: start
+    align-items: end
+    font-variant: small-caps
+    font-weight: bold
+    font-size: 3em
+
+    .clear-text
+        background: linear-gradient(to bottom, #beda00, #4fb91c, #66f645)
+        -webkit-background-clip: text
+        background-clip: text
+        -webkit-text-fill-color: transparent
+    .failed-text
+        background: linear-gradient(to bottom, #7400cc, #56e5f6)
+        -webkit-background-clip: text
+        background-clip: text
+        -webkit-text-fill-color: transparent
+.matching-result
+    display: flex
+    padding: 1.25em 0
+    gap: 1.25em
+    .card
+        padding: 1.25em
+        flex: 1
+        .content
+            display: grid
+            grid-template: 1fr 1fr / auto 1fr
+            gap: 0 1.25em
+            margin-left: 1.25em
+
+            > *
+                display: flex
+                gap: 1.25em
+                grid-area: var(--row) / var(--col)
+                font-size: 1.5em
+                &.rank-label, &.score-label
+                    justify-self: end
+                    font-weight: bold
+                &.score-value, &.rank-value
+                    justify-self: start
+
+        .you-label, .rival-label
+            background: var(--rb-color)
+            border-radius: 4px
+            text-align: center
+            margin-bottom: 1em
+            color: white
+.result-details
+    padding: 1.25em
+
+@media screen and (width < 768px)
+    :host
+        font-size: 0.75em
+    .music-card
+        width: 40em

@@ -1,0 +1,89 @@
+id,name,nameOrig,element,isAccessable
+,,,,
+int,string,string?,fire|aqua|wood|light|dark,boolean
+0,Iphilia,イフィリア,fire,TRUE
+1,Uisce,ウィスカ,aqua,TRUE
+2,Crann,クラン,wood,TRUE
+3,Pastel-kun,パステルくん,fire,TRUE
+4,Alpera,アルペラ,aqua,TRUE
+5,Illushea,イルシア,fire,TRUE
+6,Emeralda,エメラルダ,wood,TRUE
+7,NxxK,,aqua,TRUE
+8,Level 1 CPU,,fire,FALSE
+9,Level 2 CPU,,aqua,FALSE
+10,Level 3 CPU,,wood,FALSE
+11,Level 4 CPU,,fire,FALSE
+12,Level 5 CPU,,aqua,FALSE
+13,Level 6 CPU,,wood,FALSE
+14,Level 7 CPU,,fire,FALSE
+15,Level 8 CPU,,aqua,FALSE
+16,DJ YOSHITAKA,,wood,FALSE
+17,Qrispy,,fire,FALSE
+18,Des-ROW,,aqua,FALSE
+19,DJ TOTTO,,wood,FALSE
+20,dj TAKA,,fire,FALSE
+21,L.E.D.,,aqua,FALSE
+22,Sota Fujimori,,wood,FALSE
+23,猫叉Master,,fire,FALSE
+24,wac,,aqua,FALSE
+25,PON,,wood,FALSE
+26,TAG,,fire,FALSE
+27,村井聖夜,,aqua,FALSE
+28,YUEI,,wood,FALSE
+29,TOMOSUKE,,fire,FALSE
+30,SUPER STAR -満-,,aqua,FALSE
+31,96,,wood,FALSE
+32,あさき,,fire,FALSE
+33,Cody,,aqua,FALSE
+34,U-1,,wood,FALSE
+35,Akhuta,,fire,FALSE
+36,肥塚良彦,,aqua,FALSE
+37,泉 陸奥彦,,wood,FALSE
+38,ショッチョー,,fire,FALSE
+39,Hu∑eR,,aqua,FALSE
+40,Dory,,wood,FALSE
+41,劇団レコード,,fire,FALSE
+42,リチェルカ,,aqua,FALSE
+43,STAFF1,,wood,FALSE
+44,STAFF2,,fire,FALSE
+45,STAFF3,,aqua,FALSE
+46,STAFF4,,wood,FALSE
+47,STAFF5,,fire,FALSE
+48,STAFF6,,aqua,FALSE
+49,STAFF7,,wood,FALSE
+50,STAFF,,fire,FALSE
+51,Nord Braun,ノール?ブラウン,wood,TRUE
+52,Ignaz,イグナーツ,aqua,TRUE
+53,Chaton,シャトン,dark,TRUE
+54,Flower Seller of the Time,時の花売り,wood,TRUE
+55,Maiden of Silver,白銀の乙女,dark,TRUE
+56,Marika Yamakata,山形 まり花,light,TRUE
+57,Ichimai Izumi (ex),和泉 一舞,fire,TRUE
+58,Meu Meu,芽兎 めう,aqua,TRUE
+59,Sakiko haruhi,春日 咲子,wood,TRUE
+60,Rin Shimozuki,霜月 凛,dark,TRUE
+61,Natsuhi Shinonome,東雲 夏陽,fire,TRUE
+62,Kokona Shinonome,東雲 心菜,aqua,TRUE
+63,Noah,,light,TRUE
+64,Botan,牡丹,fire,TRUE
+65,Pastel-kun (ex),パステルくん (ex),fire,TRUE
+66,Aoba Suzukaze,涼風青葉,light,TRUE
+67,Ko Yagami,八神コウ,aqua,TRUE
+68,Rin Toyama,遠山りん,wood,TRUE
+69,Hifumi Takimoto,滝本ひふみ,dark,TRUE
+70,Hajime Shinoda,篠田はじめ,fire,TRUE
+71,Yun Iijima,飯島ゆん,wood,TRUE
+72,Nene Sakura,桜ねね,fire,TRUE
+73,Umiko Ahagon,阿波根うみこ,aqua,TRUE
+74,Shizuku Hazuki,葉月しずく,wood,TRUE
+75,Momiji Mochizuki,望月紅葉,aqua,TRUE
+76,Tsubame Narumi,鳴海ツバメ,fire,TRUE
+77,Mephius,メフィウス,dark,TRUE
+78,Lionel,リオネル,fire,TRUE
+79,Marika Yamakata (ex),山形 まり花 (ex),light,TRUE
+80,Ichimai Izumi (ex),和泉 一舞 (ex),fire,TRUE
+81,Meu Meu (ex),芽兎 めう (ex),aqua,TRUE
+82,Sakiko haruhi (ex),春日 咲子 (ex),wood,TRUE
+83,Rin Shimozuki (ex),霜月 凛 (ex),dark,TRUE
+84,Natsuhi Shinonome (ex),東雲 夏陽 (ex),fire,TRUE
+85,Kokona Shinonome (ex),東雲 心菜 (ex),aqua,TRUE

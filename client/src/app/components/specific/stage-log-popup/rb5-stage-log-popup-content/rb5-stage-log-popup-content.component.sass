@@ -1,0 +1,334 @@
+.card
+    border-radius: 0 !important
+
+.music-card.card
+    display: flex
+    width: 48em
+    height: 14.5em
+    padding: 0.5em 1em
+    margin-bottom: 1.25em
+    border: 0
+    gap: 0.5em
+    overflow: clip
+
+    > *
+        flex-grow: 0
+        flex-shrink: 0
+
+    .result-deco
+        position: relative
+        width: 4em
+        
+        .result-label
+            position: absolute
+            bottom: 0.5em
+            left: -0.75em
+            font-size: 2em
+            transform: rotate(-21deg)
+
+            .result-label-text-deco
+                margin-top: -1em
+                font-size: 0.2em
+                white-space: nowrap
+                
+        .deco-background
+            position: absolute
+            left: -1em
+            top: -0.5em
+            width: 5.5em
+            filter: invert(0.3)
+
+            img
+                width: 5.5em
+    .jacket, .jacket img
+        z-index: 1
+        width: 13.5em
+        height: 13.5em
+    .music-info
+        flex: 1
+        width: 28.5em
+        z-index: 2
+
+        .info-block:not(:last-child)
+            margin-bottom: 0.75em
+        .info-label
+            margin-bottom: 0.25em
+            font-size: 0.75em
+        .round-label
+            margin-right: 0.5em
+        .stage-index
+            font-size: 1.5em
+            color: #FF3FB9
+        .title-label, .artist-label
+            color: var(--invert-text-color)
+        .chart-type-block
+            display: flex
+            align-items: center
+
+            .chart-label
+                margin-left: -0.6667em
+                padding: 0 0.6667em
+                margin-right: 0.6667em
+                background: var(--invert-card-background)
+                color: var(--invert-text-color)
+            .chart-type
+                color: var(--rb-chart-color)
+        rb-music-title
+            max-width: 100%
+            color: var(--rb-chart-color)
+        rb-level
+            font-size: 1.5em
+            font-weight: bold
+    .music-info-deco
+        position: absolute
+        left: 19em
+        top: 2.5em
+        height: 6em
+        width: 70em
+        background: var(--invert-card-background)
+        z-index: -1
+        clip-path: polygon(0 0, 80% 17%, 0 96%)
+.clear-info
+    width: 48em
+    overflow: clip
+    padding: 0.75em 0
+    background: var(--invert-card-background)
+    margin-bottom: 1.25em
+
+    .marquee-content
+        display: flex
+        flex-wrap: nowrap
+        font-size: 2em
+        font-weight: bold
+
+        > *
+            margin-right: 0.33em
+        
+        .clear-label
+            .ca
+                color: #FDFF02
+            .l
+                color: #FF7A03
+            .ex
+                color: #FF3FB9
+            .r
+                color: #A3E214
+        .failed-label
+            .fl
+                color: #49B9E7
+            .ad
+                color: #B549E7
+            .i
+                color: #7302FF
+            .e
+                color: #E7A649
+.matching-result.card
+    padding: 1.25em
+    margin-bottom: 1.25em
+    .shadow-wrapper
+        filter: drop-shadow(0 2px 3px var(--card-shadow-color)) drop-shadow(0 0 2px var(--card-shadow-color))
+    .your-result
+        position: relative
+        overflow: clip
+        clip-path: polygon(0 0, 100% 0, calc(100% - 1em) 100%, 1em 100%)
+        margin-bottom: 1em
+        border: 1px solid transparent
+        background: var(--card-background)
+
+        .you-and-score-label
+            position: absolute
+            display: grid
+            grid-template: 1.5fr 1fr / 1.5fr 1fr 20em
+            left: -2em
+            top: 0
+            transform-origin: 2em 0
+            transform: rotate(-6deg)
+
+        .you-label
+            grid-area: 1 / span 3
+            height: 2em
+            padding-left: 3em
+            overflow: clip
+            background: var(--rb-color)
+            color: var(--text-color)
+            clip-path: polygon(0 0, 100% 0, calc(100% - 3em) 100%, 0 100%)
+
+            div
+                margin-top: -0.33em
+                font-size: 2.5em
+                font-weight: bold
+        .score-label
+            display: flex
+            grid-area: 2 / 1
+            height: 1em
+            margin-top: -1px // eliminate unwanted empty area between two labels
+            padding-right: 1.5em
+            justify-content: end
+            align-items: center
+            clip-path: polygon(0 0, 100% 0, calc(100% - 1.5em) 100%, 0 100%)
+            overflow: clip
+            font-weight: bold
+            background: var(--invert-card-background)
+            color: var(--invert-text-color)
+        .fc-label
+            display: flex
+            grid-area: 2 / 2
+            height: 1em
+            margin-left: -1.5em
+            margin-top: -1px // eliminate unwanted empty area between two labels
+            padding: 0 1.5em
+            justify-content: start
+            align-items: center
+            clip-path: polygon(1em 0, 100% 0, calc(100% - 1.5em) 100%, 0 100%)
+            overflow: clip
+            font-weight: bold
+            color: white
+            animation: fc-label-background-animation 0.1s steps(2, jump-both) infinite
+
+            &.hide
+                opacity: 0
+                user-select: none
+        .ar-label
+            position: absolute
+            right: 0
+            top: 0
+            padding: 0 0.5em 0 0.75em
+            border-bottom: 0.1em var(--text-color) solid
+            font-weight: bold
+            transform-origin: top right
+            transform: rotate(-6deg)
+        .score-info
+            display: grid
+            grid-template: 1fr / 8em 8em 1fr auto 8em
+            margin-top: 2em
+            padding: 0 1em
+            gap: 1em
+            align-items: baseline
+
+        .player-info
+            grid-area: 1 / 1
+            text-align: right
+        .score-value
+            grid-area: 1 / 2
+            font-size: 2.5em
+            font-weight: bold
+            color: var(--rb-color)
+        .ar-value
+            grid-area: 1 / 4
+            display: flex
+            align-items: baseline
+            font-weight: bold
+            color: var(--rb-color)
+
+            .ar-integer
+                font-size: 2em
+            .ar-decimal
+                font-size: 1.75em
+
+        rb-rank
+            grid-area: 1 / 5
+            font-size: 2.5em
+            font-weight: bold
+            text-align: center
+
+    .rival-result
+        position: relative
+        overflow: clip
+        clip-path: polygon(0 0, 100% 0, calc(100% - 1em) 100%, 1em 100%)
+        margin-bottom: 1em
+        border: 1px solid transparent
+        background: var(--card-background)
+
+        .rival-label
+            position: absolute
+            display: flex
+            right: -2em
+            bottom: 0
+            width: 50em
+            height: 2em
+            justify-content: end
+            align-items: center
+            padding-right: 3em
+            overflow: clip
+            transform-origin: calc(100% - 2em) 100%
+            transform: rotate(-6deg)
+            background: var(--rb-color)
+            color: var(--text-color)
+
+            div
+                font-size: 2.5em
+                font-weight: bold
+
+        .score-info
+            display: grid
+            grid-template: 1fr / 8em 1fr 8em
+            padding: 0 1em
+            gap: 1em
+            align-items: baseline
+
+        .player-info
+            grid-area: 1 / 1
+            text-align: right
+        .score-box
+            grid-area: 1 / 2
+            justify-self: end
+            clip-path: polygon(3em 0, calc(100% - 5em) 0, 100% 100%, 0 100%)
+            overflow: clip
+        .score-label
+            display: flex
+            height: 1.5em
+            padding: 0.5em 3em 0 3em
+            justify-content: start
+            align-items: center
+            font-weight: bold
+            background: var(--invert-card-background)
+            color: var(--invert-text-color)
+            transform-origin: top left
+            transform: rotate(-6deg)
+        .score-value
+            padding: 0 2em
+            font-size: 2.5em
+            font-weight: bold
+            color: var(--rb-color)
+.result-details
+    padding: 1.25em
+
+@media (prefers-color-scheme: dark)
+    .music-card.card
+        .result-deco .deco-background
+            filter: invert(0.7)
+    .clear-info
+        .marquee-content
+            .clear-label
+                .ca
+                    color: #7f7f22
+                .l
+                    color: #9f4a00
+                .ex
+                    color: #a12874
+                .r
+                    color: #648b0b
+            .failed-label
+                .fl
+                    color: #208bb6
+                .ad
+                    color: #a413e8
+                .i
+                    color: #6800e8
+                .e
+                    color: #b06f14
+@media screen and (width < 768px)
+    :host
+        font-size: 0.75em
+    .music-card
+        width: 40em
+    .music-card .music-info
+        width: 20.5em
+    .clear-info
+        width: 40em
+
+@keyframes fc-label-background-animation
+    from
+        background: #209CEE
+    to
+        background: #38ff59

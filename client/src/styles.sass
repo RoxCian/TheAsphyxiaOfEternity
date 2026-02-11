@@ -1,0 +1,18 @@
+@forward "app/components"
+
+:root
+    interpolate-size: allow-keywords
+
+.card
+    border-radius: 8px
+.button
+    transition: background 0.2s, color 0.2s, border 0.2s, opacity 0.2s, box-shadow 0.2s
+
+// bulma fix
+.card:not(:last-child)
+    margin-bottom: 0rem
+.card
+    box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
+bung-tabs .tabs ul
+    margin-left: 0
+    margin-top: 0

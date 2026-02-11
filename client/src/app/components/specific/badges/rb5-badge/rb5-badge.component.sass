@@ -1,0 +1,30 @@
+.badge-background
+    background: #209CEE
+.badge-label
+    perspective: 162px
+    .label-wrapper
+        display: grid
+        grid-template: 1fr / 1fr
+        align-items: center
+        justify-content: center
+
+        > *
+            grid-area: 1 / 1
+            text-align: center
+    .label-background
+        position: absolute
+        left: -12.5px
+        top: 0
+        opacity: 0
+        background: transparent
+        transition: opacity 0.2s
+        z-index: -1
+:host.is-active:not(.is-disabled), :host.enter:not(.is-disabled)
+    .badge-label
+        .label-wrapper
+            color: white
+            transform: rotateY(39deg) rotateZ(-8deg) scale(1.15) scaleX(1.12) scaleY(0.86) translateX(0.35em) translateY(0) translateZ(0)
+        .zz
+            color: #FBA227
+        .label-background
+            opacity: 1

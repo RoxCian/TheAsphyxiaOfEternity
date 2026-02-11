@@ -1,0 +1,29 @@
+<div class="classcheck card rb-panel">
+    @let isV4 = classcheck().version === 4;
+    @if (classcheck().clearType > 1) {
+        <div class="deco-background has-rb{{ classcheck().version }}-background"></div>
+        <div class="deco-background-blur-box">
+            <div class="deco-background has-rb{{ classcheck().version }}-background"></div>
+        </div>
+    }
+    <div class="classcheck-name">
+        @if (classcheckNameSub()) {
+            <bung-marquee class="sub-name" [content]="classcheckNameSub()" [spacing]="60" [delay]="1500" />
+        }
+        <bung-marquee class="main-name" [attr.lang]="classcheckNameSub() ? 'ja' : undefined" [content]="classcheckNameMain()" [spacing]="60" [delay]="1500" />
+    </div>
+    <div class="classcheck-clear-info">
+        @if (isV4) {
+            <div class="sub-info">{{ clearInfoSub() }}</div>
+        }
+        <div class="main-info" [attr.lang]="isV4 ? 'ja' : undefined">{{ clearInfoMain() }}</div>
+    </div>
+    <bung-divider isVertical />
+    <div class="classcheck-score-info">
+        <div class="classcheck-ar">{{ classcheck().averageAchievementRate }}%</div>
+        <bung-icon class="classcheck-score is-first-child" icon="counter">{{ classcheck().totalScore }}</bung-icon>
+        <bung-icon class="classcheck-play-count" icon="restart">{{ classcheck().playCount }}</bung-icon>
+        <bung-icon class="classcheck-update is-first-child" icon="update">{{ classcheck().update | relativeTime }}</bung-icon>
+        <bung-icon class="classcheck-last-play" icon="clock-time-nine-outline">{{ classcheck().lastPlay | relativeTime }}</bung-icon>
+    </div>
+</div>

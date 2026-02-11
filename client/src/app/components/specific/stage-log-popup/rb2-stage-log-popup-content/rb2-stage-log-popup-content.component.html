@@ -1,0 +1,93 @@
+<ng-template #marqueeContent let-large="large">
+    <div class="marquee-content{{ large ? ' is-large' : ''}}">
+        @for (_ of (large ? [0, 1] : [0, 1, 2, 3]); track _) {
+        @for (i of [0, 1, 2, 3]; track i) {
+        @if (stageLog().clearType !== "f" && stageLog().clearType) {
+        <div class="clear-label color{{ i }}">CLEAR!!</div>
+        } @else {
+        <div class="failed-label color{{ i }}">FAILED...</div>
+        }
+        }
+        }
+    </div>
+</ng-template>
+
+@let music = stageLog().music;
+@let chart = stageLog().chart;
+@let color = stageLog().color;
+<div class="card music-card" [rbChartType]="chart.chartType" [version]="2">
+    <figure class="jacket">
+        <img [src]="(music.musicUid | rbJacket : chart.chartType)()">
+    </figure>
+    <div class="music-info">
+        <div class="info-value stage-info">
+            <div class="stage-index">{{ stageLog().stageIndex | rbStageIndex : 2 }}</div>
+            <div class="round-label">ROUND</div>
+        </div>
+        <div class="info-value tempo-info">
+            <div class="bpm-label">BPM</div>
+            <div class="tempo-value">{{ (chart.variation?.bpm ?? music.bpm) | rbFormatBpm }}</div>
+        </div>
+        <div class="title-info">
+            <div class="info-label title-label">MUSIC</div>
+            <div class="info-value music-title">
+                <rb-music-title [music]="music" [variation]="chart.variation" />
+            </div>
+        </div>
+        <div class="artist-info">
+            <div class="info-label artist-label">ARTIST</div>
+            <div class="info-value music-artist">
+                <bung-marquee class="artist-value" [content]="chart.variation?.artist ?? music.artist" [delay]="1500" />
+            </div>
+        </div>
+        <div class="chart-level-info">
+            <div class="chart-info">
+                <div class="info-label chart-label">DIFFICULTY</div>
+                <div class="info-value chart-type">{{ chart.chartType | rbChartTypeLiteral : 2 | uppercase }}</div>
+            </div>
+            <div class="level-info">
+                <div class="level-label">LEVEL</div>
+                <rb-level class="level-value" [version]="2" [level]="chart.level" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear-info">
+    <bung-marquee [spacing]="0" [content]="marqueeContent" [context]="{ large: true }" />
+</div>
+<div class="card your-result" [rbColor]="color">
+    <div class="you-label card">You</div>
+    <div class="score-label">Score</div>
+    <div class="score-value">
+        {{ stageLog().score }}
+        @if (stageLog().score > stageLog().rivalScore) {
+        <i class="winner-icon mdi mdi-crown"></i>
+        }
+    </div>
+    <div class="ar-label">Achievement Rate</div>
+    <div class="ar-value">
+        <div class="ar-integer">{{ stageLog().achievementRate | trunc }}.</div>
+        <div class="ar-decimal">{{ stageLog().achievementRate | decimalPart : 1 }}%</div>
+    </div>
+    <div class="rank">
+        <div class="rank-label">RANK</div>
+        <rb-rank [version]="2" [achievementRate]="stageLog().achievementRate" isVisible />
+    </div>
+</div>
+<div class="clear-info">
+    <bung-marquee [spacing]="0" [content]="marqueeContent" />
+</div>
+<div class="card rival-result" [rbColor]="color" isRival>
+    <div class="rival-label card">Rival</div>
+    <div class="score-label">Score</div>
+    <div class="score-value">
+        {{ stageLog().rivalScore }}
+        @if (stageLog().score < stageLog().rivalScore) {
+          <i class="winner-icon mdi mdi-crown"></i>
+            }
+    </div>
+</div>
+
+<div class="card result-details">
+    <rb-stage-log-judge-grid [stageLog]="stageLog()" />
+</div>

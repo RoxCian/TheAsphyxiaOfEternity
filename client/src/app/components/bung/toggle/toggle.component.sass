@@ -1,0 +1,63 @@
+bung-toggle
+    display: block
+    position: relative
+    width: calc(2.5rem + 2px)
+    height: calc(1.575rem + 2px)
+    padding: 0.2rem
+    overflow: clip
+    background: #b5b5b5
+    border: 1px solid transparent
+    border-radius: 4px
+    
+    transition: border-color var(--animation-duration-lv3) var(--ease-in), box-shadow var(--animation-duration-lv3) var(--ease-in)
+    user-select: none
+    cursor: pointer
+
+    &.is-rounded, &.is-rounded .toggle-thumb, &.is-rounded .toggle-background
+        border-radius: calc(infinity * 1px)
+    &.is-disabled
+        opacity: 0.5
+        cursor: not-allowed
+    &.is-readonly
+        cursor: default
+
+    &:hover:not(.is-disabled):not(:focus:not(.is-readonly))
+        border-color: #b5b5b5
+    &:active:not(.is-disabled)
+        border-color: #4a4a4a
+    &:focus:not(.is-disabled):not(:active):not(.is-readonly)
+        border-color: var(--accent-color)
+        box-shadow: 0 0 0 0.125em var(--accent-shadow-color)
+
+    .toggle-background
+        position: absolute
+        inset: 0
+        background: var(--accent-color)
+        border-radius: 4px
+        will-change: transform
+        transform: translateX(-105%)
+        transition: transform var(--animation-duration-lv3) var(--ease-in)
+    .toggle-thumb
+        position: relative
+        width: 1.175rem
+        height: 1.175rem
+        background: #f5f5f5
+        border-radius: 4px
+        will-change: transform
+        transition: transform var(--animation-duration-lv3) var(--ease-in)
+        z-index: 1
+
+    &.is-checked
+        .toggle-background
+            transform: none
+        .toggle-thumb
+            transform: translateX(0.925em)
+
+@media (prefers-color-scheme: dark)
+    bung-toggle
+        background: #363636
+        border-color: #363636
+        &:hover:not(.is-disabled)
+            border-color: #363636
+        &:active:not(.is-disabled)
+            border-color: #b5b5b5

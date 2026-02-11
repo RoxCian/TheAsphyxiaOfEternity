@@ -1,0 +1,40 @@
+@if (!isVirtualized() || isIntersected()) {
+    <div class="insertion-content">
+        @let c = content();
+        @if (isTemplateRef(c)) {
+            <ng-container *ngTemplateOutlet="c; context: context()"/>
+        } @else if (isComponentType(c)) {
+            <ng-container *ngComponentOutlet="c; context: context()" />
+        } @else if (isString(c)) {
+            @if (textContentTag() == undefined) {
+                {{ c }}
+            } @else if (textContentTag() === "div") {
+                <div>{{ c }}</div>
+            } @else if (textContentTag() === "p") {
+                <p>{{ c }}</p>
+            } @else if (textContentTag() === "span") {
+                <span>{{ c }}</span>
+            }
+        }
+        <ng-content />
+    </div>
+} @else {
+    <div class="insertion-placeholder">
+        @let p = placeholder();
+        @if (isTemplateRef(p)) {
+            <ng-container *ngTemplateOutlet="p; context: context()"/>
+        } @else if (isComponentType(p)) {
+            <ng-container *ngComponentOutlet="p; context: context()" />
+        } @else if (isString(p)) {
+            @if (textContentTag() == undefined) {
+                {{ p }}
+            } @else if (textContentTag() === "div") {
+                <div>{{ p }}</div>
+            } @else if (textContentTag() === "p") {
+                <p>{{ p }}</p>
+            } @else if (textContentTag() === "span") {
+                <span>{{ p }}</span>
+            }
+        }
+    </div>
+}

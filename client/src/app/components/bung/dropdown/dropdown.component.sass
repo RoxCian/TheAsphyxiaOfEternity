@@ -1,0 +1,90 @@
+bung-dropdown
+    --dropdown-padding: 0.5em
+    display: block
+    position: absolute
+    left: var(--dropdown-left, 0)
+    top: var(--dropdown-top, 0)
+    bottom: var(--dropdown-bottom, auto)
+    padding-bottom: var(--dropdown-padding)
+    padding-top: var(--dropdown-padding)
+    font-size: 1rem
+    min-width: max(12em, var(--dropdown-width))
+    border-radius: 4px
+    overflow: clip
+    background: var(--card-background)
+    box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
+    // padding: 0.5em 1em
+    // font-size: 0.75em
+    // border-radius: 4px
+    // box-shadow: 0 2px 3px #0a0a0a1a, 0 0 0 1px #0a0a0a1a
+    // background: white
+
+    &.show
+        animation: bung-show-dropdown-animation var(--animation-duration-lv3) var(--ease-in) forwards
+
+        > .dropdown-container
+            animation: bung-show-dropdown-content-animation var(--animation-duration-lv3) var(--ease-in) forwards
+    &.out
+        animation: bung-hide-dropdown-animation var(--animation-duration-lv3) var(--ease-in) forwards !important
+        pointer-events: none
+    .dropdown-container
+        display: block
+        max-height: 33vh
+        overflow-y: auto
+    .dropdown-item
+        --default-background: #3273dc
+        position: relative
+        display: flex
+        padding: 0.375em 0.625em
+        min-height: 2em
+        overflow: clip
+        font-size: 1em
+        gap: 0.625em
+        transition: background-color var(--animation-duration-lv3) var(--ease-in), color var(--animation-duration-lv3) var(--ease-in)
+
+        &.is-active
+            background-color: var(--accent-color)
+            color: var(--accent-text-color, #fff)
+    bung-icon:first-child
+        margin-left: 0
+    bung-icon .icon-element
+        margin-right: 0.5em
+    bung-icon, .dropdown-item-content
+        flex: 1
+    .dropdown-item-chevron
+        display: flex
+        align-items: center
+    .dropdown-item.is-disabled
+        opacity: 0.5
+        cursor: not-allowed
+        background: transparent
+        color: var(--text-color)
+
+    &.is-small
+        font-size: 0.75rem
+    &.is-medium
+        font-size: 1.25rem
+    &.is-large
+        font-size: 1.5rem
+    
+    &.is-reversed .dropdown-item
+        flex-direction: row-reverse
+        text-align: end
+
+@keyframes bung-show-dropdown-animation
+    from
+        height: 0
+    99.99%
+        height: var(--dropdown-height, auto)
+    to
+        height: auto
+@keyframes bung-show-dropdown-content-animation
+    from
+        transform: translateY(var(--dropdown-content-init-top))
+    to
+        transform: none
+@keyframes bung-hide-dropdown-animation
+    from
+        opacity: 1
+    to
+        opacity: 0

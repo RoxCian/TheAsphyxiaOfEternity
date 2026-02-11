@@ -1,0 +1,11 @@
+<div class="bung-input-addon-right">
+    <button class="button spin-button-add" [disabled]="disabled()" (click)="onIncrease()"><i class="mdi mdi-plus"></i></button>
+    <button class="button spin-button-sub" [disabled]="disabled()" (click)="onDecrease()"><i class="mdi mdi-minus"></i></button>
+</div>
+<div class="bung-input-content" [class.is-active]="isInputFocused()" [class.is-disabled]="disabled()">
+    @if (disabled() || readonly()) {
+        <span>{{ value() }}</span>
+    } @else {
+        <input type="text" size="1" [value]="this.formatter()(value())" [max]="max()" [min]="min()" (change)="onChange($event)" (focus)="isInputFocused.set(true)" (blur)="isInputFocused.set(false)" [disabled]="disabled()" #input>
+    }
+</div>

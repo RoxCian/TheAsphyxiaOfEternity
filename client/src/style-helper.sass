@@ -1,0 +1,4 @@
+@mixin is-mobile($selector)
+    @media screen and (width < 768px)
+        #{$selector}
+            @content

@@ -1,0 +1,45 @@
+<div class="dropdown-container">
+    @for (item of items(); track item) {
+        @if (item.isDivider()) {
+            <hr class="dropdown-divider">
+        } @else if (item.isStatic()) {
+            <div class="dropdown-item {{ item.element.nativeElement.classList.toString() }}"
+                (click)="onClick(item, $event)"
+                (focus)="onFocus(item)"
+                (blur)="onBlur(item)"
+                (mouseover)="onMouseOver(item, $event)"
+                (mouseenter)="onMouseEnter(item, $event)"
+                (mouseleave)="onMouseLeave(item, $event)">
+                @if (hasIcons()) {
+                    <bung-icon [icon]="item.icon()" [iconUrl]="item.iconUrl()">
+                        <bung-insertion [content]="item.content()" [context]="item.context()" />
+                    </bung-icon>
+                } @else {
+                    <bung-insertion class="dropdown-item-content" [content]="item.content()" [context]="item.context()" />
+                }
+                @if (item.subItems().length > 0) {
+                    <i class="dropdown-item-chevron mdi mdi-chevron-right"></i>
+                }
+            </div>
+        } @else {
+            <a class="dropdown-item {{ item.element.nativeElement.classList.toString() }}" [class.is-active]="item.isActive()" [class.is-disabled]="item.disabled()"
+                (click)="onClick(item, $event)"
+                (focus)="onFocus(item)"
+                (blur)="onBlur(item)"
+                (mouseover)="onMouseOver(item, $event)"
+                (mouseenter)="onMouseEnter(item, $event)"
+                (mouseleave)="onMouseLeave(item, $event)">
+                @if (hasIcons()) {
+                    <bung-icon [icon]="item.icon()" [iconUrl]="item.iconUrl()">
+                        <bung-insertion [content]="item.content()" [context]="item.context()" />
+                    </bung-icon>
+                } @else {
+                    <bung-insertion class="dropdown-item-content" [content]="item.content()" [context]="item.context()" />
+                }
+                @if (item.subItems().length > 0) {
+                    <i class="dropdown-item-chevron mdi mdi-chevron-{{ isReversed() ? 'left' : 'right'}}"></i>
+                }
+            </a>
+        }
+    }
+</div>

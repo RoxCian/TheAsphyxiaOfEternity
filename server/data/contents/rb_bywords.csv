@@ -1,0 +1,565 @@
+version,id,side,rarity,byword,bywordOriginal
+,bywords are individually ordered on left/right side in rb limelight / colette and mixed ordered on both sides in later game version,,,,
+int,int,red|blue,none=-1|bronze|silver|gold|platinum,string,string
+2,0,red,none,Hopeful,期待の
+2,1,red,none,Training,修行中の
+2,2,red,none,Fledged,一人前の
+2,3,red,none,Awoke,目覚めし
+2,4,red,none,Talented,実力派の
+2,5,red,none,Top-notch,一流の
+2,6,red,none,Great talented,凄腕の
+2,7,red,none,Unprecedented,空前絶後の
+2,8,red,none,Glory,栄光の
+2,9,red,none,Robust,強固な
+2,10,red,none,Intact,無傷の
+2,11,red,none,Impenetrable,鉄壁の
+2,12,red,none,Undaunted,くじけぬ
+2,13,red,none,Indomitable,不屈の
+2,14,red,none,Brave,勇敢な
+2,15,red,none,Counterattacked,反撃の
+2,16,red,none,Enthusiastic,熱心な
+2,17,red,none,Rumored,噂の
+2,18,red,none,Memorial,記憶の
+2,19,red,none,Time,時の
+2,20,red,none,Fledgling,駆け出しの
+2,21,red,none,Experienced,歴戦の
+2,22,red,none,Skilled,熟練の
+2,23,red,none,Dignified,貫禄の
+2,24,red,none,Syura,修羅の
+2,25,red,none,Dawning,夜明け前の
+2,26,red,none,Shadow,影の
+2,27,red,none,Wandering,さすらいの
+2,28,red,none,Elusive,神出鬼没の
+2,29,red,none,Difference-understood,違いの分かる
+2,30,red,none,Pitch black,漆黒の
+2,31,red,none,Soundless,無音の
+2,32,red,none,Burning,燃える
+2,33,red,none,Ultimate,究極の
+2,34,red,none,Universal,宇宙の
+2,35,red,none,Infinite,永劫の
+2,36,red,none,Pastel's,パステルの
+2,37,red,none,Traditional,伝統の
+2,0,blue,none,rookie,ルーキー
+2,1,blue,none,newbee,新鋭
+2,2,blue,none,veteran,ベテラン
+2,3,blue,none,master,名手
+2,4,blue,none,expert,玄人
+2,5,blue,none,specialist,職人
+2,6,blue,none,ironman,鉄人
+2,7,blue,none,professional,達人
+2,8,blue,none,warrior,猛者
+2,9,blue,none,my star,マイスター
+2,10,blue,none,collector,コレクター
+2,11,blue,none,bodyguard,用心棒
+2,12,blue,none,elite,精鋭
+2,13,blue,none,spirit of fight,闘魂
+2,14,blue,none,trump card,切り札
+2,15,blue,none,ace,エース
+2,16,blue,none,phoenix,不死鳥
+2,17,blue,none,hard worker,努力家
+2,18,blue,none,challenger,挑戦者
+2,19,blue,none,gambler,勝負師
+2,20,blue,none,seeker,探求者
+2,21,blue,none,influencer,人気者
+2,22,blue,none,celebrity,有名人
+2,23,blue,none,idol,アイドル
+2,24,blue,none,charisma,カリスマ
+2,25,blue,none,fireworks,花火
+2,26,blue,none,achiever,到達者
+2,27,blue,none,traveller,トラベラー
+3,0,red,bronze,Hopeful,期待の
+3,1,red,bronze,Training,修行中の
+3,2,red,bronze,Fledged,一人前の
+3,3,red,bronze,Awakening,目覚めし
+3,4,red,silver,Talented,実力派の
+3,5,red,silver,Top-notch,一流の
+3,6,red,silver,Great talented,凄腕の
+3,7,red,gold,Unprecedented,空前絶後の
+3,8,red,platinum,Glory,栄光の
+3,9,red,bronze,Robust,強固な
+3,10,red,silver,Intact,無傷の
+3,11,red,gold,Impenetrable,鉄壁の
+3,12,red,bronze,Undaunted,くじけぬ
+3,13,red,bronze,Indomitable,不屈の
+3,14,red,silver,Brave,勇敢な
+3,15,red,silver,Counterattacked,反撃の
+3,16,red,bronze,Enthusiastic,熱心な
+3,17,red,silver,Rumored,噂の
+3,18,red,gold,Memorial,記憶の
+3,19,red,platinum,Time,時の
+3,20,red,bronze,Fledgling,駆け出しの
+3,21,red,bronze,Experienced,歴戦の
+3,22,red,silver,Skilled,熟練の
+3,23,red,gold,Dignified,貫禄の
+3,24,red,platinum,Syura,修羅の
+3,25,red,bronze,Dawning,夜明け前の
+3,26,red,bronze,Shadow,影の
+3,27,red,silver,Midnight,真夜中の
+3,28,red,silver,Elusive,神出鬼没の
+3,29,red,gold,Nighty,闇夜の
+3,30,red,bronze,Silent,静かなる
+3,31,red,silver,Soundless,無音の
+3,32,red,silver,Endless,果てなき
+3,33,red,silver,Distant,遙かなる
+3,34,red,gold,Eternal,悠久の
+3,35,red,platinum,Infinite,永劫の
+3,36,red,bronze,Difference-understood,違いの分かる
+3,37,red,silver,Colorful,多彩な
+3,38,red,gold,Versatile,変幻自在の
+3,39,red,bronze,Spirited,気迫の
+3,40,red,silver,Battlefield,戦場の
+3,41,red,bronze,Midwinter,真冬の
+3,42,red,silver,Frosty,凍える
+3,43,red,gold,Freezing,極寒の
+3,44,red,silver,Gorgeous,華麗なる
+3,45,red,gold,Threatening,脅威の
+3,46,red,bronze,Expeditionary,遠征中の
+3,47,red,bronze,Heavenly,天庭の
+3,48,red,silver,Reflect Beat primary,初代初級の
+3,49,red,silver,Reflect Beat intermediate,初代中級の
+3,50,red,gold,Reflect Beat advanced,初代上級の
+3,51,red,platinum,Reflect Beat elite,初代超上級の
+3,52,red,platinum,Reflect Beat legendary,初代伝説級の
+3,53,red,silver,Limelight primary,二代初級の
+3,54,red,silver,Limelight intermediate,二代中級の
+3,55,red,gold,Limelight advanced,二代上級の
+3,56,red,platinum,Limelight elite,二代超上級の
+3,57,red,platinum,Limelight legendary,二代伝説級の
+3,58,red,silver,Colette Winter primary,三代冬初級の
+3,59,red,silver,Colette Winter intermediate,三代冬中級の
+3,60,red,gold,Colette Winter advanced,三代冬上級の
+3,61,red,platinum,Colette Winter elite,三代冬超上級の
+3,62,red,platinum,Colette Winter legendary,三代冬伝説級の
+3,63,red,bronze,Everlasting summer,常夏の
+3,64,red,silver,Midsummer,真夏の
+3,65,red,gold,Beach side,渚の
+3,66,red,silver,Colette Spring primary,三代春初級の
+3,67,red,silver,Colette Spring intermediate,三代春中級の
+3,68,red,gold,Colette Spring advanced,三代春上級の
+3,69,red,platinum,Colette Spring elite,三代春超上級の
+3,70,red,platinum,Colette Spring legendary,三代春伝説級の
+3,71,red,silver,Black,黒の
+3,72,red,gold,Pitch black,漆黒の
+3,73,red,platinum,Darkness,暗黒の
+3,74,red,bronze,Forest,森林の
+3,75,red,silver,Fallen leaves,紅葉の
+3,76,red,gold,Harvest,豊作の
+3,77,red,platinum,Seasonal,旬の
+3,78,red,bronze,Second floor sat,２階席の
+3,79,red,gold,First floor sat,１階席の
+3,80,red,platinum,Arena,アリーナの
+3,81,red,gold,White,白の
+3,82,red,platinum,Red,赤の
+3,83,red,silver,Colette Summer primary,三代夏初級の
+3,84,red,silver,Colette Summer intermediate,三代夏中級の
+3,85,red,gold,Colette Summer advanced,三代夏上級の
+3,86,red,platinum,Colette Summer elite,三代夏超上級の
+3,87,red,platinum,Colette Summer legendary,三代夏伝説級の
+3,88,red,silver,Colette Autumn primary,三代秋初級の
+3,89,red,silver,Colette Autumn intermediate,三代秋中級の
+3,90,red,gold,Colette Autumn advanced,三代秋上級の
+3,91,red,platinum,Colette Autumn elite,三代秋超上級の
+3,92,red,platinum,Colette Autumn legendary,三代秋伝説級の
+3,93,red,silver,Mysterious,不思議な
+3,94,red,gold,Wonder,ワンダー
+3,95,red,platinum,More wonder,もっとワンダーな
+3,96,red,platinum,Wonder×2,２倍ワンダーな
+3,97,red,platinum,Wonder×3,３倍ワンダーな
+3,98,red,platinum,Wonder×5,５倍ワンダーな
+3,99,red,platinum,Legendary,伝説の
+3,0,blue,bronze,rookie,ルーキー
+3,1,blue,bronze,newbee,新鋭
+3,2,blue,bronze,veteran,ベテラン
+3,3,blue,silver,master,名手
+3,4,blue,silver,expert,玄人
+3,5,blue,silver,specialist,職人
+3,6,blue,gold,ironman,鉄人
+3,7,blue,gold,professional,達人
+3,8,blue,platinum,warrior,猛者
+3,9,blue,bronze,my star,マイスター
+3,10,blue,silver,collector,コレクター
+3,11,blue,bronze,bodyguard,用心棒
+3,12,blue,bronze,elite,精鋭
+3,13,blue,silver,spirit of fight,闘魂
+3,14,blue,silver,trump card,切り札
+3,15,blue,gold,ace,エース
+3,16,blue,gold,phoenix,不死鳥
+3,17,blue,bronze,hard worker,努力家
+3,18,blue,bronze,challenger,挑戦者
+3,19,blue,silver,gambler,勝負師
+3,20,blue,gold,seeker,探求者
+3,21,blue,bronze,influencer,人気者
+3,22,blue,bronze,celebrity,有名人
+3,23,blue,silver,idol,アイドル
+3,24,blue,silver,charisma,カリスマ
+3,25,blue,gold,bond,絆
+3,26,blue,bronze,guide,案内人
+3,27,blue,bronze,runner,ランナー
+3,28,blue,gold,hunter,ハンター
+3,29,blue,gold,a collector,収集家
+3,30,blue,platinum,iceberg,氷山
+3,31,blue,silver,tourist,旅人
+3,32,blue,gold,adventurer,冒険者
+3,33,blue,gold,finisher,走破者
+3,34,blue,platinum,triumpher,踏破者
+3,35,blue,gold,instructor,師範
+3,36,blue,gold,hero,英傑
+3,37,blue,bronze,fireworks,花火
+3,38,blue,platinum,achiever,到達者
+3,39,blue,bronze,grower,育て屋
+3,40,blue,silver,planter,栽培家
+3,41,blue,gold,horticulturist,園芸家
+3,42,blue,platinum,garden,庭園
+3,43,blue,platinum,gardener,庭師
+3,44,blue,bronze,hand-giver,お手伝い
+3,45,blue,bronze,handyman,便利屋
+3,46,blue,bronze,walker,ワーカー
+3,47,blue,silver,helper,ヘルパー
+3,48,blue,silver,supporter,サポーター
+3,49,blue,silver,backer,助っ人
+3,50,blue,gold,respondent,担い手
+3,51,blue,gold,contractor,請負人
+3,52,blue,platinum,servant,サーバント
+3,53,blue,platinum,captain,船長
+3,54,blue,platinum,fisherman,漁師
+3,55,blue,platinum,harvester,収穫者
+3,56,blue,platinum,traveller,トラベラー
+4,0,red,bronze,Hopeful,期待の
+4,1,blue,bronze,rookie,ルーキー
+4,2,red,bronze,Training,修行中の
+4,3,red,bronze,Fledged,一人前の
+4,4,red,bronze,Awakening,目覚めし
+4,5,red,silver,Talented,実力派の
+4,6,red,silver,Top-notch,一流の
+4,7,red,silver,Great talented,凄腕の
+4,8,red,silver,Gorgeous,華麗なる
+4,9,red,gold,Unprecedented,空前絶後の
+4,10,red,gold,Threatening,脅威の
+4,11,red,platinum,Glory,栄光の
+4,12,blue,bronze,newbee,新鋭
+4,13,blue,bronze,veteran,ベテラン
+4,14,blue,silver,master,名手
+4,15,blue,silver,expert,玄人
+4,16,blue,silver,specialist,職人
+4,17,blue,gold,ironman,鉄人
+4,18,blue,gold,professional,達人
+4,19,blue,platinum,warrior,猛者
+4,20,blue,bronze,bodyguard,用心棒
+4,21,blue,bronze,elite,精鋭
+4,22,blue,silver,spirit of fight,闘魂
+4,23,blue,silver,trump card,切り札
+4,24,blue,gold,ace,エース
+4,25,blue,gold,instructor,師範
+4,26,blue,gold,hero,英傑
+4,27,red,bronze,Undaunted,くじけぬ
+4,28,red,bronze,Indomitable,不屈の
+4,29,red,silver,Brave,勇敢な
+4,30,red,silver,Counterattacked,反撃の
+4,31,blue,gold,Phoenix,不死鳥
+4,32,red,bronze,Fledgling,駆け出しの
+4,33,blue,bronze,hard worker,努力家
+4,34,red,bronze,Experienced,歴戦の
+4,35,red,bronze,Spirited,気迫の
+4,36,blue,bronze,challenger,挑戦者
+4,37,red,silver,Battlefield,戦場の
+4,38,blue,silver,gambler,勝負師
+4,39,red,silver,Skilled,熟練の
+4,40,blue,gold,hunter,ハンター
+4,41,red,gold,Dignified,貫禄の
+4,42,blue,gold,seeker,探求者
+4,43,red,platinum,Syura,修羅の
+4,44,red,bronze,Enthusiastic,熱心な
+4,45,red,silver,Rumored,噂の
+4,46,red,gold,Memorial,記憶の
+4,47,red,platinum,Time,時の
+4,48,blue,bronze,guide,案内人
+4,49,blue,bronze,runner,ランナー
+4,50,red,silver,Endless,果てなき
+4,51,red,silver,Distant,遙かなる
+4,52,red,gold,Eternal,悠久の
+4,53,red,platinum,Infinite,永劫の
+4,54,red,bronze,Dawning,夜明け前の
+4,55,red,bronze,Shadow,影の
+4,56,red,silver,Midnight,真夜中の
+4,57,red,silver,Elusive,神出鬼没の
+4,58,red,gold,Nighty,闇夜の
+4,59,red,bronze,Robust,強固な
+4,60,red,silver,Intact,無傷の
+4,61,red,gold,Impenetrable,鉄壁の
+4,62,blue,bronze,my star,マイスター
+4,63,blue,silver,collector,コレクター
+4,64,blue,gold,collectionneur,収集家
+4,65,red,bronze,Difference-understood,違いの分かる
+4,66,red,silver,Colorful,多彩な
+4,67,red,gold,Versatile,変幻自在の
+4,68,blue,bronze,influencer,人気者
+4,69,blue,bronze,celebrity,有名人
+4,70,blue,silver,idol,アイドル
+4,71,blue,silver,charisma,カリスマ
+4,72,blue,gold,bond,絆
+4,73,red,bronze,Expeditionary,遠征中の
+4,74,blue,silver,traveller,旅人
+4,75,blue,gold,adventurer,冒険者
+4,76,blue,gold,finisher,走破者
+4,77,blue,platinum,triumpher,踏破者
+4,78,red,bronze,Silent,静かなる
+4,79,red,silver,Soundless,無音の
+4,80,blue,bronze,fireworks,花火
+4,81,blue,platinum,conqueror,覇者
+4,82,blue,gold,the strong,強者
+4,83,blue,gold,warrior,戦士
+4,84,blue,silver,regular,常連
+4,85,blue,platinum,fighting king,格闘王
+4,86,blue,gold,duelist,決闘者
+4,87,blue,gold,martial artist,格闘家
+4,88,blue,silver,strength boasting,力自慢
+4,89,red,platinum,Coliseum,コロシアムの
+4,90,red,gold,Midsummer,真夏の
+4,91,red,gold,Autumn,秋の
+4,92,red,gold,Winter,冬の
+5,0,red,none,Fledgling,駆け出しの
+5,1,blue,none,warrior,戦士
+5,2,red,none,Ran-through,駆け抜けた
+5,3,blue,none,battle,戦い
+5,4,red,none,A distant-day,遠い日の
+5,5,blue,none,challenge,挑戦
+5,6,red,none,Jumped-over,飛び越えた
+5,7,blue,none,hero,英雄
+5,8,red,none,Thousand,千の
+5,9,red,none,New,新たな
+5,10,blue,none,ground,境地
+5,11,red,none,Unseen,未だ見ぬ
+5,12,blue,none,world,世界
+5,13,red,none,Far-awway,遥かなる
+5,14,blue,none,peak,頂
+5,15,red,none,Eternal,悠久の
+5,16,blue,none,Akki,悪鬼
+5,17,blue,none,river flow,水流
+5,18,blue,none,earth,大地
+5,19,blue,none,snow,氷雪
+5,20,blue,none,wind,風
+5,21,blue,none,flame,業火
+5,22,blue,none,void,虚空
+5,23,red,none,Flawless,完璧な
+5,24,blue,none,precision machina,精密機械
+5,25,blue,none,hazardous material,危険物
+5,26,red,none,Super - ,超?
+5,27,blue,none,wings,翼
+5,28,red,none,Lonely,孤高の
+5,29,red,none,So-so,まあまあ
+5,30,red,none,Little,小さな
+5,31,red,none,Glory,栄光の
+5,32,blue,none,Legendary,伝説
+5,33,red,none,Blessed,祝福の
+5,34,red,none,Gods',神々の
+5,35,blue,none,Fujin,風神
+5,36,blue,none,Raijin,雷神
+5,37,blue,none,Syura,修羅
+5,38,blue,none,Phoenix,不死鳥
+5,39,blue,none,monster,獣
+5,40,red,none,Elder,旧
+5,41,blue,none,eight-heads,八頭身
+5,42,blue,none,Iridescent,七光り
+5,43,blue,none,dream,夢
+5,44,red,none,Five-fold,五重の
+5,45,blue,none,poem,詩
+5,46,red,none,Weakly acidic,弱酸性
+5,47,blue,none,Dual,双璧
+5,48,red,none,A drop of,一粒の
+5,49,red,none,Type0,零式
+5,50,blue,none,Extreme,極み
+5,51,blue,none,Yakitori,焼き鳥
+5,52,blue,none,rice ball,おにぎり
+5,53,blue,none,barley tea,むぎ茶
+5,54,blue,none,orange,みかん
+5,55,red,none,"Today (as well), I am a",今日も
+5,56,blue,none,days,日々
+5,57,red,none,Snazzy,おしゃれな
+5,58,blue,none,Rebirthed,生まれ変わり
+5,59,red,none,Tired,飽きっぽい
+5,60,blue,none,mouse,ねずみ
+5,61,red,none,Mechanical,機械式
+5,62,blue,none,exile,放蕩者
+5,63,red,none,Golden,黄金の
+5,64,blue,none,maharaja,マハラジャ
+5,65,red,none,Azure,蒼き
+5,66,blue,none,angel,天使
+5,67,red,none,Fallen,堕ちた
+5,68,blue,none,charisma,カリスマ
+5,69,blue,none,conqueror,覇道
+5,70,red,none,Fearless,命知らずな
+5,71,red,none,The good friend is,仲良きことは
+5,72,red,none,Unfortunate,数奇な
+5,73,blue,none,friends,ともだち
+5,74,blue,none,unbreakable heard,折れない心
+5,75,red,none,Together,一緒に
+5,76,red,none,Failnaught,負けられない
+5,77,blue,none,Playing,遊び
+5,78,red,none,Rumored,噂の
+5,79,red,none,Forgotten,忘れられた
+5,80,blue,none,?,？
+5,81,red,none,Promised,約束の
+5,82,blue,none,longing,憧れ
+5,83,red,none,Inherited,受け継がれし
+5,84,blue,none,hunter,ハンター
+5,85,red,none,Intangible,形のない
+5,86,red,none,Late,遅れてきた
+5,87,red,none,Good old,古き良き
+5,88,blue,none,chestnut,栗
+5,89,blue,none,CHAMPION,ちゃんぴおん
+5,90,red,none,Silent,粛然たる
+5,91,blue,none,Rinrinkazan,林林火山
+5,92,red,none,Beloved,親愛なる
+5,93,red,none,Friendly,友好的な
+5,94,blue,none,ally,盟友
+5,95,blue,none,nice to meet you,よろしくね
+5,96,red,none,Sup,もしもし
+5,97,red,none,Super,スーパー
+5,98,blue,none,Star,スター
+5,99,red,none,Burnt,焼いた
+5,100,blue,none,!?,！？
+5,101,blue,none,☆Ξ,☆ミ
+5,102,red,none,Delicious,おいしい
+5,103,blue,none,enjoying having this,いただきます
+5,104,red,none,What to have is,持つべき物は
+5,105,red,none,Awakening,目覚めし
+5,106,blue,none,awaken,覚醒者
+5,107,red,none,Abyssic,深淵の
+5,108,red,none,Difference-understood,違いのわかる
+5,109,red,none,A-bit-different,一味違う
+5,110,red,none,Fancy,変幻自在な
+5,111,red,none,Tricky,トリック
+5,112,red,none,Ever-changing,千変万化の
+5,113,blue,none,chasing,追っかけ
+5,114,red,none,Fasionable,流行の
+5,115,red,none,Trendy,トレンディ
+5,116,blue,none,hero of shadow,影のヒーロー
+5,117,red,none,Naughty,やんちゃな
+5,118,blue,none,champion,英雄豪傑
+5,119,blue,none,dominator,支配者
+5,120,blue,none,inheritor,継承者
+5,121,blue,none,my lord,マイロード
+5,122,blue,none,camera man,カメラマン
+5,123,red,none,Kidding,戯れの
+5,124,blue,none,distorted love,歪んだ愛
+5,125,blue,none,De facto 1st place,実質１位
+5,126,red,none,Despairing and immoral,絶望と背徳の
+5,127,red,none,Impure,不浄なる
+5,128,blue,none,nouveau riche,成金
+5,129,blue,none,lost child,迷子
+5,130,blue,none,Pastel-kun,パステルくん
+5,131,blue,none,Chikuwa,ちくわ
+5,132,red,none,Love,愛の
+5,133,blue,none,love,愛
+6,0,red,none,Ordanary,普通の
+6,1,blue,none,adventurer,冒険者
+6,2,red,none,The beginning,始まりの
+6,3,blue,none,hope,希望
+6,4,red,none,Future,これからの
+6,5,blue,none,professional,達人
+6,6,red,none,As-expected,さすがの
+6,7,blue,none,mouse,ねずみ
+6,8,red,none,Strong-looking,強そうな
+6,9,blue,none,hunter,ハンター
+6,10,red,none,Spun,紡がれし
+6,11,blue,none,light,光
+6,12,red,none,Revived,蘇った
+6,13,blue,none,dragon,ドラゴン
+6,14,blue,none,Pastel-kun,パステルくん
+6,15,red,none,Ran-through,駆け抜けた
+6,16,blue,none,battle,戦い
+6,17,red,none,A distant-day,遠い日の
+6,18,blue,none,challenge,挑戦
+6,19,red,none,Jumped-over,飛び越えた
+6,20,blue,none,hero,英雄
+6,21,red,none,Thousand,千の
+6,22,red,none,Together,一緒に
+6,23,red,none,Failnaught,負けられない
+6,24,blue,none,play,遊び
+6,25,red,none,Rumored,噂の
+6,26,red,none,Legendary,伝説の
+6,27,blue,none,warrior,戦士
+6,28,red,none,Pitch black,漆黒の
+6,29,blue,none,exile,放蕩者
+6,30,red,none,Eternal,悠久の
+6,31,blue,none,Reflesia,リフレシア
+6,32,blue,none,shadow,影
+6,33,red,none,Naughty,やんちゃな
+6,34,blue,none,the strong,強者
+6,35,blue,none,champion,豪傑
+6,36,blue,none,phoenix,不死鳥
+6,37,blue,none,late-bloomer,大器晩成
+6,38,blue,none,fortress,要塞
+6,39,red,none,So-so,まあまあ
+6,40,red,none,Little,小さな
+6,41,red,none,Glory,栄光の
+6,42,blue,none,legend,伝説
+6,43,blue,none,blessing,祝福
+6,44,red,none,God's,神々の
+6,45,blue,none,Fujin,風神
+6,46,blue,none,Raijin,雷神
+6,47,blue,none,Syura,修羅
+6,48,blue,none,first step,一歩目
+6,49,red,none,Insane,狂気の
+6,50,red,none,Unprecedented,前人未到の
+6,51,blue,none,extreme god,極神
+6,52,red,none,Awakening,目覚めし
+6,53,blue,none,awaken,覚醒者
+6,54,red,none,Abyssic,深淵の
+6,55,blue,none,river flow,水流
+6,56,blue,none,earth,大地
+6,57,blue,none,snow,氷雪
+6,58,blue,none,wind,風
+6,59,blue,none,flame,業火
+6,60,blue,none,void,虚空
+6,61,red,none,Flawless,完璧な
+6,62,blue,none,precision machina,精密機械
+6,63,blue,none,android,アンドロイド
+6,64,red,none,Gorgeous,華麗なる
+6,65,blue,none,nova star,新星
+6,66,red,none,Sublime,高尚な
+6,67,blue,none,great person,偉人
+6,68,red,none,The chosen,選ばれし
+6,69,red,none,New,新たな
+6,70,blue,none,ground,境地
+6,71,red,none,Unseen,未だ見ぬ
+6,72,blue,none,world,世界
+6,73,red,none,Particular,こだわりの
+6,74,blue,none,destination,到達点
+6,75,red,none,Unwavering,揺るぎない
+6,76,blue,none,peak,頂点
+6,77,red,none,Fulfilled,満たされた
+6,78,blue,none,Comp lovind,コンプ好き
+6,79,red,none,Enthusiastic,熱心な
+6,80,blue,none,hardcore,ハードコア
+6,81,blue,none,starter,スターター
+6,82,red,none,Card loving,カード好きな
+6,83,blue,none,preacher,伝道師
+6,84,blue,none,collector,コレクター
+6,85,blue,none,inheritor,継承者
+6,86,blue,none,yakitori,焼き鳥
+6,87,blue,none,rice ball,おにぎり
+6,88,blue,none,barley tea,むぎ茶
+6,89,blue,none,orange,みかん
+6,90,red,none,"Today (as well), I am a",今日も
+6,91,blue,none,days,日々
+6,92,red,none,Beloved,親愛なる
+6,93,red,none,Friendly,友好的な
+6,94,blue,none,ally,盟友
+6,95,red,none,Crimson,真紅の
+6,96,blue,none,angel,天使
+6,97,red,none,Fallen,堕ちた
+6,98,blue,none,charisma,カリスマ
+6,99,blue,none,conqueror,覇道
+6,100,red,none,Fearless,命知らずな
+6,101,blue,none,The good friend is,仲良きことは
+6,102,red,none,Unfortunate,数奇な
+6,103,blue,none,friends,ともだち
+6,104,blue,none,unbreakable heard,折れない心
+6,105,red,none,Good old,古き良き
+6,106,red,none,Intangible,形のない
+6,107,red,none,Late,遅れてきた
+6,108,blue,none,camera man,カメラマン
+6,109,blue,none,my lord,マイロード
+6,110,blue,none,guh-huh,ぐへへ
+6,111,red,none,DJ,DJ 

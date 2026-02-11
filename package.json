@@ -1,21 +1,24 @@
 {
-  "name": "the-asphyxia-of-eternity",
-  "version": "v1.1.11",
-  "description": "A plugin for RB supporting run on Asphyxia CORE.",
-  "main": "index.ts",
-  "author": {
-    "name": "Rox Cian"
-  },
-  "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean"
-  },
-  "devDependencies": {
-    "@types/node": "^14.14.7",
-    "typescript": "^4.2.2"
-  },
-  "dependencies": {
-    "ts-node": "^9.1.1",
-    "@types/lodash": "^4.14.153"
-  }
+    "name": "the-asphyxia-of-eternity",
+    "version": "v2.0.0-beta",
+    "description": "A plugin for RB supporting run on Asphyxia CORE.",
+    "main": "index.ts",
+    "author": {
+        "name": "Rox Cian"
+    },
+    "scripts": {
+        "restore": "node ./dev/restore.mjs",
+        "update": "node ./dev/update.mjs",
+        "debug": "node ./dev/debug.mjs",
+        "build": "node ./dev/build.mjs"
+    },
+    "dependencies": {
+        "@types/lodash": "^4.14.153"
+    },
+    "devDependencies": {
+        "@types/node": "^14.18.53",
+        "@typescript-eslint/parser": "^7.3.1",
+        "@typescript-eslint/typescript-estree": "^7.3.1",
+        "typescript": "^4.2.3"
+    }
 }

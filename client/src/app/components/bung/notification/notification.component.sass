@@ -1,0 +1,44 @@
+bung-notification
+    flex-grow: 0
+    pointer-events: all
+    overflow: clip
+    position: relative
+    box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
+
+    &.has-delete.is-single-line
+        padding-right: 2em
+
+    > delete
+        right: 0.5rem
+        position: absolute
+        top: 0.5rem
+
+    .content
+        margin-bottom: 0.5em
+
+    &.is-primary, &.is-info, &.is-link, &.is-success, &.is-warning, &.is-danger
+        .return-buttons .button
+            background: var(--bulma-color, var(--card-background))
+            border: var(--bulma-color, var(--border-color)) solid 1px
+            color: var(--accent-text-color, var(--text-color))
+
+            &:hover
+                background: var(--accent-hover-background)
+            &:focus:not(:active)
+                box-shadow: 0 0 0 0.125em color-mix(in srgb, var(--text-color), transparent 70%)
+            &:active
+                background: var(--accent-active-background)
+                border-color: var(--accent-active-border-color)
+
+    .singleline-wrapper
+        display: flex
+        align-items: center
+
+        .content
+            overflow: clip
+            display: flex
+            flex-grow: 1
+            flex-shrink: 1
+            margin-bottom: 0
+        .returns
+            margin-left: 2em

@@ -1,0 +1,42 @@
+bung-number-input
+    .bung-input-content:has(input)
+        padding: 0
+    .bung-input-content.is-active
+        z-index: 1
+    input
+        appearance: textfield
+        padding: 0.375em 0.625em
+        height: calc(2.25em - 2px)
+        // min-width: 10rem
+        width: 100%
+        font-size: inherit
+        background: transparent
+        color: var(--text-color)
+        border-width: 0
+    .bung-input-addon-right
+        display: flex
+        flex-direction: column
+
+        .button
+            height: 1.125em
+        .button:focus
+            z-index: 1
+        .spin-button-add
+            border-start-start-radius: 0
+            border-end-start-radius: 0
+            border-end-end-radius: 0
+        .spin-button-sub
+            border-start-start-radius: 0
+            border-end-start-radius: 0
+            border-start-end-radius: 0
+    &:not(.is-disabled):not(.is-readonly) .spin-button-add:not(:hover):not(:active):not(:focus), &.is-disabled .spin-button-add,  &.is-readonly .spin-button-add
+        border-left-color: transparent
+        border-bottom-color: transparent
+    &:not(.is-disabled):not(.is-readonly) .spin-button-sub:not(:hover):not(:active):not(:focus), &.is-disabled .spin-button-sub,  &.is-readonly .spin-button-sub
+        border-left-color: transparent
+        border-top-color: transparent
+    &.is-disabled
+        cursor: not-allowed
+
+        span
+            opacity: 0.5

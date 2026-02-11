@@ -1,0 +1,157 @@
+:host
+    display: block
+bung-tabs.has-error.leave
+    opacity: 0
+    transition: opacity var(--animation-duration-lv3) var(--ease-in)
+bung-divider
+    margin: 2em 0
+
+    &:first-child
+        margin-top: 0
+    &:last-child
+        margin-bottom: 0
+.performance-two-columns
+    margin-top: 2em
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    gap: 2em
+
+    > *
+        flex: 1
+        flex-basis: 24em
+.rb-classcheck-list-two-columns
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    gap: 2em
+
+    > *
+        flex: 1
+        flex-basis: 36em
+    .centered-vertical
+        display: flex
+        flex-direction: column
+        justify-content: center
+    .rb-dojo
+        display: flex
+        flex-direction: column
+        align-items: stretch
+        justify-content: center
+        gap: 2em
+
+.stat-grid
+    display: grid
+    grid-template: 1fr / repeat(auto-fill, minmax(10em, var(--max-item-width)))
+    grid-auto-flow: row
+    gap: 1em
+    justify-content: center
+    align-items: center
+    margin-bottom: 1.5em
+
+.stat-item > *
+    &.heading.rb
+        opacity: 0.83
+    bung-icon
+        display: inline-flex
+        vertical-align: middle
+.stat-item.rb-chart > *
+    color: var(--rb-chart-color)
+
+.is-skill-point.is-rb6
+    &.is-tier0
+        color: #84522d
+    &.is-tier1
+        color: #66cc66
+    &.is-tier2
+        color: #f2c40b
+    &.is-tier3
+        color: #209cee
+    &.is-tier4
+        color: #3273dc
+    &.is-tier5
+        color: #231fc2
+    &.is-tier6
+        color: #e67e22
+.rb-list
+    display: grid
+    align-items: stretch
+    justify-content: center
+    gap: 2em
+    grid-auto-flow: row
+    grid-template-columns: repeat(auto-fill, minmax(min(48em, 100%), 1fr))
+.classcheck-wrapper
+    display: grid
+    grid-template: 1fr / 1fr
+
+    > *
+        grid-area: 1 / 1
+.rb-classcheck-list
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    justify-content: center
+    gap: 2em
+
+    > *
+        grid-area: 1 / 1
+// .serif
+//     font-family: serif
+bung-tabs::ng-deep li.tab a:has(.dojo)
+    padding-top: 0
+    padding-bottom: 0
+p.dojo
+    font-size: 0.75em
+    opacity: 0.7
+    line-height: 1.1em
+    text-align: center
+    margin-bottom: 0 // asphyxia fix
+.rb-panel-enter
+    animation: rb-panel-enter-animation var(--animation-duration-lv2) var(--ease-in) forwards
+.rb-panel-leave
+    animation: rb-panel-leave-animation var(--animation-duration-lv2) var(--ease-in) forwards
+.rb-background-test
+    background: var(--rb-background)
+    width: 12em
+    height: 4em
+    margin: 1em 0
+    border-radius: 8px
+// auto-load-panel
+//     min-height: 90vh
+
+rb-level-display-switch.enter
+    animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-in)
+rb-level-display-switch.leave
+    animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+
+@keyframes rb-panel-enter-animation
+    from
+        opacity: 0
+        transform: translateX(2em)
+    to
+        opacity: 1
+        transform: none
+@keyframes rb-panel-leave-animation
+    from
+        opacity: 1
+        transform: none
+    to
+        opacity: 0
+        transform: translateX(-2em)
+
+@keyframes rb-floated-level-display-switch-enter-animation
+    from
+        transform: translateX(10em)
+    to
+        transform: none
+@media (width < 768px)
+    bung-divider
+        margin: 0.5em 0
+    .stat-grid
+        grid-template: 1fr / repeat(auto-fill, minmax(8em, var(--max-item-width)))
+        margin-bottom: 0.5em
+
+    .rb-list:not(.is-mobile), .rb-classcheck-list, .rb-classcheck-list-two-columns, .rb-classcheck-list-two-columns .rb-dojo
+        gap: 0.5em
+    .title
+        font-size: 1.5rem

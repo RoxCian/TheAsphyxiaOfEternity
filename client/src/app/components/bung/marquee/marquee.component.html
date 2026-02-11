@@ -1,0 +1,10 @@
+<div class="animation-wrapper" [class.is-overflowed]="isOverflowed() && !disabled()" [class.is-vertical]="isVertical()" [style.--marquee-duration]="duration() + 's'" [style.--marquee-ease]="delay() > 0 ? easingWhenHasDelay() : 'linear'" [style.--marquee-delay]="delay() + 'ms'" [style.--marquee-spacing]="spacing() + 'px'" [style.--marquee-factor]="speed() > 0 ? 1 : speed() == 0 ? 0 : -1" [style.--marquee-align]="isOverflowed() ? 'start' : contentAlign()">
+    <div class="content" [style.margin-right]="isOverflowed() && !disabled() ? spacing() + 'px' : 0">
+        <bung-insertion [content]="content()" [context]="context()" #contentInsertion />
+    </div>
+    @if (isOverflowed() && !disabled()) {
+    <div class="content cloned">
+        <bung-insertion [content]="clonedElement()" />
+    </div>
+    }
+</div>

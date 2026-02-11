@@ -1,0 +1,10 @@
+<span class="icon-element">
+    @if (iconUrl()) {
+        <bung-insertion class="icon-svg" [content]="iconFetched() | async" />
+    } @else {
+        <i class="{{ iconClass() }}"></i>
+    }
+</span>
+<span class="icon-content">
+    <ng-content />
+</span>

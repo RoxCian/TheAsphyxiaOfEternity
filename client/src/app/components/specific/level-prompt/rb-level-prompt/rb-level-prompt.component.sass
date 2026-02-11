@@ -1,0 +1,77 @@
+rb-level
+    display: inline-grid
+    grid-template: auto / auto
+    align-items: center
+    align-content: center
+    justify-content: center
+    color: var(--rb-chart-color)
+    text-align: center
+    line-height: 1.5em
+
+    > .level, > .skill-rate
+        grid-area: 1 / 1
+        display: block
+        margin-bottom: 0 !important
+        text-align: center
+        box-sizing: content-box
+
+        &.enter 
+            animation: rb-level-enter-animation var(--animation-duration-lv3) var(--ease-in)
+        &.leave
+            animation: rb-level-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+    &.is-rb1, &.is-rb6
+        width: 1.2em
+        transform: scale(0.8)
+        > .level, > .skill-rate
+            min-width: 1.5em
+            min-height: 1.5em
+
+    &.is-white
+        color: white
+    &.is-emphasized
+        drop-shadow: 0 0 3px white
+
+    &.is-rb1 .level
+        color: white
+        border-radius: 0.25em
+        background: var(--rb-chart-color)
+    &.is-rb1.is-white .level
+        background: white
+        color: var(--rb-chart-color)
+    &.is-rb5 .skill-rate
+        margin-left: 0.1em
+        color: #fffb
+        font-weight: bold
+        paint-order: stroke fill
+        -webkit-text-stroke: 0.15em var(--rb-chart-color)
+    &.is-rb5.is-white .skill-rate
+        color: var(--rb-chart-color)
+        -webkit-text-stroke-color: white
+    &.is-rb6
+        .level
+            color: white
+            border-radius: 1em
+            background: var(--rb-chart-color)
+        .skill-rate
+            position: relative
+            color: var(--rb-chart-color)
+            border-radius: 1em
+
+            &::after
+                content: ""
+                position: absolute
+                inset: 0
+                border-radius: 1em
+                border: 0.125em solid var(--rb-chart-color)
+    &.is-rb6.is-white
+        .level
+            background: white
+            color: var(--rb-chart-color)
+        .skill-rate
+            color: white
+            border: 0.15em solid white
+@keyframes rb-level-enter-animation
+    from
+        opacity: 0
+    to
+        opacity: 1

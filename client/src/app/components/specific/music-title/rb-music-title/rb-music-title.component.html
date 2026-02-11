@@ -1,0 +1,33 @@
+<ng-template #label777>
+    <div class="label-777">
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #mainLabel>
+    @if (music().musicUid !== "1t03") { <span>{{ variation()?.title ?? music().title }}</span> }
+    @else {
+    <div class="label-777">
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+        <div class="label-7"><i class="star mdi mdi-star"></i>
+            <div class="t-7">7</div>
+        </div>
+    </div>
+    }
+    @if (music().isRenewal) {
+    <rb-renewal />
+    }
+</ng-template>
+<bung-marquee [content]="mainLabel" [delay]="1500" [spacing]="72" [disabled]="isMarqueedisabled()" [contentAlign]="contentAlign()" />

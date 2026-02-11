@@ -1,0 +1,177 @@
+.music-card.card
+    display: grid
+    grid-template: 3em 3em 3em / auto minmax(0, 1fr) auto
+    width: 48em
+    padding: 1.25em
+    justify-content: start
+    gap: 0 1.25em
+    margin-bottom: 1.25em
+
+    .jacket
+        grid-area: 1 / 1 / span 3 / 1
+        width: 9em
+        height: 9em
+
+        img
+            border-radius: 8px
+    .info-label
+        font-size: 0.75em
+        color: var(--rb-chart-color)
+    .info-value
+        border-bottom: 1px var(--text-color) solid
+    .stage-info
+        grid-area: 1 / 2
+    .title-info
+        grid-area: 2 / 2
+    .artist-info
+        grid-area: 3 / 2
+    .clear-info
+        grid-area: 1 / 3 / span 2 / span 1
+        justify-self: center
+        align-self: center
+        font-size: 3em
+        font-weight: bold
+
+        .failed-label
+            .fe
+                color: #28bdfb
+            .ad
+                color: #cd00f6
+            .i
+                color: #005af6
+            .l
+                color: #f6c500
+        .clear-label
+            .ca
+                color: #f6c500
+            .l
+                color: #d9068c
+            .e
+                color: #f66d09
+            .r
+                color: #a2e900
+    .chart-level-info
+        grid-area: 3 / 3
+        display: flex
+        width: 100%
+        overflow: clip
+        .chart-type
+            padding-right: 10em
+            font-weight: bold
+            color: var(--rb-chart-color)
+        .level-info
+            display: flex
+            height: 100%
+            margin-left: -8em
+            align-items: baseline
+            .level-label
+                margin-right: 1em
+            rb-level
+                font-size: 2em
+                font-weight: bold
+                color: var(--rb-chart-color)
+    rb-music-title
+        width: 100%
+
+.your-result.card
+    display: flex
+    background: var(--rb-color)
+    margin-bottom: 1.25em
+
+    .you-label
+        text-align: center
+        writing-mode: vertical-rl
+        text-orientation: mixed
+        line-height: 1.25em
+        color: white
+        transform: rotate(180deg)
+    .score-info
+        flex: 1
+        display: grid
+        grid-template: 1fr / auto 1fr auto
+        margin: 1px
+        padding: 1.25em
+        justify-content: center
+
+        > *
+            display: flex
+            align-items: baseline
+            gap: 1em
+        .score
+            grid-area: 1 / 1
+        .ar
+            grid-area: 1 / 2
+            justify-self: center
+        .rank
+            grid-area: 1 / 3
+        .score-value
+            position: relative
+            font-size: 2em
+            font-weight: bold
+            color: var(--rb-color)
+        .ar-value
+            display: flex
+            align-items: baseline
+            font-weight: bold
+            color: var(--rb-color)
+
+            .ar-integer
+                font-size: 2em
+            .ar-decimal
+                font-size: 1.5em
+        rb-rank
+            font-size: 2em
+            font-weight: bold
+
+.rival-result.card
+    display: flex
+    background: var(--rb-color)
+    margin-bottom: 1.25em
+
+    .rival-label
+        text-align: center
+        writing-mode: vertical-rl
+        text-orientation: mixed
+        line-height: 1.25em
+        color: white
+        transform: rotate(180deg)
+    .score-info
+        flex: 1
+        display: grid
+        grid-template: 1fr / auto 1fr auto
+        margin: 1px
+        padding: 1.25em
+        justify-content: center
+        align-items: baseline
+        gap: 1em
+
+        > *
+            display: flex
+            align-items: baseline
+            gap: 1em
+        .rival-name
+            grid-area: 1 / 1
+        .score
+            grid-area: 1 / 3
+        .score-value
+            position: relative
+            font-size: 2em
+            font-weight: bold
+            color: var(--rb-color)
+.winner-icon
+    color: #FFC911
+    position: absolute
+    font-size: 1rem
+    top: -0.25em
+    right: -0.25em
+    transform: rotate(30deg)
+.result-details
+    padding: 1.25em
+
+@media screen and (width < 768px)
+    :host
+        font-size: 0.75em
+    .music-card.card
+        width: 40em
+    .winner-icon
+        font-size: 0.75rem

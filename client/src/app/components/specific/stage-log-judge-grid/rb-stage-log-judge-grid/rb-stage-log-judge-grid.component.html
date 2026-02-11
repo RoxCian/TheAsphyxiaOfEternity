@@ -1,0 +1,50 @@
+<div class="judge-grid">
+    <div>
+        <div class="item-label">Just</div>
+        <div class="item-value">{{ stageLog().justCount }}</div>
+    </div>
+    <div>
+        <div class="item-label">Great</div>
+        <div class="item-value">{{ stageLog().greatCount }}</div>
+    </div>
+    <div>
+        <div class="item-label">Good</div>
+        <div class="item-value">{{ stageLog().goodCount }}</div>
+    </div>
+    @if (stageLog().version === 6) {
+        <div>
+            <div class="item-label">Keep</div>
+            <div class="item-value">{{ stageLog().keepCount }}</div>
+        </div>
+    }
+    <div>
+        <div class="item-label">Miss</div>
+        <div class="item-value">{{ stageLog().missCount | rbMissCount }}</div>
+    </div>
+    <div class="wide">
+        <div class="item-label">Just Reflec</div>
+        @if (stageLog().chart.maxJustReflec != undefined && stageLog().chart.maxJustReflec >= 0) {
+            <div class="item-value">{{ stageLog().justReflecCount }} / {{ stageLog().chart.maxJustReflec }}</div>
+        } @else {
+            <div class="item-value">{{ stageLog().justReflecCount }}</div>
+        }
+    </div>
+</div>
+<div class="score-grid">
+    <div>
+        <abbr class="item-label" title="Achievement rate">AR</abbr>
+        <div class="item-value">{{ formatAr(stageLog().achievementRate, stageLog().version) }}%</div>
+    </div>
+    @if (stageLog().version !== 4 && stageLog().version !== 5) {
+        <div>
+            <div class="item-label">Combo</div>
+            <div class="item-value">{{ stageLog().combo }} / {{ stageLog().chart.maxCombo }}</div>
+        </div>
+    }
+</div>
+<div class="play-time">
+    <div>
+        <div class="item-label">Time</div>
+        <div class="item-value">{{ stageLog().time.toLocaleString() }}</div>
+    </div>
+</div>

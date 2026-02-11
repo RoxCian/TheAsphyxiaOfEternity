@@ -1,0 +1,34 @@
+version,musicId,chartType,title,artist,bpm
+,,,,,
+int,int,basic|medium|hard|special|whitehard=3,string?,string?,range
+6,591,whitehard,era (step mix),,90-180
+6,598,whitehard,CURUS-M (ditty),,185
+6,624,whitehard,starmine (beatnation summit Ver.),,182
+6,666,whitehard,踊るフィーバーロボ Eu-Robot mix,D&E&Y Rmx by kors k as disconation,163
+6,206,whitehard,Valanga 2017,,186
+5,591,special,era (step mix),,90-180
+5,598,special,CURUS-M (ditty),,185
+5,624,special,starmine (beatnation summit Ver.),,182
+5,666,special,踊るフィーバーロボ Eu-Robot mix,D&E&Y Rmx by kors k as disconation,163
+4,591,special,era (step mix),,90-180
+4,598,special,CURUS-M (ditty),,185
+4,624,special,starmine (beatnation summit Ver.),,182
+4,666,special,踊るフィーバーロボ Eu-Robot mix,D&E&Y Rmx by kors k as disconation,163
+2,62,basic,,,168
+2,62,medium,,,168
+2,62,hard,,,168
+1,52,basic,,,168
+1,52,medium,,,168
+1,52,hard,,,168
+2,117,basic,,,104
+2,117,medium,,,104
+2,117,hard,,,104
+2,128,basic,,,176
+2,128,medium,,,176
+2,128,hard,,,176
+2,97,basic,,,132
+2,97,medium,,,132
+2,97,hard,,,132
+3,275,basic,,,173
+3,275,medium,,,173
+3,275,hard,,,173

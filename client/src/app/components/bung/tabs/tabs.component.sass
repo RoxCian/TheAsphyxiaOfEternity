@@ -1,0 +1,107 @@
+bung-tabs
+    display: block
+    
+    .tabs-content
+        display: block
+    .tabs-animate-wrapper
+        display: grid
+        overflow: hidden
+        margin: -1em
+        padding: 1em
+
+        &.transit
+            animation: bung-tab-content-switch-animation var(--animation-duration-lv1) var(--ease-in) forwards
+
+            .tabs-animate-slide-wrapper
+                animation: bung-tab-content-switch-slide-animation var(--animation-duration-lv1) var(--ease-in) forwards
+    .tabs-animate-slide-wrapper
+        display: grid
+        > *
+            grid-row: 1
+            grid-column: 1
+    .tabs-content-wrapper
+        align-self: start
+
+        &.left
+            transform: translateX(calc(100% + 2em))
+        &.right
+            transform: translateX(calc(-100% - 2em))
+
+    .tab
+        min-width: 8em
+
+        i.loading-icon
+            position: absolute
+            opacity: 0
+            transition: opacity 0.2s
+        bung-insertion
+            transition: opacity 0.2s
+    .tab.disabled
+        cursor: not-allowed
+        opacity: 0.5
+
+        a
+            pointer-events: none
+
+    .tabs.is-mobile
+        margin-bottom: 0.5em
+
+        .tab
+            min-width: unset
+
+    .tabs ul
+        align-items: stretch
+
+    .tabs li a
+        min-height: 100%
+        position: relative
+        transition: border-color var(--animation-duration-lv3), color var(--animation-duration-lv3)
+
+    .tabs li a::before
+        content: ""
+        position: absolute
+        inset: 0
+        border-top-left-radius: 8px
+        border-top-right-radius: 8px
+        background: #0007
+        opacity: 0
+        transform: scaleX(1.05)
+        pointer-events: none
+        transition: transform var(--animation-duration-lv2) var(--ease-in), opacity var(--animation-duration-lv3)
+    .tabs li a:active::before
+        opacity: 0.1
+        transform: none
+
+    &.is-loading
+        opacity: 0.7
+        transition: opacity var(--animation-duration-lv3)
+        cursor: wait
+
+        > *
+            pointer-events: none
+
+        .tab.is-loading i.loading-icon
+            opacity: 1
+            animation: bung-tab-loading-icon-animation 1s infinite
+        .tab.is-loading bung-insertion
+            opacity: 0
+
+@keyframes bung-tab-content-switch-animation
+    0%
+        height: calc(var(--from-height) + 2em)
+    100%
+        height: calc(var(--height) + 2em)
+@keyframes bung-tab-content-switch-slide-animation
+    0%
+        transform: none
+    100%
+        transform: translateX(var(--to-x))
+@keyframes bung-tab-loading-icon-animation
+    0%
+        transform: none
+    100%
+        transform: rotate(360deg)
+// bung
+@media (prefers-color-scheme: dark)
+    bung-tabs .tabs li a::before
+        background: #fff7

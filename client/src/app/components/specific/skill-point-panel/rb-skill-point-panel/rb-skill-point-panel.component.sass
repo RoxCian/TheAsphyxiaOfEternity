@@ -1,0 +1,112 @@
+:host
+    display: flex
+    position: relative
+    min-width: 300px
+.error-info
+    display: flex
+    width: 100%
+    padding: 1em
+    gap: 1em
+    align-items: center
+    justify-content: center
+    opacity: 0.7
+.no-entry
+    opacity: 0.3
+.rank
+    position: absolute
+    display: flex
+    inset: 0
+    align-items: end
+    justify-content: end
+    overflow: clip
+    opacity: 0.1
+    user-select: none
+
+    span
+        font-size: 4em
+        font-weight: bold
+        margin-right: -0.15em
+        margin-bottom: -0.55em
+.music
+    flex: 1
+    z-index: 10
+    overflow-x: clip
+    min-width: 0 // firefox compatibility
+    
+    .content
+        position: relative
+        display: grid
+        grid-template: 1fr / 1fr minmax(0, 100%) 1px auto
+        justify-content: start
+        align-items: center
+        margin-bottom: 0
+        padding: 1.25em
+        gap: 1.25em
+
+        .jacket
+            flex: 0
+            margin: 0
+            min-width: 5em
+            min-height: 5em
+            width: 5em
+            height: 5em
+            border-radius: 8px
+            overflow: clip
+            user-select: none
+        .music-info
+            flex: 1
+            overflow-x: hidden
+        .music-title
+            font-weight: bold
+            margin-bottom: 0
+        rb-music-title
+            width: 100%
+        .music-artist
+            opacity: 0.7
+        .chart-name
+            color: var(--rb-chart-color)
+            margin-right: 0.5em
+            opacity: 0.7
+        rb-level
+            opacity: 0.7
+bung-divider
+    height: 100%
+.skill-point-info
+    display: grid
+    grid-template: auto 1.25em / 5em 5em
+    justify-items: center
+    z-index: 1
+
+    .skill-point
+        grid-area: 1 / span 2
+        font-size: 2em
+        font-weight: bold
+    .skill-point-score
+        grid-area: 2 / 1
+        font-size: 0.75em
+    .skill-point-ar
+        grid-area: 2 / 2
+        font-size: 0.75em
+@media screen and (width < 768px)
+    :host .card.music, :host .placeholder
+        margin-bottom: 0.5em
+
+        .content
+            padding: 0.5em
+            gap: 0.5em
+
+            .jacket
+                width: 4em
+                height: 4em
+                min-width: 4em
+                min-height: 4em
+            .music-info .music-title
+                font-size: 1.25em !important
+            .music-info .music-artist
+                font-size: 0.75em !important
+            .chart-level
+                font-size: 0.75em !important
+            .skill-point
+                font-size: 1.25em
+    .rank span
+        font-size: 2.5em

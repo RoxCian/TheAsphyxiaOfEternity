@@ -1,0 +1,215 @@
+.field-body
+    min-height: 2.25em
+    display: flex
+    align-items: center
+input.input
+    width: 100%
+    min-width: 12em
+
+.byword-field
+    display: flex
+    flex-wrap: wrap
+    gap: 0.5rem 1rem
+.byword-left, .byword-right
+    display: flex
+    flex: 1
+::ng-deep bung-select.byword-select, ::ng-deep .byword-select-dropdown
+    min-width: 9.75em
+
+.byword-select:focus, .byword-select:has(.dropdown-trigger.is-active), .byword-auto-wear-button:focus
+    z-index: 1
+.byword-left-select-tag
+    flex-direction: row-reverse
+
+.byword-auto-wear-button
+    width: calc(2.25em + 1px)
+
+    &.is-selected
+        background: var(--accent-color)
+        color: var(--accent-text-color)
+        --bung-icon-color: var(--accent-text-color)
+    &:focus
+        border-color: var(--accent-color)
+        box-shadow: 0 0 0 0.125em var(--accent-shadow-color)
+
+    bung-icon
+        margin-left: 0
+
+::ng-deep .byword-left-select .dropdown-trigger
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+.byword-auto-wear-left
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+    margin-right: -1px
+::ng-deep .byword-right-select .dropdown-trigger
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+.byword-auto-wear-right
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    margin-left: -1px
+
+    bung-icon
+        transform: scaleX(-1)
+.music-icon-placeholder
+    padding: 0.5em
+    opacity: 0
+    user-select: none
+    pointer-events: none
+
+    .figure
+        height: 7em
+        margin-bottom: 0.5em
+    .text
+        font-size: 0.75em
+    .addon
+        margin-top: -8px
+.ranking-quest-option-content
+    display: flex
+    gap: 1em
+    padding-top: 0.5em
+    padding-bottom: 0.5em
+    align-items: center
+
+    .group-label
+        writing-mode: vertical-lr
+        transform: rotate(180deg)
+::ng-deep rb-music-icon.ranking-quest-option .music
+    background-color: color-mix(in srgb, var(--card-background), transparent 30%)
+::ng-deep .ranking-quest-select-dropdown .dropdown-container
+    min-height: 40vh
+.pastel-kun
+    display: flex
+    gap: 1em
+
+.pastel-kun-body
+    display: grid
+    grid-template: 232px / 162px
+    margin-top: -44px
+
+    img
+        grid-area: 1 / 1
+        width: 162px
+        height: 232px
+        user-select: none
+.pastel-kun-selects
+    display: flex
+    flex-direction: column
+    align-items: start
+
+    bung-select.pastel-kun-top
+        margin-top: 44px
+    bung-select.pastel-kun-under
+        margin-top: 12px
+    bung-select.pastel-kun-arms
+        margin-top: 116px
+
+.characard-option-content
+    padding: 0.5em
+    position: relative
+    img
+        width: 5em
+        height: 7.1em
+.characard-element-icon
+    position: absolute
+    left: 3.5em
+    top: 1em
+    width: 1.5em
+    height: 1.5em
+    background: color-mix(in srgb, var(--card-background), transparent 30%)
+    border-radius: 8px
+    text-align: center
+    align-content: center
+
+    i
+        color: var(--accent-color)
+    .dark-element
+        --accent-color: #a96ce6
+.mylist-list
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(8em, 1fr))
+    grid-auto-flow: row
+    grid-auto-rows: 1fr
+    width: 100%
+    justify-content: space-evenly
+    gap: 1em
+.mylist-icon-box.leave
+    overflow: visible
+    animation: rb-mylist-icon-leave-animation var(--animation-duration-lv3) var(--ease-in)
+.mylist-remove-button
+    width: 100%
+    padding-top: 16px
+    padding-bottom: 8px
+    border-radius: 0 0 8px 8px
+    height: calc(2.25em + 8px)
+
+    &:hover
+        color: var(--accent-text-color)
+        background: var(--accent-color)
+    &:focus:not(:active)
+        box-shadow: 0 0 0 0.125em var(--accent-shadow-color)
+        border-color: var(--accent-color)
+    &:active
+        background: color-mix(in srgb, var(--accent-color), var(--card-background) 20%)
+.mylist-edit-button
+    display: grid
+    grid-template: auto / auto
+    align-items: stretch
+    width: 8em
+    height: auto
+    padding: 0
+    background: color-mix(in srgb, var(--card-background), transparent 70%)
+    transition: background var(--animation-duration-lv3) var(--ease-in), box-shadow var(--animation-duration-lv3) var(--ease-in), border-color var(--animation-duration-lv3) var(--ease-in)
+
+    &:hover
+        background: color-mix(in srgb, var(--card-background), transparent 50%)
+        box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
+    &:active
+        background: color-mix(in srgb, var(--card-background), transparent 30%)
+    > *
+        grid-area: 1 / 1
+.edit-button-content
+    display: flex
+    flex-direction: column
+    align-self: stretch
+    align-items: center
+    justify-content: center
+    
+.submit-footer
+    display: flex
+    position: sticky
+    flex-direction: column
+    align-items: end
+    bottom: -1px
+    margin: 0 -1.5rem // asphyxia fix
+    margin-top: 1.5rem
+    padding: 1rem 1.5rem
+    padding-top: 0
+    gap: 1rem
+    width: calc(100% + 3rem)
+    // border-top: 2px solid var(--border-color)
+    background: var(--background)
+    z-index: 10
+
+    bung-divider
+        min-height: 1px
+rb-level-display-switch.is-floated
+    bottom: 7em
+rb-level-display-switch.enter
+    animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-in)
+rb-level-display-switch.leave
+    animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+
+@keyframes rb-mylist-icon-leave-animation
+    from
+        transform: none
+        opacity: 1
+    to
+        transform: translateY(-8em)
+        opacity: 0
+@keyframes rb-floated-level-display-switch-enter-animation
+    from
+        transform: translateX(10em)
+    to
+        transform: none

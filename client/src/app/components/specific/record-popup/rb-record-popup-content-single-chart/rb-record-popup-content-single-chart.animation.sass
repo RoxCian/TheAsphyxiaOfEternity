@@ -1,0 +1,46 @@
+.jacket-show
+    animation: show-jacket 0.4s var(--ease-in) forwards
+    transform-origin: top left
+.music-info-show
+    animation: show-music-info 0.4s var(--ease-in) forwards
+.background-show
+    animation: show-background 0.4s var(--ease-in) forwards
+.score-info-show
+    animation: show-score-info 0.4s var(--ease-in) var(--score-info-delay) forwards
+
+@keyframes show-jacket
+    from
+        transform: translate(var(--jacket-start-x), var(--jacket-start-y)) scale(var(--jacket-start-scale))
+        border-radius: calc(8px / var(--jacket-start-scale))
+    to
+        transform: none
+        border-radius: 8px
+@keyframes show-music-info
+    from
+        width: var(--music-info-start-width)
+        transform: translate(var(--music-info-start-x), var(--music-info-start-y))
+    99.9999%
+        width: var(--music-info-end-width)
+        transform: none
+    to
+        width: auto
+@keyframes show-background
+    from
+        width: var(--background-start-width)
+        height: var(--background-start-height)
+    99.9999%
+        width: var(--background-end-width)
+        height: var(--background-end-height)
+    to
+        width: auto
+        height: auto
+@keyframes show-score-info
+    from
+        width: var(--score-info-start-width)
+        height: var(--score-info-start-height)
+    99.9999%
+        width: var(--score-info-end-width)
+        height: var(--score-info-end-height)
+    to
+        width: auto
+        height: auto

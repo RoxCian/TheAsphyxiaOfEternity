@@ -1,0 +1,163 @@
+:host
+    display: block
+.error-info
+    display: flex
+    padding: 1em
+    gap: 1em
+    align-items: center
+    justify-content: center
+    opacity: 0.7
+.stage-log
+    position: relative
+    cursor: pointer
+.stage-log-content
+    position: relative
+    display: grid
+    grid-template: 1fr / 2fr minmax(0, 5fr) 2fr
+    justify-content: center
+    align-items: center
+.play-data, .music-info
+    display: flex
+    flex-direction: column
+    align-items: center
+    padding: 1em
+    z-index: 1
+.play-data
+    flex-grow: 0.2
+    flex-shrink: 0
+
+    &.your-play-data
+        align-items: flex-end
+    &.rival-play-data
+        align-items: flex-start
+    .score
+        color: var(--rb-color)
+        font-weight: bold
+    
+.music-info
+    flex-grow: 1
+    flex-shrink: 1
+    flex-basis: 30%
+    min-width: 2em
+    overflow: clip
+
+    // .music-title-artist
+    //     display: flex
+    //     flex-wrap: nowrap
+    //     justify-content: center
+    //     align-items: baseline
+
+    .music-title
+        font-weight: bold
+        max-width: 100%
+        overflow: clip
+
+        rb-music-title
+            width: 100%
+    .music-artist
+        opacity: 0.7
+        max-width: 100%
+        overflow: clip
+
+        bung-marquee
+            width: 100%
+    .chart
+        display: flex
+        flex-wrap: nowrap
+        opacity: 0.7
+
+        .chart-name
+            color: var(--rb-chart-color)
+            margin-right: 0.5em
+.deco
+    position: absolute
+    inset: 0
+    align-content: flex-end
+    // padding: 1em
+    color: white
+    opacity: 0.5
+    border-radius: 8px
+    overflow: clip
+    // .you-win &
+    //     text-align: left
+    //     background: linear-gradient(to right, var(--rb-color), transparent 50%)
+    // .you-lose &
+    //     text-align: right
+    //     background: linear-gradient(to left, var(--rb-color), transparent 50%)
+    // .you-draw &
+    //     text-align: left
+    //     background: linear-gradient(to right, #d5d329, transparent 50%)
+    .jacket 
+        position: relative
+        display: flex
+        width: 100%
+        height: 100%
+        align-items: center
+        justify-content: center
+
+        img.image-foreground
+            height: 20em
+            font-size: 1.2em
+            filter: blur(4px)
+            -webkit-mask-image: linear-gradient(to right, transparent, black, transparent)
+            mask-image: linear-gradient(to right, transparent, black, transparent)
+
+        img.image-background
+            position: absolute
+            width: 100%
+            filter: blur(80px)
+            opacity: 0.2
+
+            
+    .gradient-background
+        position: absolute
+        inset: 0
+        // background: linear-gradient(to right, white calc(50% - 10em), transparent 50%, white calc(50% + 10em))
+.hover-background
+    position: absolute
+    inset: 0
+    background: color-mix(in srgb, var(--rb-chart-color, white) 75%, black)
+    opacity: 0
+    z-index: 0
+    transition: opacity 0.2s
+    border-radius: 8px
+
+    .stage-log:hover &
+        opacity: 0.3
+    .stage-log:active &
+        opacity: 0.6
+@media (prefers-color-scheme: dark)
+    // .deco .gradient-background
+    //     background: linear-gradient(to right, #0a0a0a calc(50% - 10em), transparent 50%, #0a0a0a calc(50% + 10em))
+    .hover-background
+        background: color-mix(in srgb, var(--rb-chart-color, white) 25%, black)
+@media screen and (width < 768px)
+    .play-data, .music-info
+        padding: 0.5em
+    .deco .jacket
+        font-size: 0.8em
+    .music-info .music-title
+        font-size: 1.25em !important
+        max-width: calc(100% - 0.5em)
+    .play-data .score
+        font-size: 1.25em !important
+    .play-data .score bung-icon
+        position: relative
+    .you-win .score bung-icon::ng-deep .icon
+        position: absolute
+        width: 0.25em
+        height: 0.25em
+        left: -0.25em
+        top: 0.25em
+        transform: rotate(-30deg) scale(0.7)
+    .you-lose .score bung-icon::ng-deep .icon
+        position: absolute
+        width: 0.25em
+        height: 0.25em
+        right: -0.25em
+        top: 0.25em
+        transform: rotate(30deg) scale(0.7)
+    .music-info .music-artist
+        font-size: 0.75em !important
+    .chart
+        font-size: 0.75em !important

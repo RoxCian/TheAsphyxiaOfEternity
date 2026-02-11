@@ -1,0 +1,122 @@
+bung-select
+    display: inline-block
+    position: relative
+    vertical-align: top
+    cursor: pointer
+
+    .dropdown-trigger
+        gap: 0.625em
+
+    .dropdown-trigger-content
+        flex: 1 
+        display: grid
+
+        > *
+            grid-area: 1 / 1
+            &.enter
+                animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-in) forwards
+            &.leave
+                animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-out) reverse forwards
+    bung-icon .icon-element
+        margin-right: 0.5em
+
+    &:hover:not(:active):not(:has(.dropdown-trigger.is-active)) i.dropdown-item-chevron
+        color: var(--accent-color)
+    &:active i.dropdown-item-chevron
+        color: color-mix(in srgb, var(--accent-color), var(--card-background) 33.3%)
+
+    &:focus:not(.is-loading):not(.is-disabled) .dropdown-trigger, &:not(.is-loading):not(.is-disabled) .dropdown-trigger.is-active
+        .tail-icon-grid i.dropdown-item-chevron
+            transform: rotate(3.14rad)
+    &.is-small
+        font-size: 0.75rem
+    &.is-medium
+        font-size: 1.25rem
+    &.is-large
+        font-size: 1.5rem
+    &.is-accent
+        .option
+            color: var(--accent-color) !important
+    &.is-reversed .dropdown-trigger
+        flex-direction: row-reverse
+    &.is-reversed .dropdown-trigger-content
+        justify-content: end
+        text-align: end
+    .tail-icon-grid
+        display: grid
+        grid-template: 1fr / auto auto
+        height: 1.5em
+        justify-content: center
+        align-content: center
+        align-items: center
+        pointer-events: none
+        z-index: 2
+    .tail-icon-grid button.delete
+        grid-area: 1 / 1
+        background: transparent
+        transition: background var(--animation-duration-lv3) var(--ease-in)
+        &::before, &::after
+            background: var(--text-color)
+        &:hover
+            background: #7772
+        &:active
+            background: #7774
+        &.enter
+            animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-in)
+        &.leave
+            animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-out) reverse
+    .tail-icon-grid i
+        grid-area: 1 / 2
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+    .tail-icon-grid i::before
+        font-size: 1.5em
+    .tail-icon-grid i.dropdown-item-chevron
+        color: var(--black-text)
+        transition: transform var(--animation-duration-lv3) var(--ease-in), color var(--animation-duration-lv3) var(--ease-in)
+    .tail-icon-grid i.loading-icon
+        opacity: 0
+
+    .placeholder
+        --opacity: 0.7
+        opacity: 0.7
+
+    &.is-rounded
+        .dropdown-trigger
+            border-radius: calc(infinity * 1px)
+            padding-left: 1em
+
+    &.is-disabled
+        opacity: 0.5
+        cursor: not-allowed
+    &.is-loading
+        cursor: wait
+        .tail-icon-grid i.loading-icon
+            opacity: 1
+            animation: bung-select-loading-icon-animation 1s infinite
+        .tail-icon-grid i.dropdown-item-chevron
+            opacity: 0
+.control bung-select
+    width: 100%
+    max-width: 100%
+@media (prefers-color-scheme: dark)
+    // bung-select .dropdown-trigger
+    //     border-color: #363636
+
+    bung-select .tail-icon-grid button.delete
+        &:hover
+            background: #7774
+        &:active
+            background: #7777
+    bung-select .tail-icon-grid i.dropdown-item-chevron
+        color: var(--white-text)
+
+@keyframes bung-select-loading-icon-animation
+    from
+        transform: scale(0.85)
+    to
+        transform: scale(0.85) rotate(360deg)
+@keyframes bung-select-element-animation
+    from
+        opacity: 0
+    to
+        opacity: var(--opacity, 1)

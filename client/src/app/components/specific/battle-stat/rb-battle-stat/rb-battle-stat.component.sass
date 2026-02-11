@@ -1,0 +1,43 @@
+:host
+    display: inline-flex
+    align-items: center
+
+.win
+    --color: #00D1B2B5
+.lose
+    --color: #FF3860B5
+.draw
+    --color: #209CEEB5
+
+.text
+    color: var(--color)
+    min-width: 4em
+
+.progress
+    display: inline-flex
+    flex: 1
+    width: 8em
+    height: 1em
+    overflow: hidden
+    border-radius: 1em
+    transform: scale(0.8)
+    transition: 0
+
+    &.enter
+        animation: progress-animation 1.2s cubic-bezier(0.100, 0.485, 0.185, 1.000) forwards
+    &.leave
+        animation: progress-animation 1.2s cubic-bezier(0.485, 0.100, 1.000, 0.185) forwards reverse
+
+    .progress-part
+        display: inline-block
+        width: var(--scale-factor)
+        height: 1em
+        background: var(--color)
+
+@keyframes progress-animation
+    from
+        width: 0
+    66.67%
+        width: 0
+    to
+        width: 8em

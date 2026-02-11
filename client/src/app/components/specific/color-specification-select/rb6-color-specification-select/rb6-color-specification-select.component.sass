@@ -1,0 +1,25 @@
+button.button
+    width: 2.25rem
+    height: 2.25rem
+
+    &.is-red
+        --accent-color: #ff3860
+        color: var(--accent-color)
+
+    &.is-blue
+        color: var(--accent-color)
+
+    &.is-random
+        --accent-color: #9d9d9d
+
+    &.is-selected
+        background: var(--accent-color)
+        color: var(--accent-text-color)
+
+    &:focus:not(:active)
+        box-shadow: 0 0 0 0.125em color-mix(in srgb, var(--accent-color) 25%, transparent 75%)
+        border-color: var(--accent-color)
+
+@media (prefers-color-scheme: dark)
+    button.button.is-red
+        --accent-color: #ff0537

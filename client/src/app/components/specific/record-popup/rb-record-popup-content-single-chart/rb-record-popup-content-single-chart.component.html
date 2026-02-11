@@ -1,0 +1,68 @@
+@let v = record().version;
+@let music = record().music;
+@let chart = record().charts[chartType()];
+@let score = record().scores[chartType()];
+@if (chart && score) {
+<div class="modal-body single-chart">
+    <div class="modal-card-body">
+        <div class="modal-card-background card background-{{ animationState() }}" (animationend)="onBodyInDone($event)" #background></div>
+        <figure class="jacket">
+            <img class="jacket-{{ animationState() }}" [src]="(music.musicUid | rbJacket : chartType())()" #jacket>
+            <div class="rank">
+                <rb-rank [achievementRate]="score.achievementRate" [version]="v" hasDecoration hasAnimation #rankBadge />
+            </div>
+        </figure>
+        <div class="info-container">
+            <div class="music-info-wrapper music-info-{{ animationState() }}" #musicInfo>
+                <div class="music-info">
+                    <div class="music-title is-size-4"><rb-music-title [music]="music" [variation]="chart.variation" isMarqueedisabled /></div>
+                    <bung-marquee class="music-artist" [content]="chart.variation?.artist ?? music.artist" [spacing]="60" [delay]="1500" disabled #artistMarquee />
+                </div>
+            </div>
+            <div class="score-info" [class.extra-info]="v === 6">
+                <div class="score-info-wrapper score-info-{{ animationState() }}" [style.--score-info-delay]="'0.2s'" #scoreInfo>
+                    <div class="score-info-container">
+                        <div class="score-details">
+                            <div class="chart-info">
+                                <span class="chart-type" [rbChartType]="chartType()!" [version]="v">{{ chartType() | rbChartTypeLiteral : v}}</span>
+                                <rb-level [version]="v" [level]="chart.level" [skillRate]="chart.skillRate" [rbChartType]="chartType()" />
+                            </div>
+                            <div class="bpm"></div>
+                            <bung-divider />
+                            <div class="score-data">
+                                <bung-icon icon="counter" isNoWrap bungTooltip="Score">{{ score.score }}</bung-icon>
+                                <bung-icon icon="percent" isNoWrap bungTooltip="Achievement rate">{{ score.achievementRate }}%</bung-icon>
+                                @if (v !== 4 && v !== 5) {
+                                <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Combo">{{ score.combo }}</bung-icon>
+                                }
+                                <bung-icon icon="close" isNoWrap bungTooltip="Miss Count">{{ score.miss | rbMissCount }}</bung-icon>
+                            </div>
+                            @if (v === 6) {
+                            <div class="just-collection">
+                                <bung-icon iconUrl="static/assets/icons/just-collect.svg" isNoWrap bungTooltip="Just collect">
+                                    <rb6-just-collect [red]="score.justCollectRate?.red ?? 0" [blue]="score.justCollectRate?.blue ?? 0" />
+                                </bung-icon>
+                            </div>
+                            }
+                            @if (v === 1 || v === 2) {
+                            <div class="battle-stat">
+                                <bung-icon icon="sword-cross" isNoWrap bungTooltip="Battle statistics">
+                                    <rb-battle-stat [win]="record().scores[chartType()!]?.battleStat?.win ?? 0" [lose]="score.battleStat?.lose ?? 0" [draw]="score.battleStat?.draw ?? 0" />
+                                </bung-icon>
+                            </div>
+                            }
+                            @if (v !== 1 && v !== 2) {
+                            <div class="play-time">
+                                <bung-icon icon="update" isNoWrap bungTooltip="Score update time">{{ score.update | relativeTime }}</bung-icon>
+                                <bung-icon icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ score.lastPlay | relativeTime }}</bung-icon>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <rb-chart-light [chartType]="chartType()!" [version]="v" [clearType]="score.clearType!" [isVertical]="!isMobile()" />
+</div>
+}

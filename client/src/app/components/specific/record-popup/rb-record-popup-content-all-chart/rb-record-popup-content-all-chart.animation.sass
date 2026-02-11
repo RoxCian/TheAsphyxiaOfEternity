@@ -1,0 +1,47 @@
+.jacket-show
+    animation: show-jacket 0.4s var(--ease-in) forwards
+    transform-origin: top left
+.music-info-show
+    animation: show-music-info 0.4s var(--ease-in) forwards
+.background-show
+    animation: show-background 0.4s var(--ease-in) forwards
+.score-info-show
+    transform: translateX(-105%)
+    animation: show-score-info 0.4s var(--ease-in) var(--score-info-delay) forwards
+// .jacket-show
+//     animation-play-state: paused
+// .music-info-show
+//     animation-play-state: paused
+// .background-show
+//     animation-play-state: paused
+// .score-info-show
+//     animation-play-state: paused
+@keyframes show-jacket
+    from
+        transform: translate(var(--jacket-start-x), var(--jacket-start-y)) scale(var(--jacket-start-scale))
+    to
+        transform: none
+@keyframes show-music-info
+    from
+        width: var(--music-info-start-width)
+        transform: translate(var(--music-info-start-x), var(--music-info-start-y))
+    99.9999%
+        width: var(--music-info-end-width)
+        transform: none
+    to
+        width: auto
+@keyframes show-background
+    from
+        width: var(--background-start-width)
+        height: var(--background-start-height)
+    99.9999%
+        width: var(--background-end-width)
+        height: var(--background-end-height)
+    to
+        width: auto
+        height: auto
+@keyframes show-score-info
+    from
+        transform: translateX(-105%)
+    to
+        transform: none

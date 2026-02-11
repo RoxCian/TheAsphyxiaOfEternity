@@ -1,0 +1,144 @@
+$offset: calc(-100% - 2em)
+
+@function get-translate-direction($float)
+    @if $float == left or $float == top-left or $float == bottom-left
+        @return left
+    @if $float == right or $float == top-right or $float == bottom-right
+        @return right
+    @if $float == "top" or $float == bottom
+        @return $float
+    @return inset
+
+@mixin init-state-enter($float)
+    &.popup-#{$float}-in.in
+        transform: scale(0.8)
+        #{get-translate-direction($float)}: $offset
+        filter: none
+        // transition: 0.25s, opacity 0s, transform 0s, #{get-translate-direction($float)} 0s
+        @if $float == top or $float == bottom or $float == none
+            opacity: 0
+        @else
+            opacity: 1
+    &.popup-#{$float}-show.show
+        transform: none
+        #{get-translate-direction($float)}: 0
+        opacity: 1
+
+@mixin init-state-leave($float)
+    &.popup-#{$float}-out.out
+        transform: scale(0.8)
+        #{get-translate-direction($float)}: $offset
+        filter: none
+        // transition: 0.25s, opacity 0s, transform 0s, #{get-translate-direction($float)} 0s
+        @if $float == top or $float == bottom or $float == none
+            opacity: 0
+        @else
+            opacity: 1
+    &.popup-#{$float}-show.show
+        transform: none
+        #{get-translate-direction($float)}: 0
+        opacity: 1
+
+@mixin enter-transitions($float)
+    &.popup-#{$float}-show.show
+        animation: bung-show-popup-linear var(--animation-duration-lv2) forwards, show-popup-ease-#{$float} var(--animation-duration-lv2) var(--ease-in) forwards
+    @keyframes show-popup-ease-#{$float}
+        from
+            #{get-translate-direction($float)}: $offset
+            opacity: 0
+        55%
+            #{get-translate-direction($float)}: 0
+            opacity: 1
+@mixin leave-transitions($float)
+    &.popup-#{$float}-out.out
+        @if $float == top or $float == top-left or $float == top-right or $float == bottom or $float == bottom-left or $float == bottom-right
+            animation: bung-hide-popup-linear var(--animation-duration-lv2) forwards, hide-popup-ease-#{$float} var(--animation-duration-lv2) var(--ease-in) forwards, bung-hide-popup-tb var(--animation-duration-lv2) forwards
+        @else
+            animation: bung-hide-popup-linear var(--animation-duration-lv2) forwards, hide-popup-ease-#{$float} var(--animation-duration-lv2) var(--ease-in) forwards
+    @keyframes hide-popup-ease-#{$float}
+        from
+            #{get-translate-direction($float)}: 0
+        35%
+            #{get-translate-direction($float)}: 0
+        to
+            #{get-translate-direction($float)}: $offset
+
+@keyframes bung-show-popup-linear
+    from
+        transform: scale(0.8)
+        filter: none
+    75%
+        transform: scale(0.8)
+        filter: none
+    to
+        transform: none
+@keyframes bung-hide-popup-linear
+    from
+        transform: none
+    25%
+        transform: scale(0.8)
+        filter: none
+    to
+        transform: scale(0.8)
+        filter: none
+@keyframes bung-hide-popup-tb
+    from
+        opacity: 1
+    35%
+        opacity: 1
+    to
+        opacity: 0
+
+@keyframes bung-show-popup-center
+    from
+        opacity: 0
+        transform: scale(0.72)
+    75%
+        opacity: 1
+        // transform: scale(0.85)
+    to
+        opacity: 1
+        transform: none
+@keyframes bung-hide-popup-center
+    from
+        opacity: 1
+        transform: none
+    25%
+        opacity: 1
+        // transform: scale(0.85)
+    to
+        opacity: 0
+        transform: scale(0.72)
+
+$floats: (left, right, top, bottom, top-left, top-right, bottom-left, bottom-right)
+
+.use-default-popup-animation, .use-default-popup-enter-animation
+    &.popup-in
+        opacity: 0
+        transform: scale(0.8)
+        transition: var(--animation-duration-lv2), opacity 0s, transform 0s
+    &.popup-show
+        opacity: 1
+        transform: none
+        transition: var(--animation-duration-lv2), opacity 0s, transform 0s
+    @each $float in $floats
+        @include init-state-enter($float)
+    &.popup-show
+        animation: bung-show-popup-center var(--animation-duration-lv2) var(--ease-in) forwards
+    @each $float in $floats
+        @include enter-transitions($float)
+.use-default-popup-animation, .use-default-popup-leave-animation
+    &.popup-out
+        opacity: 0
+        transform: scale(0.8)
+        transition: var(--animation-duration-lv2), opacity 0s, transform 0s
+    &.popup-show
+        opacity: 1
+        transform: none
+        transition: var(--animation-duration-lv2), opacity 0s, transform 0s
+    @each $float in $floats
+        @include init-state-leave($float)
+    &.popup-out
+        animation: bung-hide-popup-center var(--animation-duration-lv2) var(--ease-in) forwards
+    @each $float in $floats
+        @include leave-transitions($float)

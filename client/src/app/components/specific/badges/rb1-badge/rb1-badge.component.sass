@@ -1,0 +1,21 @@
+.badge-background
+    background: #5c30b4
+.note-object
+    display: inline-block
+    margin-left: -0.35em
+    margin-top: -0.2em
+    min-width: 0.3em
+    min-height: 0.3em
+    background: linear-gradient(to bottom, #E9E5E4 -92.85%, #F6F3F3 30%, #B79075 70%, #EFEDE1 104.29%)
+    opacity: 0
+    border-radius: calc(infinity * 1px)
+    vertical-align: middle
+    transition: opacity 0.2s
+:host.is-active:not(.is-disabled), :host.enter:not(.is-disabled)
+    .badge-label
+        background: linear-gradient(to bottom, #E9E5E4 0%, #F6F3F3 43%, #B79075 57%, #EFEDE1 69%)
+        -webkit-background-clip: text
+        background-clip: text
+        -webkit-text-fill-color: transparent
+    .note-object
+        opacity: 1

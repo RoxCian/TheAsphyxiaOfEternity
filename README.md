@@ -1,8 +1,8 @@
-<img src="icon.svg">
+<img src="./icon.svg">
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v1.1.11** 
+Plugin Version: **v2.0.0-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -69,10 +69,17 @@ Supported versions:
 
 ---
 
-This project used some data for web UI and game from several external websites/project, websites/project are listed as follows:
+This project used some data for web UI and game from several external websites/project, listed as follows:
 
 - <a href="http://bemaniwiki.com/">BEMANIWiki</a> for web UI data.
+- <a href="https://w.atwiki.jp/reflec_beat/">REFLEC BEAT @wiki</a> for JUST REFLEC data and algorithm.
 - <a href="http://remywiki.com/">RemyWiki</a> for some missing jackets.
 - <a href="https://github.com/DragonMinded/bemaniutils">Bemaniutils</a> for lobby structures/comment structures/RB colette event progress saving/RB groovin' episode data.<br/>
+- <a href="https://github.com/cubele/rbsimulator">Rb poor</a> for .ply structures.
 
 I'm appreciated for their help.
+
+
+
+
+

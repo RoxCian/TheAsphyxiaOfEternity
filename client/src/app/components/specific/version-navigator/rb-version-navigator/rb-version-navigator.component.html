@@ -1,0 +1,40 @@
+<!-- <div class="badge-collection" style="display: flex; border-radius: 8px; overflow: hidden;">
+    <div>
+        <rb rb [class.disabled]="!versionService.validVersions()[1]" (click)="versionService.validVersions()[1] ? versionService.changeVersion(1) : undefined" [isActive]="versionService.version() === 1"></rb>
+    </div>
+    <div>
+        <rb limelight [class.disabled]="!versionService.validVersions()[2]" (click)="versionService.validVersions()[2] ? versionService.changeVersion(2) : undefined" [isActive]="versionService.version() === 2"></rb>
+    </div>
+    <div>
+        <rb colette [class.disabled]="!versionService.validVersions()[3]" (click)="versionService.validVersions()[3] ? versionService.changeVersion(3) : undefined" [isActive]="versionService.version() === 3"></rb>
+    </div>
+    <div>
+        <rb groovin [class.disabled]="!versionService.validVersions()[4]" (click)="versionService.validVersions()[4] ? versionService.changeVersion(4) : undefined" [isActive]="versionService.version() === 4"></rb>
+    </div>
+    <div>
+        <rb volzza [class.disabled]="!versionService.validVersions()[5]" (click)="versionService.validVersions()[5] ? versionService.changeVersion(5) : undefined" [isActive]="versionService.version() === 5"></rb>
+    </div>
+    <div>
+        <rb reflesia [class.disabled]="!versionService.validVersions()[6]" (click)="versionService.validVersions()[6] ? versionService.changeVersion(6) : undefined" [isActive]="versionService.version() === 6"></rb>
+    </div>
+</div> -->
+<bung-select [value]="versionService.version()" (valueChange)="versionService.changeVersion(asNumber($event))" class="is-rounded" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [isLoading]="profileService.isLoading()">
+    <bung-option [value]="1" [isHidden]="!versionService.validVersions()[1]" [disabled]="!versionService.validVersions()[1]">
+        <rb- [class.disabled]="!versionService.validVersions()[2]" [isActive]="versionService.validVersions()[1] && versionService.version() === 1" />
+    </bung-option>
+    <bung-option [value]="2" [isHidden]="!versionService.validVersions()[2]" [disabled]="!versionService.validVersions()[2]">
+        <rb-limelight [class.disabled]="!versionService.validVersions()[2]" [isActive]="versionService.validVersions()[2] && versionService.version() === 2" />
+    </bung-option>
+    <bung-option [value]="3" [isHidden]="!versionService.validVersions()[3]" [disabled]="!versionService.validVersions()[3]">
+        <rb-colette [class.disabled]="!versionService.validVersions()[3]" [isActive]="versionService.validVersions()[3] && versionService.version() === 3" />
+    </bung-option>
+    <bung-option [value]="4" [isHidden]="!versionService.validVersions()[4]" [disabled]="!versionService.validVersions()[4]">
+        <rb-groovin [class.disabled]="!versionService.validVersions()[4]" [isActive]="versionService.validVersions()[4] && versionService.version() === 4" />
+    </bung-option>
+    <bung-option [value]="5" [isHidden]="!versionService.validVersions()[5]" [disabled]="!versionService.validVersions()[5]">
+        <rb-volzza [class.disabled]="!versionService.validVersions()[5]" [isActive]="versionService.validVersions()[5] && versionService.version() === 5" />
+    </bung-option>
+    <bung-option [value]="6" [isHidden]="!versionService.validVersions()[6]" [disabled]="!versionService.validVersions()[6]">
+        <rb-reflesia [class.disabled]="!versionService.validVersions()[6]" [isActive]="versionService.validVersions()[6] && versionService.version() === 6" />
+    </bung-option>
+</bung-select>

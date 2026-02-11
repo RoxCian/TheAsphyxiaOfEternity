@@ -1,0 +1,58 @@
+@let error = errorInfoHTML();
+@if (error) {
+<div class="rb-panel error-info card">
+    <div class="error-icon">
+        <span class="icon is-large">
+            <i class="mdi mdi-alert-circle mdi-48px"></i>
+        </span>
+    </div>
+    <div class="error-text">
+        <p [innerHTML]="error"></p>
+        <p>Maybe create new issue on GitHub?</p>
+    </div>
+</div>
+} @else {
+<div class="card music rb-panel" [style.--rb-chart-slots]="chartSlots().length" (click)="onShowPopup()">
+    <div class="content" #contentElement>
+        <figure class="jacket">
+            <img [src]="(record().music.musicUid | rbJacket)()">
+        </figure>
+        <div class="music-info">
+            <div class="music-title is-size-4"><rb-music-title [music]="record()!.music" /></div>
+            <bung-marquee class="music-artist" [content]="record()!.music.artist" [spacing]="60" [delay]="1500" />
+            <div class="charts-level">
+                @for (ct of record().charts | key; track ct) {
+                @if (record().charts[ct]!.level > 0) {
+                <rb-level [version]="record().version" [level]="record().charts[ct]!.level" [skillRate]="record().charts[ct]!.skillRate" [rbChartType]="ct" [version]="record().version" />
+                }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="hover-background"></div>
+</div>
+@for (ct of chartSlots(); track ct) {
+<div class="card score wide rb-panel" [class.disabled]="!hasChart()[ct]" [class.not-played]="!isPlayed()[ct]" [class.just-collected]="isJustCollectFulfilled()[ct]" [style.--rb-chart-slots]="chartSlots().length" [rbChartType]="ct" [version]="record().version" bungBreakpoint="mobile" (click)="onShowPopup(ct)">
+    <p class="chart-name is-size-7 heading">
+        {{ ct | rbChartTypeLiteral : record().version }}
+        <!-- <rb-level *ngIf="hasChart(chart) && getScore(chart)" design="white" [version]="score?.version ?? 6" [level]="score?.charts?.[chart]?.level ?? 1" [skillRate]="score?.charts?.[chart]?.skillRate" /> -->
+    </p>
+    <p class="chart-score {{ (hasChart()[ct] && scores()[ct]) ? 'is-size-4' : 'is-size-7' }}">{{ scores()[ct]?.score ?? (hasChart()[ct] ? "\<Not Played\>" : "\<No Chart\>") }}</p>
+    @if (isJustCollectFulfilled()[ct]) {
+    <div class="just-collect-fulfilled-background"></div>
+    }
+    <div class="hover-background"></div>
+</div>
+}
+<div class="score-container-narrow">
+    @for (ct of chartSlots(); track ct) {
+    <div class="card score narrow is-size-7 rb-panel" [class.disabled]="!hasChart()[ct]" [class.not-played]="!isPlayed()[ct]" [class.just-collected]="isJustCollectFulfilled()[ct]" [rbChartType]="ct" [version]="record().version" (click)="onShowPopup(ct)">
+        <p class="chart-score">{{ scores()[ct]?.score ?? (hasChart()[ct] ? "<->" : "<×>") }}</p>
+        @if (isJustCollectFulfilled()[ct]) {
+        <div class="just-collect-fulfilled-background"></div>
+        }
+        <div class="hover-background"></div>
+    </div>
+    }
+</div>
+}

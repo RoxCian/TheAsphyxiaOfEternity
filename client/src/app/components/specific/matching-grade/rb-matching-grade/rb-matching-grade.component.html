@@ -1,0 +1,16 @@
+<ng-template #mgRb1>
+    @let rank = "dcbas".charAt((matchingGrade() + 4) / 5 | clamp : 0 : 4);
+    <div class="rank-{{rank}}">{{ rank }}{{ matchingGrade() == 0 ? "" : (5 - (matchingGrade() - 1) % 5 | clamp : 1 : 5)}}</div>
+</ng-template>
+<ng-template #mgRb>
+    @let rank = matchingGrade() / 12 + 1 | trunc | clamp : 1 : 5;
+    <span class="rank-{{rank}}">
+        {{ rank }}<sup>{{ matchingGrade() % 12 + 1 }}</sup>
+    </span>
+</ng-template>
+
+@if (version() === 1) {
+    <ng-container [ngTemplateOutlet]="mgRb1" />
+} @else {
+    <ng-container [ngTemplateOutlet]="mgRb" />
+}

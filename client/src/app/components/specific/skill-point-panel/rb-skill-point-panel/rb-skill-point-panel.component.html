@@ -1,0 +1,54 @@
+@let error = errorInfoHTML();
+@let e = entry();
+@if (error) {
+<div class="rb-panel error-info card">
+    <div class="error-icon">
+        <span class="icon is-large">
+            <i class="mdi mdi-alert-circle mdi-48px"></i>
+        </span>
+    </div>
+    <div class="error-text">
+        <p [innerHTML]="error"></p>
+        <p>Maybe create new issue on GitHub?</p>
+    </div>
+</div>
+} @else if (!e) {
+<div class="rb-panel error-info no-entry card">
+    <div class="error-icon">
+        <span class="icon is-large">
+            <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+        </span>
+    </div>
+    <div class="error-text">
+        <p>Play to fill the slot</p>
+    </div>
+</div>
+} @else {
+<div class="card music rb-panel">
+    @let r = rank();
+    @if (r != undefined) {
+        <div class="rank">
+            <span>#{{ r + 1 }}</span>
+        </div>
+    }
+    <div class="content" #contentElement>
+        <figure class="jacket">
+            <img [src]="(e.music.musicUid | rbJacket)()">
+        </figure>
+        <div class="music-info">
+            <div class="music-title is-size-4"><rb-music-title [music]="e.music" /></div>
+            <bung-marquee class="music-artist" [content]="e.music.artist" [spacing]="60" />
+            <div class="chart-level" [rbChartType]="e.chartType" [version]="e.record.version">
+                <span class="chart-name">{{ e.chartType | rbChartTypeLiteral : e.record.version }}</span>
+                <rb-level [version]="e.record.version" [level]="e.chart.level" [skillRate]="e.chart.skillRate" />
+            </div>
+        </div>
+        <bung-divider isVertical />
+        <div class="skill-point-info">
+            <div class="skill-point">{{ e.skillPoint }}</div>
+            <bung-icon class="skill-point-score is-first-child" icon="counter">{{ e.score.score }}</bung-icon>
+            <bung-icon class="skill-point-ar" icon="percent">{{ e.score.achievementRate }}%</bung-icon>
+        </div>
+    </div>
+</div>
+}

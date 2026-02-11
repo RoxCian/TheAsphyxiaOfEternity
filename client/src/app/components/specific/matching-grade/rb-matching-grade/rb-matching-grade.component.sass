@@ -1,0 +1,62 @@
+:host
+    white-space: nowrap
+:host.rb1
+    div
+        width: 1.5em
+        height: 1.5em
+        border-radius: 9999px
+        align-content: center
+        text-align: center
+        text-transform: capitalize
+    &.is-normal
+        div
+            background: conic-gradient(var(--gradient), var(--gradient), var(--gradient), var(--gradient), var(--gradient), var(--gradient))
+        div.rank-d
+            background: #ccc
+            color: #333
+        div.rank-c
+            --gradient: #f7ebe5, #e1cec7
+            color: #6c483d
+        div.rank-b
+            --gradient: #e9eced, #c7d1d2
+            color: #515c61
+        div.rank-a
+            --gradient: #faf9e9, #eae8a4
+            color: #7d6f46
+        div.rank-s
+            --gradient: #FDE0F8, #f7b9ec
+            color: #704e6a
+    &.is-white
+        div
+            background: white
+            color: var(--rb-color)
+:host:not(.rb1)
+    &.is-normal
+        span.rank-1
+            color: #B2BABB
+        span.rank-2
+            color: #2ECC71
+        span.rank-3
+            color: #E67E22
+        span.rank-4
+            color: #2EA0EB
+        span.rank-5
+            color: #ff4638
+    &.is-white
+        span
+            color: white
+:host:not(.rb1):not(.rb2)
+    &.is-normal
+        span.rank-1
+            color: #2ECC71
+        span.rank-2
+            color: #FFDD57
+        span.rank-3
+            color: #209cee
+        span.rank-4
+            color: #FF3860
+        span.rank-5
+            color: #380dd4
+    &.is-white
+        span
+            color: white

@@ -1,0 +1,19 @@
+id,name,nameOrig,scoreBorderA,scoreBorderB,scoreBorderC,scoreBorderD
+,,,,,,
+int,string,string,int,int,int,int
+17,Examination "Qrispy",Qrispy検定,9500,7600,5700,3800
+18,Examination "Long Objects",ロング検定,9000,7200,5400,3600
+19,Examination "Sakura",さくら検定,9000,7200,5400,3600
+20,Examination "DJ YOSHITAKA",DJ YOSHITAKA検定,10000,8000,6000,4000
+21,Examination "VENUS",ウィザウチュナイ検定,9111,7288,5466,3644
+22,Examination "kors k",kors k検定,10500,8400,6300,4200
+23,Examination "Trills",トリル検定,9500,7600,5700,3800
+24,Examination "Zektbach",Zektbach検定,9500,7600,5700,3800
+25,Examination "BEMANI Stadium",BEMANIスタジアム検定,10000,8000,6000,4000
+26,Examination "BPM Change",BPM変化検定,9700,7760,5820,3880
+27,Examination "Anime",アニメ検定,8800,7040,5280,3520
+28,Examination "Hot",アツい検定,10500,8400,6300,4200
+29,Examination "Hinabita♪",ひなビタ♪検定,8500,6800,5100,3400
+30,Examination "L.E.D.",L.E.D.検定,10000,8000,6000,4000
+31,Examination "Sota Fujimori",Sota Fujimori検定,9000,7200,5400,3600
+32,Examination "Cold",サムい検定,9000,7200,5400,3600

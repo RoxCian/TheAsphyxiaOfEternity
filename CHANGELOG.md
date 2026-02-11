@@ -1,3 +1,7 @@
+- v2.0.0-beta
+
+  _TODO: Discription to be added._
+
 - v1.1.11
 
   Fixed webui bugs for newer version of RB Reflesia.

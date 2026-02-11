@@ -1,0 +1,97 @@
+@let music = stageLog().music;
+@let chart = stageLog().chart;
+@let color = stageLog().color;
+<div class="card music-card" [rbChartType]="chart.chartType" [version]="3">
+    <figure class="jacket">
+        <img [src]="(music.musicUid | rbJacket : chart.chartType)()">
+    </figure>
+    <div class="music-info">
+        <div class="info-value stage-info">
+            <div class="stage-index">{{ stageLog().stageIndex | rbStageIndex : 3 }}</div>
+            <div class="round-label">ROUND</div>
+        </div>
+        <div class="chart-level-info">
+            <div class="chart-info">
+                <div class="info-label chart-label">DIFFICULTY</div>
+                <div class="info-value chart-type">{{ chart.chartType | rbChartTypeLiteral : 3 | uppercase }}</div>
+            </div>
+            <div class="level-info">
+                <div class="level-label">LEVEL</div>
+                <rb-level class="level-value" [version]="3" [level]="chart.level" />
+            </div>
+        </div>
+        <div class="title-info">
+            <div class="info-label title-label">MUSIC</div>
+            <div class="info-value music-title">
+                <rb-music-title [music]="music" [variation]="chart.variation" />
+            </div>
+        </div>
+        <div class="artist-info">
+            <div class="info-label artist-label">ARTIST</div>
+            <div class="info-value music-artist">
+                <bung-marquee class="artist-value" [content]="chart.variation?.artist ?? music.artist" [delay]="1500" />
+            </div>
+        </div>
+    </div>
+    <div class="clear-info">
+        @if (stageLog().clearType && stageLog().clearType !== "f") {
+        <div class="clear-label">
+            <span class="cr">C</span>
+            <span class="l">L</span>
+            <span class="e">E</span>
+            <span class="a">A</span>
+            <span class="cr">R</span>
+            <span class="e">!!</span>
+        </div>
+        } @else {
+        <div class="failed-label">
+            <span class="fe">F</span>
+            <span class="ad">A</span>
+            <span class="i">I</span>
+            <span class="l">L</span>
+            <span class="fe">E</span>
+            <span class="ad">D</span>
+            <span class="l">...</span>
+        </div>
+        }
+    </div>
+</div>
+<div class="card your-result" [rbColor]="color">
+    <div class="you-label">You</div>
+    <div class="your-name">
+        <rb-player [version]="3" [color]="stageLog().color" isHideMatchingGrade />
+    </div>
+    <div class="score-label">Score</div>
+    <div class="score-value">
+        {{ stageLog().score }}
+        @if (stageLog().score > stageLog().rivalScore) {
+        <i class="winner-icon mdi mdi-crown"></i>
+        }
+    </div>
+    <div class="ar-label">Achievement Rate</div>
+    <div class="ar-value">
+        <div class="ar-integer">{{ stageLog().achievementRate | trunc }}.</div>
+        <div class="ar-decimal">{{ stageLog().achievementRate | decimalPart : 2 }}%</div>
+    </div>
+    <div class="rank">
+        <div class="rank-label">RANK</div>
+        <rb-rank [version]="3" [achievementRate]="stageLog().achievementRate" isVisible hasDecoration />
+    </div>
+</div>
+<div class="card rival-result" [rbColor]="color" isRival>
+    <div class="rival-label">Rival</div>
+    <div class="rival-name">
+        <rb-player [version]="3" [name]="stageLog().rivalUserName" [cpuId]="stageLog().rivalCpuId" [musicId]="stageLog().musicId" [color]="stageLog().color" isRival isHideMatchingGrade isShowCompleteName />
+    </div>
+    <div class="score-label">Score</div>
+    <div class="score-value">
+        {{ stageLog().rivalScore }}
+        @if (stageLog().score < stageLog().rivalScore) {
+          <i class="winner-icon mdi mdi-crown"></i>
+            }
+    </div>
+</div>
+
+<div class="card result-details">
+    <rb-stage-log-judge-grid [stageLog]="stageLog()" />
+</div>

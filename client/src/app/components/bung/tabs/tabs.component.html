@@ -1,0 +1,25 @@
+<div class="tabs" bungBreakpoint="mobile">
+    <ul>
+        @for (tab of tabs(); track tab.index()) {
+        <li class="tab" [class.disabled]="tab.disabled()" [class.is-loading]="tab.index() === loadingTabIndex()" [class.is-active]="!tab.disabled() && tab.index() == (direction() === 'left' ? leftIndex() : direction() === 'right' ? rightIndex() : (activated() ?? getFirstAvailableTabIndex()))" (click)="!tab.disabled() ? onChangeIndex(tab.index()) : undefined">
+            <a>
+                <i class="loading-icon mdi mdi-loading"></i>
+                <bung-insertion [content]="tab.headerTemplate() ?? tab.header()" />
+            </a>
+        </li>
+        }
+    </ul>
+</div>
+<div class="tabs-content">
+    <div class="tabs-animate-wrapper" #tabsAnimateWrapper>
+        <div class="tabs-animate-slide-wrapper">
+            @for (tab of tabs(); track tab.index()) {
+            @if ((tab.index() === (currIndex() ?? activated() ?? getFirstAvailableTabIndex())) || (tab.index() === leftIndex()) || (tab.index() === rightIndex())) {
+            <div class="tabs-content-wrapper" [class.left]="tab.index() === leftIndex()" [class.right]="tab.index() === rightIndex()">
+                <bung-insertion [content]="tab.element.nativeElement" [attr.tab-index]="tab.index()" #contentInsertion (viewInited)="onTabViewInited()" />
+            </div>
+            }
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+bung-loader
+    display: inline-block
+    width: var(--size)
+    height: var(--size)
+    border-width: calc(var(--size) / 6)
+    border-style: solid
+    border-color: #dbdbdb
+    border-top-color: transparent
+    border-left-color: transparent
+    border-radius: var(--size)
+    animation: loader-animation var(--animation-duration-lv1) infinite linear
+
+@keyframes loader-animation
+    from
+        rotate: 0deg
+    to
+        rotate: 360deg

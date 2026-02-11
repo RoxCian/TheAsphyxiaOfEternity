@@ -1,0 +1,25 @@
+<ng-template let-date="date" let-playCount="playCount" #playCountLabel>
+    <p style="text-align: center">
+        @if (playCount === 0) {
+            No Play
+        } @else {
+            <b class="is-size-4">{{ playCount }}</b>
+            <span style="margin-left: 0.25em">{{ playCount === 1 ? "Play" : "Plays" }}</span>
+        }
+    </p>
+    <p style="text-align: center">{{ date.toLocaleDateString() }}</p>
+</ng-template>
+<div class="calendar-grid card">
+    @for (d of daysArray; track d) {
+        @let playCount = activity()[d] ?? 0;
+        @let activityLevel = getActivityLevel(playCount);
+        @let rc = getGridRowColumn(d);
+        @let date = getDate(d);
+        <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount }">
+            <div class="day-background activity-level{{ activityLevel }}"></div>
+            @if (date.getDate() === 1) {
+                <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
+            }
+        </div>
+    }
+</div>

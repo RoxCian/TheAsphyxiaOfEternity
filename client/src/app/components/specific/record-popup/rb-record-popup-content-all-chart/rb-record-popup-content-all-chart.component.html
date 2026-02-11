@@ -1,0 +1,104 @@
+@let v = record().version;
+<ng-template let-chartType #chartScore>
+    @let ct = toChartType(chartType);
+    <div class="chart-score-container">
+        <div class="chart-score-animation-wrapper">
+            <div class="chart-score-wrapper score-info-{{ animationState() }}" bungBreakpoint="mobile" [style.--score-info-delay]="`${0.2 + 0.2 * ct}s`">
+                <div class="chart-info-background" [rbChartType]="ct" [version]="v"></div>
+                <div class="chart-info">
+                    <span class="chart-name">{{ chartType | rbChartTypeLiteral : v }}</span>
+                    <rb-level [level]="record().charts[ct]!.level" [version]="v" [skillRate]="record().charts[ct]!.skillRate" [rbChartType]="ct" design="white" />
+                </div>
+                <div class="score-info" [class.extra-info]="v === 6">
+                    <div class="score-info-wrapper card" [class.not-played]="!record().scores[ct]">
+                        <div class="score-info-container">
+                            <div class="score-details">
+                                <div class="score-data">
+                                    <bung-icon icon="counter" isNoWrap bungTooltip="Score">{{ record().scores[ct]?.score ?? "-" }}</bung-icon>
+                                    <bung-icon icon="percent" isNoWrap bungTooltip="Achievement rate">{{ record().scores[ct] ? record().scores[ct]!.achievementRate + "%" : "-" }}</bung-icon>
+                                    @if (v !== 4 && v !== 5) {
+                                    <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ record().scores[ct]?.combo ?? "-" }}</bung-icon>
+                                    }
+                                    <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ record().scores[ct]?.miss | rbMissCount }}</bung-icon>
+                                </div>
+                                @if (v === 6 && !isMobile()) {
+                                <div class="just-collection">
+                                    <bung-icon iconUrl="static/assets/icons/just-collect.svg" isNoWrap bungTooltip="Just collect">
+                                        @if (record().scores[ct]) {
+                                        <rb6-just-collect [red]="record().scores[ct]?.justCollectRate?.red ?? 0" [blue]="record().scores[ct]?.justCollectRate?.blue ?? 0" />
+                                        } @else {
+                                        -
+                                        }
+                                    </bung-icon>
+                                </div>
+                                }
+                                @if (v === 1 || v === 2) {
+                                <div class="battle-stat">
+                                    <bung-icon icon="sword-cross" isNoWrap bungTooltip="Battle statistics">
+                                        @if (record().scores[ct]) {
+                                        <rb-battle-stat [win]="record().scores[ct]?.battleStat?.win ?? 0" [lose]="record().scores[ct]?.battleStat?.lose ?? 0" [draw]="record().scores[ct]?.battleStat?.draw ?? 0" />
+                                        } @else {
+                                        -
+                                        }
+                                    </bung-icon>
+                                </div>
+                                }
+                                @if (v !== 1 && v !== 2) {
+                                <div class="play-time">
+                                    <bung-icon icon="update" isNoWrap bungTooltip="Score update time">{{ (record().scores[ct]?.update | relativeTime) || "-" }}</bung-icon>
+                                    <bung-icon icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ (record().scores[ct]?.lastPlay | relativeTime) || "-" }}</bung-icon>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    @if (!record().scores[ct]) {
+                    <div class="not-played-box is-size-7">
+                        <p>
+                            <span class="icon">
+                                <i class="mdi mdi-emoticon-confused mdi-{{ isMobile() ? 24 : 36 }}px"></i>
+                            </span>
+                        </p>
+                        <p>Unplayed chart</p>
+                    </div>
+                    }
+                    @if (record().scores[ct]) {
+                    <div class="rank">
+                        <rb-rank [achievementRate]="record().scores[ct]?.achievementRate!" [version]="v" hasDecoration hasAnimation #rankBadge />
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <rb-chart-light [chartType]="ct" [version]="v" [clearType]="record().scores[ct]?.clearType!" isShortened isVertical />
+    </div>
+</ng-template>
+<div class="modal-body all-chart" bungBreakpoint="mobile">
+    <div class="background-container">
+        <figure class="jacket jacket-{{ animationState() }}" #jacketLarge>
+            <img [src]="(record().music.musicUid | rbJacket)()">
+        </figure>
+        <div class="modal-card-background card background-{{ animationState() }}" (animationend)="onBackgroundAnimationEnd($event)" #background></div>
+    </div>
+    <div class="category-tag">
+        <div class="tag" animate.enter="enter">
+            <span>{{ record().music.category }}</span>
+        </div>
+    </div>
+    <div class="info-container">
+        <div class="music-info-wrapper music-info-{{ animationState() }}" #musicInfo>
+            <div class="music-info">
+                <div class="music-title is-size-4"><rb-music-title [music]="record().music" isMarqueedisabled /></div>
+                <bung-marquee class="music-artist" [content]="record().music.artist" [spacing]="60" [delay]="1500" disabled #artistMarquee />
+            </div>
+        </div>
+        <div class="chart-info-wrapper" bungBreakpoint="mobile" [class.extra-info]="v === 1 || v === 2 || v === 6">
+            <ng-container [ngTemplateOutlet]="chartScore" [ngTemplateOutletContext]="0 | implicit" />
+            <ng-container [ngTemplateOutlet]="chartScore" [ngTemplateOutletContext]="1 | implicit" />
+            <ng-container [ngTemplateOutlet]="chartScore" [ngTemplateOutletContext]="2 | implicit" />
+            @if ((v === 4 || v === 5 || v === 6) && (record().charts[toChartType(3)]?.level ?? 0) > 0) {
+            <ng-container [ngTemplateOutlet]="chartScore" [ngTemplateOutletContext]="3 | implicit" />
+            }
+        </div>
+    </div>
+</div>

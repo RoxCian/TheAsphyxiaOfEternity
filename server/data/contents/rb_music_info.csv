@@ -1,0 +1,960 @@
+musicUid,title,artist,isRenewal,bpm,category
+,,,(rb VOLZZA),,
+string,string,string,boolean,range,string
+1l01,SHINE×SHINE×SHINE×SHINE,エイプリルズ,FALSE,138,Pop
+1l02,JUMPER,capsule,FALSE,130,Pop
+1l03,Living Dying Message,9mm Parabellum Bullet,FALSE,190,Pop
+1l04,Infinity,GIRL NEXT DOOR,FALSE,147,Pop
+1l05,サマータイム！！,MINMI,FALSE,149,Pop
+1l06,LUCKY☆STAR,大塚愛,FALSE,136,Pop
+1l07,じょいふる,いきものがかり,FALSE,159,Pop
+1l08,GO-ON,UVERworld,FALSE,145,Pop
+1l09,メンドクサイ愛情,大島麻衣,FALSE,145,Pop
+1l10,10年桜,AKB48,FALSE,173,Pop
+1l11,Your Supporter,meajyu,FALSE,113,Pop
+1l12,-踏-,cali≠gari,FALSE,158,Pop
+1l13,LEVEL5 -judgelight-,fripSide,FALSE,140,Anime
+1l14,Shiny Sky,May J.,FALSE,148,Pop
+1l15,Heart and Soul,AAA,FALSE,140,Pop
+1l16,偶然の確率,GIRL NEXT DOOR,FALSE,121,Pop
+1l17,アルクアラウンド,サカナクション,FALSE,132,Pop
+1l18,Sunshine Girl,moumoon,FALSE,103,Pop
+1l19,LAST CHANCE,GTS feat. BABY M,FALSE,127,Pop
+1l20,come again,m-flo,FALSE,130,Pop
+1l21,One More Time,DAFT PUNK,FALSE,123,Pop
+1l22,Choo Choo TRAIN -VENUS mix-,VENUS,FALSE,127,BEMANI
+1l23,SPELL MAGIC,Acid Black Cherry,FALSE,180,Pop
+1l24,また君に恋してる,坂本冬美,FALSE,93,Pop
+1l25,罠,THE BACK HORN,FALSE,198,Anime
+1l26,KOROBUSHKA (Ryu☆Remix),Ryu☆,FALSE,175,Variety
+1l27,LOVE & JOY,木村由姫,FALSE,173,Pop
+1l28,Super Driver,平野綾,FALSE,200,Anime
+1l29,my favorite swing,DE DE MOUSE,FALSE,130,Pop
+1l30,J-POP,Half Life,FALSE,124,Pop
+1l31,七転八起☆至上主義！,KOTOKO,FALSE,176,Anime
+1l32,ソラニン,ASIAN KUNG-FU GENERATION,FALSE,159,Pop
+1l33,HEART,MEG,FALSE,127,Pop
+1l34,Ready to be a lady,GIRL NEXT DOOR,FALSE,134,Pop
+1k01,カラフルミニッツ,Qrispy Joybox feat.mao,FALSE,152,BEMANI
+1k02,message,dj TAKA feat.flare,FALSE,152,BEMANI
+1k03,Stay my side,DJ Yoshitaka feat. RINA,FALSE,100,BEMANI
+1k04,SPECIAL SUMMER CAMPAIGN!,Lucky Vacuum,FALSE,168,BEMANI
+1k05,Silence,猫叉Master,FALSE,175,BEMANI
+1k06,Diamond Dust,TAG,FALSE,148,BEMANI
+1k07,Gymnopedie -kors k mix-,kors k,FALSE,128,BEMANI
+1k08,優勢オーバードーズ,PON,FALSE,166,BEMANI
+1k09,クシコス☆ポスト-青春SKAパンク ミックス！-,TASUKI BOYZ,FALSE,190,Variety
+1k10,Sakura Reflection,Ryu☆,FALSE,181,BEMANI
+1k11,Diamond Dust -Try to Sing Ver.-,TAG rejected by DJ YOSHITAKA,FALSE,148,BEMANI
+1k12,Survival Games,VENUS,FALSE,152,BEMANI
+1k13,THE FALLEN,L.E.D.-G,FALSE,167,BEMANI
+1k14,イミテーション語ル死ス,Des-ROW・スペ志アル,FALSE,206,BEMANI
+1k15,透明なエモーション,Tatsh feat. RUNA,FALSE,155,BEMANI
+1k16,少女小景再抄録　～影～,CULTVOICE by S.S.D. PRODUCTS,FALSE,150,BEMANI
+1k17,夢の降る街,星野奏子,FALSE,115,BEMANI
+1k18,Broken,dj TAKA feat.AiMEE,FALSE,148,BEMANI
+1k19,幻想リフレクト,イルカブ,FALSE,138,BEMANI
+1k20,Need Your Love,Sota Fujimori,FALSE,146,BEMANI
+1k21,Wuv U,kors k,FALSE,173,BEMANI
+1k22,スパンコール,Yukky feat.Rio Kuniyoshi,FALSE,200,BEMANI
+1k23,虹の先に何があるか,あさき,FALSE,216,BEMANI
+1k24,SEED,DJ YOSHITAKA,FALSE,152,BEMANI
+1k25,Hollywood Galaxy,dj TAKA,FALSE,186,BEMANI
+1k26,DEADLOCK,MAX MAXIMIZER,FALSE,187,BEMANI
+1t01,smooooch・∀・,kors k,FALSE,177,BEMANI
+1t02,starmine -swallowtail mix-,ピンクターボ,FALSE,187,BEMANI
+1t03,777,EeL,FALSE,200,BEMANI
+1t04,Juicy,kors k Lovers DJ Yoshitaka,FALSE,125,BEMANI
+1t05,サヨナラ・ヘヴン,猫叉Master,FALSE,111,BEMANI
+1t06,We Can Change,Sota Fujimori feat.kemy,FALSE,138,BEMANI
+1t07,凛として咲く花の如く,紅色リトマス,FALSE,163,BEMANI
+1t08,Elisha,DJ YOSHITAKA,FALSE,185,BEMANI
+1t09,ポップミュージック論,ギラギラメガネ団,FALSE,190,BEMANI
+1t10,L'erisia(Primal Logic),Zektbach,FALSE,234,BEMANI
+1t11,NoN-Fiction Story!,Creative Life,FALSE,160,BEMANI
+1t12,Sacred Oath,TЁЯRA,FALSE,170,BEMANI
+1t13,SigSig,kors k,FALSE,179,BEMANI
+1t14,FLOWER,DJ YOSHITAKA,FALSE,173,BEMANI
+1t15,さよならトリップ,Dormir,FALSE,133,BEMANI
+1t16,not eternity,猫叉Master,FALSE,92,BEMANI
+1t17,Medicine of love,星野奏子,FALSE,173,BEMANI
+1t18,Smug Face -どうだ、オレの生き様は-,SUPER STAR 満-MITSURU-,FALSE,148,BEMANI
+1t19,He is my only star,SUPER HEROINE 彩香-AYAKA-,FALSE,160,BEMANI
+1t20,bass 2 bass,Ryu☆,FALSE,140,BEMANI
+1t21,Wenkamui,Zektbach,FALSE,135,BEMANI
+1t22,Thunderbolt,雷龍,FALSE,188,BEMANI
+1t23,reunion,Tatsh,FALSE,184,BEMANI
+1t24,Bad Maniacs,kors k as teranoid,FALSE,195,BEMANI
+1t25,Turii ～Panta rhei～,Zektbach,FALSE,148,BEMANI
+1t26,Anisakis -somatic mutation type''Forza''-,朱雀,FALSE,185,BEMANI
+1t27,Second Heaven,Ryu☆,FALSE,149,BEMANI
+1t28,Why did you go away,jun with TAHIRIH,FALSE,160,BEMANI
+2l01,残酷な天使のテーゼ,高橋洋子,FALSE,79-128,Anime
+2l02,ヘビーローテーション,AKB48,FALSE,155-175,Pop
+2l03,future gazer,fripSide,FALSE,138,Anime
+2l04,女々しくて,ゴールデンボンバー,FALSE,143,Pop
+2l05,LOVE CHECK,Bradberry Orchestra,FALSE,126,Pop
+2l06,I Hate DISCOOOOOOO!!!,the telephones,FALSE,196,Pop
+2l07,Let's ダバダバ,POLYSICS,FALSE,169,Pop
+2l08,天体観測,BUMP OF CHICKEN,FALSE,165,Pop
+2l09,虹色の戦争,SEKAI NO OWARI,FALSE,170,Pop
+2l10,Have a Good Day！,のあのわ,FALSE,200,Pop
+2l11,今のキミを忘れない,ナオト・インティライミ,FALSE,113,Pop
+2l12,鬱くしき人々のうた,マキシマム ザ ホルモン,FALSE,144-154,Pop
+2l13,楽園ベイベー,RIP SLYME,FALSE,113,Pop
+2l14,Hello,Capsule,FALSE,143,Pop
+2l15,オリオンをなぞる,UNISON SQUARE GARDEN,FALSE,182,Anime
+2l16,笑ってたいんだ,いきものがかり,FALSE,157,Pop
+2l17,くちばしにチェリー,EGO-WRAPPIN',FALSE,175-194,Pop
+2l18,半径30cmの中を知らない,アルカラ,FALSE,206,Pop
+2l19,yoakemae,Base Ball Bear,FALSE,138,Pop
+2l20,BANZAI,木村　カエラ,FALSE,140,Pop
+2l21,ヒーロー,FUNKY MONKEY BABYS,FALSE,121,Pop
+2l22,Hacking to the Gate,いとうかなこ,FALSE,161,Anime
+2l23,Chase the Light！,"Fear,and Loathing in Las Vegas",FALSE,186,Pop
+2l24,1/3の純情な感情,VENUS,FALSE,152,Pop
+2l25,ラッキーカラー,SHY,FALSE,120,Pop
+2l26,空はまるで,MONKEY MAJIK,FALSE,92,Pop
+2l27,No cry No more,AAA,FALSE,130,Pop
+2l28,STARS (Ryu☆Remix RRver.),Another Infinity feat. Mayumi Morinaga,FALSE,181,Pop
+2k01,HAPPY limelight,Qrispy Joybox feat.Megumi Tatsumi,FALSE,135,BEMANI
+2k02,Twinkle Wonderland,Qrispy Joybox feat.Sana,FALSE,188,BEMANI
+2k03,limelight world,DJ YOSHITAKA feat.DWP,FALSE,160,BEMANI
+2k04,ビューティフル レシート,Lucky Vacuum,FALSE,196,BEMANI
+2k05,空色コンチェルト,Qrispy Joybox,FALSE,163,BEMANI
+2k06,Last Hometown,猫叉Master,FALSE,108,BEMANI
+2k07,UNLIMITED FIRE,TAG,FALSE,160,BEMANI
+2k08,まるでマトリョーシカ,seiya-murai feat.ALT,FALSE,155,BEMANI
+2k09,TITANS RETURN,L.E.D.,FALSE,97-194,BEMANI
+2k10,robin,S-C-U,FALSE,190,BEMANI
+2k11,DIORAMATIC MOMENT,TЁЯRA,FALSE,150,BEMANI
+2k12,DRAGON KILLER,96 vs. Mutsuhiko Izumi,FALSE,210,BEMANI
+2k13,Flip Flap,kors k,FALSE,175,BEMANI
+2k14,中華急行,Ryu☆,FALSE,171,BEMANI
+2k15,キラキラ☆ステーション,Tatsh feat.Prico,FALSE,176,BEMANI
+2k16,ツキミチヌ,CULTVOICE by S.S.D.PRODUCTS,FALSE,146,BEMANI
+2k17,Mr.フリーダム,PON,FALSE,180,BEMANI
+2k18,quaver♪,Risk Junk,FALSE,186,BEMANI
+2k19,威風堂々 ～チュートリアルより～,Rb. Conductor,FALSE,104,Variety
+2k20,Une mage blanche,Dormir,FALSE,193,BEMANI
+2k21,LOVE IS TIMING,3tempo Produced by Sota Fujimori,FALSE,130,BEMANI
+2k22,Far Away,VENUS,FALSE,160,BEMANI
+2k23,Castle on the Moon,青龍,FALSE,191,BEMANI
+2k24,Ignition∞Break,NAOKI,FALSE,155,BEMANI
+2k25,魚氷に上り 耀よひて,あさき,FALSE,106,BEMANI
+2k26,meme,Zektbach,FALSE,155,BEMANI
+2k27,VALLIS-NERIA,DJ YOSHITAKA,FALSE,185,BEMANI
+2k28,HAERETICUS,D.J.Amuro Vs MAX MAXIMIZER,FALSE,208,BEMANI
+2k29,この青空の下で,TAG meets “eimy”,FALSE,165,BEMANI
+2k30,Fly to Next World,Qrispy Joybox,FALSE,184,BEMANI
+2t01,IMAGE-MATERIAL- <REFLEC BEAT Edition>,Tatsh,FALSE,260,BEMANI
+2t02,INTO YOUR HEART (Ruffage remix),NAOKI feat.YASMINE,FALSE,135,BEMANI
+2t03,EURO-ROMANCE,K-MASERA,FALSE,161,BEMANI
+2t04,L'amour dans le lycee (High School Love -Bossa Arr.-),Studio Bongo Mango feat.Tomoko Kataoka,FALSE,160,BEMANI
+2t05,Sakura Sunrise,Ryu☆,FALSE,181,BEMANI
+2t06,記憶の欠片,Sana,FALSE,153,BEMANI
+2t07,OVER THE LIMIT！,伊藤賢治,FALSE,104-150,BEMANI
+2t08,ANDROMEDA -SF_2011 Mix-,Sota Fujimori,FALSE,156,BEMANI
+2t09,SHION,DJ YOSHITAKA,FALSE,179,BEMANI
+2t10,華爛漫 -Flowers- (2nd EDITION),TЁЯRA,FALSE,160,BEMANI
+2t11,万物快楽理論,あさき,FALSE,110-135,BEMANI
+2t12,QUIZ MAGIC ACADEMY VIII ～決勝戦より～,マジックアカデミー管弦楽部,FALSE,147-165,BEMANI
+2t13,Music-U,Qrispy Joybox feat.mao,FALSE,152,BEMANI
+2t14,0/1 ANGEL,ALT,FALSE,140,BEMANI
+2t15,Mermaid girl (Ryu☆Remix),Cream puff,FALSE,180,BEMANI
+2t16,Mind Mapping (kors k mix),Ryu☆,FALSE,183,BEMANI
+2t17,murmur twins,yu_tokiwa.djw,FALSE,174,BEMANI
+2t18,雫,あさき,FALSE,210,BEMANI
+2t19,Starry ☆ night,Qrispy Joybox feat.mao,FALSE,184,BEMANI
+2t20,I'm so Happy,Ryu☆,FALSE,181,BEMANI
+2t21,STELLAR WIND,L.E.D.,FALSE,160,BEMANI
+2t22,concon,S-C-U,FALSE,190,BEMANI
+2t23,Red Goose,Mutsuhiko Izumi,FALSE,200,BEMANI
+2t24,[E],dj MAX STEROID,FALSE,152,BEMANI
+2t25,量子の海のリントヴルム,黒猫ダンジョン,FALSE,280,BEMANI
+2t26,HEAVENLY MOON,Tatsh,FALSE,185,BEMANI
+2t27,cloche,Qrispy Joybox,FALSE,182,BEMANI
+2t28,Sweet Rain feat. Karin,Y&Co.,FALSE,155,BEMANI
+2t29,恋する☆宇宙戦争っ！！,Prim,FALSE,200,BEMANI
+2t30,ALBIDA,DJ YOSHITAKA,FALSE,185,BEMANI
+2t31,Cookie Bouquets,L.E.D. Vs TOMOSUKE fw.crimm,FALSE,205,BEMANI
+2t32,Colorful Days ～NEWラブプラス メインテーマ～,高嶺愛花＆小早川凛子＆姉ヶ崎寧々,FALSE,128,BEMANI
+2t33,ほしふり,Sana,FALSE,155,BEMANI
+2t34,Pharaoh★Love,Des-ROW ft.中島愛,FALSE,124,BEMANI
+2t35,FRONTIER GATE,佐藤直之,FALSE,173-179,BEMANI
+2t36,オープニングテーマ～クイズマジックアカデミー賢者の扉より～,マジックアカデミー管弦楽部,FALSE,124-150,BEMANI
+2t37,ЁVOLUTIΦN,TЁЯRA,FALSE,165,BEMANI
+2t38,Express Emotion,REDALiCE feat. Shihori,FALSE,182,BEMANI
+2t39,黒髪乱れし修羅となりて,村正クオリア,FALSE,150,BEMANI
+2t40,KIMONO♥PRINCESS,jun,FALSE,190,BEMANI
+2t41,The Sampling Paradise,Mamonis,FALSE,150,BEMANI
+2t42,EXUSIA,L.E.D.-G,FALSE,188,BEMANI
+2t43,waxing and wanding,青龍,FALSE,191,BEMANI
+2t44,灼熱Beach Side Bunny,DJ Mass MAD Izm*,FALSE,153,BEMANI
+2t45,天空の夜明け,Cuvelia,FALSE,150,BEMANI
+2t46,MIRACLE MEETS,Lucky Vacuum,FALSE,160,BEMANI
+3l01,HELLO,YUI,FALSE,143,Pop
+3l02,つけまつける,きゃりーぱみゅぱみゅ,FALSE,145,Pop
+3l03,マジLOVE1000％,ST☆RISH,FALSE,129,Anime
+3l04,夏祭り,(JITTERIN'JINN),FALSE,142,Pop
+3l05,KISS KISS BANG BANG,いきものがかり,FALSE,154,Pop
+3l06,Watching you feat. WISE,LIL,FALSE,129,Pop
+3l07,365日のラブストーリー。,ソナーポケット,FALSE,124,Pop
+3l08,サブリナ,家入レオ,FALSE,136,Pop
+3l09,侵略ノススメ☆,ULTRA-PRISM,FALSE,185,Anime
+3l10,行くぜっ！怪盗少女 -Zver.-,ももいろクローバーZ,FALSE,160,Pop
+3l11,WHITE BREATH,BONUS,FALSE,190,Pop
+3l12,パノラマセカイ,TRIPLANE,FALSE,132,Pop
+3l13,→unfinished→,KOTOKO,FALSE,146,Anime
+3l15,オレンジ,GReeeeN,FALSE,182,Pop
+3l16,全力少年,スキマスイッチ,FALSE,134,Pop
+3l17,嘘,シド,FALSE,173-180,Pop
+3l18,Butter-Fly,和田光司,FALSE,165,Anime
+3l19,スリル,布袋寅泰,FALSE,175,Pop
+3l20,STRONG,MIYAVI vs KREVA,FALSE,135,Pop
+3k01,snow prism,Qrispy Joybox,FALSE,196,BEMANI
+3k02,紅焔,PON,FALSE,175,BEMANI
+3k03,GLITTER,Sota Fujimori 2nd Season,FALSE,184,BEMANI
+3k04,VOLTEXES,Sota Fujimori,FALSE,150,BEMANI
+3k05,Clumsy thoughts,猫叉Master feat. *spiLa*,FALSE,153,BEMANI
+3k06,Aerial Skydive,Dirty Androids,FALSE,175,BEMANI
+3k07,TAKE THE FUN,Anemo=Aspel by MLREC.,FALSE,140,BEMANI
+3k08,It's my Miracle,Another Infinity feat. Mayumi Morinaga,FALSE,175,BEMANI
+3k09,Our Faith,kors k,FALSE,175,BEMANI
+3k10,愛は不死鳥の様に,真紅の薔薇の騎士Prim,FALSE,192,BEMANI
+3k11,Cosmic Hurricane,TAG,FALSE,188,BEMANI
+3k12,guerre à outrance,Vivian,FALSE,180,BEMANI
+3k13,milky ice bear,S-C-U,FALSE,147,BEMANI
+3k14,恋閃繚乱,2B-Waves,FALSE,142,BEMANI
+3k15,December Breeze,dj silverberg,FALSE,182,BEMANI
+3k16,純白レジエンド －冬－,Des-NOW,FALSE,158,BEMANI
+3k17,Almace - HI SPEED EDITION -,Qrispy Joybox,FALSE,186,BEMANI
+3k18,Going My Way,BONUS,FALSE,170,BEMANI
+3k19,Valanga,DJ TOTTO,FALSE,186,BEMANI
+3k20,ROUND!,WESTARENA by MLREC.,FALSE,134,BEMANI
+3k21,梅雪夜,Qrispy Joybox feat.mao,FALSE,167,BEMANI
+3k22,Wizard,Tatsh,FALSE,200,BEMANI
+3k23,Daily Lunch Special,Lucky Vacuum,FALSE,205,BEMANI
+3t01,MANA,DJ YOSHITAKA,FALSE,195,BEMANI
+3t02,"Blind Justice ～Torn souls, Hurt Faiths～",Zektbach,FALSE,165,BEMANI
+3t03,幻想雷神記,98,FALSE,200-268,BEMANI
+3t04,Chinese Snowy Dance,Mutsuhiko Izumi,FALSE,175,BEMANI
+3t05,Ignited Night,HHH,FALSE,149,BEMANI
+3t06,Fantasia,TЁЯRA,FALSE,165,BEMANI
+3t07,London EVOLVED,TAG underground,FALSE,43-340,BEMANI
+3t08,In Heaven,Sota Fujimori,FALSE,149,BEMANI
+3t09,蛇神,Zektbach,FALSE,170,BEMANI
+3t10,天庭,あさき,FALSE,209,BEMANI
+3t11,532nm,Ryu☆,FALSE,177,BEMANI
+3t12,Snake Stick,DJ Yoshitaka VS. DJ Mass MAD Izm*,FALSE,145,BEMANI
+3t13,イブの時代っ！,日向美ビタースイーツ♪,FALSE,210,HinaBitter♪
+3t14,つばめ,あさき,FALSE,180,BEMANI
+3t15,まほろば教,あさき,FALSE,253,BEMANI
+3t16,REcollect,猫叉Master feat. 常盤ゆう,FALSE,115,BEMANI
+3t17,Re:GENERATION,TAG feat. ERi,FALSE,176,BEMANI
+3t18,WONDER WALKER,L.E.D.,FALSE,165,BEMANI
+3t19,Vairocana,五条式改,FALSE,145-290,BEMANI
+3t20,DOUBLE IMPACT,DOUBLE IMPACT,FALSE,265,BEMANI
+3l21,Get Off of My Way,MAN WITH A MISSION,FALSE,135,Pop
+3l22,Sakura Luminance,Ryu☆,FALSE,170,Variety
+3l23,READY STEADY GO,L'Arc～en～Ciel,FALSE,144,Pop
+3l24,三日月,VENUS,FALSE,184,Pop
+3l25,From Noon Till Dawn feat.Tabu Zombie & Kunikazu Tanaka,ストレイテナー,FALSE,184,Pop
+3l26,創聖のアクエリオン,AKINO,FALSE,151,Anime
+3l27,さくら,ケツメイシ,FALSE,120,Pop
+3l28,Dance My Generation,ゴールデンボンバー,FALSE,133,Pop
+3l29,リアルワールド,nano.RIPE,FALSE,196,Anime
+3l30,ふりそでーしょん,きゃりーぱみゅぱみゅ,FALSE,200,Pop
+3l31,ファッションモンスター,きゃりーぱみゅぱみゅ,FALSE,160,Pop
+3k27,水鏡,PON,FALSE,157,BEMANI
+3k28,みんな笑った,seiya-murai feat. 凸BOT娘,FALSE,160,BEMANI
+3k29,Honey Party,Ryu☆,FALSE,188,BEMANI
+3k30,黒点,あさき,FALSE,154,BEMANI
+3k31,Playing With Fire,kors k,FALSE,160,BEMANI
+3k32,Following Flow,猫叉Master,FALSE,175,BEMANI
+3k33,Lights On Me,Sota Fujimori,FALSE,180,BEMANI
+3k34,ストレイ・マーチ,少年ゾディアック,FALSE,180,BEMANI
+3k35,printemps,Qrispy Joybox,FALSE,168,BEMANI
+3k36,ARACHNE,MAX MAXIMIZER,FALSE,179,BEMANI
+3k40,追儺の桜 －春－,Des-TINE,FALSE,158,BEMANI
+3k41,Wow Wow VENUS,VENUS,FALSE,157,BEMANI
+3k42,Windy Fairy,DJ TOTTO,FALSE,180,BEMANI
+3k43,UNLIMITED FIRE-Try to Sing Ver.-,TAG rejected by DJ YOSHITAKA,FALSE,160,BEMANI
+3k44,Nostalgia Is Lost,U1 overground,FALSE,172,BEMANI
+3m01,Elemental Creation,dj TAKA meets DJ YOSHITAKA,FALSE,212,BEMANI
+3m02,ラキラキ,Mutsuhiko Izumi & S-C-U,FALSE,165,BEMANI
+3m03,晴天Bon Voyage,TOMOSUKE × seiya-murai feat. ALT,FALSE,230,BEMANI
+3m04,STULTI,MAX MAXIMIZER VS DJ TOTTO,FALSE,90-182,BEMANI
+3m05,虹色の花,Akhuta y OJ,FALSE,170,BEMANI
+3m06,お米の美味しい炊き方、そしてお米を食べることによるその効果。,大日本鉄倶楽部【あさき＆96】,FALSE,200,BEMANI
+3m07,創世ノート,PON+wac,FALSE,190,BEMANI
+3m08,Synergy For Angels,TAG×U1-ASAMi,FALSE,160,BEMANI
+3m09,Empathetic,Sota÷Des,FALSE,180,BEMANI
+3m10,GAIA,猫叉L.E.D.Master+,FALSE,180,BEMANI
+3k37,anemone,S-C-U feat. Qrispy Joybox,FALSE,200,BEMANI
+3k38,ZZ,D.J.Amuro,FALSE,154,BEMANI
+3m11,chaplet,DJ TOTTO,FALSE,200,BEMANI
+3t21,めうめうぺったんたん！！,日向美ビタースイーツ♪,FALSE,185,BEMANI
+3t22,OVERHEAT -Type R-,DOUBLE IMPACT,FALSE,155,BEMANI
+3t24,L'avide,Zektbach,FALSE,170,BEMANI
+3t25,桜,Reven-G,FALSE,13-320,BEMANI
+3t26,spring pony,S-C-U,FALSE,150,BEMANI
+3t27,Good-bye Chalon,猫叉Master+,FALSE,154,BEMANI
+3t28,アルストロメリア,TAG,FALSE,144,BEMANI
+3t30,The Wind of Gold,kors k,FALSE,170,BEMANI
+3t31,†渚の小悪魔ラヴリィ～レイディオ†,夏色ビキニのPrim,FALSE,190,BEMANI
+3t32,True Blue,dj TAKA feat.AiMEE,FALSE,164,BEMANI
+3t33,アストライアの双皿,ZODIACSYNDICATE,FALSE,173,BEMANI
+3t34,Mirage,Mutsuhiko Izumi,FALSE,170,BEMANI
+3t35,朧,HHH×MM×ST,FALSE,149,BEMANI
+3t36,The Least 100sec,佐々木博史,FALSE,200-264,BEMANI
+3t37,SILVER☆DREAM,jun,FALSE,192,BEMANI
+3t38,Vermilion,Remo-con,FALSE,143,BEMANI
+3t39,Apocalypse ～dirge of swans～,Zektbach,FALSE,170,BEMANI
+3t40,灼熱の翼,マジックアカデミー管弦楽部×劇団レコード,FALSE,166,Game
+3t41,虚空と光明のディスクール,日向美ビタースイーツ♪,FALSE,140,HinaBitter♪
+3t42,Ha･lle･lu･jah,SOUND HOLIC feat. Nana Takahashi,FALSE,150,BEMANI
+3t43,バタフライキャット,daniwell,FALSE,167,BEMANI
+3t44,香港功夫大旋風,Daisuke Ohnuma,FALSE,178,BEMANI
+3t45,TRIGGER★HAPPY,P*Light,FALSE,185,BEMANI
+3t46,Max Burning!!,BlackY,FALSE,190,BEMANI
+3t47,Arousing,DJ TOTTO feat.吉河順央,FALSE,179,BEMANI
+3l32,セツナトリップ,Last Note. feat. GUMI,FALSE,145,Vocaloid
+3l33,にんじゃりばんばん,きゃりーぱみゅぱみゅ,FALSE,130,Pop
+3l34,マツケンサンバII,松平健,FALSE,127,Variety
+3l35,サヨナラじゃない,FUNKY MONKEY BABYS,FALSE,135,Pop
+3l36,RPG,SEKAI NO OWARI,FALSE,135,Pop
+3l37,sister's noise,fripSide,FALSE,144,Anime
+3l38,ルカルカ★ナイトフィーバー,実谷なな,FALSE,160,Variety
+3l40,Blade,青龍,FALSE,191,Variety
+3l41,ラクガキスト,cosMo＠暴走P feat.GUMI,FALSE,199,Vocaloid
+3k46,阿波おどり -Awaodori-,U1ミライダガッキ連,FALSE,140-180,Variety
+3k47,ÆTHER,TAG underground,FALSE,192,BEMANI
+3k48,EMPEROR OF THE AVALON,L.E.D.-G,FALSE,90-180,BEMANI
+3k49,リリーゼと炎龍レーヴァテイン,黒猫ダンジョン,FALSE,200,BEMANI
+3k50,アラベスクの回廊,劇団レコード,FALSE,176,BEMANI
+3k51,examination leave,dj razzle dazzle,FALSE,180,BEMANI
+3k52,Knell,Project B-,FALSE,205,BEMANI
+3k53,Legendary Dragon,Vivian,FALSE,180,BEMANI
+3k54,serendipity,小野秀幸,FALSE,180,BEMANI
+3k55,Screaming Your Faith!!!,itoken vs. 96,FALSE,162,BEMANI
+3k57,Flying soda,猫叉Master feat.林ももこ,FALSE,106,BEMANI
+3k58,Last Memento －花火のない夏－,Des-wim,FALSE,172,BEMANI
+3k59,太陽の子,あさき,FALSE,214,BEMANI
+3k60,海神,兎々,FALSE,159,BEMANI
+3k61,7 Colors,kors k feat.吉河順央,FALSE,156,BEMANI
+3k62,Little Flipper,S-C-U,FALSE,165,BEMANI
+3k64,SPARKLE,Sota Fujimori 2nd Season,FALSE,182,BEMANI
+3m12,Zirkfied,iconoclasm,FALSE,210,BEMANI
+3t48,凛として咲く花の如く ～ひなビタ♪edition～,日向美ビタースイーツ♪,FALSE,163,HinaBitter♪
+3t49,恋とキングコング,日向美ビタースイーツ♪,FALSE,158,HinaBitter♪
+3t50,とってもとっても、ありがとう。,日向美ビタースイーツ♪,FALSE,92,HinaBitter♪
+3t51,éclair au chocolat,kamome sano,FALSE,182,BEMANI
+3t52,PANIC HOLIC,C-Show,FALSE,220,BEMANI
+3t53,Onigo,Hommarju,FALSE,175,BEMANI
+3t54,Devilz Staircase,OSTER project,FALSE,185,BEMANI
+3t55,Proof of the existence,猫叉Master+,FALSE,170,BEMANI
+3t56,perditus†paradisus,iconoclasm,FALSE,172,BEMANI
+3t57,キャトられ♥恋はモ～モク,ギュ～っとしたい♥Prim,FALSE,196,BEMANI
+3t58,ZETA ～素数の世界と超越者～,Zektbach,FALSE,90-180,BEMANI
+3t59,コドモライブ,onoken feat.asami,FALSE,140-146,BEMANI
+3t60,少年は空を辿る,Power Of Nature,FALSE,140,BEMANI
+3t61,シュレーディンガーの猫,Cait Sith,FALSE,187,BEMANI
+3t62,疾風,Power Of Nature,FALSE,180,BEMANI
+3t63,隅田川夏恋歌,seiya-murai feat. ALT,FALSE,180,BEMANI
+3t64,ペリーでぇす！,ブタパンチ,FALSE,160,BEMANI
+3t65,Colorful Cookie,Lucky Vacuum,FALSE,180,BEMANI
+3t66,Smile,Hommarju feat. 実谷なな,FALSE,185,BEMANI
+3t67,Sakura Reflection (P*Light Slayer Remix),P*Light,FALSE,186,BEMANI
+3t68,Qubism,Hate vs Brilliance,FALSE,180,BEMANI
+3l42,1 2 3 ～恋がはじまる～,(いきものがかり),FALSE,158,Pop
+3l43,REVERSI,UVERworld,FALSE,224,Pop
+3l44,Voice,androp,FALSE,140,Pop
+3l45,リライト,(ASIAN KUNG-FU GENERATION),FALSE,179,Pop
+3k65,RAGNAROK,96,FALSE,108-184,BEMANI
+3k66,Candy Drop,SAYA,FALSE,167,BEMANI
+3k67,ロボット☆ライフ,Qrispy Joybox feat.林ももこ,FALSE,177,BEMANI
+3k68,Like+it!,Ryu☆,FALSE,165,BEMANI
+3k69,Chu☆Chu☆Tonight,VENUS,FALSE,165,BEMANI
+3k70,Lapis Philosophorum,Akhuta,FALSE,140,BEMANI
+3k71,空葬,あさき,FALSE,170,BEMANI
+3k72,Ground Shake,kors k,FALSE,200,BEMANI
+3k75,fallen leaves,猫叉Master,FALSE,165,BEMANI
+3k24,双璧のVANESSA,Remixed by REINHARD,FALSE,360,BEMANI
+3k25,Vanity shadow,偽りのAssassin,FALSE,184,BEMANI
+3k26,終焔のClaudia,二代目朱雀,FALSE,90-185,BEMANI
+3m14,Lisa-RICCIA,DJ YOSHITAKA,FALSE,205,BEMANI
+3t69,キルト,Des-Sana+wpt9,FALSE,178,BEMANI
+3t70,Beautiful Dream,REDALiCE feat. anporin,FALSE,182,BEMANI
+3t71,MAXIMIZER,CLI-MAX S.,FALSE,190,BEMANI
+3t85,JOMANDA,DJ YOSHITAKA,FALSE,90-195,BEMANI
+3t72,にゃんだふる55,Dormir,FALSE,235,BEMANI
+3t73,三毛猫JIVE＆ジャイブ,小野秀幸,FALSE,246,BEMANI
+3t74,Intersect Platinum,ZUKI featuring 96,FALSE,180,BEMANI
+3t75,麻雀格闘倶楽部NEXT タイトルデモ～東一局～リーチ,Ｙ．Ｔ．,FALSE,140-155,Game
+3t76,祟竜ヤマタノオロチのテーマ,Vivian vs 猫叉Master,FALSE,165,Game
+3t77,Qipchãq,world sequence,FALSE,150,BEMANI
+3t78,nightbird lost wing,猫叉Master+,FALSE,190,BEMANI
+3t79,Another Phase,TAG,FALSE,160,BEMANI
+3t80,Brand New World,VENUS,FALSE,157,BEMANI
+3t81,Survival Games -ZEUS Mix-,VENUS,FALSE,156,BEMANI
+3t82,START,瀬下千晶,FALSE,168,BEMANI
+3t83,ちくわパフェだよ☆CKP,日向美ビタースイーツ♪,FALSE,205,HinaBitter♪
+3t84,カタルシスの月,日向美ビタースイーツ♪,FALSE,200,HinaBitter♪
+3t86,飛翔 -オープニングテーマ-,マジックアカデミー管弦楽部×劇団レコード,FALSE,105-144,BEMANI
+3t87,polygon,Sota Fujimori,FALSE,174,BEMANI
+3t88,少年リップルズ,常盤ゆう,FALSE,210,BEMANI
+3l46,回レ！雪月花,歌組雪月花,FALSE,160,Anime
+3l47,BLUE DRAGON,青龍,FALSE,191,Variety
+3l48,Water Horizon (BD MIX),青龍,FALSE,191,Variety
+3k76,Freedom,VENUS,FALSE,170,BEMANI
+3k77,マッハマンの歌,あさきのくりむ童話,FALSE,161,BEMANI
+3k80,ソ.レ.ミ.ファ.ソーダ,AKOCHIP ft. nc,FALSE,158,BEMANI
+3k81,Velvet Sentiment,seiya-murai,FALSE,160,BEMANI
+3k82,Cosmic Hurricane-Try to Sing Ver.-,TAG rejected by DJ YOSHITAKA,FALSE,188,BEMANI
+3k84,Ambitious,S-C-U,FALSE,182,BEMANI
+3k85,SPEED BLADE,L.E.D.,FALSE,192,BEMANI
+3k86,Arcanos,DJ Totoriott,FALSE,96,BEMANI
+3k87,CLAMARE,MAX MAXIMIZER,FALSE,112-224,BEMANI
+3m15,Stella Sinistra,Akhuta Philharmonic Orchestra,FALSE,120-180,BEMANI
+3m16,マインド・ゲーム,96 with メカショッチョー,FALSE,180,BEMANI
+3m17,PUNISHER,TAG×PON,FALSE,180,BEMANI
+3m18,HYENA,Hommarju,FALSE,178,BEMANI
+3m20,轟け！恋のビーンボール！！,ダイナミック野球兄弟 v.s. クロスファイヤーPrim,FALSE,180,BEMANI
+3m21,デッドボヲルdeホームラン,猫叉Masterβ2,FALSE,145,BEMANI
+3m22,野球の遊び方 そしてその歴史 ～決定版～,あさき大監督,FALSE,141,BEMANI
+3m23,Squeeze,VENUS feat. Mutsuhiko Izumi,FALSE,173,BEMANI
+3m24,IX,dj TAKA VS DJ TOTTO feat.藍,FALSE,198,BEMANI
+3t89,The Sealer ～ア・ミリアとミリアの民～,Zektbach,FALSE,137-205,BEMANI
+3t90,フレッフレー♪熱血チアガール,裏マドンナだ！Primちゃん,FALSE,195,BEMANI
+3t91,sakura storm,Ryu☆,FALSE,184,BEMANI
+3t92,Evans,DJ YOSHITAKA,FALSE,185,BEMANI
+3t93,High School Love,DJ YOSHITAKA feat.DWP,FALSE,180,BEMANI
+3t94,愛のかたち 幸せのかたち,あさき,FALSE,238,BEMANI
+3t95,Liberation,dj TAKA,FALSE,150,BEMANI
+3t96,THE SAFARI -DJ TOTTO mix-,DJ TOTTO,FALSE,150,BEMANI
+3t97,Russian Snowy Dance,Mutsuhiko Izumi,FALSE,170-240,BEMANI
+3t98,Dispersion Star,ZUKI,FALSE,180,BEMANI
+3t99,星屑のキロク,小野秀幸,FALSE,182,BEMANI
+3t9a,Engraved Mark,Ryu☆ ∞ Des-ROW,FALSE,188,BEMANI
+3t9b,ホーンテッド★メイドランチ,日向美ビタースイーツ♪,FALSE,188,HinaBitter♪
+3t9c,REVOLUTIONARY ADDICT,TAG underground,FALSE,174,BEMANI
+3t9d,走れメロンパン,日向美ビタースイーツ♪,FALSE,170,HinaBitter♪
+3t9e,滅びに至るエランプシス,日向美ビタースイーツ♪,FALSE,158,HinaBitter♪
+3t9f,FIRE (REFLEC Version),Mutsuhiko Izumi,FALSE,184,BEMANI
+4l02,Vitalization,水樹奈々,FALSE,190,Anime
+4l03,カラフル,ClariS,FALSE,178,Anime
+4l04,Aoi,サカナクション,FALSE,164,Pop
+4l05,My VOICE,ファンキー加藤,FALSE,181,Pop
+4l06,テレビ映画「吉宗評判記暴れん坊将軍」BGM,菊池俊輔,FALSE,100-155,Variety
+4l07,Challenge the GAME,REDMAN,FALSE,190,Pop
+4l08,紅蓮の弓矢,Linked Horizon,FALSE,181,Anime
+4l09,W.W.D,でんぱ組.inc,FALSE,190,Pop
+4l10,The Reluctant Heroes,澤野 弘之,FALSE,127,Anime
+4l12,ラブギガヘルツ,末広アンテナ,FALSE,180,Pop
+4l13,放課後ストライド,Last Note.,FALSE,225,Vocaloid
+4l14,天ノ弱,164,FALSE,200-205,Vocaloid
+4l15,いーあるふぁんくらぶ,みきとP,FALSE,145,Vocaloid
+4k01,ハンガリー舞曲 第5番 ～ Hungarian Dances No. 5 ～,Rb. Conductor II,FALSE,162,Variety
+4k02,"ラデツキー行進曲 ～ Radetzky March, Op. 228 ～",Rb. Conductor III,FALSE,148,Variety
+4k03,待宵草,CULTVOICE by S.S.D.PRODUCTS,FALSE,160,BEMANI
+4k04,Get Over!,DJ NAGAI feat. Ayumi Nomiya,FALSE,181,BEMANI
+4k05,ハピ恋☆らぶりぃタイム!!,DJ TOTTO feat.anporin,FALSE,139,BEMANI
+4k06,SCHWARZSCHILD FIELD,L.E.D.,FALSE,150,BEMANI
+4k07,LIGHTNING THUNDERBOLT,TAG,FALSE,155,BEMANI
+4k08,Northern Lights,Hommarju,FALSE,175,BEMANI
+4k09,砂の雨は夜に,あさき,FALSE,214,BEMANI
+4k10,Rush!!(Remix!!),kors k feat.吉河順央,FALSE,180,BEMANI
+4k11,サクラヨゾラ,Xceon feat. Mayumi Morinaga,FALSE,158,BEMANI
+4k12,licca,Qrispy Joybox,FALSE,196,BEMANI
+4k13,Poochie,kors k,FALSE,110-220,BEMANI
+4k14,Sakura Mirage,Ryu☆,FALSE,187,BEMANI
+4k15,アヴァロンの丘,猫叉Master,FALSE,158,BEMANI
+4k16,Cattleya,Sota Fujimori 2nd Season,FALSE,184,BEMANI
+4k17,refrain,dj TAKA feat.AiMEE,FALSE,158,BEMANI
+4k18,Nigra Ludia,Akhuta,FALSE,177,BEMANI
+4k19,天地動伝説,98,FALSE,147,BEMANI
+4k20,Benita,劇団レコード,FALSE,174,BEMANI
+4k21,Chronoxia,DJ Totoriott,FALSE,180,BEMANI
+4k22,VOLTEXES II,Sota Fujimori,FALSE,147,BEMANI
+4k23,FUJIMORI -祭- FESTIVAL,VENUS,FALSE,158,BEMANI
+4k24,LIGHTNING THUNDERBOLT-Try to Sing Ver.-,TAG rejected by DJ TOTTO,FALSE,155,BEMANI
+4t01,Kailua,kors k,FALSE,146,BEMANI
+4t02,狂喜宴舞,栗須承之介,FALSE,169,BEMANI
+4t03,I LOVE SAKURA,CHERRY BLOSSOMS (ASAKI & wac),FALSE,212,BEMANI
+4t04,"ラデツキー行進曲～Radetzky March, op.228～",Rb. Conductor III,FALSE,148,Variety
+4t05,TSAR BOMBA,L.E.D.,FALSE,190,BEMANI
+4t06,ƒƒƒƒƒ,Five Hammer,FALSE,138,BEMANI
+4t07,シャムシールの舞,ゼクトバッハ,FALSE,100-155,BEMANI
+4t08,見習い天使と星降りの丘,DJ TOTTO,FALSE,174,BEMANI
+4t09,蛹,あさき,FALSE,192,BEMANI
+4t10,ツミナガラ...と彼女は謂ふ,あさき,FALSE,153,BEMANI
+4t11,SABER WING,TAG,FALSE,74-222,BEMANI
+4u01,My HERO,chairmans,FALSE,140,U.M.U
+4u02,Everybody Say EDOGAWA,EDOist,FALSE,142,U.M.U
+4u03,HAPPY☆きたかた,KIRA☆GIRL,FALSE,172,U.M.U
+4u04,ルシャナの気持ち,Le Siana,FALSE,172,U.M.U
+4u05,my cosmic world,silQ,FALSE,138,U.M.U
+4u06,Dong! Dong!,Star☆T,FALSE,210,U.M.U
+4u07,マーメイド,T!P,FALSE,154,U.M.U
+4u08,ドリームキャッチャー,アイくるガールズ,FALSE,208,U.M.U
+4u09,僕は君に恋をした,アイドル教室,FALSE,170,U.M.U
+4u10,Field on!,サザン☆クロス,FALSE,170,U.M.U
+4u11,LUCKY-YO!!,だいやぁ☆もんど,FALSE,112,U.M.U
+4u12,Boom! Boom! Miracle Emotion,ひろしま MAPLE★S,FALSE,156,U.M.U
+4u13,CAPTIVE,フルーティー♡,FALSE,160,U.M.U
+4u14,We are チャリンコエンジェルス,浦安マリンエンジェルス,FALSE,145,U.M.U
+4u15,乙女の真骨頂,乙女の純情,FALSE,180,U.M.U
+4u16,川崎純情音頭,川崎純情小町☆,FALSE,132,U.M.U
+4u17,Determination,柊木りお,FALSE,230,U.M.U
+4u18,瞬間 I LOVE YOU,H&A.,FALSE,167,U.M.U
+4u19,A to Z,OSAKA翔GANGS,FALSE,160-204,U.M.U
+4u20,ザッツ！KAIYODO,はちきんガールズ,FALSE,149,U.M.U
+4u21,MITOれて！いばらきっしゅだ～りん,水戸ご当地アイドル(仮),FALSE,173,U.M.U
+4u22,LoveLove DokiDoki,水戸ご当地アイドル(仮),FALSE,160,U.M.U
+4w01,大藝術家 -The Great Artist-,蔡依林 -Jolin Tsai-,FALSE,96,Variety
+4w02,全城熱愛 -Feel The Love-,羅志祥 -Show Lo-,FALSE,130,Variety
+4w03,電司 -DANCE-,LOLLIPOP F,FALSE,130,Variety
+4w04,Don't stop the music,Dream Girls,FALSE,123,Variety
+4w05,嗶嗶嗶 -Bi Bi Bi-,謝金燕 -Jeannie Hsieh-,FALSE,142,Variety
+4l16,On My Wings,kors k,FALSE,130,Variety
+4l17,Force of mind,The 4th(kors k vs Ryu☆),FALSE,170,Variety
+4l18,バンブーソード・ガール,cosMo＠暴走P,FALSE,208,Variety
+4l19,幻想系世界修復少女,Last Note.,FALSE,193,Variety
+4t13,Smooooch・∀・ (Ryu☆ Remix),Ryu☆,FALSE,187,BEMANI
+4t14,Playing With Fire (Sota Fujimori Remix),Sota Fujimori,FALSE,162,BEMANI
+4t15,Gimme a Big Beat (Hommarju Remix),Hommarju,FALSE,170,BEMANI
+4t16,Strobe♡Girl,colate,FALSE,190,BEMANI
+4t17,憂恋☆アクティベーション,u-z,FALSE,150,BEMANI
+4t18,City Edge,winddrums,FALSE,200,BEMANI
+4m01,Idola,iconoclasm feat.GUMI,FALSE,201,BEMANI
+4k27,YELLOW SPLASH!!,P*Light,FALSE,185,BEMANI
+4k49,Chirality,かめりあ,FALSE,201,BEMANI
+4k50,リカーシブ・ファンクション,OSTER project,FALSE,145,BEMANI
+4k51,Army of Marionette,RoughSketch,FALSE,195,BEMANI
+4m02,Cleopatrysm,ピラミッ℃,FALSE,190,BEMANI
+4m03,御千手メディテーション,昇天家族,FALSE,150-190,BEMANI
+4m04,KHAMEN BREAK,くふおー,FALSE,180,BEMANI
+4t19,都会征服Girls☆,日向美ビタースイーツ♪,FALSE,140,HinaBitter♪
+4t20,情操ディストピア,mami,FALSE,228,BEMANI
+4t21,旋律のドグマ～Misérables～,楓璃夢=ジークフリード=ファイエルローゼン,FALSE,192,BEMANI
+4t22,Stand Alone Beat Masta,GUHROOVY,FALSE,200,BEMANI
+4l20,全速力協奏曲,Omoi,FALSE,166,Variety
+4l21,過食性:アイドル症候群,スズム,FALSE,200,Vocaloid
+4l22,ロストワンの号哭,Neru,FALSE,162,Vocaloid
+4l23,クノイチでも恋がしたい,みきとP feat.松下,FALSE,185,Variety
+4l24,ガラクタネバーランド,cosMo＠暴走P feat.灯油,FALSE,200,Variety
+4l25,しんでしまうとはなさけない！,ワンダフル☆オポチュニティ！ feat. kradness＆れをる,FALSE,174,Variety
+4k28,HALOS,SOUND HOLIC feat. Nana Takahashi,FALSE,165,BEMANI
+4k29,オタサー☆レボリューション,ARM(IOSYS) feat. miko & キム,FALSE,185,BEMANI
+4k30,打打打打打打打打打打,ヒゲドライバー join. SELEN,FALSE,156,BEMANI
+4k36,City Never Sleeps,Dirty Androids,FALSE,178,BEMANI
+4k37,Material Factor,岩橋星実(Elements Garden) feat.μ,FALSE,185,BEMANI
+4k38,OverDriveTrain,cosMo＠暴走P,FALSE,301,BEMANI
+4k39,ulexite,ZUKI,FALSE,180,BEMANI
+4k40,らくりん☆パラダイス♪,三章登,FALSE,165,BEMANI
+4k41,三毛猫DANCE,小野秀幸,FALSE,274,BEMANI
+4k66,Super GERO GE-RO,S-C-U,FALSE,188,BEMANI
+4k43,Guilty Destruction,DUALLELE（Akhuta＆DJ TOTTO）,FALSE,140,BEMANI
+4k44,ビビットストリーム,DJ TOTTO,FALSE,184,BEMANI
+4k45,Snow Eagle,Mutsuhiko Izumi,FALSE,200,BEMANI
+4k46,I LOVE SUNFLOWER,CHERRY BLOSSOMS (ASAKI & wac),FALSE,190,BEMANI
+4k47,狂鬼村正,九六VS栗須承之介,FALSE,200,BEMANI
+4u23,Che Che Chelip～魔法のコトバ～,Chelip,FALSE,125-130,U.M.U
+4u24,らいらら,KRD8,FALSE,155,U.M.U
+4u25,HeartLatte,TnyGinA,FALSE,135,U.M.U
+4u26,キライじゃないのぉ,まなみのりさ,FALSE,142,U.M.U
+4u27,ラブラブキュートなハピハピサンデー,Lisapyon♡,FALSE,165,U.M.U
+4t23,温故知新でいこっ！,日向美ビタースイーツ♪,FALSE,118,HinaBitter♪
+4t24,Adularia,DJ TOTTO,FALSE,180,BEMANI
+4t25,DARK LEGACY,BaSTeT,FALSE,196,BEMANI
+4t26,Golden Cross (extended remix),REMO-CON vs dj TAKA,FALSE,154,BEMANI
+4t27,FIRE FIRE,StripE,FALSE,150,BEMANI
+4k52,onslaught,PHQUASE,FALSE,202,BEMANI
+4k54,Cytokinesis,Hommarju,FALSE,111-280,BEMANI
+4k55,Gale Rider,P*Light,FALSE,193,BEMANI
+4k56,Proluvies,かめりあ,FALSE,81-162,BEMANI
+4k64,WICKeD CRφSS,OSTER project,FALSE,180,BEMANI
+4k65,Giant Strength,RoughSketch,FALSE,152,BEMANI
+4k69,鬼天,兎々,FALSE,161,BEMANI
+4k70,Miseria,MAX MAXIMIZER,FALSE,184,BEMANI
+4k71,envidia,猫叉劇団,FALSE,134,BEMANI
+4l26,H.U.D.01 (BEMANI Mix),Ryu☆,FALSE,142,Variety
+4l27,sukha (雷龍 BEMANI Mix),Ryu☆,FALSE,188,Variety
+4t28,ARACHNE(DJ Noriken Remix),DJ Noriken,FALSE,177,BEMANI
+4t29,7 Colors (DJ NAGAI Remix),DJ NAGAI,FALSE,180,BEMANI
+4t30,groovin',Sota Fujimori,FALSE,140,BEMANI
+4t31,Into UR Heart,Sota Fujimori,FALSE,140,BEMANI
+4t32,龍と少女とデコヒーレンス,黒猫ダンジョン,FALSE,165,BEMANI
+4t33,滅亡天使 † にこきゅっぴん,日向美ビタースイーツ♪,FALSE,200,HinaBitter♪
+4l28,アイネクライネ,→Pia-no-jaC←,FALSE,95-127,Pop
+4k58,Genesis At Oasis,白龍,FALSE,212,BEMANI
+4l29,EZ DO DANCE,VENUS,FALSE,148,Pop
+4l30,レット・イット・ゴー～ありのままで～,松たか子,FALSE,137,Pop
+4l31,IGNITE,藍井エイル,FALSE,171,Anime
+4l32,FLAT adding Yuuki Ozaki(from Galileo Galilei),livetune,FALSE,180,Pop
+4l33,炎と森のカーニバル,SEKAI NO OWARI,FALSE,116,Pop
+4k53,anqad,onoken feat.b,FALSE,168,BEMANI
+4k60,Super Duper Racers,kors k & Numb'n'dub,FALSE,170,BEMANI
+4k61,DEADLOCK -Out Of Reach-,U1 undefined behavior,FALSE,205,BEMANI
+4k62,夕刻エレジ -秋-,Des-ROW,FALSE,175,BEMANI
+4k72,はおち～♡カンフー娘の鉄拳フルコース!!,もえよ!攻夫娘々☆Prim,FALSE,157,BEMANI
+4k73,Air Reading Power,ADULTIC TEACHERS,FALSE,184,BEMANI
+4k75,Artifacter,CAPACITY GATE,FALSE,181,BEMANI
+4k77,Time again,猫叉Master,FALSE,97,BEMANI
+4k79,I LOVE COSMOS,CHERRY BLOSSOMS (ASAKI & wac),FALSE,197,BEMANI
+4t34,INSOMNIA,ジャカルタファンクブラザーズ,FALSE,195,BEMANI
+4m05,Ludus In Tenebris,Akhuta,FALSE,126,BEMANI
+4t35,ABSOLUTE,dj TAKA,FALSE,60-144,BEMANI
+4t36,CHOCOLATE PHILOSOPHY,常盤ゆう,FALSE,110,BEMANI
+4t37,LOGICAL DASH,dj TAKA,FALSE,144,BEMANI
+4t38,era (nostalmix),TaQ,FALSE,90-180,BEMANI
+4k80,Thank You Merry Christmas,VENUS,FALSE,220,BEMANI
+4t39,ポチコの幸せな日常,NU-KO,FALSE,192,BEMANI
+4t40,乙女繚乱 舞い咲き誇れ,日向美ビタースイーツ♪,FALSE,210,HinaBitter♪
+4t41,大見解,Des-ROW・組,FALSE,143-172,BEMANI
+4t42,Funky sonic World,Des-ROW feat.SHIGE,FALSE,400,BEMANI
+4t43,BE LOVIN,D-crew,FALSE,185,BEMANI
+4t44,CURUS,D-crew,FALSE,184-188,BEMANI
+4t45,DROP THE BOMB,Scotty D.,FALSE,150,BEMANI
+4t46,AXIS,千本松 仁,FALSE,155,BEMANI
+4t47,fellows,dj TAKA feat. Sana,FALSE,135,BEMANI
+4t48,MAD BLAST,THE INFECTION,FALSE,180,BEMANI
+4t50,GENOM SCREAMS,L.E.D.LIGHT,FALSE,150,BEMANI
+4t51,Presto,Osamu Kubota,FALSE,136,BEMANI
+4t52,JET WORLD,泉 陸奥彦,FALSE,276,BEMANI
+4t53,Go Beyond!!,Ryu☆ Vs. Sota,FALSE,200,BEMANI
+4l34,FUJIMORI -祭- FESTIVAL(EDP Live Mix),VENUS,FALSE,158,Variety
+4m06,Go↓Go↑Girls&Boys!,松下feat.Sota & wac,FALSE,158,BEMANI
+4k81,伐折羅-vajra-,DJ TOTTO VS 兎々,FALSE,173,BEMANI
+4k82,The 4th KAC DJ TOTTO's SELECTION,remixed by DJ TOTTO,FALSE,180-196,BEMANI
+4t49,恋愛観測 -VENUS Mix-,VENUS,FALSE,188,BEMANI
+4t54,I'M GONNA GET YOU!,Kelly Cosmo,FALSE,160,BEMANI
+4t55,the keel,Akino,FALSE,133,BEMANI
+4t56,LOVE IS ORANGE,Orange Lounge,FALSE,180,BEMANI
+4t57,Gamelan de Couple,TOMOSUKE,FALSE,150,BEMANI
+4t62,水月鏡花のコノテーション,日向美ビタースイーツ♪,FALSE,185,HinaBitter♪
+4t63,白露の風,Qrispy Joybox feat. 常盤ゆう,FALSE,166,BEMANI
+4l35,ツーマンライブ,東雲夏陽 meets 日向美ビタースイーツ♪,FALSE,174,HinaBitter♪
+4l36,キモチコネクト,東雲心菜 meets 日向美ビタースイーツ♪,FALSE,150,HinaBitter♪
+4k83,I・MA・SU・GU ALL RIGHT！,VENUS,FALSE,158,BEMANI
+4t58,Flash Back 90's,kors k as disconation,FALSE,155,BEMANI
+4t59,White Eve,さな,FALSE,125,BEMANI
+4t60,HELL SCAPER,L.E.D.LIGHT-G,FALSE,190-200,BEMANI
+4t61,starmine,Ryu☆,FALSE,182,BEMANI
+4t64,Scars of FAUNA,猫叉Master,FALSE,165,BEMANI
+4t65,VOIDDD,Des-ROW feat.Kevin Vecchione,FALSE,136,BEMANI
+4t66,明鏡止水,TOMOSUKE feat.あさき,FALSE,208-290,BEMANI
+4t67,Pink Rose,Kiyommy+Seiya,FALSE,116-146,BEMANI
+4t68,sync,OutPhase (TaQ/dj TAKA),FALSE,167,BEMANI
+4t69,Beyond The Earth,猫叉Master,FALSE,140,BEMANI
+4l37,朝色の紙飛行機,かめりあ,FALSE,132,Variety
+4l38,M.A.Y.U.,Ryu☆ feat.MAYU,FALSE,128,Variety
+4m07,女言葉の消失,Sota Fujimori,FALSE,136,BEMANI
+4k84,十界,あさき,FALSE,184,BEMANI
+4t72,地の記 獄編,あさき,FALSE,174,BEMANI
+4t73,Sonne,あさき,FALSE,156,BEMANI
+4t70,Hello Happiness,P*Light feat. mow*2,FALSE,182,BEMANI
+4t71,Todestrieb,Rche,FALSE,185,BEMANI
+4m08,全力 SPECIAL VACATION!! ～限りある休日～,DJ GW,FALSE,170,BEMANI
+4z01,NEON WORLD,SOUND HOLIC feat. Nana Takahashi,FALSE,154-164,Touhou
+4z02,Scarlet Moon,REDALiCE feat. Ayumi Nomiya,FALSE,180,Touhou
+4z03,Russian Caravan Rhapsody,Power Of Nature,FALSE,158,Touhou
+4z04,ほおずき程度には赤い頭髪,Akhuta,FALSE,174,Touhou
+4z05,取り残された美術(Arranged:HiZuMi),幽閉サテライト feat. senya,FALSE,160,Touhou
+4z06,Struggle,Masayoshi Minoshima(ALR),FALSE,180,Touhou
+4z07,ホメ猫☆センセーション,P*Light feat. mow*2,FALSE,200,Touhou
+4z08,妖隠し -あやかしかくし-,DJ TOTTO feat.3L,FALSE,85,Touhou
+4z09,BEAT-NEW-WORLD,ビートまりお（COOL&CREATE）,FALSE,190,Touhou
+4z10,プレインエイジア -PHQ remix-,PHQUASE,FALSE,182,Touhou
+4z11,竹取飛翔 ～ Lunatic Princess (Ryu☆Remix),Ryu☆,FALSE,171,Touhou
+4z12,千年ノ理,猫叉Master,FALSE,153,Touhou
+4l39,Seventh Heaven,Ryu☆,FALSE,149,Variety
+4l40,contrail tail,movies(moimoi×Xceon×Dai),FALSE,140,Variety
+4l41,光と幻影 (Xceon album ver.),Xceon feat. Mayumi Morinaga,FALSE,145,Variety
+4l42,I'm On Fire,kors k,FALSE,160,Variety
+4t74,COSMIC COWGIRL,Toshio Sakurai,FALSE,145,BEMANI
+4t75,BOBBY SUE AND SKINNY JIM,Raj Ramayya,FALSE,133,BEMANI
+4t76,男々道,Des-ROW･組,FALSE,156-240,BEMANI
+4t77,Spica,D.JW,FALSE,128,BEMANI
+4t78,チョコレートスマイル,日向美ビタースイーツ♪ & ここなつ,FALSE,196,HinaBitter♪
+4l43,ミライプリズム(collaboration ver.),ここなつ meets 日向美ビタースイーツ♪,FALSE,140,HinaBitter♪
+4t79,PULSE,319,FALSE,130,BEMANI
+4t80,GRADIUSIC CYBER,TAKA,FALSE,159-167,BEMANI
+4t81,Nova emoção,Berimbau '66,FALSE,94-136,BEMANI
+4t82,踊るフィーバーロボ,ダニエル＆eimy と よしくん,FALSE,160,BEMANI
+4t92,パ→ピ→プ→Yeah!,ヒゲドライバー join. shully & Nimo,FALSE,160,BEMANI
+4t93,爆なな☆てすとロイヤー,ARM feat.ななひら,FALSE,200,BEMANI
+4t94,童話回廊,DJ TOTTO,FALSE,262,BEMANI
+4t95,音楽,弁士カンタビレオ,FALSE,210-520,BEMANI
+4k57,Eclipse Zero,tūmahaB,FALSE,199,BEMANI
+4t83,♥Love²シュガ→♥,dj TAKA feat.のりあ,FALSE,155,BEMANI
+4t84,Lucy,ELE BLOCK,FALSE,156,BEMANI
+4t85,GUILTY,D.J.SETUP,FALSE,148,BEMANI
+4t86,V,TAKA,FALSE,150,BEMANI
+4t87,Freedom -DEUS Mix-,VENUS,FALSE,170,BEMANI
+4t88,FUJIMORI -祭- FESTIVAL -祭りだ! Sota Fujimori Mix-,VENUS,FALSE,158,BEMANI
+4t89,JET WORLD (Ryu☆Remix),泉 陸奥彦 Remixed by Ryu☆,FALSE,165,BEMANI
+4t90,HELL SCAPER(kors k Remix),L.E.D.LIGHT-G Remixed by kors k,FALSE,190,BEMANI
+4t91,男々道 -otoko PHQ remix-,Des-ROW・組 Remixed by PHQUASE （Gt.かめりあ）,FALSE,88,BEMANI
+4t96,V₂,TAKA,FALSE,150,BEMANI
+4t97,ΔMAX,DM Ashura,FALSE,100-573,BEMANI
+4t98,ヤサイマシ☆ニンニクアブラオオメ,azuma feat. ななひら,FALSE,180,BEMANI
+4m09,In The Breeze,96 & Sota ft. Mayumi Morinaga,FALSE,123-142,BEMANI
+4m10,Peragro,Akhutaとオマツリワッショイズ,FALSE,190,BEMANI
+4m11,BELLS,楽園の囚人,FALSE,93-186,BEMANI
+4m12,夏色DIARY 懐色DIEARY,猫叉王子 feat.矢作川,FALSE,156-230,BEMANI
+4k86,カーテンコール・メモリーズ,DJ TOTTO ＆ Qrispy Joybox,FALSE,173,BEMANI
+4k87,MAGICAL SUMMER SMILE,wac feat. VENUS,FALSE,195,BEMANI
+4t99,neko＊neko,日向美ビタースイーツ♪,FALSE,123,HinaBitter♪
+4l44,MURASAKI,蒼井翔太,FALSE,145,Pop
+4t9a,ZERO-ONE,Mr.T,FALSE,160,BEMANI
+4t9b,MAKE A JAM!,U1,FALSE,124,BEMANI
+4t9c,Ping×Pong×Dash,パーキッツ,FALSE,173,BEMANI
+4t9d,DAY DREAM,Mutsuhiko Izumi,FALSE,80-300,BEMANI
+4t9e,激アツ☆マジヤバ☆チアガール,日向美ビタースイーツ♪,FALSE,170,HinaBitter♪
+4l45,はなまるぴっぴはよいこだけ,A応P,FALSE,172,Anime
+5l01,ハウトゥー世界征服,Neru feat.いかさん,FALSE,151,Variety
+5l02,無頼ック自己ライザー,じーざす（ワンダフル☆オポチュニティ！）feat.kradness,FALSE,150,Variety
+5l03,∞=Inftrumental=,cosMo＠暴走P,FALSE,190,Variety
+5l04,ウミユリ海底譚,n-buna,FALSE,120,Vocaloid
+5l05,東京テディベア,Neru,FALSE,204,Vocaloid
+5l06,シュガーソングとビターステップ,UNISON SQUARE GARDEN,FALSE,132,Pop
+5l07,私以外私じゃないの,ゲスの極み乙女。,FALSE,136,Pop
+5l08,Piano Ninja,maras k/marasy×kors k,FALSE,170,Variety
+5k01,CODE:1,HEXA,FALSE,145,BEMANI
+5k02,Ghost Hunters,96,FALSE,148,BEMANI
+5k03,ヴェニスの慕情,劇団レコードfeat.Mille Face,FALSE,150,BEMANI
+5k04,Palma Lunae,Akhuta,FALSE,144,BEMANI
+5k05,幻影ノ消失,Xceon feat. Mayumi Morinaga,FALSE,160,BEMANI
+5k06,雪月夜,Ryu*,FALSE,155,BEMANI
+5k07,Follow the path,Sota F.,FALSE,150,BEMANI
+5k08,私をディスコに連れてって TOKYO,U1 vs U1 overground,FALSE,142,BEMANI
+5k10,神よ、ニャンコを与えたまえ！,かめりあ feat. ななひら & 謎の黒猫神 Ｗ,FALSE,222,BEMANI
+5k11,Raving Fantasy,RoughSketch,FALSE,185,BEMANI
+5k12,Storm Buster,P*Light,FALSE,193,BEMANI
+5k13,Viden,onoken,FALSE,174,BEMANI
+5k14,God bless you,ヒゲドライバー with 高橋瞳,FALSE,145-185,BEMANI
+5k15,SERVI,Des-ROW vibes Dr.Honda,FALSE,191,BEMANI
+5k16,True Blue [DJ Command Mix],DJ Command,FALSE,164,BEMANI
+5k17,XiNX,cosMo＠暴走P feat.96,FALSE,188,BEMANI
+5k18,Sapphire,kors k,FALSE,140,BEMANI
+5k19,JUST AFTER DARK -零-,SOUND HOLIC feat. Nana Takahashi,FALSE,199,BEMANI
+5k20,いただき! 桃色ゾンビにあん,ARM×狐夢想 feat. 桃箱,FALSE,200,BEMANI
+5k21,リフレクラジカル,ビートまりお(COOL&CREATE),FALSE,200,BEMANI
+5k22,Jungle Jungle,DJ NAGAI,FALSE,196,BEMANI
+5k32,RAIN,dj TAKA,FALSE,159,BEMANI
+5k33,THE LYCANTHROPE,L.E.D.,FALSE,155,BEMANI
+5k34,NIRVANA,Asaki,FALSE,185,BEMANI
+5k36,FIRE 2,Mutsuhiko Izumi,FALSE,165-172,BEMANI
+5k37,Crystalia,DJ TOTTO,FALSE,270,BEMANI
+5k38,Winter Gift ～クリスピーからの贈りもの～,Qrispy Joybox,FALSE,178,BEMANI
+5k39,Journey,猫叉Master,FALSE,112,BEMANI
+5k43,斬刀鬼,Des-ROW・組,FALSE,145-244,BEMANI
+5t01,Erosion Mark,kors k REASM Des-ROW,FALSE,192,BEMANI
+5t02,漆黒のスペシャルプリンセスサンデー,日向美ビタースイーツ♪,FALSE,200,HinaBitter♪
+5z01,チルノのパーフェクトさんすう教室,ARM+夕野ヨシミ feat.miko,FALSE,175,Touhou
+5z02,FUTURE FLIGHT,SOUND HOLIC feat. Nana Takahashi,FALSE,163,Touhou
+5z03,幻想郷の夏祭り,C-CLAYS,FALSE,79-158,Touhou
+5z04,花,豚乙女,FALSE,180,Touhou
+5r01,カラフルミニッツ,Qrispy Joybox feat.mao,TRUE,152,BEMANI
+5r02,Silence,猫叉Master,TRUE,175,BEMANI
+5r03,Survival Games,VENUS,TRUE,152,BEMANI
+5r04,Broken,dj TAKA feat.AiMEE,TRUE,148,BEMANI
+5r05,凛として咲く花の如く,紅色リトマス,TRUE,163,BEMANI
+5r06,Elisha,DJ YOSHITAKA,TRUE,185,BEMANI
+5r07,SigSig,kors k,TRUE,179,BEMANI
+5r08,さよならトリップ,Dormir,TRUE,133,BEMANI
+5r09,Fly to Next World,Qrispy Joybox,TRUE,184,BEMANI
+5r10,MIRACLE MEETS,Lucky Vacuum,TRUE,160,BEMANI
+5r11,Windy Fairy,DJ TOTTO,TRUE,180,BEMANI
+5r12,ちくわパフェだよ☆CKP,日向美ビタースイーツ♪,TRUE,205,HinaBitter♪
+5r14,murmur twins,yu_tokiwa.djw,TRUE,174,BEMANI
+5r15,恋する☆宇宙戦争っ!!,Prim,TRUE,200,BEMANI
+5r18,ストレイ・マーチ,少年ゾディアック,TRUE,180,BEMANI
+5r20,リリーゼと炎龍レーヴァテイン,黒猫ダンジョン,TRUE,200,BEMANI
+5t03,地方創生☆チクワクティクス,日向美ビタースイーツ♪,FALSE,170,HinaBitter♪
+5t05,フラッター現象の顛末と単一指向性の感情論,日向美ビタースイーツ♪,FALSE,206,HinaBitter♪
+5l11,混ぜるな危険,筋肉少女帯,FALSE,178,Anime
+5z05,"Help me, ERINNNNNN!! 小林幸子さん ver.「くーくり博麗お祭りえーりん！」",ビートまりおと小林幸子,FALSE,170,Touhou
+5k23,Crazy Jackpot,Hommarju,FALSE,170,BEMANI
+5k24,アイリス,PHQUASE,FALSE,163,BEMANI
+5k25,DixieLand a la mode,OSTER project,FALSE,250,BEMANI
+5k26,Get Future,DJ Genki feat. yukacco With Gt 三代,FALSE,198,BEMANI
+5k27,F/E/D/R(I Don't Care),DJ Noriken,FALSE,175,BEMANI
+5k28,Hastur,USAO,FALSE,118,BEMANI
+5k29,I Am No One,DJ Myosuke,FALSE,180,BEMANI
+5k30,MOON DUST,源屋 feat.Kuroa*,FALSE,177,BEMANI
+5k31,SEITEN NO TERIYAKI,Kobaryo,FALSE,273,BEMANI
+5k42,CODE:2,HEXA,FALSE,155,BEMANI
+5t16,加油!元気猿!,成城猿楽団,FALSE,60-180,BEMANI
+5t17,Monkey Business,kors k,FALSE,160,BEMANI
+5t18,去る金合戦,あさきのくりむ童話,FALSE,164,BEMANI
+5k45,Rebellio,MAX MAXIMIZER VS DJ TOTTO,FALSE,234,BEMANI
+5k51,The 5th KAC DJ TOTTO's SELECTION,remixed by DJ TOTTO,FALSE,130-186,BEMANI
+5t11,ぽかぽかレトロード,日向美ビタースイーツ♪,FALSE,178,HinaBitter♪
+5t12,完全無欠の無重力ダイブ,日向美ビタースイーツ♪,FALSE,122,HinaBitter♪
+5t13,エキサイティング！！も・ちゃ・ちゃ☆,日向美ビタースイーツ♪,FALSE,187,HinaBitter♪
+5t14,とびっきりのふわっふわ,日向美ビタースイーツ♪,FALSE,110,HinaBitter♪
+5t15,3 A.M. ディテクティブ・ゲーム,日向美ビタースイーツ♪,FALSE,162,HinaBitter♪
+5k46,SAMBA de 恋心,dj TAKA feat. VENUS,FALSE,147,BEMANI
+5m01,きゅん×きゅんばっきゅん☆LOVE,松下feat.Sota & wac,FALSE,165,BEMANI
+5l09,ダイバー,KANA-BOON,FALSE,140,Pop
+5l10,アシタノヒカリ,AAA,FALSE,120,Pop
+5l12,全力バタンキュー,A応P,FALSE,155,Anime
+5l13,ふ・れ・ん・ど・し・た・い,学園生活部,FALSE,148,Anime
+5l14,リクライム,ROOKiEZ is PUNK’D,FALSE,188,Anime
+5l15,ギミチョコ!!,BABYMETAL,FALSE,220,Pop
+5l16,プライド革命,CHICO with HoneyWorks,FALSE,185,Anime
+5l17,Preserved Roses,T.M.Revolution×水樹奈々,FALSE,167,Anime
+5l18,ANTI-HERO,SEKAI NO OWARI,FALSE,105,Pop
+5l19,MOONLiGHT,月龍,FALSE,199,Variety
+5k40,ORIENTAL MESIA,Power Of Nature,FALSE,164,BEMANI
+5k44,Like a nameless flower,阿部靖広 feat.ひうらまさこ,FALSE,172,BEMANI
+5k47,Precious ☆ Star,DJ TOTTO feat.えなこ,FALSE,178,BEMANI
+5k48,Disable Mark,RoughSketch REVET D-crew,FALSE,195,BEMANI
+5k49,ruin of opals,上ノ瀬つかさ,FALSE,220-390,BEMANI
+5k50,EXOTICA,Sota Fujimori 3rd Season,FALSE,180,BEMANI
+5k52,Dreaming,ゆよゆっぱ,FALSE,190,BEMANI
+5k53,Black or Red?,コスモドライバー join. shully & Nimo,FALSE,157,BEMANI
+5t19,透明はまだらに世界を告げて,あさき×剣,FALSE,210,BEMANI
+5t10,For UltraPlayers,cosMo＠暴走P,FALSE,201,BEMANI
+5t06,少女アリスと箱庭幻想コンチェルト,DJ TOTTO,FALSE,134,BEMANI
+5t07,ra'am,雷龍,FALSE,111-222,BEMANI
+5t08,めいさいアイドル☆あいむちゃん♪,DJ SHARPNEL feat. みらい,FALSE,160,BEMANI
+5t09,Blue Spring Express,DJ Scratch & Bend,FALSE,172,BEMANI
+5t20,黒髪乱れし修羅となりて～凛 edition～,日向美ビタースイーツ♪,FALSE,150,HinaBitter♪
+5l20,Dualive,Quarks(kradness×Camellia),FALSE,190,Variety
+5l21,You and me,Quarks(kradness×Camellia),FALSE,128,Variety
+5l22,Infinity Rise(Camellia's 'Inf+1' Remix),Ryu* feat. kradness remixed by Camellia,FALSE,132,Variety
+5l23,Brightness(Camellia's 'Vividness' Remix),kors k feat. kradness remixed by Camellia,FALSE,150,Variety
+5k54,CODE:1 [revision 0.9.8],HEXA,FALSE,145,BEMANI
+5k55,Mathematical Love,三代目 ADULTIC TEACHERS,FALSE,172,BEMANI
+5r22,Time again,猫叉Master,TRUE,97,BEMANI
+5r23,魚氷に上り　耀よひて,あさき,TRUE,106,BEMANI
+5r24,Arcanos,DJ Totoriott,TRUE,96,BEMANI
+5k56,Pleasure with VOLZZA,ACRID-9,FALSE,162-170,BEMANI
+5k57,在るが儘に,Des-ROW・組スペシアルr,FALSE,181,BEMANI
+5k58,Crafty Savior,HuΣeR,FALSE,170,BEMANI
+5t21,H@ppy Choice,good-cool feat. すわひでお,FALSE,168,BEMANI
+5t22,O JIYA,ASMAT & emi,FALSE,151,BEMANI
+5t23,Little Prayer,土岐麻子,FALSE,174,BEMANI
+5t24,カモミール・バスルーム,常盤ゆう,FALSE,168,BEMANI
+5t25,El Dorado,TAG,FALSE,138,BEMANI
+5t26,under control,Kevin Vecchione,FALSE,210,BEMANI
+5m02,"Good bye, Summer～さよならは言わない～",私立BEMANI学園軽音部 OB,FALSE,165,BEMANI
+5l24,SAKURAスキップ,fourfolium,FALSE,165,Anime
+5l25,Now Loading!!!!,fourfolium,FALSE,193,Anime
+5z06,"Help me, ERINNNNNN!! -VENUS mix-",VENUS,FALSE,183,Touhou
+5m03,零の位相,kradness,FALSE,190-205,BEMANI
+5k59,We need love,TOMOSUKE feat. Shiho Rainbow,FALSE,125,BEMANI
+5k60,魔法の言葉,Qrispy Joybox feat.VENUS,FALSE,164,BEMANI
+5t30,無双,SOUND HOLIC Vs. VENUS feat. Nana Takahashi,FALSE,180,BEMANI
+5t27,スカイダイバー,ヒゲドライバー feat. ヒゲドライVAN,FALSE,180,BEMANI
+5t28,怒りと共に去りぬ！！,96 feat.すわひでお,FALSE,190,BEMANI
+5t29,カケラ,豚乙女,FALSE,182,BEMANI
+5t32,リメンバーリメンバー,rino & m＠sumi from plastic penguin,FALSE,182,BEMANI
+5t31,jet coaster☆girl,TOMOSUKE feat. Three Berry Icecream,FALSE,177,BEMANI
+5t33,倉野川音頭,日向美ビタースイーツ♪＆ひなちくん,FALSE,113,HinaBitter♪
+5k61,X-TREME 6,元祖ボーイズ男子ボーイズ,FALSE,200,BEMANI
+5t34,Angelic Jelly,t+pazolite,FALSE,200,BEMANI
+5t35,Sephirot,SHIKI,FALSE,154,BEMANI
+5t36,ZEPHYRANTHES,TAG,FALSE,180,BEMANI
+5t37,StrayedCatz,削除,FALSE,151,BEMANI
+5t38,Grand Chariot,xi,FALSE,191,BEMANI
+5t39,Triple Counter,DJ YOSHITAKA meets dj TAKA,FALSE,216,BEMANI
+6l01,Paradisus-Paradoxum,MYTH & ROID,FALSE,201,Anime
+6l02,オラリオン,やなぎなぎ,FALSE,108-149,Anime
+6k01,彼方のリフレシア,DJ TOTTO feat.Annabel & 日山尚,FALSE,180,BEMANI
+6k02,黒紅掬い,猫叉Master feat.霜月はるか,FALSE,104,BEMANI
+6k03,勇気のペンダント,Qrispy Joybox feat.茶太,FALSE,109,BEMANI
+6k04,Dragon's Tears,96 & keiichi,FALSE,256,BEMANI
+6k05,Emblem of the Moon,dj TAKA,FALSE,150,BEMANI
+6k06,Apocalypse,Morrigan feat. リリィ,FALSE,165,BEMANI
+6k07,アネモイティエライ,bermei.inazawa feat.結良まり,FALSE,164,BEMANI
+6k08,昏き甲鉄のヴェルガ,arcane feat.rionos,FALSE,174,BEMANI
+6k09,ディーナ・シーの踊り,大嶋啓之,FALSE,90-120,BEMANI
+6k10,Night Clock,kidlit/深水チエ,FALSE,134-191,BEMANI
+6k11,know,emon(Tes.) feat.conoqa,FALSE,128,BEMANI
+6k12,Requiem of Lament,Powerless feat. Shoohey,FALSE,160,BEMANI
+6k13,Dracophobia,上ノ瀬つかさ,FALSE,108-178,BEMANI
+6k14,Agony for Glory,RoughSketch,FALSE,175,BEMANI
+6k15,【×▽×】FANTASTIC NxxD BABY【×＿×】,P*Light feat. mow*2,FALSE,145,BEMANI
+6k16,追想ブロカント,onoken feat. Rin,FALSE,92,BEMANI
+6k19,DAWN OF FALCON,L.E.D.-G,FALSE,155,BEMANI
+6k20,Strange Flow,Sota Fujimori,FALSE,140,BEMANI
+6k21,Myth Collapse,HuΣeR,FALSE,222,BEMANI
+6k22,風詠之舞～カゼヨミノマイ,world sequence,FALSE,110,BEMANI
+6k23,彷徨オルフェウス,劇団レコードfeat.猫叉Master,FALSE,150,BEMANI
+6k24,円環のヴァルキュリア -lopulla tragedia-,ARM×狐夢想 feat. anporin,FALSE,200,BEMANI
+6k25,Towards The Horizon,かめりあ,FALSE,154,BEMANI
+6k26,Oh My Jam,Hommarju,FALSE,170,BEMANI
+6k27,宵月の歌姫,OSTER project feat. りぼんぬ,FALSE,210,BEMANI
+6k28,瀦,PHQUASE,FALSE,108,BEMANI
+6k29,BOMBER BOMBER,DJ NAGAI,FALSE,193,BEMANI
+6k30,DREAMER,SOUND HOLIC feat. 709sec.,FALSE,186,BEMANI
+6k32,Nostalgic Magica,cosMo＠暴走P,FALSE,63,BEMANI
+6k17,零,Akhuta Works feat.ランコ（豚乙女）,FALSE,184,BEMANI
+6k31,Point of No Return,kors k,FALSE,145,BEMANI
+6k41,Eira,DJ TOTTO,FALSE,186,BEMANI
+6k18,刹那のカーリギッド ～セトリオスの6の赦罪より～,UNVEIL et 葉月ゆら,FALSE,161,BEMANI
+6l03,一瞬のクオリア,茶太・霜月はるか,FALSE,95,Variety
+6l04,星謳う民,canoue,FALSE,119,Variety
+6l05,捻子巻く時計が月の満ち欠けを刻む,霜月はるか（tieLeaf）,FALSE,84,Variety
+6k37,Catastrophic Dance,the wandering bard feat. 志方あきこ,FALSE,145,BEMANI
+6k44,The 6th KAC DJ TOTTO's SELECTION,remixed by DJ TOTTO Gt.TATSUYA,FALSE,179-234,BEMANI
+6k50,めうめうぺったんたん‼ (割印[Breakcore] Remix),日向美ビタースイーツ♪,FALSE,194,HinaBitter♪
+6t01,nostos,Setaria Virtuoso,FALSE,86-144,BEMANI
+6t02,Everlasting Message,ぺのれり,FALSE,230,BEMANI
+6k33,Lagrangian Point Ø,tūmahaB,FALSE,212,BEMANI
+6k45,Laevateinn -無響鐘剣-,Morrigan feat. リリィ,FALSE,175,BEMANI
+6k46,with Uisce,bermei.inazawa,FALSE,220-240,BEMANI
+6k47,Deadman falling,猫叉Master,FALSE,165,BEMANI
+6k48,Tortura,MAX MAXIMIZER,FALSE,206,BEMANI
+6t03,LEAD Gravity,Des-ROW,FALSE,188,BEMANI
+6t04,glacia,DJ TOTTO,FALSE,186,BEMANI
+6k36,Iluzio De Lunlumo,m@sumi feat.＊spiLa＊,FALSE,128-185,BEMANI
+6k49,LOVE IS BLIND-知らない街で Crazy for You-,VENUS,FALSE,156,BEMANI
+6k53,HAPPY☆PARADISE☆GALAXY,DJ（GW＋ミラクル☆ストーン）÷2,FALSE,182,BEMANI
+6t05,Brazilian Anthem,Berimbau '66,FALSE,260,BEMANI
+6t06,トキメキストリーム,Qrispy Joybox,FALSE,164,BEMANI
+6l06,STEP by STEP UP↑↑↑↑,fourfolium,FALSE,175,Anime
+6l07,JUMPin' JUMP UP!!!!,fourfolium,FALSE,168,Anime
+6k34,穢レテ唱ウハ黄泉ノ呪詛,片霧烈火 ト 少年トトリオット,FALSE,156,BEMANI
+6k42,Step forward,桜庭　統,FALSE,145,BEMANI
+6k43,Maximum Beatissimo!!!!,ITOKEN vs. TATSUYA,FALSE,179,BEMANI
+6k51,Now's the Time,古代祐三,FALSE,148,BEMANI
+6k52,忘れられたピアノの記憶,下村陽子,FALSE,164,BEMANI
+6k54,幻蒼彗星探査旅団,上ノ瀬つかさ,FALSE,333,BEMANI
+6k55,Wolf 424,Xceon,FALSE,188,BEMANI
+6k60,The Reflesia of Eternity,Mephius,FALSE,48-174,BEMANI
+6t07,Hard distance,桜庭 統,FALSE,146,BEMANI
+6t08,バトル XIII,伊藤賢治,FALSE,140-143,BEMANI
+6t09,Majestic Fire,下村陽子,FALSE,180,BEMANI
+6t10,狂月の招き,古代祐三,FALSE,128,Game
+6t11,メアリー牧場の一日,Mutsuhiko Izumi,FALSE,150-158,BEMANI
+6t12,LOTUS,dj TAKA feat. Nana Takahashi,FALSE,160,BEMANI
+6l08,君氏危うくも近うよれ,A応P,FALSE,162,Anime
+6z01,向日葵サンセット,ARM・まろん (IOSYS) × ランコ・パプリカ (豚乙女),FALSE,135,Touhou
+6k56,ミーティアドライブ,OSTER project,FALSE,182,BEMANI
+6k57,イデア,canoue,FALSE,126,BEMANI
+6k59,アエル,S.S.D.FANTASICA,FALSE,126,BEMANI
+6t13,けもののおうじゃ🐾めうめう,日向美ビタースイーツ♪,FALSE,162,HinaBitter♪
+6t14,ミラクル・スイート・スイーツ・マジック！！,日向美ビタースイーツ♪,FALSE,88-206,HinaBitter♪
+6t15,ナイト・オブ・ロンド,日向美ビタースイーツ♪,FALSE,169,HinaBitter♪
+6t16,Drizzly Venom,日向美ビタースイーツ♪,FALSE,147-168,HinaBitter♪
+6t17,銃弾は解を撃ち抜いて,日向美ビタースイーツ♪,FALSE,171,HinaBitter♪
+6t18,キリステゴメン,東雲夏陽,FALSE,156,HinaBitter♪
+6t19,シノビシノノメ,東雲心菜,FALSE,174,HinaBitter♪
+6t20,鴉,L.E.D.-G,FALSE,190,BEMANI
+6t21,CHERNOBOG,漆黒のEBONY,FALSE,200,BEMANI
+6t22,Mynarco,positive MAD-crew,FALSE,181,BEMANI
+6t23,POSSESSION,TAG underground,FALSE,185-370,BEMANI
+6t24,DREAMING-ING!!,ときめきアイドル project,FALSE,180,Game
+6t25,Strawberry Chu♡Chu♡,ときめきアイドル project クッキーパラダイス,FALSE,274,Game
+6t26,恋のパズルマジック,ときめきアイドル project Rhythmixxx,FALSE,140,Game
+6k61,それは音楽が導く永遠の物語,DJ Totoriott,FALSE,80-152,BEMANI
+6m01,50th Memorial Songs -Beginning Story-,BEMANI Sound Team,FALSE,135,BEMANI
+6m02,50th Memorial Songs -二人の時 ～under the cherry blossoms～-,BEMANI Sound Team,FALSE,160,BEMANI
+6m03,50th Memorial Songs -Flagship medley-,BEMANI Sound Team,FALSE,135-175,BEMANI
+6m04,50th Memorial Songs -The BEMANI History-,BEMANI Sound Team,FALSE,136,BEMANI
