@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, statSync, lstatSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs"
+import { copyFileSync, existsSync, statSync, lstatSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs"
 import "node:process"
 import { execSync as run, spawn } from "node:child_process"
 import { relative } from "node:path"
@@ -45,7 +45,7 @@ const readme = readFileSync("./README.md", { encoding: "utf8" })
 const icon = readFileSync("./icon.svg")
 const modifiedReadme = readme.replace(/(?<=<img src=")[^"]+/, `data:image/svg+xml;base64,${icon.toString("base64")}`)
 writeFileSync(`./dist/${pluginNameProd}/README.md`, modifiedReadme, { encoding: "utf8" })
-log("🔵 Packing.")
+log("🔵 Packing")
 const version = readFileSync("./dev/version", { encoding: "utf8" }).replaceAll(/[\r\n]/g, "")
 const distPack = `the-asphyxia-of-eternity-${version}.zip`
 cd("./dist")
@@ -72,8 +72,8 @@ function cloneClient() {
     // clone builded client directory
     cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//])
     // copy pug file
-    copyFileSync(`./client/pug/template.pug`, `${distDir}/profile-detail.pug`)
-    copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame-comment.pug`)
+    copyFileSync(`./client/pug/template.pug`, `${distDir}/profile_detail.pug`) // underscore please
+    copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame_comment.pug`)
 }
 function cloneDir(fromDir, toDir, excludes) {
     if (!existsSync(toDir) || !lstatSync(toDir).isDirectory()) mkdirSync(toDir, { recursive: true })

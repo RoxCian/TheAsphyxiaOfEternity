@@ -24,9 +24,9 @@ jobs:
         -
             name: Install reference packages
             run: |
-                npm ci
+                npm install
                 cd client
-                npm ci
+                npm install
                 cd ..
         -
             name: Pull Asphyxia CORE typedef file

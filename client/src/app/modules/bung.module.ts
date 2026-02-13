@@ -23,12 +23,13 @@ import { BungMenuItemComponent } from "../components/bung/menu-item/menu-item.co
 import { BungDropdownComponent } from "../components/bung/dropdown/dropdown.component"
 import { BungDropdownDirective } from "../directives/bung/dropdown.directive"
 import { BungFieldComponent } from "../components/bung/field/field.component"
-import { Field } from "@angular/forms/signals"
+import { FormField } from "@angular/forms/signals"
 import { BungToggleComponent } from "../components/bung/toggle/toggle.component"
 import { BungNumberInputComponent } from "../components/bung/number-input/number-input.component"
 import { BungModalComponent } from "../components/bung/modal/modal.component"
 import { BungModalDirective } from "../directives/bung/modal.directive";
 import { BungImgSrcDirective } from '../directives/bung/bung-img-src.directive';
+import { ReactiveFormsModule } from "@angular/forms"
 
 @NgModule({
     declarations: [
@@ -63,7 +64,7 @@ import { BungImgSrcDirective } from '../directives/bung/bung-img-src.directive';
     ],
     imports: [
         CommonModule,
-        Field
+        FormField
     ],
     exports: [
         BungCardComponent,

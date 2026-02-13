@@ -103,6 +103,7 @@ async function debugServerDaemon() {
 function cloneServer() {
     const files = readdirSync("./server", { withFileTypes: true, recursive: true })
     const targetPluginDir = resolve(envConfig.asphyxiaDirectory, `plugins/${envConfig.pluginNameDev}`)
+    if (!existsSync(targetPluginDir)) mkdirSync(targetPluginDir)
     const filesInTargetDir = readdirSync(targetPluginDir, { withFileTypes: true, recursive: true })
     for (const file of files) {
         if (file.isDirectory()) continue

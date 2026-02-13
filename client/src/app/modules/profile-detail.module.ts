@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common"
 import { NgModule } from "@angular/core"
-import { FormsModule } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { BungModule } from "./bung.module"
 import { LetsPlayComponent } from "../components/misc/lets-play/lets-play.component"
 import { RhythmicIconComponent } from "../components/misc/rhythm-icon/rhythmic-icon.component"
@@ -58,7 +58,7 @@ import { RbActivityGridComponent } from "../components/specific/activity-grid/rb
 import { RbPlayerCardComponent } from "../components/specific/player-card/rb-player-card/rb-player-card.component"
 import { RbPlayDataSubpage } from "../pages/profile/play-data/play-data.component"
 import { RbSettingsSubpage } from "../pages/profile/settings/settings.component"
-import { Field } from "@angular/forms/signals"
+import { FormField } from "@angular/forms/signals"
 import { RbDefaultCommentPipe } from "../pipes/specific/rb-default-comment.pipe"
 import { RbSettingsSectionComponent } from "../components/specific/settings-section/rb-settings-section/rb-settings-section.component"
 import { RbObjectSizeSelectComponent } from "../components/specific/object-size-select/rb-object-size-select/rb-object-size-select.component"
@@ -139,7 +139,7 @@ import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb
         CommonModule,
         FormsModule,
         BungModule,
-        Field,
+        FormField
     ],
     exports: [
         VersionNavComponent,

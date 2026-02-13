@@ -19,6 +19,6 @@ export class BungFieldComponent {
     readonly labelContext = input<unknown>()
     readonly help = input<BungInsertionContent>()
     readonly helpContext = input<unknown>()
-    readonly field = input<FieldTree<unknown> | undefined>()
+    readonly formField = input<FieldTree<unknown> | undefined>()
     readonly isDirty = input(false, { transform: toggleTransform })
 }

@@ -1,6 +1,6 @@
 <div class="field-label is-normal">
-    <label class="label" [class.is-dirty]="field()?.()?.dirty() || isDirty()">
-        @if (field()?.()?.required()) { * }
+    <label class="label" [class.is-dirty]="formField()?.()?.dirty() || isDirty()">
+        @if (formField()?.()?.required()) { * }
         <bung-insertion [content]="label()" [context]="labelContext()" />
     </label>
 </div>
@@ -11,7 +11,7 @@
             <p class="help">
                 <bung-insertion [content]="help()" [context]="helpContext()" />
             </p>
-            @for (error of field()?.()?.errors(); track error) {
+            @for (error of formField()?.()?.errors(); track error) {
                 <p class="help is-danger">
                     {{ error.message }}
                 </p>
