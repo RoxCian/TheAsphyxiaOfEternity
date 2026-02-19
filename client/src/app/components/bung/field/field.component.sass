@@ -1,18 +1,16 @@
 bung-field
     display: block
     
-    label
+    label bung-insertion
         position: relative
-
-        bung-insertion
-            display: inline-grid
-    label::before
+        display: inline-grid
+    label bung-insertion::before
         position: absolute
         content: "●"
         right: -1em
         opacity: 0
         transition: opacity var(--animation-duration-lv3) var(--ease-in)
-    label.is-dirty::before
+    label.is-dirty bung-insertion::before
         opacity: 1
     &.is-fullwidth .control
         width: 100%

@@ -3,11 +3,12 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb1MusicRecord, Rb1PlayerBase, Rb1PlayerCustom, Rb1PlayerReleasedInfo, Rb1StageLog } from "../../models/rb1/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, Rb1SettingsResponse, RbPlayerPerformanceResponse, RbItemResponse, RbAvailableItemResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, Rb1SettingsResponse, RbPlayerPerformanceResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { hasLeapDay } from "../../utils/utility_functions"
 import { RbLobbySettings } from "../../models/shared/lobby"
-import { rbItems } from "../../data/tables/rb_items"
+import { RbSettingsFactory, contextQueryElement, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared/settings"
+import { readAvailableItemsShared } from "../shared/available_items"
 
 type V = 1
 const version = 1 as const
@@ -17,8 +18,9 @@ export function registerRb1Controllers() {
     C.route("rb1ReadPlayerPerformance", readPlayerPerformance)
     C.route("rb1ReadRecords", readRecords)
     C.route("rb1ReadStageLogs", readStageLogs)
-    C.route("rb1ReadSettings", readSettings)
     C.route("rb1ReadAvailableItems", readAvailableItems)
+    C.route("rb1ReadSettings", readSettings)
+    C.route("rb1WriteSettings", writeSettings)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -85,27 +87,41 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
-const readSettings: C.C<RbRequest, Rb1SettingsResponse> = async data => {
-    const base = await DBH.findOne<Rb1PlayerBase>(data.rid, { collection: "rb.rb1.player.base" })
-    const custom = await DBH.findOne<Rb1PlayerCustom>(data.rid, { collection: "rb.rb1.player.custom" })
-    const lobbySettings = await DBH.findOne<RbLobbySettings<1>>(undefined, { collection: "rb.rb1.player.lobbySettings#userId", userId: base.userId }) ?? new RbLobbySettings(version, base.userId)
-    return {
-        name: base.name,
-        comment: base.comment ?? "",
-        shotSound: custom.stageShotSound,
-        shotVolume: custom.stageShotVolume,
-        explodeEffect: custom.stageExplodeType,
-        frame: custom.stageFrameType,
-        background: custom.stageBackground,
-        backgroundBrightness: custom.stageBackgroundBrightness,
-        backgroundMusic: custom.stageBackgroundMusic,
-        isLobbyEnabled: lobbySettings.isEnabled
-    } as Rb1SettingsResponse
-}
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb1PlayerReleasedInfo>(data.rid, { collection: "rb.rb1.player.releasedInfo" })
-    return (await rbItems).filter(i => i.version === version && (i.isUnlockedByDefault || released.some(r => r.type === i.typeId && r.id === i.value))).map(i => ({ typeId: i.typeId, value: i.value }))
+    return await readAvailableItemsShared(version, released, [])
 }
+
+type Rb1SettingsContext = {
+    base: Rb1PlayerBase
+    custom: Rb1PlayerCustom
+    lobbySettings: RbLobbySettings<V>
+}
+const rb1SettingsFactory: RbSettingsFactory<Rb1SettingsResponse, Rb1SettingsContext> = {
+    contextQuery: {
+        base: { collection: "rb.rb1.player.base" },
+        custom: { collection: "rb.rb1.player.custom" },
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb1.player.lobbySettings#userId", userId: ctx.base.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.base.userId)),
+    },
+    factory: {
+        name: "base.name",
+        comment: {
+            read: ctx => ctx.base.comment ?? "",
+            write: (v, ctx) => ctx.base.comment = !v ? "" : v
+        },
+        shotSound: "custom.stageShotSound",
+        shotVolume: "custom.stageShotVolume",
+        explodeEffect: "custom.stageExplodeType",
+        frame: "custom.stageFrameType",
+        background: "custom.stageBackground",
+        backgroundBrightness: "custom.stageBackgroundBrightness",
+        backgroundMusic: "custom.stageBackgroundMusic",
+        isLobbyEnabled: "lobbySettings.isEnabled"
+    }
+}
+
+const readSettings: C.C<RbRequest, Rb1SettingsResponse> = async data => readSettingsUsingFactory(data.rid, rb1SettingsFactory)
+const writeSettings: C.C<RbRequest & Rb1SettingsResponse, RbWriteSettingsResponse> = async data => writeSettingsUsingFactory(data.rid, data, rb1SettingsFactory)
 
 async function toStageLogResponse(l: Rb1StageLog): Promise<RbStageLogResponse<V, Rb1ChartType>> {
     return {

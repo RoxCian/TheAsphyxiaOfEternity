@@ -32,20 +32,6 @@ export function hasLeapDay(): boolean {
     if ((year % 100 !== 0 && year % 4 !== 0) || (year % 100 === 0 && year % 400 !== 0)) return false
     return now.getMonth() >= 2
 }
-
-export async function log(data: any, file?: string) {
-    if (!file) file = "./rblog.txt"
-    let s = IO.Exists(file) ? await IO.ReadFile(file, "") : ""
-    if (typeof data === "string") s += data + "\n"
-    else {
-        let n = ""
-        try {
-            n = JSON.stringify(data)
-        } catch { }
-        s += n + "\n"
-    }
-    await IO.WriteFile(file, s)
-}
 export function base64ToBuffer(str: string, size?: number): Buffer {
     if (size != undefined) {
         const rem = size - Math.trunc(size / 3) * 3

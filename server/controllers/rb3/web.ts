@@ -3,14 +3,15 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
 import { hasLeapDay } from "../../utils/utility_functions"
-import { rbItems } from "../../data/tables/rb_items"
 import { Rb3Mylist } from "../../models/rb3/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
+import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared/settings"
+import { readAvailableItemsShared } from "../shared/available_items"
 
 type V = 3
 const version = 3 as const
@@ -20,8 +21,9 @@ export function registerRb3Controllers() {
     C.route("rb3ReadPlayerPerformance", readPlayerPerformance)
     C.route("rb3ReadRecords", readRecords)
     C.route("rb3ReadStageLogs", readStageLogs)
-    C.route("rb3ReadSettings", readSettings)
     C.route("rb3ReadAvailableItems", readAvailableItems)
+    C.route("rb3ReadSettings", readSettings)
+    C.route("rb3WriteSettings", writeSettings)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -112,50 +114,60 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = async data => await Promise.all((await DBH.find<Rb3PlayerStageLog>(data.rid, { collection: "rb.rb3.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
-const readSettings: C.C<RbRequest, Rb3SettingsResponse> = async data => {
-    const account = await DBH.findOne<Rb3PlayerAccount>(data.rid, { collection: "rb.rb3.player.account" })
-    const base = await DBH.findOne<Rb3PlayerBase>(data.rid, { collection: "rb.rb3.player.base" })
-    const custom = await DBH.findOne<Rb3PlayerCustom>(data.rid, { collection: "rb.rb3.player.custom" })
-    const config = await DBH.findOne<Rb3PlayerConfig>(data.rid, { collection: "rb.rb3.player.config" })
-    const lobbySettings = await DBH.findOne<RbLobbySettings<3>>(undefined, { collection: "rb.rb3.player.lobbySettings#userId", userId: account.userId }) ?? new RbLobbySettings(version, account.userId)
-    const mylist = await DBH.findOne<Rb3Mylist>(data.rid, { collection: "rb.rb3.player.mylist" })
-    return {
-        name: base.name,
-        comment: base.comment ?? "",
-        bywordLeft: config.bywordLeft,
-        bywordRight: config.bywordRight,
-        isAutoBywordLeft: config.isAutoBywordLeft,
-        isAutoBywordRight: config.isAutoBywordRight,
-        mainGaugeType: custom.stageMainGaugeType,
-        clearGaugeType: custom.stageClearGaugeType,
-        objectSize: custom.stageObjectSize,
-        shotSound: custom.stageShotSound,
-        shotVolume: custom.stageShotVolume,
-        explodeEffect: custom.stageExplodeType,
-        frame: custom.stageFrameType,
-        background: custom.stageBackground,
-        backgroundBrightness: custom.stageBackgroundBrightness,
-        backgroundMusic: config.musicSelectBgm,
-        touchMarkerDisplayingType: custom.stageTouchMarkerDisplayingType,
-        isLobbyEnabled: lobbySettings.isEnabled,
-        mylist: mylist?.slot.map(m => m.musicId) ?? []
-    }
-}
-const itemTypesAdditional = [7, 8] // [bywordLeft, bywordRight]
-const defaultUnlockedItemsAdditional = [[0], [0]]
+
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo" })
-    const result = (await rbItems).filter(i => i.version === version && (i.isUnlockedByDefault || released.some(r => r.type === i.typeId && r.id === i.value))).map(i => ({ typeId: i.typeId, value: i.value }))
-    const additional = released.filter(r => itemTypesAdditional.includes(r.type)).map(r => ({ typeId: r.type, value: r.id }))
-    for (let i = 0; i < itemTypesAdditional.length; i++) {
-        for (const u of defaultUnlockedItemsAdditional[i]) {
-            if (!additional.some(a => a.typeId === itemTypesAdditional[i] && a.value === u)) {
-                additional.push({ typeId: itemTypesAdditional[i], value: u })
-            }
+    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0] }, { type: 8, id: [0] }]) // bywordLeft, bywordRight
+}
+
+type Rb3SettingsContext = {
+    account: Rb3PlayerAccount
+    base: Rb3PlayerBase
+    custom: Rb3PlayerCustom
+    config: Rb3PlayerConfig
+    lobbySettings: RbLobbySettings<V>
+    mylist?: Rb3Mylist
+}
+const rb3SettingsFactory: RbSettingsFactory<Rb3SettingsResponse, Rb3SettingsContext> = {
+    contextQuery: {
+        account: { collection: "rb.rb3.player.account" },
+        base: { collection: "rb.rb3.player.base" },
+        custom: { collection: "rb.rb3.player.custom" },
+        config: { collection: "rb.rb3.player.config" },
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb3.player.lobbySettings#userId", userId: ctx.account.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.account.userId)),
+        mylist: contextQueryElement({ collection: "rb.rb3.player.mylist" }, "rid", () => new Rb3Mylist())
+    },
+    factory: {
+        name: "base.name",
+        comment: {
+            read: ctx => ctx.base.comment ?? "",
+            write: (v, ctx) => ctx.base.comment = !v ? "" : v
+        },
+        bywordLeft: "config.bywordLeft",
+        bywordRight: "config.bywordRight",
+        isAutoBywordLeft: "config.isAutoBywordLeft",
+        isAutoBywordRight: "config.isAutoBywordRight",
+        mainGaugeType: "custom.stageMainGaugeType",
+        clearGaugeType: "custom.stageClearGaugeType",
+        objectSize: "custom.stageObjectSize",
+        shotSound: "custom.stageShotSound",
+        shotVolume: "custom.stageShotVolume",
+        explodeEffect: "custom.stageExplodeType",
+        frame: "custom.stageFrameType",
+        background: "custom.stageBackground",
+        backgroundBrightness: "custom.stageBackgroundBrightness",
+        backgroundMusic: "config.musicSelectBgm",
+        touchMarkerDisplayingType: "custom.stageTouchMarkerDisplayingType",
+        isLobbyEnabled: "lobbySettings.isEnabled",
+        mylist: {
+            read: ctx => ctx.mylist.slot?.map(m => m.musicId) ?? [],
+            write: (v, ctx) => ctx.mylist.slot = v.filter(m => m >= 0).map((m, i) => ({ slotId: i, musicId: m }))
         }
     }
-    return [...result, ...additional]
 }
+
+const readSettings: C.C<RbRequest, Rb3SettingsResponse> = data => readSettingsUsingFactory(data.rid, rb3SettingsFactory)
+const writeSettings: C.C<RbRequest & Rb3SettingsResponse, RbWriteSettingsResponse> = data => writeSettingsUsingFactory(data.rid, data, rb3SettingsFactory)
 
 async function toStageLogResponse(l: Rb3PlayerStageLog): Promise<RbStageLogResponse<V, Rb1ChartType>> {
     return {

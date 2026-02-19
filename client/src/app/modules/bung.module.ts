@@ -29,7 +29,6 @@ import { BungNumberInputComponent } from "../components/bung/number-input/number
 import { BungModalComponent } from "../components/bung/modal/modal.component"
 import { BungModalDirective } from "../directives/bung/modal.directive";
 import { BungImgSrcDirective } from '../directives/bung/bung-img-src.directive';
-import { ReactiveFormsModule } from "@angular/forms"
 
 @NgModule({
     declarations: [

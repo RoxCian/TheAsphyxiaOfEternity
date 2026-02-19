@@ -194,6 +194,22 @@ input.input
 
     bung-divider
         min-height: 1px
+    .button-and-notification
+        display: flex
+        align-items: center
+        gap: 1em
+    .saved, .failed
+        color: var(--bulma-color)
+
+        &.enter
+            animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-in)
+        &.leave
+            animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+    .failed
+        text-align: right
+
+        bung-icon
+            justify-content: end
 rb-level-display-switch.is-floated
     bottom: 7em
 rb-level-display-switch.enter
@@ -213,3 +229,10 @@ rb-level-display-switch.leave
         transform: translateX(10em)
     to
         transform: none
+@keyframes rb-submit-info-enter-animation
+    from
+        transform: translateX(2em)
+        opacity: 0
+    to
+        transform: none
+        opacity: 1

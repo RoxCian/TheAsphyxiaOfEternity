@@ -3,14 +3,13 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerCustom, Rb6PlayerReleasedInfo, Rb6PlayerStageLog } from "../../models/rb6/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { rb6PastelLevel } from "../../data/tables/rb6_pastel_level"
 import { Rb6MusicRecord } from "../../models/rb6/music_record"
 import { Rb6Classcheck } from "../../models/rb6/classcheck"
 import { getRbByword } from "../../data/tables/rb_bywords"
 import { hasLeapDay } from "../../utils/utility_functions"
-import { rbItems } from "../../data/tables/rb_items"
 import { Rb6Mylist } from "../../models/rb6/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
 import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
@@ -18,6 +17,8 @@ import { rb6RankingQuests } from "../../data/tables/rb6_ranking_quests"
 import { rb6Equips } from "../../data/tables/rb6_equips"
 import { rb6CharacterCards } from "../../data/tables/rb6_characard"
 import { Rb6CharacterCard } from "../../models/rb6/character_card"
+import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared/settings"
+import { readAvailableItemsShared } from "../shared/available_items"
 
 type V = 6
 const version = 6 as const
@@ -28,11 +29,12 @@ export function registerRb6Controllers() {
     C.route("rb6ReadRecords", readRecords)
     C.route("rb6ReadClasschecks", readClasschecks)
     C.route("rb6ReadStageLogs", readStageLogs)
-    C.route("rb6ReadSettings", readSettings)
     C.route("rb6ReadAvailableItems", readAvailableItems)
     C.route("rb6ReadRankingQuests", readRankingQuests)
     C.route("rb6ReadEquips", readEquips)
     C.route("rb6ReadCharacterCards", readCharacterCards)
+    C.route("rb6ReadSettings", readSettings)
+    C.route("rb6WriteSettings", writeSettings)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -139,69 +141,83 @@ const readClasschecks: C.C<RbRequest, RbClasscheckResponse<V>[]> = async data =>
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb6ChartType>[]> = async data => await Promise.all((await DBH.find<Rb6PlayerStageLog>(data.rid, { collection: "rb.rb6.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
-const readSettings: C.C<RbRequest, Rb6SettingsResponse> = async data => {
-    const account = await DBH.findOne<Rb6PlayerAccount>(data.rid, { collection: "rb.rb6.player.account" })
-    const base = await DBH.findOne<Rb6PlayerBase>(data.rid, { collection: "rb.rb6.player.base" })
-    const custom = await DBH.findOne<Rb6PlayerCustom>(data.rid, { collection: "rb.rb6.player.custom" })
-    const config = await DBH.findOne<Rb6PlayerConfig>(data.rid, { collection: "rb.rb6.player.config" })
-    const lobbySettings = await DBH.findOne<RbLobbySettings<6>>(undefined, { collection: "rb.rb6.player.lobbySettings#userId", userId: account.userId }) ?? new RbLobbySettings(version, account.userId)
-    const miscSettings = await DBH.findOne<Rb6MiscSettings>(data.rid, { collection: "rb.rb6.player.misc" }) ?? new Rb6MiscSettings()
-    const mylist = await DBH.findOne<Rb6Mylist>(data.rid, { collection: "rb.rb6.player.mylist" })
-    return {
-        name: base.name,
-        comment: base.comment ?? "",
-        bywordLeft: config.bywordLeft,
-        bywordRight: config.bywordRight,
-        isAutoBywordLeft: config.isAutoBywordLeft,
-        isAutoBywordRight: config.isAutoBywordRight,
-        highSpeed: parseFloat((custom.stageHighSpeed / 10 + 1).toFixed(1)),
-        clearGaugeType: custom.stageClearGaugeType,
-        achievementRateDisplayingType: custom.stageAchievementRateDisplayingType,
-        objectSize: custom.stageObjectSize,
-        sameTimeObjectsDisplayingType: custom.stageSameTimeObjectsDisplayingType,
-        shotSound: custom.stageShotSound,
-        shotVolume: custom.stageShotVolume,
-        explodeEffect: custom.stageExplodeType,
-        frame: custom.stageFrameType,
-        background: custom.stageBackground,
-        backgroundBrightness: custom.stageBackgroundBrightness,
-        backgroundMusic: config.musicSelectBgm,
-        bigbangEffectPerformingType: custom.stageBigBangEffectPerformingType,
-        rivalObjectsDisplayingType: custom.stageRivalObjectsDisplayingType,
-        topAssistDisplayingType: custom.stageTopAssistDisplayingType,
-        chatSoundSwitch: custom.stageChatSoundSwitch,
-        colorSpecified: custom.stageColorSpecified,
-        isLobbyEnabled: lobbySettings.isEnabled,
-        rankingQuestIndex: miscSettings.rankingQuestIndex,
-        pastelParts: base.pastelParts,
-        characterCardId: config.characterCardId,
-        mylist: mylist?.mylist ?? []
-    }
-}
-const itemTypesAdditional = [6, 7, 9, 10, 11, 12] // [characard, byword, pastel_head, pastel_top, pastel_under, pastel_arms]
-const defaultUnlockedItemsAdditional = [[], [0, 1], [0], [0], [0], [0]]
+
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb6PlayerReleasedInfo>(data.rid, { collection: "rb.rb6.player.releasedInfo" })
-    const result = (await rbItems).filter(i => i.version === version && (i.isUnlockedByDefault || released.some(r => r.type === i.typeId && r.id === i.value))).map(i => ({ typeId: i.typeId, value: i.value }))
-    const additional = released.filter(r => itemTypesAdditional.includes(r.type)).map(r => ({ typeId: r.type, value: r.id }))
-    for (let i = 0; i < itemTypesAdditional.length; i++) {
-        for (const u of defaultUnlockedItemsAdditional[i]) {
-            if (!additional.some(a => a.typeId === itemTypesAdditional[i] && a.value === u)) {
-                additional.push({ typeId: itemTypesAdditional[i], value: u })
-            }
-        }
-    }
+    const result = await readAvailableItemsShared(version, released, [
+        { type: 6, id: [] }, { type: 7, id: [0, 1] }, // characard, byword
+        { type: 9, id: [0] }, { type: 10, id: [0] }, { type: 11, id: [0] }, { type: 12, id: [0] } // pastel_head, pastel_top, pastel_under, pastel_arms
+    ])
     // it seems default character cards won't be saved as released info
     const defaultCharaCards = await DBH.find<Rb6CharacterCard>(data.rid, { collection: "rb.rb6.player.characterCard", characterCardId: { $gte: 0, $lte: 2 } })
-    for (const charaCard of defaultCharaCards) if (!additional.find(c => c.typeId === 6 && c.value === charaCard.characterCardId)) additional.push({
+    for (const charaCard of defaultCharaCards) if (!result.find(c => c.typeId === 6 && c.value === charaCard.characterCardId)) result.push({
         typeId: 6,
         value: charaCard.characterCardId
     })
 
-    return [...result, ...additional]
+    return result
 }
 const readEquips: C.C<{}, Rb6EquipmentInfo[]> = () => rb6Equips
 const readCharacterCards: C.C<{}, Rb6CharacterCardInfo[]> = () => rb6CharacterCards
+
+type Rb6SettingsContext = {
+    account: Rb6PlayerAccount
+    base: Rb6PlayerBase
+    custom: Rb6PlayerCustom
+    config: Rb6PlayerConfig
+    lobbySettings: RbLobbySettings<V>
+    miscSettings: Rb6MiscSettings
+    mylist: Rb6Mylist
+}
+const rb6SettingsFactory: RbSettingsFactory<Rb6SettingsResponse, Rb6SettingsContext> = {
+    contextQuery: {
+        account: { collection: "rb.rb6.player.account" },
+        base: { collection: "rb.rb6.player.base" },
+        custom: { collection: "rb.rb6.player.custom" },
+        config: { collection: "rb.rb6.player.config" },
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb6.player.lobbySettings#userId", userId: ctx.account.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.account.userId)),
+        miscSettings: contextQueryElement({ collection: "rb.rb6.player.misc" }, "rid", () => new Rb6MiscSettings()),
+        mylist: contextQueryElement({ collection: "rb.rb6.player.mylist" }, "rid", () => new Rb6Mylist())
+    },
+    factory: {
+        name: "base.name",
+        comment: {
+            read: ctx => ctx.base.comment ?? "",
+            write: (v, ctx) => ctx.base.comment = !v ? "" : v
+        },
+        bywordLeft: "config.bywordLeft",
+        bywordRight: "config.bywordRight",
+        isAutoBywordLeft: "config.isAutoBywordLeft",
+        isAutoBywordRight: "config.isAutoBywordRight",
+        highSpeed: {
+            read: ctx => parseFloat((ctx.custom.stageHighSpeed / 10 + 1).toFixed(1)),
+            write: (v, ctx) => ctx.custom.stageHighSpeed = Math.round((v - 1) * 10)
+        },
+        clearGaugeType: "custom.stageClearGaugeType",
+        achievementRateDisplayingType: "custom.stageAchievementRateDisplayingType",
+        objectSize: "custom.stageObjectSize",
+        sameTimeObjectsDisplayingType: "custom.stageSameTimeObjectsDisplayingType",
+        shotSound: "custom.stageShotSound",
+        shotVolume: "custom.stageShotVolume",
+        explodeEffect: "custom.stageExplodeType",
+        frame: "custom.stageFrameType",
+        background: "custom.stageBackground",
+        backgroundBrightness: "custom.stageBackgroundBrightness",
+        bigbangEffectPerformingType: "custom.stageBigBangEffectPerformingType",
+        rivalObjectsDisplayingType: "custom.stageRivalObjectsDisplayingType",
+        topAssistDisplayingType: "custom.stageTopAssistDisplayingType",
+        chatSoundSwitch: "custom.stageChatSoundSwitch",
+        colorSpecified: "custom.stageColorSpecified",
+        isLobbyEnabled: "lobbySettings.isEnabled",
+        rankingQuestIndex: "miscSettings.rankingQuestIndex",
+        pastelParts: "base.pastelParts",
+        characterCardId: "config.characterCardId",
+        mylist: "mylist.mylist"
+    }
+}
+
+const readSettings: C.C<RbRequest, Rb6SettingsResponse> = data => readSettingsUsingFactory(data.rid, rb6SettingsFactory)
+const writeSettings: C.C<RbRequest & Rb6SettingsResponse, RbWriteSettingsResponse> = data => writeSettingsUsingFactory(data.rid, data, rb6SettingsFactory)
 
 const readRankingQuests: C.C<{}, Rb6RankingQuestResponse[]> = async () => {
     const quests = await rb6RankingQuests

@@ -231,6 +231,10 @@ export type RbSettingsResponse<TVersion extends RbVersion> =
     TVersion extends 3 ? Rb3SettingsResponse :
     TVersion extends 2 ? Rb2SettingsResponse :
     Rb1SettingsResponse
+export type RbWriteSettingsResponse = {
+    state: "succeeded" | "failed"
+    reason?: string[]
+}
 
 export type Rb6UploadAsphyxiaDataRequest = {
     sessionId: string

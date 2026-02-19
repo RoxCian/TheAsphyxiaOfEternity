@@ -56,4 +56,15 @@ export class RbProfileService {
         router.events.subscribe(updateRid)
         updateRid()
     }
+
+    reload(version: RbVersion) {
+        switch (version) {
+            case 1: return this.rb1Profile.reload()
+            case 2: return this.rb2Profile.reload()
+            case 3: return this.rb3Profile.reload()
+            case 4: return this.rb4Profile.reload()
+            case 5: return this.rb5Profile.reload()
+            case 6: return this.rb6Profile.reload()
+        }
+    }
 }

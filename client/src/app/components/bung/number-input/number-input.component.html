@@ -1,6 +1,6 @@
 <div class="bung-input-addon-right">
-    <button class="button spin-button-add" [disabled]="disabled()" (click)="onIncrease()"><i class="mdi mdi-plus"></i></button>
-    <button class="button spin-button-sub" [disabled]="disabled()" (click)="onDecrease()"><i class="mdi mdi-minus"></i></button>
+    <button class="button spin-button-add" type="button" [disabled]="disabled()" (click)="onIncrease()"><i class="mdi mdi-plus"></i></button>
+    <button class="button spin-button-sub" type="button" [disabled]="disabled()" (click)="onDecrease()"><i class="mdi mdi-minus"></i></button>
 </div>
 <div class="bung-input-content" [class.is-active]="isInputFocused()" [class.is-disabled]="disabled()">
     @if (disabled() || readonly()) {

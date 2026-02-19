@@ -1,6 +1,6 @@
 import { ICollection } from "./db_types"
 import { GetType, isType, Type } from "../types"
-import { getPropertyDescriptor, log } from "../utility_functions"
+import { getPropertyDescriptor } from "../utility_functions"
 
 export namespace DBH {
     // DB operation serialization
@@ -371,25 +371,21 @@ export namespace DBH {
         async commit(): Promise<any[]> {
             const result = []
             for (let s of this.submissions) {
-                if (s.operation == "skip") continue
+                if (s.operation === "skip") continue
                 if (s.doc) delete s.doc._id
-                try {
-                    switch (s.operation) {
-                        case "insert":
-                            result.push(await insert(s.refid, s.doc, s.isPublicDoc))
-                            break
-                        case "update":
-                            result.push(await update(s.refid, s.query, s.doc, s.isPublicDoc))
-                            break
-                        case "upsert":
-                            result.push(await upsert(s.refid, s.query, s.doc, s.isPublicDoc))
-                            break
-                        case "remove":
-                            result.push(await remove(s.refid, s.query, s.isPublicDoc))
-                            break
-                    }
-                } catch (e) {
-                    await log(Date.now().toLocaleString() + " Error: " + (e as Error).message)
+                switch (s.operation) {
+                    case "insert":
+                        result.push(await insert(s.refid, s.doc, s.isPublicDoc))
+                        break
+                    case "update":
+                        result.push(await update(s.refid, s.query, s.doc, s.isPublicDoc))
+                        break
+                    case "upsert":
+                        result.push(await upsert(s.refid, s.query, s.doc, s.isPublicDoc))
+                        break
+                    case "remove":
+                        result.push(await remove(s.refid, s.query, s.isPublicDoc))
+                        break
                 }
             }
             return result

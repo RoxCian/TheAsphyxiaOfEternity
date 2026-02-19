@@ -3,15 +3,16 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog } from "../../models/rb5/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
 import { getRbByword } from "../../data/tables/rb_bywords"
 import { hasLeapDay } from "../../utils/utility_functions"
-import { rbItems } from "../../data/tables/rb_items"
 import { Rb5Mylist } from "../../models/rb5/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
+import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared/settings"
+import { readAvailableItemsShared } from "../shared/available_items"
 
 type V = 5
 const version = 5 as const
@@ -22,8 +23,9 @@ export function registerRb5Controllers() {
     C.route("rb5ReadRecords", readRecords)
     C.route("rb5ReadClasschecks", readClasschecks)
     C.route("rb5ReadStageLogs", readStageLogs)
-    C.route("rb5ReadSettings", readSettings)
     C.route("rb5ReadAvailableItems", readAvailableItems)
+    C.route("rb5ReadSettings", readSettings)
+    C.route("rb5WriteSettings", writeSettings)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -118,56 +120,63 @@ const readClasschecks: C.C<RbRequest, RbClasscheckResponse<V>[]> = async data =>
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = async data => await Promise.all((await DBH.find<Rb5PlayerStageLog>(data.rid, { collection: "rb.rb5.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
-const readSettings: C.C<RbRequest, Rb5SettingsResponse> = async data => {
-    const account = await DBH.findOne<Rb5PlayerAccount>(data.rid, { collection: "rb.rb5.player.account" })
-    const base = await DBH.findOne<Rb5PlayerBase>(data.rid, { collection: "rb.rb5.player.base" })
-    const custom = await DBH.findOne<Rb5PlayerCustom>(data.rid, { collection: "rb.rb5.player.custom" })
-    const config = await DBH.findOne<Rb5PlayerConfig>(data.rid, { collection: "rb.rb5.player.config" })
-    const lobbySettings = await DBH.findOne<RbLobbySettings<5>>(undefined, { collection: "rb.rb5.player.lobbySettings#userId", userId: account.userId }) ?? new RbLobbySettings(version, account.userId)
-    const mylist = await DBH.findOne<Rb5Mylist>(data.rid, { collection: "rb.rb5.player.mylist" })
-    return {
-        name: base.name,
-        comment: base.comment ?? "",
-        bywordLeft: config.bywordLeft,
-        bywordRight: config.bywordRight,
-        isAutoBywordLeft: config.isAutoBywordLeft,
-        isAutoBywordRight: config.isAutoBywordRight,
-        highSpeed: custom.stageHighSpeed,
-        mainGaugeType: custom.stageMainGaugeType,
-        clearGaugeType: custom.stageClearGaugeType,
-        achievementRateDisplayingType: custom.stageAchievementRateDisplayingType,
-        objectSize: custom.stageObjectSize,
-        sameTimeObjectsDisplayingType: custom.stageSameTimeObjectsDisplayingType,
-        shotSound: custom.stageShotSound,
-        shotVolume: custom.stageShotVolume,
-        explodeEffect: custom.stageExplodeType,
-        frame: custom.stageFrameType,
-        background: custom.stageBackground,
-        backgroundBrightness: custom.stageBackgroundBrightness,
-        backgroundMusic: config.musicSelectBgm,
-        rivalObjectsDisplayingType: custom.stageRivalObjectsDisplayingType,
-        topAssistDisplayingType: custom.stageTopAssistDisplayingType,
-        voiceMessageSet: custom.voiceMessageSet,
-        voiceMessageVolume: custom.voiceMessageVolume,
-        isLobbyEnabled: lobbySettings.isEnabled,
-        mylist: mylist?.mylist ?? []
-    }
-}
-const itemTypesAdditional = [7] // [byword]
-const defaultUnlockedItemsAdditional = [[0, 1]]
+
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb5PlayerReleasedInfo>(data.rid, { collection: "rb.rb5.player.releasedInfo" })
-    const result = (await rbItems).filter(i => i.version === version && (i.isUnlockedByDefault || released.some(r => r.type === i.typeId && r.id === i.value))).map(i => ({ typeId: i.typeId, value: i.value }))
-    const additional = released.filter(r => itemTypesAdditional.includes(r.type)).map(r => ({ typeId: r.type, value: r.id }))
-    for (let i = 0; i < itemTypesAdditional.length; i++) {
-        for (const u of defaultUnlockedItemsAdditional[i]) {
-            if (!additional.some(a => a.typeId === itemTypesAdditional[i] && a.value === u)) {
-                additional.push({ typeId: itemTypesAdditional[i], value: u })
-            }
-        }
-    }
-    return [...result, ...additional]
+    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0, 1] }]) // byword
 }
+
+type Rb5SettingsContext = {
+    account: Rb5PlayerAccount
+    base: Rb5PlayerBase
+    custom: Rb5PlayerCustom
+    config: Rb5PlayerConfig
+    lobbySettings: RbLobbySettings<V>
+    mylist: Rb5Mylist
+}
+const rb5SettingsFactory: RbSettingsFactory<Rb5SettingsResponse, Rb5SettingsContext> = {
+    contextQuery: {
+        account: { collection: "rb.rb5.player.account" },
+        base: { collection: "rb.rb5.player.base" },
+        custom: { collection: "rb.rb5.player.custom" },
+        config: { collection: "rb.rb5.player.config" },
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb5.player.lobbySettings#userId", userId: ctx.account.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.account.userId)),
+        mylist: contextQueryElement({ collection: "rb.rb5.player.mylist" }, "rid", () => new Rb5Mylist())
+    },
+    factory: {
+        name: "base.name",
+        comment: {
+            read: ctx => ctx.base.comment ?? "",
+            write: (v, ctx) => ctx.base.comment = !v ? "" : v
+        },
+        bywordLeft: "config.bywordLeft",
+        bywordRight: "config.bywordRight",
+        isAutoBywordLeft: "config.isAutoBywordLeft",
+        isAutoBywordRight: "config.isAutoBywordRight",
+        highSpeed: "custom.stageHighSpeed",
+        mainGaugeType: "custom.stageMainGaugeType",
+        clearGaugeType: "custom.stageClearGaugeType",
+        achievementRateDisplayingType: "custom.stageAchievementRateDisplayingType",
+        objectSize: "custom.stageObjectSize",
+        sameTimeObjectsDisplayingType: "custom.stageSameTimeObjectsDisplayingType",
+        shotSound: "custom.stageShotSound",
+        shotVolume: "custom.stageShotVolume",
+        explodeEffect: "custom.stageExplodeType",
+        frame: "custom.stageFrameType",
+        background: "custom.stageBackground",
+        backgroundBrightness: "custom.stageBackgroundBrightness",
+        backgroundMusic: "config.musicSelectBgm",
+        rivalObjectsDisplayingType: "custom.stageRivalObjectsDisplayingType",
+        topAssistDisplayingType: "custom.stageTopAssistDisplayingType",
+        voiceMessageSet: "custom.voiceMessageSet",
+        voiceMessageVolume: "custom.voiceMessageVolume",
+        isLobbyEnabled: "lobbySettings.isEnabled",
+        mylist: "mylist.mylist"
+    }
+}
+
+const readSettings: C.C<RbRequest, Rb5SettingsResponse> = data => readSettingsUsingFactory(data.rid, rb5SettingsFactory)
+const writeSettings: C.C<RbRequest & Rb5SettingsResponse, RbWriteSettingsResponse> = data => writeSettingsUsingFactory(data.rid, data, rb5SettingsFactory)
 
 async function toStageLogResponse(l: Rb5PlayerStageLog): Promise<RbStageLogResponse<V, Rb4ChartType>> {
     return {
