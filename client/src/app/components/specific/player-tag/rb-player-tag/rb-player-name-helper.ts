@@ -1,4 +1,4 @@
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 import { RbProfileService } from "../../../../services/specified/rb-profile.service"
 import { Signal } from "@angular/core"
 

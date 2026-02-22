@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { RbChartType, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbVersion } from "rbweb"
 import { toRbChartTypeLiteral } from "../../utils/rb-functions"
 
 @Pipe({

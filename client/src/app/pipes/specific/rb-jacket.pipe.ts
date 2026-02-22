@@ -1,5 +1,5 @@
 import { computed, Pipe, PipeTransform, SecurityContext, Signal } from "@angular/core"
-import { RbChartType, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbVersion } from "rbweb"
 import { RbJacketsService } from "../../services/specified/rb-jackets.service"
 
 // const jacketsIncluded: string[] = []

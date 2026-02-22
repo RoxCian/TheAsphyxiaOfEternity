@@ -1,5 +1,5 @@
 import { Directive, ElementRef, computed, effect, input } from "@angular/core"
-import { RbChartType, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbVersion } from "rbweb"
 import { toRbChartTypeLiteral } from "../../utils/rb-functions"
 
 @Directive({

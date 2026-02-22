@@ -1,5 +1,5 @@
 import { Component, input, linkedSignal } from "@angular/core"
-import { RbStageLogResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupComponent } from "../../../bung/popup/popup.component"
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 
 @Component({
     selector: "rb-matching-grade",

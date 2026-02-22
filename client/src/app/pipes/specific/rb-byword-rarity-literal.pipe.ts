@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { RbBywordRarity } from "server/models/shared/web"
+import { RbBywordRarity } from "rbweb"
 
 @Pipe({
     name: "rbBywordRarityLiteral",

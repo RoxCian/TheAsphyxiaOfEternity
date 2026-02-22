@@ -1,5 +1,5 @@
 import { computed, Injectable } from "@angular/core"
-import { RbClasscheckResponse, RbVersionWithClasscheck } from "server/models/shared/web"
+import { RbClasscheckResponse, RbVersionWithClasscheck } from "rbweb"
 import { RbPlayDataService } from "./rb-play-data.service"
 
 @Injectable({

@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core"
-import { RbStageLogResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 
 
 @Component({

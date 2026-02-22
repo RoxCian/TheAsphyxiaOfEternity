@@ -1,5 +1,5 @@
 import { Component, computed, inject, input } from "@angular/core"
-import { RbVersion, RbColor } from "server/models/shared/web"
+import { RbVersion, RbColor } from "rbweb"
 import { getPlayerEntry, playerEntryEquals } from "./rb-player-name-helper"
 import { BungThemeService } from "../../../../services/bung/theme.service"
 import { toggleTransform } from "../../../../signals/transforms"

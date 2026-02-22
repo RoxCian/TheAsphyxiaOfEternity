@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from "@angular/core"
 import { Router } from "@angular/router"
-import { RbPlayerResponse, RbRequest, RbVersion } from "server/models/shared/web"
+import { RbPlayerResponse, RbRequest, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { env } from "../../../env/env"
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { rbData } from "../../signals/rb-data"
-import { RbRequest, RbWebAppConfigResponse } from "server/models/shared/web"
+import { RbRequest, RbWebAppConfigResponse } from "rbweb"
 
 @Injectable({ providedIn: "root" })
 export class RbWebAppConfigService {

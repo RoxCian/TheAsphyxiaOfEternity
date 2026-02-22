@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, computed, input } from "@angular/core"
-import { RbChartType, RbClearTypeLiteral, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbClearTypeLiteral, RbVersion } from "rbweb"
 import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
 
 const HTransitionParams = { width: "0", height: "*", translate: "translateX(-120%)" }

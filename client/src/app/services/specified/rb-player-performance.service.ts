@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core"
 import { RbVersionService } from "./rb-version.service"
-import { RbPlayerPerformanceResponse, RbVersion } from "server/models/shared/web"
+import { RbPlayerPerformanceResponse, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbProfileService } from "./rb-profile.service"
 

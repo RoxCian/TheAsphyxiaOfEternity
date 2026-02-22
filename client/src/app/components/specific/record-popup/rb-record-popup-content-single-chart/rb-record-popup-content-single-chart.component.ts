@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, computed, inject, model, signal, viewChild } from "@angular/core"
-import { RbMusicRecordResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 import { RbChartLightComponent } from "../../chart-light/rb-chart-light/rb-chart-light.component"
 import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"

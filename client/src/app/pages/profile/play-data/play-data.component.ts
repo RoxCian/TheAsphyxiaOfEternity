@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, Injector, signal, viewChild } from "@angular/core"
-import { RbVersion, RbChartType, RbVersionWithClasscheck, Rb4DojoIndex, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse } from "server/models/shared/web"
+import { RbVersion, RbChartType, RbVersionWithClasscheck, Rb4DojoIndex, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse } from "rbweb"
 import { AutoLoadPanelComponent, AutoLoadEvent } from "../../../components/misc/auto-load-panel/auto-load-panel.component"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
 import { RbClasscheckService } from "../../../services/specified/rb-classcheck.service"

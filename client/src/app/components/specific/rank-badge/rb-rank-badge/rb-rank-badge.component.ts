@@ -1,5 +1,5 @@
 import { Component, computed, input } from "@angular/core"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 import { numeric, linkedToggle, toggleTransform } from "../../../../signals/transforms"
 import { getRbRank } from "../../../../utils/rb-functions"
 

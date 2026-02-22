@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core"
-import { RbStageLogResponse, Rb1ChartType } from "server/models/shared/web"
+import { RbStageLogResponse, Rb1ChartType } from "rbweb"
 
 @Component({
     selector: "rb3-stage-log-popup-content",

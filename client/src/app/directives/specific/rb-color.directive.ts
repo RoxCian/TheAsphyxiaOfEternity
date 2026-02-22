@@ -1,6 +1,6 @@
 import { Directive, effect, ElementRef, input } from "@angular/core"
 import { toggleTransform } from "../../signals/transforms"
-import { RbColor } from "server/models/shared/web"
+import { RbColor } from "rbweb"
 
 @Directive({
     selector: "[rbColor]",

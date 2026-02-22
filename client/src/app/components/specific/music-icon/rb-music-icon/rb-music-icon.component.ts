@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core"
-import { RbChartType, RbMusicResponse, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbMusicResponse, RbVersion } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
 import { BungIntersectionService } from "../../../../services/bung/intersection.service"
 

@@ -1,5 +1,5 @@
 import { Component, computed, ElementRef, inject, input, viewChild } from "@angular/core"
-import { RbMusicRecordResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbRecordPopupComponent } from "../../record-popup/rb-record-popup/rb-record-popup.component"
 import { RbLogService } from "../../../../services/specified/rb-log.service"

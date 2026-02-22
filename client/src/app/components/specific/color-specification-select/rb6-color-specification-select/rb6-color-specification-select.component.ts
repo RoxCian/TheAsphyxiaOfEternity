@@ -1,6 +1,6 @@
 import { Component, model } from "@angular/core"
 import { FormValueControl } from "@angular/forms/signals"
-import { RbColorSpecification } from "server/models/shared/rb_types"
+import { RbColorSpecification } from "rbweb"
 
 @Component({
     selector: "rb6-color-specification-select",

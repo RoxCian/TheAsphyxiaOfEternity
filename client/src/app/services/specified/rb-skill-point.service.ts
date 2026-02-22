@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from "@angular/core"
-import { RbChartInfo, RbChartType, RbMusicInfo, RbMusicRecordResponse, RbScoreResponse, RbVersion } from "server/models/shared/web"
+import { RbChartInfo, RbChartType, RbMusicInfo, RbMusicRecordResponse, RbScoreResponse, RbVersion } from "rbweb"
 import { RbMusicRecordService } from "./rb-music-record.service"
 
 export type RbSkillPointEntry<TVersion extends RbVersion> = {

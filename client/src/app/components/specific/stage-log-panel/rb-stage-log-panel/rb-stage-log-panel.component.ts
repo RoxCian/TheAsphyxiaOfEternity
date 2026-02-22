@@ -1,5 +1,5 @@
 import { Component, computed, inject, input } from "@angular/core"
-import { RbStageLogResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-popup/rb-stage-log-popup.component"
 import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"

@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal } from "@angular/core"
-import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "server/models/shared/web"
+import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
 import { RbPlayDataSubpage } from "../../../../pages/profile/play-data/play-data.component"
@@ -71,7 +71,7 @@ export class RbPlayerCardComponent {
         return (Object.keys(profileSubpages) as (keyof typeof profileSubpages)[]).find(k => profileSubpages[k] === s)
     })
 
-    protected readonly fakeVersionArray = computed(() => [{ version: this.profile()?.version}])
+    protected readonly fakeVersionArray = computed(() => [{ version: this.profile()?.version }])
 
     protected toRb3PlayerEventLevel(value?: number) {
         if (value == undefined) return 0

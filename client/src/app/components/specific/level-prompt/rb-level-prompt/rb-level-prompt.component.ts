@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewEncapsulation, computed, effect, input } from "@angular/core"
 import { RbLevelDisplayService } from "../../../../services/specified/rb-level-display.service"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 
 @Component({
     selector: "rb-level",

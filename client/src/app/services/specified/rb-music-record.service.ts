@@ -1,5 +1,5 @@
 import { computed, Injectable } from "@angular/core"
-import { RbMusicRecordResponse, RbVersion } from "server/models/shared/web"
+import { RbMusicRecordResponse, RbVersion } from "rbweb"
 import { RbPlayDataService } from "./rb-play-data.service"
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core"
 import { RbVersionService } from "./rb-version.service"
-import { RbVersion } from "server/models/shared/rb_types"
+import { RbVersion } from "rbweb"
 
 @Injectable({ providedIn: "root" })
 export class RbLogService {

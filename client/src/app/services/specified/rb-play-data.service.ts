@@ -1,6 +1,6 @@
 import { effect, inject, Injectable, Signal, signal } from "@angular/core"
 import { RbVersionService } from "./rb-version.service"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbProfileService } from "./rb-profile.service"
 import { HttpResourceRef } from "@angular/common/http"

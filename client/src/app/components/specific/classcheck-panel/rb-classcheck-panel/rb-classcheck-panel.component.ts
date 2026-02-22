@@ -1,5 +1,5 @@
 import { Component, computed, input } from "@angular/core"
-import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "server/models/shared/web"
+import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "rbweb"
 
 @Component({
     selector: "rb-classcheck",

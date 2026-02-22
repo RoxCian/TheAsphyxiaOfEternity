@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, computed, input } from "@angular/core"
-import { RbByword, RbBywordRarity } from "server/models/shared/web"
+import { RbByword, RbBywordRarity } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, output } from "@angular/core"
-import { RbMusicResponse, RbVersion } from "server/models/shared/web"
+import { RbMusicResponse, RbVersion } from "rbweb"
 import { RbSettingsService } from "../../../../services/specified/rb-settings.service"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
 import { BungIntersectionService } from "../../../../services/bung/intersection.service"

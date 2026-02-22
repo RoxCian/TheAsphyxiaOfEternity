@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, output } from "@angular/core"
 import { Router } from "@angular/router"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 import { RbProfileService } from "./rb-profile.service"
 import { initiatedSignal } from "../../signals/initiated-signal"
 
@@ -16,11 +16,11 @@ export class RbVersionService {
         6: this.profileService.rb6Profile.hasValue() && !!this.profileService.rb6Profile.value(),
     }))
     readonly isLoading = computed(() => {
-        return this.profileService.rb1Profile.isLoading() || 
-            this.profileService.rb2Profile.isLoading() || 
-            this.profileService.rb3Profile.isLoading() || 
-            this.profileService.rb4Profile.isLoading() || 
-            this.profileService.rb5Profile.isLoading() || 
+        return this.profileService.rb1Profile.isLoading() ||
+            this.profileService.rb2Profile.isLoading() ||
+            this.profileService.rb3Profile.isLoading() ||
+            this.profileService.rb4Profile.isLoading() ||
+            this.profileService.rb5Profile.isLoading() ||
             this.profileService.rb6Profile.isLoading()
     })
     readonly defaultVersion = computed<RbVersion>(() => {

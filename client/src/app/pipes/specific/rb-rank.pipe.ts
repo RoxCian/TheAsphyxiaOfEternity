@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { RbVersion } from "server/models/shared/web"
+import { RbVersion } from "rbweb"
 import { getRbRank } from "../../utils/rb-functions"
 
 @Pipe({

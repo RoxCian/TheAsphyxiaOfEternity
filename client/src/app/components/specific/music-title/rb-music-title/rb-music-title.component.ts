@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from "@angular/core"
-import { RbChartType, RbMusicInfo, RbMusicVariation, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbMusicInfo, RbMusicVariation, RbVersion } from "rbweb"
 import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
 
 @Component({

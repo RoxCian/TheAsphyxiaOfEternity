@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core"
-import { RbVersion, RbVersionLiteral } from "server/models/shared/web"
+import { RbVersion, RbVersionLiteral } from "rbweb"
 
 @Pipe({
     name: "rbTitle",

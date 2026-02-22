@@ -1,5 +1,5 @@
 import { computed, effect, inject, Injectable, linkedSignal, signal } from "@angular/core"
-import { createRbSettingsResponse, Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6RankingQuestResponse, RbAvailableItemResponse, RbByword, RbItemResponse, RbMusicResponse, RbRequest, RbSettingsResponse, RbVersion, RbWriteSettingsResponse } from "server/models/shared/web"
+import { createRbSettingsResponse, Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6RankingQuestResponse, RbAvailableItemResponse, RbByword, RbItemResponse, RbMusicResponse, RbRequest, RbSettingsResponse, RbVersion, RbWriteSettingsResponse } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbVersionService } from "./rb-version.service"
 import { RbProfileService } from "./rb-profile.service"
@@ -85,8 +85,8 @@ export class RbSettingsService {
     }
 }
 
-type CastToVersion<T, TVersion extends RbVersion> = 
+type CastToVersion<T, TVersion extends RbVersion> =
     T extends FieldTree<RbSettingsResponse<RbVersion>, string | number> ? FieldTree<RbSettingsResponse<TVersion>, string | number> :
-    T extends SchemaPathTree<RbSettingsResponse<RbVersion>, PathKind.Root> ? SchemaPathTree<RbSettingsResponse<TVersion>, PathKind.Root> : 
+    T extends SchemaPathTree<RbSettingsResponse<RbVersion>, PathKind.Root> ? SchemaPathTree<RbSettingsResponse<TVersion>, PathKind.Root> :
     T extends RbSettingsResponse<RbVersion> ? RbSettingsResponse<TVersion> :
     never

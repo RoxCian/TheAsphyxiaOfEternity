@@ -1,5 +1,5 @@
 import { computed, Injectable } from "@angular/core"
-import { RbChartType, RbStageLogResponse, RbVersion } from "server/models/shared/web"
+import { RbChartType, RbStageLogResponse, RbVersion } from "rbweb"
 import { RbPlayDataService } from "./rb-play-data.service"
 
 @Injectable({

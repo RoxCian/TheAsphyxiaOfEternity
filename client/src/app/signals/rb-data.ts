@@ -1,6 +1,6 @@
 import { HttpHeaders, httpResource, HttpResourceRef } from "@angular/common/http"
 import { isSignal, Signal } from "@angular/core"
-import { RbRequest } from "server/models/shared/web"
+import { RbRequest } from "rbweb"
 
 const headers = new HttpHeaders({
     "content-type": "application/json"
@@ -26,8 +26,8 @@ export function rbData<TResponse = unknown, TRequest = RbRequest>(name: string |
                 headers: headers
             }
         }, {
-            
-        }
+
+    }
     )
 }
 export function rbDataText<TRequest = RbRequest>(name: string | (() => string | undefined) | undefined, data: TRequest | Signal<TRequest>): HttpResourceRef<string | undefined> {

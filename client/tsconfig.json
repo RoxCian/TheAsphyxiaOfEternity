@@ -19,11 +19,8 @@
       "module": "ES2022",
       "useDefineForClassFields": false,
       "paths": {
-        "server/": [
-          "../server"
-        ],
-        "server/*": [
-          "../server/*"
+        "rbweb": [
+          "../server/models/shared/web"
         ]
       }
     },

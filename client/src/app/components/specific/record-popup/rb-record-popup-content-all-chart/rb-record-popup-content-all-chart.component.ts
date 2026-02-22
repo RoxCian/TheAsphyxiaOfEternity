@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, model, signal, viewChild } from "@angular/core"
-import { RbMusicRecordResponse, RbChartType, RbVersion } from "server/models/shared/web"
+import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbChartLightComponent } from "../../chart-light/rb-chart-light/rb-chart-light.component"
 import { viewChildren } from "@angular/core"
