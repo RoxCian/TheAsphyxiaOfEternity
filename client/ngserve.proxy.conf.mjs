@@ -3,7 +3,9 @@ import * as rl from "node:readline"
 
 const env = JSON.parse(readFileSync("../dev/config/env.conf.json"))
 const ngConf = JSON.parse(readFileSync("./angular.json"))
+const version = readFileSync("../dev/version")
 let port = 8083
+const ngPort = ngConf.projects[Object.keys(ngConf.projects)[0]].architect.serve.configurations.development.port
 const asphyxiaConfigPath = `${env.asphyxiaDirectory}/config.ini`
 if (existsSync(asphyxiaConfigPath)) {
     const asphyxiaConfigStream = createReadStream(asphyxiaConfigPath)
@@ -20,7 +22,6 @@ if (existsSync(asphyxiaConfigPath)) {
         }
     }
 }
-const ngPort = ngConf.projects[Object.keys(ngConf.projects)[0]].architect.serve.configurations.development.port
 
 export default [
     {
@@ -60,6 +61,15 @@ export default [
         secure: false,
         bypass: (req, res, options) => {
             res.end(env.debugRid)
+            return true
+        }
+    },
+    {
+        context: ["/dev/version"],
+        target: `http://localhost:${ngPort}`,
+        secure: false,
+        bypass: (req, res, options) => {
+            res.end(version)
             return true
         }
     }

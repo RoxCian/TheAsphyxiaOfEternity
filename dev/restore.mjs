@@ -90,6 +90,9 @@ cd("client")
 await run("npm install", "😟 Failed to install packages.")
 cd("..")
 
+log("🔵 Install Angular CLI.")
+await run("npm install -g @angular/cli", "😟 Failed to install Angular CLI.")
+
 log("🔵 Install packages in Asphyxia CORE plugin directory.")
 const home = resolve("./")
 cd(`${envConfig.asphyxiaDirectory}/plugins`)

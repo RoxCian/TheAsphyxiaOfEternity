@@ -67,10 +67,10 @@ function cloneClient() {
     if (!existsSync(distDir)) mkdirSync(distDir, { recursive: true })
     const distFiles = readdirSync(distDir, { withFileTypes: true, recursive: true })
     for (const file of distFiles) {
-        if (file.name.match(/^chunk-[A-Za-z0-9]/)) unlinkSync(`${file.parentPath}/${file.name}`)
+        if (file.name.match(/.+\.js/)) unlinkSync(`${file.parentPath}/${file.name}`)
     }
     // clone builded client directory
-    cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//])
+    cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /^dev-/])
     // copy pug file
     copyFileSync(`./client/pug/template.pug`, `${distDir}/profile_detail.pug`) // underscore please
     copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame_comment.pug`)

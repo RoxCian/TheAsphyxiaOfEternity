@@ -56,7 +56,8 @@
                                     "maximumError": "50kb"
                                 }
                             ],
-                            "outputHashing": "all",
+                            "outputHashing": "none",
+                            "namedChunks": true,
                             "optimization": true
                         },
                         "development": {

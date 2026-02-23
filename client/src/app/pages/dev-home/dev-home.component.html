@@ -1,0 +1,35 @@
+<header>
+    <h2 class="title">Dev Home</h2>
+    <p class="is-size-7">悠久のアスフィクシア -The Asphyxia of Eternity-</p>
+    @if (version.hasValue()) {
+        <p class="is-size-7">v{{ version.value() }}</p>
+    } @else {
+        <p class="is-size-7">...</p>
+    }
+</header>
+<bung-divider />
+<section>
+    <p>This is the home page of debugging.</p>
+    <p>You can navigate to pages by buttons down below.</p>
+</section>
+<bung-divider prompt="Profile Detail" />
+<section>
+    @if (debugRid.isLoading()) {
+        <p>...</p>
+    } @else {
+        <p>The default profile REFID is {{ debugRid.value() ?? 'not specified' }}.</p>
+    }
+    <p>If you want to use an REFID other than the default one, please specify in the text box down below and click the button.</p>
+    <p>
+        <input class="input" type="input" [class.is-danger]="!isRidInputValid()" [placeholder]="debugRid.value() ?? ''" (input)="rid.set($event.target.value)" maxlength="16">
+    </p>
+    <p>
+        <a class="button router-link" routerLink="profile" [queryParams]="rid() ? { rid: rid() } : undefined" [class.is-disabled]="!isRidInputValid()">Go to profile page</a>
+    </p>
+</section>
+<bung-divider prompt="Ingame Comments" />
+<section>
+    <p>
+        <a class="button router-link" routerLink="ingame_comments" [class.is-disabled]="!isRidInputValid()">Go to comments page</a>
+    </p>
+</section>

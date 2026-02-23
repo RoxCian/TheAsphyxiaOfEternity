@@ -16,56 +16,7 @@
                 <div class="stat">
                     <bung-divider prompt="Performance" />
                     <div class="stat-grid" [style.--max-item-width]="v === 4 || v === 5 || v === 6 ? 'calc(25% - 1.5em)' : 'calc(33.33% - 1.33em)'">
-                        <bung-menu-def #menuDef>
-                            <ng-template #menu3Content>
-                                <div>Menu3</div>
-                                <code>Menu3</code>
-                            </ng-template>
-                            <bung-menu-item content="Menu" (click)="msg('Menu clicked')" icon="abacus" />
-                            <bung-menu-item content="Menu2" (click)="msg('Menu2 clicked')" iconUrl="static/assets/icons/onigiri.svg">
-                                <bung-menu-item content="Menu sub1">
-                                    <bung-menu-item content="Menu sub sub1" />
-                                    <bung-menu-item content="Menu sub sub2">
-                                        <bung-menu-item content="Menu sub sub sub1">
-                                            <bung-menu-item content="Menu sub sub sub sub1" />
-                                            <bung-menu-item content="Menu sub sub sub sub2" />
-                                            <bung-menu-item content="Menu sub sub sub sub3">
-                                                <bung-menu-item content="Menu sub sub sub sub sub1" />
-                                                <bung-menu-item content="Menu sub sub sub sub sub2" />
-                                            </bung-menu-item>
-                                        </bung-menu-item>
-                                        <bung-menu-item content="Menu sub sub sub2" />
-                                        <bung-menu-item content="Menu sub sub sub3">
-                                            <bung-menu-item content="Menu sub sub sub sub1" />
-                                            <bung-menu-item content="Menu sub sub sub sub2" />
-                                        </bung-menu-item>
-                                        <bung-menu-item content="Menu sub sub sub4" />
-                                        <bung-menu-item content="Menu sub sub3" />
-                                        <bung-menu-item content="Menu sub sub4" />
-                                        <bung-menu-item content="Menu sub sub5" />
-                                        <bung-menu-item content="Menu sub sub6" />
-                                        <bung-menu-item content="Menu sub sub7" />
-                                        <bung-menu-item content="Menu sub sub8" />
-                                        <bung-menu-item content="Menu sub sub9" />
-                                        <bung-menu-item content="Menu sub sub10" />
-                                        <bung-menu-item content="Menu sub sub11" />
-                                        <bung-menu-item content="Menu sub sub12" />
-                                    </bung-menu-item>
-                                </bung-menu-item>
-                                <bung-menu-item content="Menu sub2" isActive />
-                                <bung-menu-item content="Menu sub3" />
-                            </bung-menu-item>
-                            <bung-menu-item [content]="menu3Content" (click)="msg('Menu3 clicked')" iconUrl="static/assets/icons/garage-key.svg" />
-                            <bung-menu-item isDivider />
-                            <bung-menu-item content="Menu static" isStatic />
-                            <bung-menu-item isDivider />
-                            <bung-menu-item content="Menu disabled" disabled (click)="msg('Menu clicked')" icon="cross" />
-                            <bung-menu-item content="Menu activated" isActive (click)="msg('Menu activated clicked')" icon="account" />
-                            <bung-menu-item content="Menu last" isActive (click)="msg('Menu last clicked')">
-                                <bung-menu-item content="Menu last sub" isActive (click)="msg('Menu last sub clicked')" />
-                            </bung-menu-item>
-                        </bung-menu-def>
-                        <div class="stat-item has-text-centered" [bungDropdown]="menuDef" triggerMethod="contextmenu">
+                        <div class="stat-item has-text-centered" triggerMethod="contextmenu">
                             <div class="heading">Ability Point</div>
                             <div class="title">{{ p.abilityPoint }}</div>
                         </div>
@@ -75,16 +26,7 @@
                                 <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
                             </div>
                         }
-                        <bung-menu-def #menuDef2>
-                            <bung-menu-item content="Menu2" (click)="msg('Menu2 clicked')">
-                                <bung-menu-item content="Menu sub1">
-                                    <bung-menu-item content="Menu sub sub1" />
-                                </bung-menu-item>
-                            </bung-menu-item>
-                            <bung-menu-item isDivider />
-                            <bung-menu-item content="Menu static" isStatic />
-                        </bung-menu-def>
-                        <div class="stat-item has-text-centered" [bungDropdown]="menuDef2" triggerMethod="contextmenu">
+                        <div class="stat-item has-text-centered" triggerMethod="contextmenu">
                             <div class="heading">Play Count</div>
                             <div class="title">{{ p.playCount }}</div>
                         </div>

@@ -2,15 +2,8 @@ import { CommonModule } from "@angular/common"
 import { NgModule } from "@angular/core"
 import { FormsModule } from "@angular/forms"
 import { BungModule } from "./bung.module"
-import { LetsPlayComponent } from "../components/misc/lets-play/lets-play.component"
 import { RhythmicIconComponent } from "../components/misc/rhythm-icon/rhythmic-icon.component"
 import { VersionNavComponent } from "../components/misc/version-nav/version-nav.component"
-import { Rb1BadgeComponent } from "../components/specific/badges/rb1-badge/rb1-badge.component"
-import { Rb2BadgeComponent } from "../components/specific/badges/rb2-badge/rb2-badge.component"
-import { Rb3BadgeComponent } from "../components/specific/badges/rb3-badge/rb3-badge.component"
-import { Rb4BadgeComponent } from "../components/specific/badges/rb4-badge/rb4-badge.component"
-import { Rb5BadgeComponent } from "../components/specific/badges/rb5-badge/rb5-badge.component"
-import { Rb6BadgeComponent } from "../components/specific/badges/rb6-badge/rb6-badge.component"
 import { RbBattleStatComponent } from "../components/specific/battle-stat/rb-battle-stat/rb-battle-stat.component"
 import { RbBywordTagComponent } from "../components/specific/byword-tag/rb-byword-tag/rb-byword-tag.component"
 import { RbChartLightComponent } from "../components/specific/chart-light/rb-chart-light/rb-chart-light.component"
@@ -67,19 +60,13 @@ import { Rb6ColorSpecificationSelectComponent } from "../components/specific/col
 import { RbSkillPointPanelComponent } from "../components/specific/skill-point-panel/rb-skill-point-panel/rb-skill-point-panel.component"
 import { RbMusicIconComponent } from "../components/specific/music-icon/rb-music-icon/rb-music-icon.component";
 import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb-mylist-editor/rb-mylist-editor.component'
+import { RbSharedComponentsModule } from "./rb-shared-components.module"
 
 @NgModule({
     declarations: [
         VersionNavComponent,
-        Rb1BadgeComponent,
-        Rb2BadgeComponent,
-        Rb3BadgeComponent,
-        Rb4BadgeComponent,
-        Rb5BadgeComponent,
-        Rb6BadgeComponent,
         RbBywordTagComponent,
         RbLevelPromptComponent,
-        LetsPlayComponent,
         RbPlayerTagComponent,
         RbRecordPanelComponent,
         RbRenewalLabelComponent,
@@ -139,19 +126,14 @@ import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb
         CommonModule,
         FormsModule,
         BungModule,
-        FormField
+        FormField,
+        RbSharedComponentsModule
     ],
     exports: [
+        RbSharedComponentsModule,
         VersionNavComponent,
-        Rb1BadgeComponent,
-        Rb2BadgeComponent,
-        Rb3BadgeComponent,
-        Rb4BadgeComponent,
-        Rb5BadgeComponent,
-        Rb6BadgeComponent,
         RbBywordTagComponent,
         RbLevelPromptComponent,
-        LetsPlayComponent,
         RbPlayerTagComponent,
         RbRecordPanelComponent,
         RbRenewalLabelComponent,

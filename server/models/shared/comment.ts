@@ -4,7 +4,7 @@ import { XD, XM } from "../../utils/x"
 import { Rb2EventStatus } from "../rb2/event"
 import { RbVersion } from "./rb_types"
 
-export class RbComment<TVersion extends RbVersion> implements ICollection<"rb.info.comment"> {
+export class RbComment<TVersion extends RbVersion> implements ICollection<"rb.info.comment">, RbComment<TVersion> {
     readonly collection = "rb.info.comment"
     version: TVersion
     @XD.s32("eid") entryId = 0

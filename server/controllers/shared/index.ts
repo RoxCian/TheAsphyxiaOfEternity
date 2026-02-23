@@ -1,3 +1,4 @@
+import { registerCommentsController } from "./comment"
 import { registerItemsController } from "./items"
 import { registerJacketController } from "./jackets"
 import { registerMusicsController } from "./musics"
@@ -8,4 +9,5 @@ export function registerSharedControllers() {
     registerJacketController()
     registerItemsController()
     registerMusicsController()
+    registerCommentsController()
 }

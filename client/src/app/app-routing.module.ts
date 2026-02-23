@@ -1,8 +1,13 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
+import { env } from "../env/env"
 
 const routes: Routes = [
-    { path: "profile", loadComponent: () => import("./pages/test/test-page/test-page.component").then(file => file.TestProfilePageComponent) }
+    env.production ? {} : {
+        path: "", loadComponent: () => import("./pages/dev-home/dev-home.component").then(file => file.DevHomePageComponent)
+    },
+    { path: "profile", loadComponent: () => import("./pages/profile/profile.component").then(file => file.ProfilePageComponent) },
+    { path: "ingame_comments", loadComponent: () => import("./pages/comments/comments.component").then(file => file.CommentsPageComponent) }
 ]
 
 @NgModule({

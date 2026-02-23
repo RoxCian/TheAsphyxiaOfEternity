@@ -1,5 +1,5 @@
-<button class="button is-rounded" [class.is-selected]="value() === 3" (click)="value.set(3)">-3</button>
-<button class="button is-rounded" [class.is-selected]="value() === 2" (click)="value.set(2)">-2</button>
-<button class="button is-rounded" [class.is-selected]="value() === 1" (click)="value.set(1)">-1</button>
-<button class="button is-rounded" [class.is-selected]="value() === 0" (click)="value.set(0)">0</button>
-<button class="button is-rounded" [class.is-selected]="value() === 4" (click)="value.set(4)">+1</button>
+<button class="button is-rounded" [class.is-selected]="toInt(value()) === 3" (click)="value.set(3)">-3</button>
+<button class="button is-rounded" [class.is-selected]="toInt(value()) === 2" (click)="value.set(2)">-2</button>
+<button class="button is-rounded" [class.is-selected]="toInt(value()) === 1" (click)="value.set(1)">-1</button>
+<button class="button is-rounded" [class.is-selected]="toInt(value()) === 0" (click)="value.set(0)">0</button>
+<button class="button is-rounded" [class.is-selected]="toInt(value()) === 4" (click)="value.set(4)">+1</button>

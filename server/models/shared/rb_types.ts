@@ -119,3 +119,13 @@ export type RbMusicVariation<TVersion extends RbVersion, TChart extends RbChartT
     artist?: string
     bpm: Range
 }
+
+export type RbComment<TVersion extends RbVersion> = {
+    version: TVersion
+    entryId: number
+    userId: number
+    name: string
+    balloon: number
+    time: number
+    comment: string
+}

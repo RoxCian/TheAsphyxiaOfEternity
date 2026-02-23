@@ -13,4 +13,10 @@ import { RbColorSpecification } from "rbweb"
 })
 export class Rb6ColorSpecificationSelectComponent implements FormValueControl<RbColorSpecification> {
     value = model(RbColorSpecification.random)
+
+    protected toInt(v: unknown): number {
+        if (typeof v === "string") return parseInt(v)
+        else if (typeof v === "number") return v
+        return 0
+    }
 }

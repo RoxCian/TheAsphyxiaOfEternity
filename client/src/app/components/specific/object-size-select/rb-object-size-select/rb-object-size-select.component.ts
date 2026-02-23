@@ -12,4 +12,10 @@ import { FormValueControl } from "@angular/forms/signals"
 })
 export class RbObjectSizeSelectComponent implements FormValueControl<number> {
     value = model(0)
+
+    protected toInt(v: unknown): number {
+        if (typeof v === "string") return parseInt(v)
+        else if (typeof v === "number") return v
+        return 0
+    }
 }

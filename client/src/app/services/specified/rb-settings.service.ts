@@ -3,7 +3,7 @@ import { createRbSettingsResponse, Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6Ra
 import { rbData } from "../../signals/rb-data"
 import { RbVersionService } from "./rb-version.service"
 import { RbProfileService } from "./rb-profile.service"
-import { FieldTree, form, max, maxLength, min, minLength, PathKind, required, SchemaPathTree, submit, validate } from "@angular/forms/signals"
+import { FieldTree, form, max, maxLength, min, minLength, PathKind, required, SchemaPathTree, validate } from "@angular/forms/signals"
 import { isInShiftJISCharset } from "../../utils/functions"
 
 @Injectable({ providedIn: "root" })

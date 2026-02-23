@@ -13,4 +13,10 @@ import { FormValueControl } from "@angular/forms/signals"
 })
 export class Rb5HiSpeedSelectComponent implements FormValueControl<number> {
     value = model(0)
+
+    protected toInt(v: unknown): number {
+        if (typeof v === "string") return parseInt(v)
+        else if (typeof v === "number") return v
+        return 0
+    }
 }
