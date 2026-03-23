@@ -36,7 +36,7 @@ export function base64ToBuffer(str: string, size?: number): Buffer {
     if (size != undefined) {
         const rem = size - Math.trunc(size / 3) * 3
         if (rem > 0) {
-            str = str.replace("=", "A").replace("=", "A").padEnd(Math.trunc(size / 3) * 4 + rem + 1, "A")
+            str = str.replace(/=/g, "A").padEnd(Math.trunc(size / 3) * 4 + rem + 1, "A")
             if (rem === 1) str += "=="
             else if (rem === 2) str += "="
         }
@@ -45,8 +45,8 @@ export function base64ToBuffer(str: string, size?: number): Buffer {
     else return Buffer.from(str, "base64")
 }
 export function bufferToBase64(buffer: Buffer, isTrimZero: boolean = true): string {
-    if (isTrimZero) for (let i = buffer.length - 1; i >= 0; i--) if (buffer.readInt8(i) != 0) return buffer.toString("base64", 0, i + 1)
-    return buffer.toString("base64")
+    if (isTrimZero) for (let i = buffer.length - 1; i >= 0; i--) if (buffer.readInt8(i) !== 0) return buffer.toString("base64", 0, i + 1)
+    return buffer.toString("base64", 0, buffer.length)
 }
 export function isHigherVersion(left: string, right: string): boolean {
     const splitedLeft = left.split(".")

@@ -102,14 +102,20 @@ export namespace DBH {
             if (!desc || desc.writable || desc.set) {
                 const conf = dbConfig[k]
                 if (conf.$one) {
-                    if (!(obj[k] instanceof conf.$one)) Object.setPrototypeOf(obj[k], conf.$one)
+                    if (!(obj[k] instanceof conf.$one)) {
+                        obj[k] = Object.assign(new conf.$one(), obj[k])
+                        Object.setPrototypeOf(obj[k], conf.$one.prototype)
+                    }
                     assignDoc(obj[k], conf.$one?.__dbConfig__)
                 } else if (conf.$many) {
                     const a = obj[k]
                     if (Array.isArray(a)) {
-                        for (const e of a) {
-                            if (!(e instanceof conf.$many)) Object.setPrototypeOf(e, conf.$many)
-                            assignDoc(e, conf.$many?.__dbConfig__)
+                        for (let i = 0; i < a.length; i++) {
+                            if (!(a[i] instanceof conf.$many)) {
+                                a[i] = Object.assign(new conf.$many(), a[i])
+                                Object.setPrototypeOf(a[i], conf.$many.prototype)
+                            }
+                            assignDoc(a[i], conf.$many?.__dbConfig__)
                         }
                     } else throw new Error("Type not matched (DBH.many)")
                 }
@@ -119,7 +125,10 @@ export namespace DBH {
     function docToObj<T extends ICollection<any>>(doc: Doc<T>, typeParam: Type<T> | GetType<T> | undefined): T & Doc<T> {
         if (typeParam) {
             const type: TypeWithDBConfig<T> = isType(typeParam) ? typeParam : typeParam(doc)
-            if (!(doc instanceof type)) Object.setPrototypeOf(doc, type.prototype)
+            if (!(doc instanceof type)) {
+                doc = Object.assign(new type(), doc)
+                Object.setPrototypeOf(doc, type.prototype)
+            }
             assignDoc(doc, type?.__dbConfig__)
         }
         return doc
@@ -127,7 +136,10 @@ export namespace DBH {
     function docsToObjs<T extends ICollection<any>>(docs: Doc<T>[], typeParam: Type<T> | GetType<T> | undefined): (T & Doc<T>)[] {
         if (typeParam) return docs.map(doc => {
             const type: TypeWithDBConfig<T> = isType(typeParam) ? typeParam : typeParam(doc)
-            if (!(doc instanceof type)) Object.setPrototypeOf(doc, type.prototype)
+            if (!(doc instanceof type)) {
+                doc = Object.assign(new type(), doc)
+                Object.setPrototypeOf(doc, type.prototype)
+            }
             assignDoc(doc, type?.__dbConfig__)
             return doc
         })
@@ -142,25 +154,28 @@ export namespace DBH {
     }
 
     // Serialized & typed DB query
-    async function checkData<T extends ICollection<any>>(data: Partial<T>): Promise<void> {
-        for (let k in data) if (k.startsWith("__")) delete data[k]
+    async function checkData<T extends ICollection<any>>(data: Partial<T>, isUpdate: boolean): Promise<void> {
+        if (isUpdate) {
+            for (let k in data) if (k.startsWith("__")) delete data[k]
+        }
         if (!await enqueueTask(() => DB.FindOne<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }))) {
             await enqueueTask(() => DB.Insert<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }))
         }
     }
     export async function update<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T> | Update<T>, isPublicDoc: boolean = true) {
-        checkData(data)
+        console.log(JSON.stringify(data))
+        checkData(data, true)
         if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Update(query, data)) : await enqueueTask(() => DB.Update(undefined, query, data))
         else return await enqueueTask(() => DB.Update(refid, query, data))
     }
     export async function upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T>, isPublicDoc: boolean = true) {
-        checkData(data)
+        checkData(data, false)
         if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Upsert(query, data)) : await enqueueTask(() => DB.Upsert(undefined, query, data))
         else return await enqueueTask(() => DB.Upsert(refid, query, data))
     }
-    export async function insert<T extends ICollection<any>>(refid: string | undefined, data: Doc<T>, isPublicDoc: boolean = true) {
-        checkData(data)
-        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Insert(data)) : await enqueueTask(() => DB.Insert(undefined, data))
+    export async function insert<T extends ICollection<any>>(refid: string | undefined, data: Doc<T>) {
+        checkData(data, false)
+        if (refid == undefined) return await enqueueTask(() => DB.Insert(data))
         else return await enqueueTask(() => DB.Insert(refid, data))
     }
     export async function remove<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, isPublicDoc: boolean = true) {
@@ -375,7 +390,7 @@ export namespace DBH {
                 if (s.doc) delete s.doc._id
                 switch (s.operation) {
                     case "insert":
-                        result.push(await insert(s.refid, s.doc, s.isPublicDoc))
+                        result.push(await insert(s.refid, s.doc))
                         break
                     case "update":
                         result.push(await update(s.refid, s.query, s.doc, s.isPublicDoc))

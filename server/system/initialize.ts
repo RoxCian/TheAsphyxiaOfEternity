@@ -11,7 +11,7 @@ let initialized = false
 export async function initialize() {
     if (initialized) return
     initialized = true
-    const version = await DB.FindOne<IPluginVersion>({ collection: "rb.pluginVersion" })
+    const version = await DBH.findOne<IPluginVersion>({ collection: "rb.pluginVersion" })
     if (!version || isHigherVersion(version.version, pluginVersion)) {
         initializeBatch()
         await Batch.execute(pluginVersion)

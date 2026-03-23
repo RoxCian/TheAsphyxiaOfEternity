@@ -1,6 +1,5 @@
 import { DBBigInt, Vector, Vector2, Vector2B, Vector3, Vector3B, Vector4, Vector4B, VectorB } from "../db/db_types"
 import { isTypeOrToken, Type, TypeToken } from "../types"
-import { XF } from "./functions"
 import { XMap, XSubMap, XTypeExtended } from "./types"
 
 export namespace XM {

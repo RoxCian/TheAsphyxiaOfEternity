@@ -7,9 +7,10 @@ export namespace Batch {
 
     export async function execute(version: string): Promise<void> {
         for (const b of registeredBatch) {
-            if ((await DB.Find<IBatchResult>({ collection: "rb.batchResult", batchId: b.id })).length === 0) if (!isHigherVersion(version, b.version)) {
+            if (!await DBH.findOne<IBatchResult>({ collection: "rb.batchResult", batchId: b.id })) if (!isHigherVersion(version, b.version)) {
                 await b.batch()
                 await DBH.insert<IBatchResult>(undefined, { collection: "rb.batchResult", batchId: b.id })
+                console.log(`Batch task "${b.id}" was executed.`)
             }
         }
     }

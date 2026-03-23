@@ -1,7 +1,7 @@
 import { XD } from "../../utils/x"
 import { ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { RbStageLog } from "../shared/shared"
+import { RbStageLog } from "../shared/stage_log"
 import { Rb1ChartType, Rb1ClearType, RbColor } from "../shared/rb_types"
 
 export class Rb1PlayerBase implements ICollection<"rb.rb1.player.base"> {

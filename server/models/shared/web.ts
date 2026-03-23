@@ -243,7 +243,7 @@ export type Rb6UploadAsphyxiaDataRequest = {
 }
 type Rb6RankingQuestChart = {
     musicId: number
-    chartType: Rb6ChartType
+    chartType: Rb6ChartType | -1
 }
 export type Rb6RankingQuestResponse = {
     id: number

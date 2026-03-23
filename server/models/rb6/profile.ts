@@ -66,7 +66,7 @@ export class Rb6PlayerBase implements ICollection<"rb.rb6.player.base"> {
 
 export class Rb6PlayerConfig implements ICollection<"rb.rb6.player.config"> {
     readonly collection = "rb.rb6.player.config"
-    @XD.s8("msel_bgm") musicSelectBgm = 0
+    @XD.u8("msel_bgm") musicSelectBgm = 0
     @XD.u8("narrowdown_type") narrowDownType = 0
     @XD.u8("musiclvdisp_type") musicLevelDisplayingType = 0
     @XD.s16("characard_id") characterCardId = 0
@@ -175,7 +175,7 @@ export class Rb6PlayerParameters implements ICollection<"rb.rb6.player.parameter
 export class Rb6QuestRecord implements ICollection<"rb.rb6.playData.quest"> {
     readonly collection = "rb.rb6.playData.quest"
     @XD.s32() dungeonId: number
-    @XD.s32() dungeonGrade: number
+    @XD.s8() dungeonGrade: number
     rankingId: number
     @XD.s32("clear_num") clearCount: number
     @XD.s32("play_num") playCount: number

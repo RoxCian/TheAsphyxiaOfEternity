@@ -1,6 +1,6 @@
 questId,dungeonId,questType,value,endTime,rankingId,musicId0,musicId1,musicId2,chartType0,chartType1,chartType2
 ,,,,,,,,,,,
-int,int,int,int,number,int,int,int,int,basic|medium|hard|whiteHard,basic|medium|hard|whiteHard,basic|medium|hard|whiteHard
+int,int,int,int,number,int,int,int,int,none=-1|basic|medium|hard|whiteHard,none=-1|basic|medium|hard|whiteHard,none=-1|basic|medium|hard|whiteHard
 22,47,3,1,2147483647,0,33,22,52,hard,hard,hard
 22,47,3,1,2147483647,1,189,310,219,hard,whiteHard,whiteHard
 22,47,3,1,2147483647,2,724,840,733,hard,hard,whiteHard

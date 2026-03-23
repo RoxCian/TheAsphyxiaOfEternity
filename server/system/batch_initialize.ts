@@ -8,8 +8,13 @@ import { Rb6MusicRecord } from "../models/rb6/music_record"
 
 export function initializeBatch() {
     Batch.register("batch#0.11.11.part2", "1.4.0", async () => {
-        const jc = await DB.Find<Rb6JustCollection>({ collection: "rb.rb6.playData.justCollection#userId" })
+        const jc = await DBH.find<Rb6JustCollection>({ collection: "rb.rb6.playData.justCollection#userId" })
         for (const e of jc) {
+            if (!e.userId) {
+                await DBH.remove(undefined, { _id: e._id }, false)
+                continue
+            }
+            if (!e["redData"] && !e["blueData"] && !e["redDataArray"] && !e["blueDataArray"]) continue
             delete e["redData"]
             delete e["blueData"]
             delete e["redDataArray"]
@@ -19,7 +24,7 @@ export function initializeBatch() {
         }
     })
     Batch.register("batch#0.12.0", "0.12.0", async () => {
-        const a = await DB.Find<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account" })
+        const a = await DBH.find<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account" })
         for (const account of a) {
             if (account.playCountToday == undefined) account.playCountToday = (account as any).dpc
             if (account.dayCount == undefined) account.dayCount = (account as any).tdc
@@ -27,15 +32,15 @@ export function initializeBatch() {
         }
     })
     Batch.register("batch#0.12.0.part2", "1.4.0", async () => {
-        const a = await DB.Find<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account" })
+        const a = await DBH.find<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account" })
         for (const account of a) {
             delete account["dpc"]
             delete account["tdc"]
-            await DBH.update(undefined, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
+            await DBH.update(account.rid, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
         }
     })
     Batch.register("batch#1.2.0", "1.2.0", async () => {
-        const g = await DB.Find<Rb6Ghost>({ collection: "rb.rb6.playData.ghost#userId" })
+        const g = await DBH.find<Rb6Ghost>({ collection: "rb.rb6.playData.ghost#userId" })
         const accountsCache = new Map<number, Rb6PlayerAccount>()
         for (const ghost of g) {
             const account: Rb6PlayerAccount = accountsCache.get(ghost.userId) || await DB.FindOne<Rb6PlayerAccount>(undefined, { collection: "rb.rb6.player.account", userId: ghost.userId })
@@ -47,5 +52,22 @@ export function initializeBatch() {
             if (ghost.redDataBase64) update.$set.isHasGhostRed = true
             DBH.update<Rb6MusicRecord>(rid, { collection: "rb.rb6.playData.musicRecord", musicId: ghost.musicId, chartType: ghost.chartType }, update)
         }
+    })
+    Batch.register("batch#2.0.0", "2.0.0", async () => {
+        const records = await DBH.find<Rb6MusicRecord>(undefined, { collection: "rb.rb6.playData.musicRecord" })
+        const modifiedRecords: Doc<Rb6MusicRecord>[] = []
+        for (const r of records) {
+            let isModified = false
+            if (r.justCollectionRateTimes100Red == undefined) {
+                isModified = true
+                r.justCollectionRateTimes100Red = 0
+            }
+            if (r.justCollectionRateTimes100Blue == undefined) {
+                isModified = true
+                r.justCollectionRateTimes100Blue = 0
+            }
+            if (isModified) modifiedRecords.push(r)
+        }
+        for (const r of modifiedRecords) await DBH.update((r as any).__refid, { _id: r._id }, r)
     })
 }

@@ -1,18 +1,17 @@
 import { PJ } from "./utils/pj"
-import { registerRb1Controllers } from "./controllers/rb1/web"
-import { registerRb2Controllers } from "./controllers/rb2/web"
-import { registerRb3Controllers } from "./controllers/rb3/web"
-import { registerRb4Controllers } from "./controllers/rb4/web"
-import { registerRb5Controllers } from "./controllers/rb5/web"
-import { registerRb6Controllers } from "./controllers/rb6/web"
-import { registerSharedControllers } from "./controllers/shared"
-import { registerRb1Handlers } from "./handlers/rb1/common"
-import { registerRb2Handlers } from "./handlers/rb2/common"
-import { registerRb3Handlers } from "./handlers/rb3/common"
-import { registerRb4Handlers } from "./handlers/rb4/common"
-import { registerRb5Handlers } from "./handlers/rb5/common"
-import { registerRb6Handlers } from "./handlers/rb6/common"
-import { registerRb1Rb2Rb3HandlersDispatcher } from "./handlers/shared/common"
+import { registerRb1Controllers } from "./api/rb1/web"
+import { registerRb2Controllers } from "./api/rb2/web"
+import { registerRb3Controllers } from "./api/rb3/web"
+import { registerRb4Controllers } from "./api/rb4/web"
+import { registerRb5Controllers } from "./api/rb5/web"
+import { registerRb6Controllers } from "./api/rb6/web"
+import { registerSharedControllers } from "./api/shared_web"
+import { registerRb1Handlers } from "./api/rb1/game"
+import { registerRb2Handlers } from "./api/rb2/game"
+import { registerRb3Handlers } from "./api/rb3/game"
+import { registerRb4Handlers } from "./api/rb4/game"
+import { registerRb5Handlers } from "./api/rb5/game"
+import { registerRb6Handlers } from "./api/rb6/game"
 
 export function register() {
     R.GameCode("KBR")
@@ -27,16 +26,12 @@ export function register() {
 
     R.Config("<colette_all_seasons>_daily_stamp_boost", { type: "integer", default: 0 })
 
-    JSON.stringify = PJ.stringify
-    JSON.parse = PJ.parse
-
     registerRb1Handlers()
     registerRb2Handlers()
     registerRb3Handlers()
     registerRb4Handlers()
     registerRb5Handlers()
     registerRb6Handlers()
-    registerRb1Rb2Rb3HandlersDispatcher()
 
     registerRb1Controllers()
     registerRb2Controllers()
@@ -46,5 +41,5 @@ export function register() {
     registerRb6Controllers()
     registerSharedControllers()
 
-    R.Unhandled()
+    R.Unhandled((_r, _d, send) => send.success())
 }

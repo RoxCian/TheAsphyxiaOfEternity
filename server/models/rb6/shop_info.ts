@@ -2,11 +2,11 @@ import { XD } from "../../utils/x"
 
 export class Rb6ShopInfoContent {
     @XD.str("nm") name = "Asphyxia Core" as const
-    @XD.bool("cl_enbl") clEnabled = false
-    @XD.u8() clH = 0
+    @XD.bool("cl_enbl") clEnabled = true
+    @XD.u8() clH = 8
     @XD.u8() clM = 0
-    @XD.u8("prf") prefecture = 3
-    @XD.bool() shopFlag = false
+    @XD.u8("prf") prefecture = 13
+    @XD.bool() shopFlag = true
 }
 
 export class Rb6ShopInfo {

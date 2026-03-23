@@ -11,15 +11,16 @@ export class Rb6Quest {
     @XD.s32() endTime = 0
     @XD.s32() rankingId = 0
 
-    @XD.s32() musicId0 = 0
-    @XD.s32() musicId1 = 0
-    @XD.s32() musicId2 = 0
-    @XD.s8("note_grade_0") chartType0 = Rb6ChartType.basic
-    @XD.s8("note_grade_1") chartType1 = Rb6ChartType.basic
-    @XD.s8("note_grade_2") chartType2 = Rb6ChartType.basic
+    @XD.s32("music_id_0") musicId0 = 0
+    @XD.s32("music_id_1") musicId1 = 0
+    @XD.s32("music_id_2") musicId2 = 0
+    @XD.s8("note_grade_0") chartType0: Rb6ChartType | -1 = -1
+    @XD.s8("note_grade_1") chartType1: Rb6ChartType | -1 = -1
+    @XD.s8("note_grade_2") chartType2: Rb6ChartType | -1 = -1
 
     static async createExamples(rankingQuestId: number): Promise<Rb6Quest[]> {
-        const rankingQuest = (await rb6RankingQuests).find(q => q.dungeonId === rankingQuestId)
+        const rankingQuest = (await rb6RankingQuests).find(q => q.rankingId === rankingQuestId)
+        if (!rankingQuest) return await rb6Quests
         return [...await rb6Quests, rankingQuest]
     }
 }

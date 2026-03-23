@@ -53,7 +53,9 @@ export type TypeNoneEquivalent<T> = {
     $oSide?: Type<T> | TypeToken<T>
 }
 
-declare const xSymbol: unique symbol
+declare const __xSymbol__: unique symbol
 export type X<T> = {
-    readonly [S in typeof xSymbol]?: T
+    readonly [S in typeof __xSymbol__]?: {
+        [K in keyof T]?: never
+    }
 }

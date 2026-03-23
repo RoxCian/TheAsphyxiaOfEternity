@@ -13,9 +13,9 @@ export class Rb6PlayerStart {
     @XD.aw("data", Rb6EventControl) eventCtrl: ArrayWrapper<"data", Rb6EventControl> = {
         data: Rb6EventControl.examples
     }
-    @XD.obj({ item: {} }) itemLockCtrl: {} = { item: {} }
+    @XD.obj({}) itemLockCtrl: {} = {}
     @XD.aw("data", Rb6ItemControl) itemCtrl: ArrayWrapper<"data", Rb6ItemControl> = {}
-    @XD.aw("data", Rb6Quest) quertCtrl: ArrayWrapper<"data", Rb6Quest> = {}
+    @XD.aw("data", Rb6Quest) questCtrl: ArrayWrapper<"data", Rb6Quest> = {}
 
     constructor(playerId: number = -1) {
         this.plyid = playerId

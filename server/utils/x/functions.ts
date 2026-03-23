@@ -1,8 +1,7 @@
 import { X, XMap, XMapNonEquivalent, XTypeExtended } from "./types"
-import { DBBigInt, BufferArray, NumberGroup, isBufferArray, isNumberGroup, isDBBigInt, toBigInt, isDBDate, toDate } from "../db/db_types"
+import { DBBigInt, BufferArray, NumberGroup, isBufferArray, isNumberGroup, isDBBigInt, toBigInt, toDate } from "../db/db_types"
 import { injectorSymbol, isTypeOrToken, isTypeToken, Type, TypeInjector, TypeToken } from "../types"
 import { getPropertyDescriptor, instantiate } from "../utility_functions"
-import { inspect } from "util"
 
 export namespace XF {
     function toSnakeCase(camel: string) {
@@ -10,7 +9,7 @@ export namespace XF {
         let matchFlag = true
         while (matchFlag) {
             matchFlag = false
-            result = result.replace(/[A-Z]|(?<!_)[0-9]/g, c => {
+            result = result.replace(/[A-Z]/g, c => {
                 matchFlag = true
                 return `_${c.toLowerCase()}`
             })
@@ -71,6 +70,7 @@ export namespace XF {
         let content: any = value
         let hasAttr = typeof xType === "string"
 
+        // find #value, fill @attr dictionary
         for (const k in map) {
             switch (k) {
                 case "$type": case "$xType": case "$xKey": case "$convert": case "$convertBack": case "$fallbackValue": case "$subMap": case "$el": case "$elSubMap": continue
@@ -87,48 +87,49 @@ export namespace XF {
             attr.__type = xType
             hasAttr = true
         }
-        if (map.$convert) content = map.$convert(content)
-        const isArray = Array.isArray(content)
-        if (isArray && ((map as any).$el || (map as any).$xSide?.$el)) { // array of object or array of primitive types with attrs or xvalue (wrapped in objects)
+
+        // convert
+        if (map.$convert) content = map.$convert(content as T)
+        
+        // map array
+        if (Array.isArray(content) && ((map as any).$el || (map as any).$xSide?.$el)) { // array of object or array of primitive types with attrs or xvalue (wrapped in objects)
             let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never> | undefined
             let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined> | undefined
-            const array = content.map(el => x(el, elType as any, elMap, typeInjector)) // TODO: any? 
+            const array = content.map(el => x(el, elType, elMap, typeInjector))
             if (hasAttr) return {
                 "@attr": attr,
                 "@content": array
             } as X<T>
             else return array as X<T>
         } else if (((map as any).$el || (map as any).$xSide?.$el)) return [] as X<T>
+
+        if (content == undefined) return undefined
+        // set @content
         switch (xType) {
             case "xignore": return undefined
             case "xattr": return content?.toString() ?? ""
             case "bool":
-                if (isArray) {
+                if (Array.isArray(content)) {
                     attr.__count = content.length
                     result["@content"] = content.map(v => (v && (v !== "false") && (v !== 0)) ? 1 : 0)
                 }
                 else result["@content"] = [(content && (content !== "false") && (content !== 0)) ? 1 : 0]
-                console.log(JSON.stringify(result))
                 break
-            case "s8": case "u8": case "bin":
-                if (isBufferArray(content)) {
-                    attr.__count = content["@bufferArrayValue"].byteLength
-                    result["@content"] = content["@bufferArrayValue"].toJSON()
-                    break
-                } else if (content instanceof Buffer) {
-                    attr.__count = content.byteLength
-                    result["@content"] = content.toJSON()
-                    break
+            case "s8": case "u8": case "s16": case "u16": case "s32": case "u32": case "float": case "double": case "bin":
+                if (xType === "s8" || xType === "u8" || xType === "bin") {
+                    if (content instanceof Buffer) {
+                        attr.__count = content.byteLength
+                        result["@content"] = content
+                        break
+                    }
                 }
-            // no break here
-            case "s8": case "u8": case "s16": case "u16": case "s32": case "u32": case "float": case "double":
-                if (isArray) {
+                if (Array.isArray(content)) {
                     attr.__count = content.length
                     result["@content"] = content
                 } else result["@content"] = [content ?? 0]
                 break
             case "s64": case "u64":
-                if (isArray) {
+                if (Array.isArray(content)) {
                     attr.__count = content.length
                     result["@content"] = content.map(toBigInt)
                 } else {
@@ -137,47 +138,47 @@ export namespace XF {
                 }
                 break
             case "2s8": case "2u8": case "2s16": case "2u16": case "2s32": case "2u32": case "2b": case "2d": case "2f":
-                if (isArray) result["@content"] = content.slice(0, 2)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 2)
                 else if (isNumberGroup(content)) content = content["@numberGroupValue"].slice(0, 2)
                 else result["@content"] = [0, 0]
                 break
             case "2s64": case "2u64":
-                if (isArray) result["@content"] = content.slice(0, 2).map(toBigInt)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 2).map(toBigInt)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].slice(0, 2).map(toBigInt)
                 else result["@content"] = [BigInt(0), BigInt(0)]
                 break
             case "3s8": case "3u8": case "3s16": case "3u16": case "3s32": case "3u32": case "3b": case "3d": case "3f":
-                if (isArray) result["@content"] = content.slice(0, 3)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 3)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].slice(0, 3)
                 else result["@content"] = [0, 0, 0]
                 break
             case "3s64": case "3u64":
-                if (isArray) result["@content"] = content.slice(0, 3).map(toBigInt)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 3).map(toBigInt)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].slice(0, 3).map(toBigInt)
                 else result["@content"] = [BigInt(0), BigInt(0), BigInt(0)]
                 break
             case "4s8": case "4u8": case "4s16": case "4u16": case "4s32": case "4u32": case "4b": case "4d": case "4f":
-                if (isArray) result["@content"] = content.slice(0, 4)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 4)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].slice(0, 4)
                 else result["@content"] = [0, 0, 0, 0]
                 break
             case "4s64": case "4u64":
-                if (isArray) result["@content"] = content.slice(0, 4).map(toBigInt)
+                if (Array.isArray(content)) result["@content"] = content.slice(0, 4).map(toBigInt)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].slice(0, 4).map(toBigInt)
                 else result["@content"] = [BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
                 break
             case "vb":
-                if (isArray) result["@content"] = content
+                if (Array.isArray(content)) result["@content"] = content
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"]
                 else result["@content"] = [0]
                 break
             case "vs8": case "vu8": case "vs16": case "vu16":
-                if (isArray) result["@content"] = content.map(toBigInt)
+                if (Array.isArray(content)) result["@content"] = content.map(toBigInt)
                 else if (isNumberGroup(content)) result["@content"] = content["@numberGroupValue"].map(toBigInt)
                 else result["@content"] = [BigInt(0)]
                 break
             case "ip4":
-                if (isArray) result["@content"] = `${content[0] ?? 0}.${content[1] ?? 0}.${content[2] ?? 0}.${content[3] ?? 0}`
+                if (Array.isArray(content)) result["@content"] = `${content[0] ?? 0}.${content[1] ?? 0}.${content[2] ?? 0}.${content[3] ?? 0}`
                 else if (typeof content === "number") result["@content"] = `${content & 0xFF}.${(content & 0xFF00) >> 8}.${(content & 0xFF0000) >> 16}.${(content & 0xFF000000) >> 24}`
                 else if (typeof content === "string" && content.match(/^\d{1-3}.\d{1-3}.\d{1-3}.\d{1-3}$/)) result["@content"] = content
                 else result["@content"] = "0.0.0.0"
@@ -187,10 +188,12 @@ export namespace XF {
                 result["@content"] = content
                 break
             case "time":
-                result["@content"] = [toDate(content ?? 0)]
+                result["@content"] = [toDate((content as number) ?? 0)]
                 break
         }
-        if (typeof value === "object") for (const k in map) {
+
+        // fill fields
+        if (typeof value === "object" && value != undefined) for (const k in map) {
             switch (k) {
                 case "$type": case "$xType": case "$xKey": case "$convert": case "$convertBack": case "$fallbackValue": case "$subMap": case "$el": case "$elSubMap": continue
                 default:
@@ -198,11 +201,13 @@ export namespace XF {
                     if (!subMap) continue
                     const field = value[k]
                     if (subMap.$xType === "xignore" || subMap.$xType === "xattr" || subMap.$xType === "xvalue") continue
-                    result[subMap.$xKey ?? toSnakeCase(k)] = x(field, subMap.$type, subMap.$subMap ?? subMap, typeInjector)
+                    const subItem = x(field, subMap.$type, subMap.$subMap ?? subMap, typeInjector)
+                    if (subItem != undefined) result[subMap.$xKey ?? toSnakeCase(k)] = subItem
                     break
             }
         }
         if (!hasAttr) delete result["@attr"]
+
         return result
     }
 
@@ -246,17 +251,18 @@ export namespace XF {
             if (xValueKey) {
                 const desc = getPropertyDescriptor(result, xValueKey)
                 if (!desc || desc.writable || desc.set) result[xValueKey] = value
-            } else if (typeof value === "object") {
+            } else if (value && typeof value === "object") {
                 if (Array.isArray(value) && Array.isArray(result)) for (let i = 0; i < value.length; i++) result[i] = value[i]
-                else if (result && Object.getPrototypeOf(result)) {
-                    result.Object.assign(result, value)
-                    if (Object.getPrototypeOf(result) === Object && value && Object.getPrototypeOf(value) !== Object) Object.setPrototypeOf(result, Object.getPrototypeOf(value))
-                } else if (typeof result === "object") result = Object.assign(value, result)
+                else if (typeof result === "object") {
+                    Object.assign(value, result)
+                    result = value
+                }
                 else result = value
             } else if (value == undefined) return
             else result = value
         }
         const content = xValue?.["@content"] ?? xValue
+        if (content == undefined && xType) return undefined
         const isArray = (typeof xType === "string" && xValue?.["@attr"]?.__count != undefined) || (typeof xType !== "string" && Array.isArray(content) || ((map as any).$el || (map as any).$oSide?.$el))
         switch (xType) {
             case "xignore":
@@ -267,8 +273,12 @@ export namespace XF {
                 else setValue(content?.[0] != 0)
                 break
             case "s8": case "u8": case "bin":
-                if (content?.type === "Buffer") {
-                    setValue(BufferArray(Buffer.from(<number[]>(content?.data ?? []))))
+                if (content instanceof Buffer) {
+                    setValue(content)
+                    break
+                }
+                if (xType === "bin") {
+                    setValue(Buffer.alloc(0))
                     break
                 }
             // no break here
@@ -305,7 +315,7 @@ export namespace XF {
                 setValue(NumberGroup(content?.map(DBBigInt) ?? [DBBigInt(0)]))
                 break
             case "ip4":
-                setValue(content?.split(".") ?? [0, 0, 0, 0])
+                setValue(content?.split(".").map(t => parseInt(t)) ?? [0, 0, 0, 0])
                 break
             case "str":
                 if (typeof content !== "string") setValue(content)
@@ -335,11 +345,13 @@ export namespace XF {
                     }
                     if (subMap?.$xType === "xattr" || subMap?.$xType === "xvalue") continue
                     const desc = getPropertyDescriptor(result, k as keyof T)
-                    if (!desc || desc.writable || desc.set) result[k] = o(xField, subMap.$type, subMap?.$subMap ?? subMap, typeInjector)
+                    if (!desc || desc.writable || desc.set) {
+                        const subItem = o(xField, subMap.$type, subMap?.$subMap ?? subMap, typeInjector)
+                        if (subItem != undefined) result[k] = subItem
+                    }
                     break
             }
         }
         return map.$convertBack ? map.$convertBack(result) : result
     }
-
 }

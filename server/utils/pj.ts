@@ -55,6 +55,27 @@ export const PJ = {
     stringify(value: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | undefined | null, space?: string | number) {
         return originalStringify(value, getPJReplacer(replacer), space)
     },
+    convertToPJ(value: any) {
+        for (const pn in protocols) {
+            const p = protocols[pn]
+            const type = p.type
+            if (typeof type !== "function") continue
+            if (type.constructor && type.prototype && !(value instanceof type)) continue
+            if ((!type.constructor || !type.prototype) && !(type as (value: any) => boolean)(value)) continue
+            return `pj@${pn}:${p.stringify!(value)}`
+        }
+        if (typeof value !== "object") return value
+        const result: any = {}
+        for (const k in value) result[k] = PJ.convertToPJ(value[k])
+        return result
+    },
+    convertFromPJ(value: any) {
+        if (typeof value === "string" && value.startsWith("pj@") && value.includes(":")) for (let pn in protocols) if (value.startsWith(`pj@${pn}:`)) return protocols[pn].parse!(value.substring(pn.length + 4))
+        if (typeof value !== "object") return value
+        const result: any = {}
+        for (const k in value) result[k] = PJ.convertFromPJ(value[k])
+        return result
+    },
     register<T>(type: any, protocol: string, parse?: (text: string) => T, stringify?: (value: T) => string) {
         if (!parse) {
             if ("parse" in type) parse = type["parse"]

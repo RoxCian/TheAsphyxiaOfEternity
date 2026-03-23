@@ -2,7 +2,7 @@ import { XD, XM } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { DBBigInt, ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { RbStageLog } from "../shared/shared"
+import { RbStageLog } from "../shared/stage_log"
 import { Rb1ChartType, Rb2ClearType } from "../shared/rb_types"
 
 export class Rb2PlayerBase implements ICollection<"rb.rb2.player.base"> {
