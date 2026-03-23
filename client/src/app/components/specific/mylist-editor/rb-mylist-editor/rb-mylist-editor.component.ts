@@ -54,7 +54,7 @@ export class RbMylistEditorComponent<TVersion extends RbVersion> {
         const idInArray = oldList.indexOf(musicId)
         if (idInArray < 0) return
         const newList = [...oldList.slice(0, idInArray), -1, ...oldList.slice(idInArray + 1)]
-        this.mylist().setControlValue(newList)
+        this.mylist().controlValue.set(newList)
     }
     protected onAddMylist(musicId: number) {
         if (!this.mylist || this.mylistCount() >= 30) return
@@ -63,20 +63,20 @@ export class RbMylistEditorComponent<TVersion extends RbVersion> {
         if (firstEmptySlot < 0 && (oldList.length >= 30 || (oldList.length >= 5 && this.versionService.version() === 2))) return
         if (firstEmptySlot < 0) firstEmptySlot = oldList.length
         const newList = [...oldList.slice(0, firstEmptySlot), musicId, ...oldList.slice(firstEmptySlot + 1)]
-        this.mylist().setControlValue(newList)
+        this.mylist().controlValue.set(newList)
     }
     protected onRemoveMylistSlot(slot: number) {
         if (!this.mylist) return
         const list = [...this.mylist().value()]
         list[slot] = -1
-        this.mylist().setControlValue(list)
+        this.mylist().controlValue.set(list)
         this.mylistSlotChanged.emit()
     }
     protected onSetMylistSlot(slot: number, musicId: number) {
         if (!this.mylist) return
         const list = [...this.mylist().value()]
         list[slot] = musicId
-        this.mylist().setControlValue(list)
+        this.mylist().controlValue.set(list)
         this.mylistSlotChanged.emit()
     }
 }

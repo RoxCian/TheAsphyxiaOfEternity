@@ -73,13 +73,13 @@ export class RbSettingsSubpage<TVersion extends RbVersion> {
         const idInArray = oldList.indexOf(musicId)
         if (idInArray < 0) return
         const newList = [...oldList.slice(0, idInArray), -1, ...oldList.slice(idInArray + 1)]
-        casted.mylist().setControlValue(newList)
+        casted.mylist().controlValue.set(newList)
     }
     protected onRemoveMylistSlot(slot: number) {
         const casted = this.settingsService.cast(this.settingsService.settingsForm, 2)
         const list: [number, number, number, number, number] = [...casted.mylist().value()]
         list[slot] = -1
-        casted.mylist().setControlValue(list)
+        casted.mylist().controlValue.set(list)
     }
     protected onMylistSlotChanged() {
         this.mylistModalTrigger()?.close()
@@ -90,6 +90,6 @@ export class RbSettingsSubpage<TVersion extends RbVersion> {
         const partsField = this.settingsService.cast(this.settingsService.settingsForm, 6).pastelParts()
         const parts: [number, number, number, number] = [...partsField.value()]
         parts[part] = value
-        partsField.setControlValue(parts)
+        partsField.controlValue.set(parts)
     }
 }

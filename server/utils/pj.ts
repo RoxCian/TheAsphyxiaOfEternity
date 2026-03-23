@@ -65,16 +65,14 @@ export const PJ = {
             return `pj@${pn}:${p.stringify!(value)}`
         }
         if (typeof value !== "object") return value
-        const result: any = {}
-        for (const k in value) result[k] = PJ.convertToPJ(value[k])
-        return result
+        for (const k in value) value[k] = PJ.convertToPJ(value[k])
+        return value
     },
     convertFromPJ(value: any) {
         if (typeof value === "string" && value.startsWith("pj@") && value.includes(":")) for (let pn in protocols) if (value.startsWith(`pj@${pn}:`)) return protocols[pn].parse!(value.substring(pn.length + 4))
         if (typeof value !== "object") return value
-        const result: any = {}
-        for (const k in value) result[k] = PJ.convertFromPJ(value[k])
-        return result
+        for (const k in value) value[k] = PJ.convertFromPJ(value[k])
+        return value
     },
     register<T>(type: any, protocol: string, parse?: (text: string) => T, stringify?: (value: T) => string) {
         if (!parse) {

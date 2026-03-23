@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@angular/build": "^21.1.4",
-    "@angular/cli": "~21.1.4",
+    "@angular/cli": "~21.2.3",
     "@angular/compiler-cli": "^21.1.4",
     "@mdi/font": "^7.2.96",
     "@types/jasmine": "~4.3.0",

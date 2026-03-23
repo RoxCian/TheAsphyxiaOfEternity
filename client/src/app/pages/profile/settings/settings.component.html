@@ -16,7 +16,7 @@
                         @let autoWearLeft = casted.isAutoBywordLeft().value();
                         @let autoWearRight = casted.isAutoBywordRight().value();
                         <div class="byword-left">
-                            <button class="button byword-auto-wear-button byword-auto-wear-left is-danger-accent" [class.is-selected]="autoWearLeft" (click)="casted.isAutoBywordLeft().setControlValue(!autoWearLeft)" bungTooltip="Left byword auto wear is {{ autoWearLeft ? 'on' : 'off' }}.">
+                            <button class="button byword-auto-wear-button byword-auto-wear-left is-danger-accent" [class.is-selected]="autoWearLeft" (click)="casted.isAutoBywordLeft().controlValue.set(!autoWearLeft)" bungTooltip="Left byword auto wear is {{ autoWearLeft ? 'on' : 'off' }}.">
                                 @if (autoWearLeft) { <bung-icon iconUrl="static/assets/icons/byword-auto-renew.svg" /> }
                                 @else { <bung-icon iconUrl="static/assets/icons/byword-auto-renew-off.svg" /> }
                             </button>
@@ -32,7 +32,7 @@
                                     <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 1)"><rb-byword-tag noLeftPart [rightByword]="byword" /></bung-option>
                                 }
                             </bung-select>
-                            <button class="button byword-auto-wear-button byword-auto-wear-right is-info-accent" [class.is-selected]="autoWearRight" (click)="casted.isAutoBywordRight().setControlValue(!autoWearRight)" bungTooltip="Right byword auto wear is {{ autoWearRight ? 'on' : 'off' }}.">
+                            <button class="button byword-auto-wear-button byword-auto-wear-right is-info-accent" [class.is-selected]="autoWearRight" (click)="casted.isAutoBywordRight().controlValue.set(!autoWearRight)" bungTooltip="Right byword auto wear is {{ autoWearRight ? 'on' : 'off' }}.">
                                 @if (autoWearRight) { <bung-icon iconUrl="static/assets/icons/byword-auto-renew.svg" /> }
                                 @else { <bung-icon iconUrl="static/assets/icons/byword-auto-renew-off.svg" /> }
                             </button>

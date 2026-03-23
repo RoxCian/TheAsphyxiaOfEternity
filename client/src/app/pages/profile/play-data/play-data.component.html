@@ -103,14 +103,14 @@
                 <div class="rb-highlight">
                     <bung-divider prompt="Recent Highlight" />
                     @let highlights = playerPerformanceService.playerPerformance.value()?.recentHighlightPlay;
-                    @if (!highlights?.length) {
-                        <lets-play text="A bit of quiet these days." />
-                    } @else {
+                    @if (highlights?.length) {
                         <div class="rb-list">
                             @for (h of highlights; track h) {
                                 <rb-stage-log-panel [stageLog]="h" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
                             }
                         </div>
+                    } @else if (playerPerformanceService.playerPerformance.hasValue()) {
+                        <lets-play text="A bit of quiet these days." />
                     }
                 </div>
             </div>
