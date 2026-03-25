@@ -62,7 +62,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     let base: RbPlayerBase
 
     // RB1
-    if (forVersion != 1) {
+    if (forVersion !== 1) {
         base = await DB.FindOne<Rb1PlayerBase>(undefined, { collection: "rb.rb1.player.base", userId })
         if (base) {
             result.base = base
@@ -74,7 +74,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     }
 
     // RB2
-    if (forVersion != 2) {
+    if (forVersion !== 2) {
         base = await DB.FindOne<Rb2PlayerBase>(undefined, { collection: "rb.rb2.player.base", userId })
         if (base) {
             result.base = base
@@ -86,7 +86,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     }
 
     // RB3
-    if (forVersion != 3) {
+    if (forVersion !== 3) {
         account = await DB.FindOne<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account", userId })
         if (account) {
             result.account = account
@@ -99,7 +99,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     }
 
     // RB4
-    if (forVersion != 4) {
+    if (forVersion !== 4) {
         account = await DB.FindOne<Rb4PlayerAccount>(undefined, { collection: "rb.rb4.player.account", userId })
         if (account) {
             result.account = account
@@ -112,7 +112,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     }
 
     // RB5
-    if (forVersion != 5) {
+    if (forVersion !== 5) {
         account = await DB.FindOne<Rb5PlayerAccount>(undefined, { collection: "rb.rb5.player.account", userId })
         if (account) {
             result.account = account
@@ -125,7 +125,7 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     }
 
     // RB6
-    if (forVersion != 6) {
+    if (forVersion !== 6) {
         account = await DB.FindOne<Rb6PlayerAccount>(undefined, { collection: "rb.rb6.player.account", userId })
         if (account) {
             result.account = account
@@ -145,7 +145,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     let base: RbPlayerBase
 
     // RB1
-    if (forVersion != 1) {
+    if (forVersion !== 1) {
         base = await DB.FindOne<Rb1PlayerBase>(rid, { collection: "rb.rb1.player.base" })
         if (base) {
             result.base = base
@@ -157,7 +157,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     }
 
     // RB2
-    if (forVersion != 2) {
+    if (forVersion !== 2) {
         base = await DB.FindOne<Rb2PlayerBase>(rid, { collection: "rb.rb2.player.base" })
         if (base) {
             result.base = base
@@ -169,7 +169,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     }
 
     // RB3
-    if (forVersion != 3) {
+    if (forVersion !== 3) {
         account = await DB.FindOne<Rb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
         if (account) {
             result.account = account
@@ -182,7 +182,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     }
 
     // RB4
-    if (forVersion != 4) {
+    if (forVersion !== 4) {
         account = await DB.FindOne<Rb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
         if (account) {
             result.account = account
@@ -195,7 +195,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     }
 
     // RB5
-    if (forVersion != 5) {
+    if (forVersion !== 5) {
         account = await DB.FindOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
         if (account) {
             result.account = account
@@ -208,7 +208,7 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     }
 
     // RB6
-    if (forVersion != 6) {
+    if (forVersion !== 6) {
         account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
         if (account) {
             result.account = account

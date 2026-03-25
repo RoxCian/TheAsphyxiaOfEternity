@@ -90,7 +90,7 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
             playCount: record.playCount,
             battleStat: undefined,
             justCollectRate: undefined,
-            skillPoint: await calculateSkillPoint(record),
+            skillPoint: await computeSkillPoint(record),
             lastPlay: new Date(record.time * 1000),
             update: new Date(Math.max(record.bestComboUpdateTime, record.bestScoreUpdateTime, record.bestMissCountUpdateTime, record.bestAchievementRateUpdateTime) * 1000)
         }
@@ -225,7 +225,7 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
     }
     return result
 }
-async function calculateSkillPoint(record: Rb5MusicRecord): Promise<number> {
+async function computeSkillPoint(record: Rb5MusicRecord): Promise<number> {
     const chart = (await rbChartInfo).find(ci => ci.musicId === record.musicId && ci.chartType === record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com

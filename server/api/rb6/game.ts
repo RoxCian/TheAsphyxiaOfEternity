@@ -248,19 +248,6 @@ const readGhost: H.H<Rb6ReadGhostParam> = async data => {
     const randomRedData = (redDatas.length > 0) ? redDatas[Math.round((redDatas.length - 1) * Math.random())] : new Rb6Ghost(param.musicId, param.chartType)
     const randomBlueData = (blueDatas.length > 0) ? blueDatas[Math.round((blueDatas.length - 1) * Math.random())] : new Rb6Ghost(param.musicId, param.chartType)
     const randomData = Object.assign(randomRedData, randomBlueData)
-
-    // let k = mapKObject({ ghost: randomData }, { ghost: Rb6GhostMap })
-    // /* @ts-ignore **/
-    // if (k.ghost.item_red_data_bin) k.ghost.win_count_red = K.ITEM("s32", 5)
-    // /* @ts-ignore **/
-    // if (k.ghost.item_blue_data_bin) k.ghost.win_count_blue = K.ITEM("s32", 5)
-    // /* @ts-ignore **/
-    // if (k.ghost.item_red_data_bin) k.ghost.red_id = K.ITEM("s32", 0)
-    // /* @ts-ignore **/
-    // if (k.ghost.item_blue_data_bin) k.ghost.blue_id = K.ITEM("s32", 0)
-    // await log(k)
-    // send.object(k)
-
     const result = new Rb6ReadGhost()
     result.ghost = randomData
     return XF.x(result)

@@ -125,7 +125,11 @@ export type RbComment<TVersion extends RbVersion> = {
     entryId: number
     userId: number
     name: string
-    balloon: number
+    balloon: RbCommentBalloon
     time: number
     comment: string
+}
+
+export enum RbCommentBalloon {
+    default, rounded, rectangle, cloud, exploded
 }

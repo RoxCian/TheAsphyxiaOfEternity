@@ -3,7 +3,7 @@ import { Batch } from "./batch"
 import { Rb6JustCollection } from "../models/rb6/just_collection"
 import { Rb3PlayerAccount } from "../models/rb3/profile"
 import { Rb6Ghost } from "../models/rb6/ghost"
-import { Rb6PlayerAccount } from "../models/rb6/profile"
+import { Rb6PlayerAccount, Rb6PlayerBase } from "../models/rb6/profile"
 import { Rb6MusicRecord } from "../models/rb6/music_record"
 
 export function initializeBatch() {
@@ -57,17 +57,24 @@ export function initializeBatch() {
         const records = await DBH.find<Rb6MusicRecord>(undefined, { collection: "rb.rb6.playData.musicRecord" })
         const modifiedRecords: Doc<Rb6MusicRecord>[] = []
         for (const r of records) {
-            let isModified = false
+            let modified = false
             if (r.justCollectionRateTimes100Red == undefined) {
-                isModified = true
+                modified = true
                 r.justCollectionRateTimes100Red = 0
             }
             if (r.justCollectionRateTimes100Blue == undefined) {
-                isModified = true
+                modified = true
                 r.justCollectionRateTimes100Blue = 0
             }
-            if (isModified) modifiedRecords.push(r)
+            if (modified) modifiedRecords.push(r)
         }
         for (const r of modifiedRecords) await DBH.update((r as any).__refid, { _id: r._id }, r)
+        
+        const base = await DBH.find<Rb6PlayerBase>({ collection: "rb.rb6.player.base" })
+        for (const b of base) {
+            b.classAchievementRateTimes100 ??= (b as any)["classAchievrementRateTimes100"]
+            delete (b as any)["classAchievrementRateTimes100"]
+            await DBH.update((b as any).__refid, { collection: "rb.rb6.player.base" }, b)
+        }
     })
 }

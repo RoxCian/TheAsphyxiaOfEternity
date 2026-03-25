@@ -5,8 +5,8 @@ import { rbMusicVariation } from "./rb_music_variation"
 
 export const rbChartInfo = loadCsvAsync<RbChartInfo<RbVersion, RbChartType<RbVersion>>>("rb_chart_info")
 
-export async function findChartInfo<TVersion extends RbVersion>(musicId: number, version: TVersion, chartType: RbChartType<TVersion>): Promise<RbChartInfo<RbVersion, RbChartType<TVersion>> | undefined> {
-    return (await rbChartInfo).find(c => c.version === version && c.musicId === musicId && c.chartType === chartType) as RbChartInfo<RbVersion, RbChartType<TVersion>>
+export async function findChartInfo<TVersion extends RbVersion>(musicId: number, version: TVersion, chartType: RbChartType<TVersion>): Promise<RbChartInfo<TVersion, RbChartType<TVersion>> | undefined> {
+    return (await rbChartInfo).find(c => c.version === version && c.musicId === musicId && c.chartType === chartType) as RbChartInfo<TVersion, RbChartType<TVersion>>
 }
 export async function findCharts<TVersion extends RbVersion>(musicId: number, version: TVersion): Promise<RbChartsInfo<TVersion>> {
     const charts = (await rbChartInfo).filter(c => c.version === version && c.musicId === musicId)

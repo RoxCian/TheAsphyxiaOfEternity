@@ -1,9 +1,9 @@
 import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
-import { findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
+import { findChartInfo, findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerCustom, Rb6PlayerReleasedInfo, Rb6PlayerStageLog } from "../../models/rb6/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse, RbChartInfo } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { rb6PastelLevel } from "../../data/tables/rb6_pastel_level"
 import { Rb6MusicRecord } from "../../models/rb6/music_record"
@@ -35,6 +35,9 @@ export function registerRb6Controllers() {
     C.route("rb6ReadCharacterCards", readCharacterCards)
     C.route("rb6ReadSettings", readSettings)
     C.route("rb6WriteSettings", writeSettings)
+    C.route("rb6RequestAsphyxia", requestAsphyxia)
+    C.route("rb6UploadAsphyxia", uploadAsphyxia)
+    C.route("rb6ImportAsphyxia", importAsphyxia)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -111,7 +114,7 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
                 red: record.justCollectionRateTimes100Red / 100,
                 blue: record.justCollectionRateTimes100Blue / 100
             },
-            skillPoint: await calculateSkillPoint(record),
+            skillPoint: await computeSkillPoint(record),
             lastPlay: new Date(record.time * 1000),
             update: new Date(Math.max(record.bestComboUpdateTime, record.bestScoreUpdateTime, record.bestMissCountUpdateTime, record.bestAchievementRateUpdateTime) * 1000)
         }
@@ -159,6 +162,183 @@ const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data
 }
 const readEquips: C.C<{}, Rb6EquipmentInfo[]> = () => rb6Equips
 const readCharacterCards: C.C<{}, Rb6CharacterCardInfo[]> = () => rb6CharacterCards
+
+const asphyxiaUploadSessionsContent: Record<string, { profileData: Buffer, profileProgress: number, scoresData: Buffer, scoresProgress: number }> = {}
+
+const requestAsphyxia: C.C<RbRequest & { profileSize: number, scoresSize: number }, { profileProgress: number, scoresProgress: number }> = async data => {
+    let sessionContent = asphyxiaUploadSessionsContent[data.rid]
+    if (sessionContent && data.profileSize === sessionContent.profileData.length && data.scoresSize === sessionContent.scoresData.length) {
+        return { profileProgress: sessionContent.profileProgress, scoresProgress: sessionContent.scoresProgress }
+    }
+    sessionContent = { profileData: Buffer.alloc(data.profileSize), profileProgress: 0, scoresData: Buffer.alloc(data.scoresSize), scoresProgress: 0 }
+    asphyxiaUploadSessionsContent[data.rid] = sessionContent
+    return { profileProgress: 0, scoresProgress: 0 }
+}
+const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", trunk: string }> = async data => {
+    const sessionContent = asphyxiaUploadSessionsContent[data.rid]
+    if (!sessionContent) return { type: "error", code: 401, message: "Asphyxia upload session is not requested." }
+    const bin = Buffer.from(data.trunk, "base64")
+    const sessionData = data.file === "profile" ? sessionContent.profileData : sessionContent.scoresData
+    let sessionProgress = data.file === "profile" ? sessionContent.profileProgress : sessionContent.scoresProgress
+    if (bin.length + sessionProgress > sessionData.length) return { type: "error", code: 401, message: "Insufficient file size." }
+    if (sessionData.length === sessionProgress) return {}
+    bin.copy(sessionData, sessionProgress)
+    sessionProgress += bin.length
+    if (data.file === "profile") sessionContent.profileProgress = sessionProgress
+    else sessionContent.scoresProgress = sessionProgress
+}
+const importAsphyxia: C.C<RbRequest> = async data => {
+    const rid = data.rid
+    const sessionContent = asphyxiaUploadSessionsContent[rid]
+    if (!sessionContent) return { type: "error", code: 401, message: "Asphyxia upload session is not requested." }
+    if (sessionContent.profileData.length !== sessionContent.profileProgress || sessionContent.scoresData.length !== sessionContent.scoresProgress) {
+        delete asphyxiaUploadSessionsContent[rid]
+        return { type: "error", code: 401, message: "File uploading is incomplete." }
+    }
+    let profile: any, scores: any
+    try {
+        profile = JSON.parse(sessionContent.profileData.toString("utf8"))
+        scores = JSON.parse(sessionContent.scoresData.toString("utf8"))
+    } catch {
+        return { type: "error", code: 401, message: "Invalid Asphyxia profile data." }
+    }
+    const base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
+    const t = new DBH.T()
+
+    const validCheckKeys = ["ap", "mg", "skillPoint", "pastelExp"]
+    for (const k of validCheckKeys) if (profile[k] == undefined) return { type: "error", code: 401, message: "Invalid Asphyxia profile data." }
+
+    for (const k in profile.dojo) {
+        if (`${parseInt(k)}` !== k) continue
+        const dojo = profile.dojo[k]
+        const query: Query<Rb6Classcheck> = { collection: "rb.rb6.playData.classcheck", class: parseInt(k) }
+        let classcheck = await t.findOne(rid, query)
+        if (!classcheck) {
+            classcheck = new Rb6Classcheck(parseInt(k))
+            classcheck.clearType = dojo.clear
+            classcheck.averageAchievementRateTimes100 = dojo.ar
+            classcheck.rank = dojo.rank
+            classcheck.playCount = dojo.pc
+            classcheck.recordUpdateTime = dojo.update
+            classcheck.lastPlayTime = dojo.time
+            classcheck.totalScore = dojo.score
+            if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
+                base.class = classcheck.class
+                base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
+            }
+            t.insert(rid, classcheck)
+        } else {
+            let updateFlag = 0
+            if (classcheck.clearType < dojo.clear) {
+                updateFlag++
+                classcheck.clearType = dojo.clear
+            }
+            if (classcheck.averageAchievementRateTimes100 < dojo.ar) {
+                updateFlag++
+                classcheck.averageAchievementRateTimes100 = dojo.ar
+            }
+            if (classcheck.totalScore < dojo.score) {
+                updateFlag++
+                classcheck.totalScore = dojo.score
+            }
+            classcheck.playCount += dojo.pc
+            if (classcheck.lastPlayTime < dojo.time) classcheck.lastPlayTime = dojo.time
+            if (updateFlag === 3) classcheck.recordUpdateTime = dojo.update
+            else if ((updateFlag > 0) && (classcheck.recordUpdateTime < dojo.update)) classcheck.recordUpdateTime = dojo.update
+            if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
+                base.class = classcheck.class
+                base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
+            }
+            t.update(rid, query, classcheck)
+        }
+        for (const k in profile.charas) {
+            if (`${parseInt(k)}` !== k) continue
+            const chara = profile.charas[k]
+            const query: Query<Rb6CharacterCard> = { collection: "rb.rb6.player.characterCard", characterCardId: parseInt(k) }
+            let characterCard = await DB.FindOne<Rb6CharacterCard>(rid, query)
+            if (!characterCard) {
+                characterCard = new Rb6CharacterCard(parseInt(k))
+                characterCard.level = chara.level
+                characterCard.experience = chara.exp
+            } else {
+                // TODO: Should merge level and experiences
+                if (chara.lv > characterCard.level || chara.lv === characterCard.level && chara.exp > characterCard.experience) {
+                    characterCard.level = chara.lv
+                    characterCard.experience = chara.exp
+                    t.update(rid, query, characterCard)
+                }
+            }
+        }
+        for (const k in scores) {
+            const match = k.match(/^(?<mid>\d{1-4}):(?<ct>[0-3])/)
+            if (!match) continue
+            const mid = parseInt(match.groups.mid)
+            const ct: Rb6ChartType = parseInt(match.groups.ct)
+            const s = scores[k]
+
+            const validCheckKeys2 = ["ar", "ct", "scr", "ms", "combo", "param", "time"]
+            for (let k of validCheckKeys2) if (s[k] == undefined) continue
+
+            const query: Query<Rb6MusicRecord> = { collection: "rb.rb6.playData.musicRecord", musicId: mid, chartType: ct }
+            const chartInfo = await findChartInfo(mid, version, ct)
+            let musicRecord = await DB.FindOne<Rb6MusicRecord>(rid, query)
+
+            if (!musicRecord) {
+                musicRecord = new Rb6MusicRecord(mid, ct)
+                musicRecord.achievementRateTimes100 = s.ar
+                musicRecord.clearType = s.ct
+                musicRecord.score = s.scr
+                musicRecord.combo = s.combo
+                musicRecord.missCount = (s.combo === chartInfo.maxCombo) ? 0 : (s.ms <= 0) ? ((s.ct >= 3) ? computeMaxMissCount(s.scr, s.combo, chartInfo) : -1) : s.ms
+                musicRecord.param = (s.combo === chartInfo.maxCombo) ? (s.param == 0) ? 1 : s.param : s.param
+                musicRecord.playCount = s.pc
+                musicRecord.time = s.time
+                musicRecord.bestComboUpdateTime = s.time
+                musicRecord.bestAchievementRateUpdateTime = s.time
+                musicRecord.bestMissCountUpdateTime = s.time
+                musicRecord.bestScoreUpdateTime = s.time
+                t.insert(rid, musicRecord)
+            } else {
+                if (musicRecord.clearType < s.ct) musicRecord.clearType = s.ct
+                if (musicRecord.achievementRateTimes100 < s.ar) {
+                    musicRecord.bestAchievementRateUpdateTime = s.time
+                    musicRecord.achievementRateTimes100 = s.ar
+                }
+                if (musicRecord.score < s.score) {
+                    musicRecord.bestScoreUpdateTime = s.time
+                    musicRecord.score = s.score
+                }
+                if (musicRecord.combo < s.combo) {
+                    musicRecord.bestComboUpdateTime = s.time
+                    musicRecord.combo = s.combo
+                }
+                if (musicRecord.param < s.param) musicRecord.param = s.param
+                if ((s.ms > 0) && ((musicRecord.missCount < s.ms) || (musicRecord.missCount < 0))) {
+                    musicRecord.bestMissCountUpdateTime = s.time
+                    musicRecord.missCount = s.ms
+                }
+                if ((musicRecord.combo === chartInfo.maxCombo) && ((musicRecord.missCount !== 0) || (musicRecord.param === 0))) {
+                    musicRecord.bestMissCountUpdateTime = s.time
+                    musicRecord.missCount = 0
+                    if (musicRecord.param === 0) musicRecord.param = 1
+                }
+                musicRecord.playCount += s.pc
+                musicRecord.time = Math.max(musicRecord.time, s.time)
+                t.update(rid, query, musicRecord)
+            }
+        }
+        base.matchingGrade = Math.max(base.matchingGrade, profile.mg)
+        base.skillPointTimes10 = Math.max(base.skillPointTimes10, profile.skillPoint)
+        base.pastelExperiences += profile.pastelExp
+        t.update(rid, { collection: "rb.rb6.player.base" }, base)
+
+        try {
+            await t.commit()
+        } catch (ex) {
+            return { type: "error", code: 500, message: `Server error when save changes: ${(ex as Error).message}` }
+        }
+    }
+}
 
 type Rb6SettingsContext = {
     account: Rb6PlayerAccount
@@ -278,11 +458,19 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
     }
     return result
 }
-async function calculateSkillPoint(record: Rb6MusicRecord): Promise<number> {
+async function computeSkillPoint(record: Rb6MusicRecord): Promise<number> {
     const chart = (await rbChartInfo).find(ci => ci.musicId === record.musicId && ci.chartType === record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com
     const maxScore = (chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50
-    const result = Math.min((record.score / maxScore) * (record.combo / chart.maxCombo) * chart.skillRate * 2, chart.skillRate * 2) // a very little charts can break up the max score limit like refrain (HARD, Reflesia). So cap it.
+    const result = Math.min((record.score / maxScore) * (record.combo / chart.maxCombo) * chart.skillRate * 2, chart.skillRate * 2) // a very little charts can break up the max score limit like refrain (HARD). So cap it.
     return parseFloat(result.toFixed(2))
+}
+function computeMaxMissCount(score: number, combo: number, chart: RbChartInfo<V, Rb6ChartType>) {
+    // formulae are come from bemaniwiki.com
+    const maxScoreAtCurrentComboRate = Math.trunc((chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50 * (combo / chart.maxCombo))
+    const maxMissCombo = chart.maxCombo - combo
+    const maxKeepMissScore = Math.min(maxScoreAtCurrentComboRate - score, chart.maxKeepCount)
+    const maxMissScore = maxKeepMissScore < maxScoreAtCurrentComboRate - score ? Math.trunc((maxScoreAtCurrentComboRate - score - maxKeepMissScore) / 6) + maxKeepMissScore : maxKeepMissScore
+    return Math.min(maxMissCombo, maxMissScore)
 }

@@ -2,7 +2,7 @@ import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb2EventStatus } from "../../models/rb2/event"
-import { getRbCommentType, Rb2Comment, Rb2Comments, Rb3Comment, Rb6Comment, RbComment, RbComments, rbCommentTypeToken, RbReadCommentParam } from "../../models/shared/comment"
+import { getRbCommentType, Rb2Comment, Rb2Comments, Rb3Comment, Rb6Comment, RbCommentBase, RbComments, rbCommentTypeToken, RbReadCommentParam } from "../../models/shared/comment"
 import { RbVersion } from "../../models/shared/rb_types"
 import { injectorSymbol, TypeInjector } from "../../utils/types"
 
@@ -42,7 +42,7 @@ export function createReadCommentHandler<TVersion extends RbVersion>(version: TV
         }
     }
 }
-export function createWriteCommentHandler<TVersion extends RbVersion>(version: TVersion): H.H<RbComment<TVersion>> {
+export function createWriteCommentHandler<TVersion extends RbVersion>(version: TVersion): H.H<RbCommentBase<TVersion>> {
     if (!U.GetConfig("comment_feature")) return () => H.deny
     const closure = {
         version: version,
@@ -55,7 +55,7 @@ export function createWriteCommentHandler<TVersion extends RbVersion>(version: T
         const comment = XF.o(data, closure.type, closure.typeInjector)
         comment.version = closure.version
         do comment.entryId = Math.round(Math.random() * 99999999)
-        while (await DB.FindOne<RbComment<TVersion>>({ collection: "rb.info.comment", entryId: comment.entryId }))
+        while (await DB.FindOne<RbCommentBase<TVersion>>({ collection: "rb.info.comment", entryId: comment.entryId }))
         await DBH.insert(undefined, comment)
         return H.success
     }
