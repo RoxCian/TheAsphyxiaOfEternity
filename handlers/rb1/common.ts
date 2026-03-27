@@ -109,9 +109,9 @@ export namespace Rb1HandlersCommon {
                 if (player.pdata.base?.userId <= 0) {
                     player.pdata.base.userId = await generateUserId()
                     // initializePlayer(player)
-                    playerBaseForPlayCountQuery = player.pdata.base
-                    playerBaseForPlayCountQuery.playCount = 0
+                    player.pdata.base.playCount = 0
                 }
+                opm.upsert(rid, playCountQuery, player.pdata.base)
             } else {
                 if (playerBaseForPlayCountQuery.playCount == null) playerBaseForPlayCountQuery.playCount = 1
                 else playerBaseForPlayCountQuery.playCount++

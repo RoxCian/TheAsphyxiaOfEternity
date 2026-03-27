@@ -23,7 +23,7 @@ export function readPlayerPostProcess(player: KITEM2<IRb4Player>): KITEM2<IRb4Pl
 }
 export async function writePlayerPreProcess(player: KITEM2<IRb4Player>): Promise<KITEM2<IRb4Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
-    if (!player.pdata.released?.info) {
+    if (player.pdata.released?.info) {
         let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
         let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
         if (!isUnlockSongs && !isUnlockItems) return player

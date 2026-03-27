@@ -58,14 +58,16 @@ export namespace Rb2HandlersCommon {
             if (rbPlayer != null) {
                 result = generateRb2Profile(readParam.rid, rbPlayer.userId)
                 result.pdata.base.name = rbPlayer.name
-                let scoreMetadatas = await findMusicRecordMetadatas(readParam.rid)
-                let scores = await pullMusicRecords(readParam.rid, scoreMetadatas, true)
-                if (scores.length > 0) result.pdata.record = { rec: scores }
             } else {
                 result = generateRb2Profile(readParam.rid, await generateUserId())
                 result.pdata.base.name = "RBPlayer"
             }
             await writePlayerInternal(result)
+            if (rbPlayer != null) {
+                let scoreMetadatas = await findMusicRecordMetadatas(readParam.rid)
+                let scores = await pullMusicRecords(readParam.rid, scoreMetadatas, true)
+                if (scores.length > 0) result.pdata.record = { rec: scores }
+            }
             result.pdata.comment = ((base?.comment != null) && (base?.comment != "")) ? base.comment : "Enjoy limelight world!"
         } else {
             let stat: IRb2PlayerStat = await DB.FindOne<IRb2PlayerStat>(readParam.rid, { collection: "rb.rb2.player.stat" })
@@ -175,9 +177,9 @@ export namespace Rb2HandlersCommon {
                 if (player.pdata.base?.userId <= 0) {
                     player.pdata.base.userId = await generateUserId()
                     // initializePlayer(player)
-                    playerBaseForPlayCountQuery = player.pdata.base
-                    playerBaseForPlayCountQuery.playCount = 0
+                    player.pdata.base.playCount = 0
                 }
+                opm.upsert(rid, playCountQuery, player.pdata.base)
             } else {
                 if (playerBaseForPlayCountQuery.playCount == null) playerBaseForPlayCountQuery.playCount = 1
                 else playerBaseForPlayCountQuery.playCount++

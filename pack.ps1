@@ -9,6 +9,7 @@ $conditions = [System.Collections.ArrayList]@()
         $conditions.Add($_)
     }
 }
+((Get-Content -Path README.md -Raw) -replace "src=""icon.svg""", "src=""rb/static/img/icon.svg""") | Set-Content -Path README.md
 Get-ChildItem -Exclude $conditions | ForEach-Object {
     if ($_.Name.Trim() -eq "") {
         continue
@@ -16,7 +17,7 @@ Get-ChildItem -Exclude $conditions | ForEach-Object {
     $path = Resolve-Path $_.FullName -Relative
     Copy-Item $_ "dist\rb\$path" -Force -Recurse
 }
-((Get-Content -Path README.md -Raw) -replace "src="".+""", "src=""icon.svg""") | Set-Content -Path README.md     
+((Get-Content -Path README.md -Raw) -replace "src="".+""", "src=""icon.svg""") | Set-Content -Path README.md
 ((Get-Content -Path package.json -Raw) -replace "(?<=""version"": ""v)\d+\.\d+\.\d+(-.+)?(?="")", "$version") | Set-Content -Path package.json
 
 $compress = @{

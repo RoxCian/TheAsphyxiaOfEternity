@@ -10,6 +10,7 @@ package-lock.json
 # Debugging
 bin
 obj
+dev
 
 # Package
 *.tgz

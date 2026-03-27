@@ -1,3 +1,15 @@
+- v1.2.0
+
+  New profile can be saved now for RB & RB limelight.
+
+  <small>&nbsp;&nbsp;_Honestly, I don't know why didn't I write the code to save profile. Or did I remove that by accident?_</small>
+
+  Fixed the logic of released info trimming when turn on unlock all songs / items.
+
+  Fixed an issue of equipment exp accumulating for RB colette.
+
+  Fixed an issue of always show profile update notification for RB colette.
+
 - v1.1.11
 
   Fixed webui bugs for newer version of RB Reflesia.

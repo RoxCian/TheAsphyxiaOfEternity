@@ -249,6 +249,7 @@ export namespace Rb3HandlersCommon {
                 }
                 playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
+                playerAccountForPlayCountQuery.version = player.pdata.account.version
 
                 opm.update(rid, { collection: "rb.rb3.player.account" }, playerAccountForPlayCountQuery)
             }
@@ -270,7 +271,14 @@ export namespace Rb3HandlersCommon {
             if (player.pdata.lincleLink != null) opm.upsert<IRb2LincleLink>(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
             if (player.pdata.tricolettePark != null) opm.upsert<IRb3TricolettePark>(rid, { collection: "rb.rb3.player.tricolettePark" }, player.pdata.tricolettePark)
             if (player.pdata.eventProgress?.data?.length > 0) for (let d of player.pdata.eventProgress.data) await updateEventProgress(rid, d, opm)
-            if (player.pdata.equip?.data?.length > 0) for (let e of player.pdata.equip.data) opm.upsert<IRb3Equip>(rid, { collection: "rb.rb3.player.equip", index: e.index }, e)
+            if (player.pdata.equip?.data?.length > 0) for (let e of player.pdata.equip.data) {
+                let oldEquip = await DB.FindOne<IRb3Equip>(rid, { collection: "rb.rb3.player.equip", index: e.index })
+                if (oldEquip == null) opm.insert<IRb3Equip>(rid, e)
+                else {
+                    oldEquip.experience += e.experience
+                    opm.update<IRb3Equip>(rid, { collection: "rb.rb3.player.equip", index: e.index }, oldEquip)
+                }
+            }
             if (player.pdata.seedPod?.data?.length > 0) for (let s of player.pdata.seedPod.data) opm.upsert<IRb3SeedPod>(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
             if (player.pdata.order != null) await updateOrder(rid, player.pdata.order, opm)
             if (player.pdata.stamp != null) opm.upsert<IRb3Stamp>(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)

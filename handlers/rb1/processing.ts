@@ -21,15 +21,16 @@ export function readPlayerPostProcess(player: KITEM2<IRb1Player>): KITEM2<IRb1Pl
 }
 export async function writePlayerPreProcess(player: KITEM2<IRb1Player>): Promise<KITEM2<IRb1Player>> {
     if (player.pdata.base?.name != null) player.pdata.base.name["@content"] = toHalfWidth(player.pdata.base.name["@content"])
-    if (!player.pdata.released?.info) {
+    if (player.pdata.released?.info) {
         let isUnlockSongs: boolean = U.GetConfig("unlock_all_songs")
         let isUnlockItems: boolean = U.GetConfig("unlock_all_items")
         if (!isUnlockSongs && !isUnlockItems) return player
         // Process fields specifically
         if (isUnlockSongs || isUnlockItems) {
             let oldBase = await DB.FindOne<IRb1PlayerBase>(player.rid["@content"], { collection: "rb.rb1.player.base" })
-            player.pdata.base.level["@content"] = [(oldBase == null) ? oldBase.level : 0] // You may unlock customize items and songs with your level upgrading.
-            if (isUnlockItems) player.pdata.base.matchingGrade["@content"] = [(oldBase == null) ? oldBase.matchingGrade : 0] // If your matching grade getting incresed, you should unlock customize items.
+            let base: any = player.pdata.base
+            base.lv["@content"] = [oldBase?.level ?? 0] // You may unlock customize items and songs with your level upgrading.
+            if (isUnlockItems) base.mg["@content"] = [oldBase?.matchingGrade ?? 0] // If your matching grade getting incresed, you should unlock customize items.
         }
         // General
         if (isUnlockSongs && isUnlockItems) {
