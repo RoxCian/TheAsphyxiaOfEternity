@@ -63,12 +63,6 @@ function cloneServer() {
 }
 function cloneClient() {
     const distDir = `./dist/${pluginNameProd}/webui`
-    // clean chunk files
-    if (!existsSync(distDir)) mkdirSync(distDir, { recursive: true })
-    const distFiles = readdirSync(distDir, { withFileTypes: true, recursive: true })
-    for (const file of distFiles) {
-        if (file.name.match(/.+\.js/)) unlinkSync(`${file.parentPath}/${file.name}`)
-    }
     // clone builded client directory
     cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /^dev-/])
     // copy pug file

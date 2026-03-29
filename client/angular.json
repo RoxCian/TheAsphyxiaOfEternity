@@ -57,7 +57,6 @@
                                 }
                             ],
                             "outputHashing": "none",
-                            "namedChunks": true,
                             "optimization": true
                         },
                         "development": {
@@ -69,6 +68,10 @@
                                 {
                                     "replace": "src/env/env.ts",
                                     "with": "src/env/env.dev.ts"
+                                },
+                                {
+                                    "replace": "src/app/app-routing.module.ts",
+                                    "with": "src/app/app-routing.dev.module.ts"
                                 }
                             ]
                         }
