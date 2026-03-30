@@ -4,9 +4,9 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 // player.pdata.released.info.type == 6 -> character card
 // player.pdata.released.info.type == 7 -> byword
 
-export function readPlayerPostProcess(player: Rb3Player) {
+export async function readPlayerPostProcess(player: Rb3Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(3, player, Rb3PlayerReleasedInfo, [550, 30, 30, 30, 30, 30, 200, 30])
+    await attachReleaseInfo(3, player, Rb3PlayerReleasedInfo, [550, 30, 30, 30, 30, 30, 200, 30])
 }
 export async function writePlayerPreProcess(player: Rb3Player) {
     toHalfWidthPlayerName(player)

@@ -9,9 +9,9 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 // player.pdata.released.info.type == 11 -> leg equip
 // player.pdata.released.info.type == 12 -> arms
 // player.pdata.released.info.type == 13 -> music fragment
-export function readPlayerPostProcess(player: Rb6Player) {
+export async function readPlayerPostProcess(player: Rb6Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(6, player, Rb6PlayerReleasedInfo, [999, 200, 200, 200, 200, 200, 100, 200, 200, 33, 33, 33, 33], () => {
+    await attachReleaseInfo(6, player, Rb6PlayerReleasedInfo, [999, 200, 200, 200, 200, 200, 100, 200, 200, 33, 33, 33, 33], () => {
         player.pdata.characterCards.list = []
         for (let i = 0; i <= 99; i++) {
             const card = new Rb6CharacterCard(i)

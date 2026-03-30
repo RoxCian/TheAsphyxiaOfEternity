@@ -10,18 +10,24 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { StageLogManager } from "../shared_game/stage_log_manager"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { RbPlayerRead } from "../../models/shared/common"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb1Handlers() {
     H.route("player.start?model=KBR", startPlayer)
     H.route("player.read?model=KBR", readPlayer)
     H.route("player.write?model=KBR", writePlayer)
+    H.route("player.end?model=KBR", endPlayer)
     H.route("log.player?model=KBR", logPlayer)
     H.route("lobby.entry?model=KBR", createAddLobbyHandler(1))
     H.route("lobby.read?model=KBR", createReadLobbyHandler(1))
     H.route("lobby.delete?model=KBR", createDeleteLobbyHandler(1))
 }
 
-const startPlayer: H.H = () => XF.x(new Rb1PlayerStart())
+const startPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    if (!await createSession(rid, 1)) return H.deny
+    return XF.x(new Rb1PlayerStart())
+}
 
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
@@ -51,14 +57,20 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         result.pdata.record = { rec: scores.length > 0 ? scores : undefined }
         result.pdata.stat = stat
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 const writePlayer: H.H<Rb1Player> = async data => {
     const player = XF.o(data, Rb1Player)
+    if (!await getSession(player.rid, 1)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player)
     return { uid: K.ITEM("s32", player.pdata.base.userId) }
+}
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 1)
+    return H.success
 }
 const logPlayer: H.H<RbStageLogStandalone> = async data => {
     const log = XF.o(data, RbStageLogStandalone)

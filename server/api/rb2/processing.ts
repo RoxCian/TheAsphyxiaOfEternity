@@ -1,5 +1,5 @@
 import { Rb2Player, Rb2PlayerReleasedInfo } from "../../models/rb2/profile"
-import { toFullWidthPlayerName, attachReleaseInfo, toHalfWidthPlayerName, seekUnlockConfigs, detachReleaseInfo } from "../shared_game/player_processing"
+import { toFullWidthPlayerName, attachReleaseInfo, toHalfWidthPlayerName, detachReleaseInfo } from "../shared_game/player_processing"
 // player.pdata.released.info.type == 0 -> song
 // player.pdata.released.info.type == 1 -> sfx
 // player.pdata.released.info.type == 2 -> bgm
@@ -10,9 +10,9 @@ import { toFullWidthPlayerName, attachReleaseInfo, toHalfWidthPlayerName, seekUn
 // player.pdata.released.info.type == 7 -> byword left part
 // player.pdata.released.info.type == 8 -> byword right part
 
-export function readPlayerPostProcess(player: Rb2Player) {
+export async function readPlayerPostProcess(player: Rb2Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(2, player, Rb2PlayerReleasedInfo, [400, 30, 30, 30, 30, 30, 200, 50, 50])
+    await attachReleaseInfo(2, player, Rb2PlayerReleasedInfo, [400, 30, 30, 30, 30, 30, 200, 50, 50])
 }
 export async function writePlayerPreProcess(player: Rb2Player): Promise<void> {
     toHalfWidthPlayerName(player)

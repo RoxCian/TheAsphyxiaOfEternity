@@ -7,9 +7,9 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 // player.pdata.released.info.type == 4 -> explode fx
 // player.pdata.released.info.type == 5 -> bg
 
-export function readPlayerPostProcess(player: Rb1Player) {
+export async function readPlayerPostProcess(player: Rb1Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(1, player, Rb1PlayerReleasedInfo, [200, 30, 30, 30, 30, 30, 30, 30])
+    await attachReleaseInfo(1, player, Rb1PlayerReleasedInfo, [200, 30, 30, 30, 30, 30, 30, 30])
 }
 export async function writePlayerPreProcess(player: Rb1Player): Promise<void> {
     toHalfWidthPlayerName(player)

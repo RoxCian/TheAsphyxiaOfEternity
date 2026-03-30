@@ -229,7 +229,7 @@ async function computeSkillPoint(record: Rb5MusicRecord): Promise<number> {
     const chart = (await rbChartInfo).find(ci => ci.musicId === record.musicId && ci.chartType === record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com
-    const maxScore = (chart.maxCombo - chart.maxKeepCount) * 3 + chart.maxJustReflec * 10 + 50
+    const maxScore = chart.maxCombo * 3 + chart.maxJustReflec * 10 + 50
     const result = Math.min((record.score / maxScore) * chart.skillRate * 100, chart.skillRate * 100)
-    return parseFloat(result.toFixed(2))
+    return parseFloat(result.toFixed(1))
 }

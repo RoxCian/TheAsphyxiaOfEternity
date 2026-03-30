@@ -9,9 +9,9 @@ import { toFullWidthPlayerName, attachReleaseInfo, toHalfWidthPlayerName, detach
 // player.pdata.released.info.type == 6 -> icon
 // player.pdata.released.info.type == 7 -> byword
 // player.pdata.released.info.type == 8 -> voice chat
-export function readPlayerPostProcess(player: Rb5Player) {
+export async function readPlayerPostProcess(player: Rb5Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(5, player, Rb5PlayerReleasedInfo, [999, 30, 30, 30, 30, 30, 200, 30, 30])
+    await attachReleaseInfo(5, player, Rb5PlayerReleasedInfo, [999, 30, 30, 30, 30, 30, 200, 30, 30])
 }
 export async function writePlayerPreProcess(player: Rb5Player) {
     toHalfWidthPlayerName(player)

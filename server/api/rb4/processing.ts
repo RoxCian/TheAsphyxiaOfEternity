@@ -10,9 +10,9 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 // player.pdata.released.info.type == 6 -> icon
 // player.pdata.released.info.type == 7 -> byword
 
-export function readPlayerPostProcess(player: Rb4Player) {
+export async function readPlayerPostProcess(player: Rb4Player) {
     toFullWidthPlayerName(player)
-    attachReleaseInfo(4, player, Rb4PlayerReleasedInfo, [750, 30, 30, 30, 30, 30, 200, 30])
+    await attachReleaseInfo(4, player, Rb4PlayerReleasedInfo, [750, 30, 30, 30, 30, 30, 200, 30])
 }
 export async function writePlayerPreProcess(player: Rb4Player) {
     toHalfWidthPlayerName(player)

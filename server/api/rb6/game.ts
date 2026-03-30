@@ -22,6 +22,7 @@ import { Rb6JustCollection, Rb6ReadJustCollection, Rb6ReadJustCollectionParamete
 import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghost"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb6Handlers() {
     H.route("info.rb6_info_read", readInfo)
@@ -30,6 +31,7 @@ export function registerRb6Handlers() {
     H.route("player.rb6_player_start", startPlayer)
     H.route("player.rb6_player_read", readPlayer)
     H.route("player.rb6_player_write", writePlayer)
+    H.route("player.rb5_player_end", endPlayer)
     H.route("player.rb6_player_delete", deletePlayer)
     H.route("player.rb6_player_read_score", readPlayerScore)
     H.route("player.rb6_player_read_jc", readPlayerJustCollections)
@@ -85,6 +87,7 @@ const playerSucceeded: H.H = async data => {
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
+    if (rid && !await createSession(rid, 6)) return H.deny
     const account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
     const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
     const result = new Rb6PlayerStart(account?.playerId ?? -1)
@@ -188,7 +191,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         if (questRecords?.length > 0) p.quest.list = questRecords
         p.ghostWinCount.info = base.ghostWinCount
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 
@@ -206,9 +209,16 @@ const deletePlayer: H.H = async data => {
 
 const writePlayer: H.H<Rb6Player> = async data => {
     const player = XF.o(data, Rb6Player)
+    if (!await getSession(player.pdata.account.rid, 6)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
+}
+
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 6)
+    return H.success
 }
 
 const readPlayerScore: H.H = async data => {

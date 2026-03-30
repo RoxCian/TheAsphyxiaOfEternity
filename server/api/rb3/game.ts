@@ -17,6 +17,7 @@ import { Rb1ChartType, Rb1ClearType } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -24,6 +25,7 @@ export function registerRb3Handlers() {
     H.route("player.succeed?model=MBR", succeedPlayer)
     H.route("player.read?model=MBR", readPlayer)
     H.route("player.write?model=MBR", writePlayer)
+    H.route("player.end?model=MBR", endPlayer)
     H.route("lobby.entry?model=MBR", createAddLobbyHandler(3))
     H.route("lobby.read?model=MBR", createReadLobbyHandler(3))
     H.route("lobby.delete?model=MBR", createDeleteLobbyHandler(3))
@@ -37,7 +39,11 @@ const bootPcb: H.H = () => XF.x(new Rb3ShopInfo())
 
 const readHitChartInfo: H.H = () => ({ ver: {} })
 
-const startPlayer: H.H = () => XF.x(new Rb3PlayerStart())
+const startPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    if (!await createSession(rid, 3)) return H.deny
+    return XF.x(new Rb3PlayerStart())
+}
 
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
@@ -136,14 +142,20 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         if (scores.length > 0) p.record.rec = scores
         if (oldRecords.length > 0) p.recordOld.rec = oldRecords
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 const writePlayer: H.H<Rb3Player> = async data => {
     const player = XF.o(data, Rb3Player)
+    if (!await getSession(player.pdata.account.rid, 3)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
+}
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 3)
+    return H.success
 }
 const deletePlayer: H.H = async data => {
     try {

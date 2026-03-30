@@ -19,13 +19,15 @@ import { createAddLobbyHandler, createDeleteLobbyHandler, createReadLobbyHandler
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
 import { isNewMusic } from "../../data/tables/rb_music_id"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb4Handlers() {
     H.route("pcb.rb4boot", bootPcb)
     H.route("player.rb4start", startPlayer)
     H.route("player.rb4succeed", succeedPlayer)
-    H.route("player.rb4write", writePlayer)
     H.route("player.rb4read", readPlayer)
+    H.route("player.rb4write", writePlayer)
+    H.route("player.rb4end", endPlayer)
     H.route("player.rb4readepisode", readEpisode)
     H.route("player.rb4readscore", readPlayerScore)
     H.route("lobby.rb4entry", createAddLobbyHandler(4))
@@ -60,6 +62,7 @@ const succeedPlayer: H.H = async data => {
 }
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
+    if (rid && !await createSession(rid, 4)) return H.deny
     const account = rid == undefined ? undefined : await DB.FindOne<Rb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
     const result = new Rb4PlayerStart(account?.playerId)
     return XF.x(result)
@@ -132,14 +135,20 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         p.episode.info = episodes
         p.quest = quest
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 const writePlayer: H.H<Rb4Player> = async data => {
     const player = XF.o(data, Rb4Player)
+    if (!await getSession(player.pdata.account.rid, 4)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
+}
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 4)
+    return H.success
 }
 const readEpisode: H.H = async data => {
     const userId = $(data).number("user_id")

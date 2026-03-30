@@ -17,14 +17,16 @@ import { Rb5PlayerStart } from "../../models/rb5/common"
 import { Rb4ChartType, Rb5ClasscheckIndex } from "../../models/shared/rb_types"
 import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb5Handlers() {
     H.route("pcb.rb5boot", bootPcb)
     H.route("player.rb5_player_start", startPlayer)
-    H.route("player.rb5_player_write", writePlayer)
-    H.route("player.rb5_player_write_5", writePlayer2) // VOLZZA 2
     H.route("player.rb5_player_read", readPlayer)
     H.route("player.rb5_player_read_5", readPlayer) // VOLZZA 2
+    H.route("player.rb5_player_write", writePlayer)
+    H.route("player.rb5_player_write_5", writePlayer2) // VOLZZA 2
+    H.route("player.rb5_player_end", endPlayer)
     H.route("player.rb5_player_read_score", readPlayerScore)
     H.route("player.rb5_player_read_score_5", readPlayerScore) // VOLZZA 2
     H.route("player.rb5_player_read_score_old_5", readPlayerScoreOldVersion) // VOLZZA 2
@@ -41,6 +43,7 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
+    if (rid && !await createSession(rid, 5)) return H.deny
     const account = rid == undefined ? undefined : await DB.FindOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
     const result = new Rb5PlayerStart(account?.playerId)
     return XF.x(result)
@@ -119,7 +122,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         p.myCourse = myCourse
         p.myCourseF = myCourse
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 const deletePlayer: H.H = async data => {
@@ -137,13 +140,21 @@ const deletePlayer: H.H = async data => {
 
 const writePlayer: H.H<Rb5Player> = async data => {
     const player = XF.o(data, Rb5Player)
+    if (!await getSession(player.pdata.account.rid, 5)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player, false)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 5)
+    return H.success
+}
+
 const writePlayer2: H.H<Rb5Player> = async data => {
     const player = XF.o(data, Rb5Player)
+    if (!await getSession(player.pdata.account.rid, 5)) return H.deny
     writePlayerPreProcess(player)
     await writePlayerCore(player, true)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }

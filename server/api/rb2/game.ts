@@ -14,12 +14,14 @@ import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { Rb1ChartType } from "../../models/shared/rb_types"
 import { RbPlayerRead } from "../../models/shared/common"
+import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb2Handlers() {
     H.route("read.info?model=LBR", readInfo)
     H.route("player.start?model=LBR", startPlayer)
     H.route("player.read?model=LBR", readPlayer)
     H.route("player.write?model=LBR", writePlayer)
+    H.route("player.end?model=LBR", endPlayer)
     H.route("log.player?model=LBR", logPlayer)
     H.route("event_w.update_status?model=LBR", updateEventStatus)
     H.route("lobby.entry?model=LBR", createAddLobbyHandler(2))
@@ -31,7 +33,11 @@ export function registerRb2Handlers() {
 
 const readInfo: H.H = () => H.success
 
-const startPlayer: H.H = () => XF.x(new Rb2PlayerStart())
+const startPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    if (!await createSession(rid, 2)) return H.deny
+    return XF.x(new Rb2PlayerStart())
+}
 
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
@@ -72,18 +78,25 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         result.pdata.lincleLink = lincleLink
         result.pdata.mylist = mylist
     }
-    readPlayerPostProcess(result)
+    await readPlayerPostProcess(result)
     return XF.x(result)
 }
 
 const writePlayer: H.H<Rb2Player> = async data => {
     const player = XF.o(data, Rb2Player)
+    if (!await getSession(player.rid, 2)) return H.deny
     await writePlayerPreProcess(player)
     await writePlayerCore(player)
     return {
         uid: K.ITEM("s32", player.pdata.base.userId),
         time: K.ITEM("s32", Math.trunc(Date.now() / 1000))
     }
+}
+
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 2)
+    return H.success
 }
 
 const logPlayer: H.H<RbStageLogStandalone> = async data => {
