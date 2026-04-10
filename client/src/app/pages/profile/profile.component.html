@@ -1,11 +1,19 @@
 <ng-template #placeholder>
     <div class="rb-panel"></div>
 </ng-template>
-<rb-player-card [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" />
-<div class="page-container">
-    @for (p of fakeSubpageParams(); track p.random) {
-        <div class="page-content" animate.enter="enter" animate.leave="leave">
-            <ng-container *ngComponentOutlet="p.subpage" />
+@if (profileService.hasProfiles()) {
+    <rb-player-card animate.enter="enter" animate.leave="leave" [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" [profileDeleted]="profileService.lastDeletedProfile() === versionService.version()" />
+    @if (profileService.rbProfiles()[versionService.version()]) {
+        <div class="page-container" animate.enter="enter" animate.leave="leave">
+            @for (p of fakeSubpageParams(); track p.random) {
+                <div class="page-content" animate.enter="enter" animate.leave="leave">
+                    <ng-container *ngComponentOutlet="p.subpage" />
+                </div>
+            }
         </div>
     }
-</div>
+} @else if (profileService.lastDeletedProfile() === versionService.version()) {
+    <lets-play [text]="['All save data has been deleted.', 'Thank you for playing!']" animate.enter="enter" animate.leave="leave" />
+} @else if (!profileService.hasProfiles() && !profileService.isLoading()) {
+    <lets-play animate.enter="enter" animate.leave="leave" />
+}

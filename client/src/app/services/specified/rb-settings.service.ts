@@ -5,6 +5,7 @@ import { RbVersionService } from "./rb-version.service"
 import { RbProfileService } from "./rb-profile.service"
 import { FieldTree, form, max, maxLength, min, minLength, PathKind, required, SchemaPathTree, validate } from "@angular/forms/signals"
 import { isInShiftJISCharset } from "../../utils/functions"
+import { rbEmitJSON } from "../../utils/rb-functions"
 
 @Injectable({ providedIn: "root" })
 export class RbSettingsService {
@@ -48,7 +49,10 @@ export class RbSettingsService {
 
     constructor() {
         effect(() => {
-            if (this.settingsForm().dirty()) this.submittedInternal.set(false)
+            if (this.settingsForm().dirty()) {
+                this.submittedInternal.set(false)
+                this.submissionErrorInternal.set(undefined)
+            }
         })
     }
     cast<T, TVersion extends RbVersion>(value: T, _: TVersion): CastToVersion<T, TVersion> {
@@ -59,18 +63,13 @@ export class RbSettingsService {
     }
     async submit() {
         if (this.settingsForm().invalid() || !this.settingsForm().dirty()) return
+        this.submissionErrorInternal.set(undefined)
         const form = this.settingsForm().value() as RbRequest & RbSettingsResponse<RbVersion>
         form.rid = this.profileService.rid()
         try {
             console.log(JSON.stringify(form))
             const version = this.versionService.version()
-            const result = await (await fetch(`emit/rb${version}WriteSettings`, {
-                method: "POST",
-                body: JSON.stringify(form),
-                headers: {
-                    "content-type": "application/json;charset=UTF-8"
-                }
-            })).json() as RbWriteSettingsResponse
+            const result = await rbEmitJSON<RbWriteSettingsResponse>(`rb${version}WriteSettings`, form)
             if (result.state === "succeeded") {
                 this.settingsResource.reload()
                 this.settingsForm().reset()

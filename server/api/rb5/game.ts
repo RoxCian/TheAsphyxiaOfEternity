@@ -128,9 +128,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
 const deletePlayer: H.H = async data => {
     try {
         const rid = $(data).str("rid")
-        const account = await DB.FindOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
-        if (!account?.userId) return H.deny
-        await DBH.overall(rid, account?.userId, "rb.rb5", "delete")
+        await DBH.removeAll(rid, /^rb\.rb5\./)
         return H.success
     } catch (e) {
         console.log((<Error>e).message)

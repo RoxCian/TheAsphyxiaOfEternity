@@ -1,0 +1,96 @@
+<rb-settings-section name="Export save file">
+    <p>Click the Download button to download your save data of current RB version.</p>
+    <p>The exported data will be saved in JSON format as "RB{{ versionService.version() }}-savedata-{{ profileService.rid() }}-<i>(datetime in UTC)</i>.asphyxiacore".</p>
+    <button class="button is-info" type="button" (click)="onDownloadSaveFile()" [class.is-loading]="isDownloading()" [disabled]="isDownloading() || isUploading() || isDeleting()"><bung-icon icon="download">Download</bung-icon></button>
+</rb-settings-section>
+@if (versionService.version() === 6) {
+<rb-settings-section name="Import Asphyxia file">
+    <p>You can import play data from Asphyxia (version ~0.1).</p>
+    <p>Note that this feature will be removed after v2.1</p>
+    <div class="asphyxia-import">
+        <div class="asphyxia-import-input-grid">
+            @let p = uploadingProfileData();
+            @let s = uploadingScoresData();
+            <input class="file-input profile-input" type="file" accept=".json" (change)="onChangeProfileDataToUpload($event)" #profileInput>
+            <button class="button file-cta profile-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
+                <bung-icon iconUrl="assets/icons/asphyxia-import.svg">Select rb.json ...</bung-icon>
+            </button>
+            <span class="file-name profile-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
+                @if (p) {
+                <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
+                    <span class="file-name-span">{{ p.name }}</span>
+                    <span class="file-size">{{ p.size | friendlyFileSize }}</span>
+                    <button class="delete" type="button" (click)="onClearProfileDataToUpload($event)"></button>
+                </div>
+                } @else {
+                <span class="is-size-7" style="opacity: 0.5" animate.enter="enter" animate.leave="leave">Click to select rb.json.</span>
+                }
+            </span>
+
+            <input class="file-input scores-input" type="file" accept=".json" (change)="onChangeScoresDataToUpload($event)" #scoresInput>
+            <button class="button file-cta scores-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
+                <bung-icon iconUrl="assets/icons/asphyxia-import.svg">Select rb_scores.json ...</bung-icon>
+            </button>
+            <span class="file-name scores-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
+                @if (s) {
+                <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
+                    <span class="file-name-span">{{ s.name }}</span>
+                    <span class="file-size">{{ s.size | friendlyFileSize }}</span>
+                    <button class="delete" type="button" (click)="onClearScoresDataToUpload($event)"></button>
+                </div>
+                } @else {
+                <span class="is-size-7" style="opacity: 0.5" animate.enter="enter" animate.leave="leave">Click to select rb_scores.json.</span>
+                }
+            </span>
+        </div>
+        <div class="button-and-notification">
+            <button class="button import-asphyxia-button" type="button" [disabled]="!p || !s || isDownloading() || isUploading() || isDeleting()" [class.is-loading]="isUploading()" (click)="onUploadAsphyxia()">
+                <bung-icon icon="upload">Upload</bung-icon>
+            </button>
+            @if (isUploaded()) {
+            <span class="saved is-success" animate.enter="enter" animate.leave="leave"><bung-icon icon="check">Imported.</bung-icon></span>
+            } @else if (uploadResult()) {
+            <span class="failed is-danger" animate.enter="enter" animate.leave="leave">
+                <bung-icon icon="emoticon-confused">Failed to import Asphyxia data.</bung-icon>
+                <span class="is-size-7">({{ uploadResult() }})</span>
+            </span>
+            }
+        </div>
+    </div>
+</rb-settings-section>
+}
+
+<rb-settings-section name="Delete save data">
+    <ng-template #confirmModal>
+        <div class="content">
+            <p>Do you mean to remove all of your data? Your profile and scores of this RB version will be all gone.</p>
+            <p>Make sure nesessary data are all backup or exported.</p>
+            <div class="buttons">
+                <button class="button is-primary" (click)="onCloseDeleteSaveFileModal()">Cancel</button>
+                <button class="button is-danger is-outlined" (click)="onOpenFinalConfirmDeleteSaveFile()">I'm ready to delete my save data</button>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #finalConfirmModal>
+        <div class="content">
+            <p>This is the last chance to save your save data. The deletion cannot be aborted or be reversed. If you didn't backup, you will permanently lose your save data. </p>
+            <p>If you really mean it, type</p>
+            <p><code style="user-select: none">{{ finalConfirmText }}</code></p>
+            <p>in the text box down below and click the DELETE button.</p>
+            <p><input class="input" type="text" (change)="onFinalConfirmModalInputValueChanged($event)" [value]="finalConfirmModalInputValue()"></p>
+            <div class="button-and-notification">
+                <button class="button is-primary" (click)="onCloseDeleteSaveFileModal()">Nonono take me back</button>
+                <button class="button is-danger is-outlined" [disabled]="finalConfirmModalInputValue() !== finalConfirmText || isDownloading() || isUploading() || isDeleting()" [class.is-loading]="isDeleting()" (click)="onDeleteSaveFile()">DELETE</button>
+                @if (deleteResult()) {
+                    <span class="failed is-danger" animate.enter="enter" animate.leave="leave">
+                        <bung-icon icon="emoticon-confused">Failed to delete save data.</bung-icon>
+                        <div class="is-size-7">({{ deleteResult() }})</div>
+                    </span>
+                }
+            </div>
+        </div>
+    </ng-template>
+    <p>If you want to erase your save data, please click Delete button.</p>
+    <p>You will not be able to undo this action. Make sure you have all nesessary data backuped.</p>
+    <button class="button is-danger is-outlined" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="onOpenConfirmDeleteSaveFile()"><bung-icon icon="trash-can">Delete</bung-icon></button>
+</rb-settings-section>

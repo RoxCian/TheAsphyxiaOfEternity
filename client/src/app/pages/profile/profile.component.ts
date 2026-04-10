@@ -7,6 +7,7 @@ import { RbSubpageService } from "../../services/specified/rb-subpage.service"
 import { RbPlayDataSubpage } from "./play-data/play-data.component"
 import { CommonModule } from "@angular/common"
 import { BungNotificationService } from "../../services/bung/notification.service"
+import { Rb6ClearTypeLiteral } from "../../../../../server/models/shared/rb_types"
 
 @Component({
     selector: "profile-page",

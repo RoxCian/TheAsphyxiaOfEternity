@@ -77,6 +77,17 @@ export function toRelativeTimeString(time: Date): string {
     return `${prefix}${number}${suffix}`
 }
 
+export function toFriendlyFileSize(size: number): string {
+    const units = ["B", "KB", "MB", "GB", "TB", "PB"]
+    let s = size
+    let i = 0
+    for (; i < units.length - 1; i++) {
+        if (s < 1024) break
+        s /= 1024
+    }
+    return `${s.toFixed(2).replace(/\.?0+$/, "")} ${units[i]}`
+}
+
 export function mapObject<T, TMapFnResult>(object: T, mapFn: (key: keyof T) => TMapFnResult): Record<keyof T, TMapFnResult> {
     const result: Record<keyof T, TMapFnResult> = {} as Record<keyof T, TMapFnResult>
     for (const key in object) result[key] = mapFn(key)

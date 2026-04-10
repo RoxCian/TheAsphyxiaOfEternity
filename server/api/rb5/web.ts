@@ -140,7 +140,7 @@ const rb5SettingsFactory: RbSettingsFactory<Rb5SettingsResponse, Rb5SettingsCont
         base: { collection: "rb.rb5.player.base" },
         custom: { collection: "rb.rb5.player.custom" },
         config: { collection: "rb.rb5.player.config" },
-        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb5.player.lobbySettings#userId", userId: ctx.account.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.account.userId)),
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb5.player.lobbySettings#userId", userId: ctx.account.userId }), "public", ctx => new RbLobbySettings(version, ctx.account.userId)),
         mylist: contextQueryElement({ collection: "rb.rb5.player.mylist" }, "rid", () => new Rb5Mylist())
     },
     factory: {

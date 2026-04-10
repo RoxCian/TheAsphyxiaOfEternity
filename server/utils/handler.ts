@@ -76,6 +76,7 @@ export namespace H {
         HS.routes[method] = handlers
         const fn: EPR = async (req, data, send) => {
             initialize()
+            console.log("Handler method:", method)
             for (const _h of handlers) {
                 if (!HS.matchInfo(req, _h.query)) continue
                 const res = await _h.handler(data, req)

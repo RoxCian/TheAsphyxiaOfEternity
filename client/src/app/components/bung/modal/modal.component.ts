@@ -13,12 +13,13 @@ import { BungInsertionContent, BungInsertionContentOrComputation } from "../../.
         "[class.modal]": "true",
         "[class.is-active]": "true",
         "[class.use-default-popup-animation]": "true",
-        "[class.has-delete]": "isCard()",
+        "[class.has-delete]": "hasDelete()",
     }
 })
 export class BungModalComponent<TReturn> extends BungPopupComponent<TReturn> {
     readonly header = model<BungInsertionContent>()
     readonly headerContext = model<any>()
+    readonly hasDelete = input(false, { transform: toggleTransform })
     readonly isCard = input(false, { transform: toggleTransform })
 
     protected isSignal(value: BungInsertionContentOrComputation): value is (() => BungInsertionContent) {

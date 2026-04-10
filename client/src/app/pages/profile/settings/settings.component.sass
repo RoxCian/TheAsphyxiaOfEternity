@@ -52,19 +52,6 @@ input.input
 
     bung-icon
         transform: scaleX(-1)
-.music-icon-placeholder
-    padding: 0.5em
-    opacity: 0
-    user-select: none
-    pointer-events: none
-
-    .figure
-        height: 7em
-        margin-bottom: 0.5em
-    .text
-        font-size: 0.75em
-    .addon
-        margin-top: -8px
 .ranking-quest-option-content
     display: flex
     gap: 1em
@@ -180,7 +167,6 @@ input.input
     display: flex
     position: sticky
     flex-direction: column
-    align-items: end
     bottom: -1px
     margin: 0 -1.5rem // asphyxia fix
     margin-top: 1.5rem
@@ -197,19 +183,16 @@ input.input
     .button-and-notification
         display: flex
         align-items: center
+        padding-left: 2em
         gap: 1em
-    .saved, .failed
-        color: var(--bulma-color)
 
-        &.enter
-            animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-in)
-        &.leave
-            animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
-    .failed
-        text-align: right
+        .saved, .failed
+            color: var(--bulma-color)
 
-        bung-icon
-            justify-content: end
+            &.enter
+                animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-in)
+            &.leave
+                animation: rb-submit-info-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
 rb-level-display-switch.is-floated
     bottom: 7em
 rb-level-display-switch.enter
@@ -236,3 +219,6 @@ rb-level-display-switch.leave
     to
         transform: none
         opacity: 1
+@media screen and (width < 768px)
+    .submit-footer .button-and-notification
+        padding-left: 0.75em

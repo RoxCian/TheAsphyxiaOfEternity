@@ -9,7 +9,7 @@ export namespace Batch {
         for (const b of registeredBatch) {
             if (!await DBH.findOne<IBatchResult>({ collection: "rb.batchResult", batchId: b.id })) if (!isHigherVersion(version, b.version)) {
                 await b.batch()
-                await DBH.insert<IBatchResult>(undefined, { collection: "rb.batchResult", batchId: b.id })
+                await DBH.insert<IBatchResult>({ collection: "rb.batchResult", batchId: b.id })
                 console.log(`Batch task "${b.id}" was executed.`)
             }
         }

@@ -6,7 +6,7 @@
 .card
     border-radius: 8px
 .button
-    transition: background 0.2s, color 0.2s, border 0.2s, opacity 0.2s, box-shadow 0.2s
+    transition: background var(--animation-duration-lv3), color var(--animation-duration-lv3), border var(--animation-duration-lv3), opacity var(--animation-duration-lv3), box-shadow var(--animation-duration-lv3)
 
 // bulma fix
 .card:not(:last-child)
@@ -16,3 +16,18 @@
 bung-tabs .tabs ul
     margin-left: 0
     margin-top: 0
+
+// asphyxia fix
+input
+    transition: border-color var(--animation-duration-lv3) var(--ease-in)
+@media (prefers-color-scheme: dark)
+    .bung-input-content
+        background: black
+    .control .button:not(.is-selected):not(:hover):not(:active):not(.is-active)
+        background: black
+    .control rb-music-icon .card, rb-mylist-editor rb-music-icon .card, rb-mylist-editor rb-music-icon .button
+        background: black
+    bung-dropdown.show
+        background: black
+    .control input
+        background: black

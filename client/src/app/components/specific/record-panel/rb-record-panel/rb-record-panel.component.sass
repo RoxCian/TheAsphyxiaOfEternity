@@ -82,7 +82,7 @@
         transform: rotate(180deg)
         text-transform: uppercase
         margin-bottom: 0 // bypass style for "content p"
-
+        white-space: nowrap
     .chart-name
         position: absolute
         opacity: 0.3
@@ -93,6 +93,17 @@
 
     .chart-score
         font-weight: bold
+    rb-rank
+        display: inline-block
+        margin-top: 0.5em
+        font-size: 0.75em
+
+        &::ng-deep .deco-box
+            filter: none
+    rb-chart-light-badge
+        display: inline-block
+        margin-top: -0.8em
+        font-size: 0.75em
     
     &.not-played:not(.disabled)
         background: color-mix(in srgb, var(--rb-chart-color) 15%, white)

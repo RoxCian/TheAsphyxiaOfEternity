@@ -198,8 +198,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
 const deletePlayer: H.H = async data => {
     try {
         const rid = $(data).str("rid")
-        const account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
-        await DBH.overall(rid, account?.userId, "rb.rb6", "delete")
+        await DBH.removeAll(rid, /^rb\.rb6\./)
         return H.success
     } catch (e) {
         console.log((<Error>e).message)
@@ -243,7 +242,6 @@ const readPlayerJustCollections: H.H<Rb6ReadJustCollectionParameters> = async da
         result.justcollection.blueData = element.blueData
         result.justcollection.redData = element.redData
     }
-    // console.log(JSON.stringify(XF.x(result)))
     return XF.x(result)
 }
 
@@ -407,7 +405,7 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerSta
 
 async function updateGhostScore(userId: number, ghost: Rb6Ghost, t: DBH.T): Promise<void> {
     ghost.userId = userId
-    t.upsert(undefined, { collection: "rb.rb6.playData.ghost#userId", musicId: ghost.musicId, chartType: ghost.chartType, userId: userId }, ghost)
+    t.upsert({ collection: "rb.rb6.playData.ghost#userId", musicId: ghost.musicId, chartType: ghost.chartType, userId: userId }, ghost)
 }
 
 async function updateClasscheckRecordFromLog(rid: string, log: Rb6Classcheck, time: number, t: DBH.T): Promise<void> {
@@ -445,7 +443,7 @@ async function updateClasscheckRecordFromLog(rid: string, log: Rb6Classcheck, ti
 
 async function updateJustCollection(userId: number, justColElement: Rb6JustCollection, t: DBH.T): Promise<void> {
     justColElement.userId = userId
-    t.upsert(undefined, { collection: "rb.rb6.playData.justCollection#userId", userId: userId, musicId: justColElement.musicId, chartType: justColElement.chartType }, justColElement)
+    t.upsert({ collection: "rb.rb6.playData.justCollection#userId", userId: userId, musicId: justColElement.musicId, chartType: justColElement.chartType }, justColElement)
 }
 
 function checkRecord(record: Rb6PlayerStageLog | Rb6MusicRecord): boolean {

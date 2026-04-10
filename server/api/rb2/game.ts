@@ -49,12 +49,14 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         if (rbPlayer) {
             result.pdata.base.userId = rbPlayer.userId
             result.pdata.base.name = rbPlayer.name
-            const scores = await pullMusicRecords(read.rid, true)
-            if (scores.length > 0) result.pdata.record.rec = scores
         } else {
             result.pdata.base.name = "RBPlayer"
         }
         await writePlayerCore(result)
+        if (rbPlayer) {
+            const scores = await pullMusicRecords(read.rid, true)
+            if (scores.length > 0) result.pdata.record.rec = scores
+        }
         result.pdata.comment = ((base?.comment != undefined) && (base?.comment !== "")) ? base.comment : "Enjoy limelight world!"
     } else {
         const stat = await DBH.findOne(read.rid, Rb2PlayerStat, { collection: "rb.rb2.player.stat" })
@@ -108,7 +110,7 @@ const logPlayer: H.H<RbStageLogStandalone> = async data => {
 
 const updateEventStatus: H.H<Rb2EventStatus> = async data => {
     const status = XF.o(data, Rb2EventStatus)
-    await DBH.upsert(undefined, { collection: "rb.rb2.player.event.status#userId", userId: status.userId }, status)
+    await DBH.upsert({ collection: "rb.rb2.player.event.status#userId", userId: status.userId }, status)
     return H.success
 }
 
@@ -122,6 +124,7 @@ async function writePlayerCore(player: Rb2Player) {
     if (!baseSaved) {
         if (player.pdata.base?.userId <= 0) player.pdata.base.userId = await generateUserId()
         player.pdata.base.playCount = 0
+        t.upsert(rid, baseQuery, player.pdata.base)
     } else {
         if (baseSaved.playCount == undefined) baseSaved.playCount = 1
         else baseSaved.playCount++

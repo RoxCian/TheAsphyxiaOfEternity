@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common"
 import { NgModule } from "@angular/core"
 import { FormsModule } from "@angular/forms"
 import { BungModule } from "./bung.module"
-import { RhythmicIconComponent } from "../components/misc/rhythm-icon/rhythmic-icon.component"
 import { VersionNavComponent } from "../components/misc/version-nav/version-nav.component"
 import { RbBattleStatComponent } from "../components/specific/battle-stat/rb-battle-stat/rb-battle-stat.component"
 import { RbBywordTagComponent } from "../components/specific/byword-tag/rb-byword-tag/rb-byword-tag.component"
@@ -35,6 +34,7 @@ import { RbColorDirective } from "../directives/specific/rb-color.directive"
 import { ClampPipe } from "../pipes/misc/clamp.pipe"
 import { DecimalPartPipe } from "../pipes/misc/decimal-part.pipe"
 import { RelativeTimePipe } from "../pipes/misc/relative-time.pipe"
+import { FriendlyFileSizePipe } from "../pipes/misc/friendly-file-size.pipe"
 import { TruncPipe } from "../pipes/misc/trunc.pipe"
 import { RbBywordRarityLiteralPipe } from "../pipes/specific/rb-byword-rarity-literal.pipe"
 import { RbChartTypeLiteralPipe } from "../pipes/specific/rb-chart-type-to-name.pipe"
@@ -61,6 +61,8 @@ import { RbSkillPointPanelComponent } from "../components/specific/skill-point-p
 import { RbMusicIconComponent } from "../components/specific/music-icon/rb-music-icon/rb-music-icon.component";
 import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb-mylist-editor/rb-mylist-editor.component'
 import { RbSharedComponentsModule } from "./rb-shared-components.module"
+import { RbSaveDataSubpage } from "../pages/profile/save-data/save-data.component";
+import { RbChartLightBadgeComponent } from '../components/specific/chart-light/rb-chart-light-badge/rb-chart-light-badge.component'
 
 @NgModule({
     declarations: [
@@ -76,9 +78,9 @@ import { RbSharedComponentsModule } from "./rb-shared-components.module"
         RbChartLightComponent,
         RbTitlePipe,
         RbChartTypeDirective,
-        RhythmicIconComponent,
         Rb6JustCollectRateComponent,
         RelativeTimePipe,
+        FriendlyFileSizePipe,
         RbRankLabelComponent,
         RbBattleStatComponent,
         RbRankBadgeComponent,
@@ -120,7 +122,9 @@ import { RbSharedComponentsModule } from "./rb-shared-components.module"
         RbDefaultCommentPipe,
         RbPlayDataSubpage,
         RbSettingsSubpage,
-        RbMylistEditorComponent
+        RbSaveDataSubpage,
+        RbMylistEditorComponent,
+        RbChartLightBadgeComponent
     ],
     imports: [
         CommonModule,
@@ -143,9 +147,9 @@ import { RbSharedComponentsModule } from "./rb-shared-components.module"
         RbChartLightComponent,
         RbTitlePipe,
         RbChartTypeDirective,
-        RhythmicIconComponent,
         Rb6JustCollectRateComponent,
         RelativeTimePipe,
+        FriendlyFileSizePipe,
         RbRankLabelComponent,
         RbBattleStatComponent,
         RbRankBadgeComponent,
@@ -187,7 +191,9 @@ import { RbSharedComponentsModule } from "./rb-shared-components.module"
         RbDefaultCommentPipe,
         RbPlayDataSubpage,
         RbSettingsSubpage,
-        RbMylistEditorComponent
+        RbSaveDataSubpage,
+        RbMylistEditorComponent,
+        RbChartLightBadgeComponent
     ],
 })
 export class ProfileDetailModule { }

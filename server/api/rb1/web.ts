@@ -101,7 +101,7 @@ const rb1SettingsFactory: RbSettingsFactory<Rb1SettingsResponse, Rb1SettingsCont
     contextQuery: {
         base: { collection: "rb.rb1.player.base" },
         custom: { collection: "rb.rb1.player.custom" },
-        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb1.player.lobbySettings#userId", userId: ctx.base.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.base.userId)),
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb1.player.lobbySettings#userId", userId: ctx.base.userId }), "public", ctx => new RbLobbySettings(version, ctx.base.userId)),
     },
     factory: {
         name: "base.name",

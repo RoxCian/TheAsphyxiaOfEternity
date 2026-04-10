@@ -11,5 +11,5 @@ import { Component, input } from "@angular/core"
     standalone: false
 })
 export class LetsPlayComponent {
-    readonly text = input("Nothing's here yet. Let's play!")
+    readonly text = input<string | string[]>("Nothing's here yet. Let's play!")
 }

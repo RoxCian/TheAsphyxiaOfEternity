@@ -160,8 +160,7 @@ const endPlayer: H.H = async data => {
 const deletePlayer: H.H = async data => {
     try {
         const rid = $(data).str("rid")
-        const account = await DBH.findOne<Rb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
-        await DBH.overall(rid, account?.userId, "rb.rb3", "delete")
+        await DBH.removeAll(rid, /^rb\.rb3\./)
         return H.success
     } catch (e) {
         console.log((e as Error).message)

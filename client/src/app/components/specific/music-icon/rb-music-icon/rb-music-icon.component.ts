@@ -10,9 +10,10 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
     standalone: false,
 })
 export class RbMusicIconComponent {
-    readonly music = input.required<RbMusicResponse<RbVersion>>()
+    readonly music = input<RbMusicResponse<RbVersion>>()
     readonly chartType = input<RbChartType<RbVersion> | undefined>(undefined)
     readonly isVirtualized = input(false, { transform: toggleTransform })
+    readonly isPlaceholder = input(false, { transform: toggleTransform })
 
     constructor(intersectionService: BungIntersectionService) {
         intersectionService.createGroup("rb-music-icon-img")

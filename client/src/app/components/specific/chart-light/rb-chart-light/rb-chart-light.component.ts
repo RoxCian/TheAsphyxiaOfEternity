@@ -8,12 +8,12 @@ const VTransitionParams = { width: "*", height: "0", translate: "translateY(-120
 @Component({
     selector: "rb-chart-light",
     templateUrl: "./rb-chart-light.component.html",
-    styleUrls: ["./rb-chart-light.component.sass"],
+    styleUrl: "./rb-chart-light.component.sass",
     encapsulation: ViewEncapsulation.None,
     host: {
         "[class]": "clearType()",
         "[class.is-vertical]": "isVertical()",
-        "[class.disable-animation]": "!clearType()"
+        "[class.no-clear-type]": "!clearType()"
     },
     standalone: false
 })

@@ -19,6 +19,7 @@ import { rb6CharacterCards } from "../../data/tables/rb6_characard"
 import { Rb6CharacterCard } from "../../models/rb6/character_card"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
+import { inspect } from "util"
 
 type V = 6
 const version = 6 as const
@@ -38,6 +39,7 @@ export function registerRb6Controllers() {
     C.route("rb6RequestAsphyxia", requestAsphyxia)
     C.route("rb6UploadAsphyxia", uploadAsphyxia)
     C.route("rb6ImportAsphyxia", importAsphyxia)
+    C.route("rb6AbortAsphyxia", abortAsphyxia)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -174,10 +176,10 @@ const requestAsphyxia: C.C<RbRequest & { profileSize: number, scoresSize: number
     asphyxiaUploadSessionsContent[data.rid] = sessionContent
     return { profileProgress: 0, scoresProgress: 0 }
 }
-const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", trunk: string }> = async data => {
+const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", chunk: string }> = async data => {
     const sessionContent = asphyxiaUploadSessionsContent[data.rid]
     if (!sessionContent) return { type: "error", code: 401, message: "Asphyxia upload session is not requested." }
-    const bin = Buffer.from(data.trunk, "base64")
+    const bin = Buffer.from(data.chunk, "base64")
     const sessionData = data.file === "profile" ? sessionContent.profileData : sessionContent.scoresData
     let sessionProgress = data.file === "profile" ? sessionContent.profileProgress : sessionContent.scoresProgress
     if (bin.length + sessionProgress > sessionData.length) return { type: "error", code: 401, message: "Insufficient file size." }
@@ -186,6 +188,7 @@ const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", trunk: strin
     sessionProgress += bin.length
     if (data.file === "profile") sessionContent.profileProgress = sessionProgress
     else sessionContent.scoresProgress = sessionProgress
+    return `""`
 }
 const importAsphyxia: C.C<RbRequest> = async data => {
     const rid = data.rid
@@ -202,143 +205,150 @@ const importAsphyxia: C.C<RbRequest> = async data => {
     } catch {
         return { type: "error", code: 401, message: "Invalid Asphyxia profile data." }
     }
-    const base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
-    const t = new DBH.T()
 
-    const validCheckKeys = ["ap", "mg", "skillPoint", "pastelExp"]
-    for (const k of validCheckKeys) if (profile[k] == undefined) return { type: "error", code: 401, message: "Invalid Asphyxia profile data." }
+    console.log(inspect(profile))
+    console.log(inspect(scores))
 
-    for (const k in profile.dojo) {
-        if (`${parseInt(k)}` !== k) continue
-        const dojo = profile.dojo[k]
-        const query: Query<Rb6Classcheck> = { collection: "rb.rb6.playData.classcheck", class: parseInt(k) }
-        let classcheck = await t.findOne(rid, query)
-        if (!classcheck) {
-            classcheck = new Rb6Classcheck(parseInt(k))
-            classcheck.clearType = dojo.clear
-            classcheck.averageAchievementRateTimes100 = dojo.ar
-            classcheck.rank = dojo.rank
-            classcheck.playCount = dojo.pc
-            classcheck.recordUpdateTime = dojo.update
-            classcheck.lastPlayTime = dojo.time
-            classcheck.totalScore = dojo.score
-            if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
-                base.class = classcheck.class
-                base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
-            }
-            t.insert(rid, classcheck)
-        } else {
-            let updateFlag = 0
-            if (classcheck.clearType < dojo.clear) {
-                updateFlag++
-                classcheck.clearType = dojo.clear
-            }
-            if (classcheck.averageAchievementRateTimes100 < dojo.ar) {
-                updateFlag++
-                classcheck.averageAchievementRateTimes100 = dojo.ar
-            }
-            if (classcheck.totalScore < dojo.score) {
-                updateFlag++
-                classcheck.totalScore = dojo.score
-            }
-            classcheck.playCount += dojo.pc
-            if (classcheck.lastPlayTime < dojo.time) classcheck.lastPlayTime = dojo.time
-            if (updateFlag === 3) classcheck.recordUpdateTime = dojo.update
-            else if ((updateFlag > 0) && (classcheck.recordUpdateTime < dojo.update)) classcheck.recordUpdateTime = dojo.update
-            if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
-                base.class = classcheck.class
-                base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
-            }
-            t.update(rid, query, classcheck)
-        }
-        for (const k in profile.charas) {
-            if (`${parseInt(k)}` !== k) continue
-            const chara = profile.charas[k]
-            const query: Query<Rb6CharacterCard> = { collection: "rb.rb6.player.characterCard", characterCardId: parseInt(k) }
-            let characterCard = await DB.FindOne<Rb6CharacterCard>(rid, query)
-            if (!characterCard) {
-                characterCard = new Rb6CharacterCard(parseInt(k))
-                characterCard.level = chara.level
-                characterCard.experience = chara.exp
-            } else {
-                // TODO: Should merge level and experiences
-                if (chara.lv > characterCard.level || chara.lv === characterCard.level && chara.exp > characterCard.experience) {
-                    characterCard.level = chara.lv
-                    characterCard.experience = chara.exp
-                    t.update(rid, query, characterCard)
-                }
-            }
-        }
-        for (const k in scores) {
-            const match = k.match(/^(?<mid>\d{1-4}):(?<ct>[0-3])/)
-            if (!match) continue
-            const mid = parseInt(match.groups.mid)
-            const ct: Rb6ChartType = parseInt(match.groups.ct)
-            const s = scores[k]
+    // const base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
+    // const t = new DBH.T()
 
-            const validCheckKeys2 = ["ar", "ct", "scr", "ms", "combo", "param", "time"]
-            for (let k of validCheckKeys2) if (s[k] == undefined) continue
+    // const validCheckKeys = ["ap", "mg", "skillPoint", "pastelExp"]
+    // for (const k of validCheckKeys) if (profile[k] == undefined) return { type: "error", code: 401, message: "Invalid Asphyxia profile data." }
 
-            const query: Query<Rb6MusicRecord> = { collection: "rb.rb6.playData.musicRecord", musicId: mid, chartType: ct }
-            const chartInfo = await findChartInfo(mid, version, ct)
-            let musicRecord = await DB.FindOne<Rb6MusicRecord>(rid, query)
+    // for (const k in profile.dojo) {
+    //     if (`${parseInt(k)}` !== k) continue
+    //     const dojo = profile.dojo[k]
+    //     const query: Query<Rb6Classcheck> = { collection: "rb.rb6.playData.classcheck", class: parseInt(k) }
+    //     let classcheck = await t.findOne(rid, query)
+    //     if (!classcheck) {
+    //         classcheck = new Rb6Classcheck(parseInt(k))
+    //         classcheck.clearType = dojo.clear
+    //         classcheck.averageAchievementRateTimes100 = dojo.ar
+    //         classcheck.rank = dojo.rank
+    //         classcheck.playCount = dojo.pc
+    //         classcheck.recordUpdateTime = dojo.update
+    //         classcheck.lastPlayTime = dojo.time
+    //         classcheck.totalScore = dojo.score
+    //         if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
+    //             base.class = classcheck.class
+    //             base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
+    //         }
+    //         t.insert(rid, classcheck)
+    //     } else {
+    //         let updateFlag = 0
+    //         if (classcheck.clearType < dojo.clear) {
+    //             updateFlag++
+    //             classcheck.clearType = dojo.clear
+    //         }
+    //         if (classcheck.averageAchievementRateTimes100 < dojo.ar) {
+    //             updateFlag++
+    //             classcheck.averageAchievementRateTimes100 = dojo.ar
+    //         }
+    //         if (classcheck.totalScore < dojo.score) {
+    //             updateFlag++
+    //             classcheck.totalScore = dojo.score
+    //         }
+    //         classcheck.playCount += dojo.pc
+    //         if (classcheck.lastPlayTime < dojo.time) classcheck.lastPlayTime = dojo.time
+    //         if (updateFlag === 3) classcheck.recordUpdateTime = dojo.update
+    //         else if ((updateFlag > 0) && (classcheck.recordUpdateTime < dojo.update)) classcheck.recordUpdateTime = dojo.update
+    //         if (classcheck.class > base.class || classcheck.class === base.class && classcheck.averageAchievementRateTimes100 > base.classAchievementRateTimes100) {
+    //             base.class = classcheck.class
+    //             base.classAchievementRateTimes100 = classcheck.averageAchievementRateTimes100
+    //         }
+    //         t.update(rid, query, classcheck)
+    //     }
+    // }
+    // for (const k in profile.charas) {
+    //     if (`${parseInt(k)}` !== k) continue
+    //     const chara = profile.charas[k]
+    //     const query: Query<Rb6CharacterCard> = { collection: "rb.rb6.player.characterCard", characterCardId: parseInt(k) }
+    //     let characterCard = await DB.FindOne<Rb6CharacterCard>(rid, query)
+    //     if (!characterCard) {
+    //         characterCard = new Rb6CharacterCard(parseInt(k))
+    //         characterCard.level = chara.level
+    //         characterCard.experience = chara.exp
+    //     } else {
+    //         // TODO: Should merge level and experiences
+    //         if (chara.lv > characterCard.level || chara.lv === characterCard.level && chara.exp > characterCard.experience) {
+    //             characterCard.level = chara.lv
+    //             characterCard.experience = chara.exp
+    //             t.update(rid, query, characterCard)
+    //         }
+    //     }
+    // }
+    // for (const k in scores) {
+    //     const match = k.match(/^(?<mid>\d{1-4}):(?<ct>[0-3])/)
+    //     if (!match) continue
+    //     const mid = parseInt(match.groups.mid)
+    //     const ct: Rb6ChartType = parseInt(match.groups.ct)
+    //     const s = scores[k]
 
-            if (!musicRecord) {
-                musicRecord = new Rb6MusicRecord(mid, ct)
-                musicRecord.achievementRateTimes100 = s.ar
-                musicRecord.clearType = s.ct
-                musicRecord.score = s.scr
-                musicRecord.combo = s.combo
-                musicRecord.missCount = (s.combo === chartInfo.maxCombo) ? 0 : (s.ms <= 0) ? ((s.ct >= 3) ? computeMaxMissCount(s.scr, s.combo, chartInfo) : -1) : s.ms
-                musicRecord.param = (s.combo === chartInfo.maxCombo) ? (s.param == 0) ? 1 : s.param : s.param
-                musicRecord.playCount = s.pc
-                musicRecord.time = s.time
-                musicRecord.bestComboUpdateTime = s.time
-                musicRecord.bestAchievementRateUpdateTime = s.time
-                musicRecord.bestMissCountUpdateTime = s.time
-                musicRecord.bestScoreUpdateTime = s.time
-                t.insert(rid, musicRecord)
-            } else {
-                if (musicRecord.clearType < s.ct) musicRecord.clearType = s.ct
-                if (musicRecord.achievementRateTimes100 < s.ar) {
-                    musicRecord.bestAchievementRateUpdateTime = s.time
-                    musicRecord.achievementRateTimes100 = s.ar
-                }
-                if (musicRecord.score < s.score) {
-                    musicRecord.bestScoreUpdateTime = s.time
-                    musicRecord.score = s.score
-                }
-                if (musicRecord.combo < s.combo) {
-                    musicRecord.bestComboUpdateTime = s.time
-                    musicRecord.combo = s.combo
-                }
-                if (musicRecord.param < s.param) musicRecord.param = s.param
-                if ((s.ms > 0) && ((musicRecord.missCount < s.ms) || (musicRecord.missCount < 0))) {
-                    musicRecord.bestMissCountUpdateTime = s.time
-                    musicRecord.missCount = s.ms
-                }
-                if ((musicRecord.combo === chartInfo.maxCombo) && ((musicRecord.missCount !== 0) || (musicRecord.param === 0))) {
-                    musicRecord.bestMissCountUpdateTime = s.time
-                    musicRecord.missCount = 0
-                    if (musicRecord.param === 0) musicRecord.param = 1
-                }
-                musicRecord.playCount += s.pc
-                musicRecord.time = Math.max(musicRecord.time, s.time)
-                t.update(rid, query, musicRecord)
-            }
-        }
-        base.matchingGrade = Math.max(base.matchingGrade, profile.mg)
-        base.skillPointTimes10 = Math.max(base.skillPointTimes10, profile.skillPoint)
-        base.pastelExperiences += profile.pastelExp
-        t.update(rid, { collection: "rb.rb6.player.base" }, base)
+    //     const validCheckKeys2 = ["ar", "ct", "scr", "ms", "combo", "param", "time"]
+    //     for (let k of validCheckKeys2) if (s[k] == undefined) continue
 
-        try {
-            await t.commit()
-        } catch (ex) {
-            return { type: "error", code: 500, message: `Server error when save changes: ${(ex as Error).message}` }
-        }
-    }
+    //     const query: Query<Rb6MusicRecord> = { collection: "rb.rb6.playData.musicRecord", musicId: mid, chartType: ct }
+    //     const chartInfo = await findChartInfo(mid, version, ct)
+    //     let musicRecord = await DB.FindOne<Rb6MusicRecord>(rid, query)
+
+    //     if (!musicRecord) {
+    //         musicRecord = new Rb6MusicRecord(mid, ct)
+    //         musicRecord.achievementRateTimes100 = s.ar
+    //         musicRecord.clearType = s.ct
+    //         musicRecord.score = s.scr
+    //         musicRecord.combo = s.combo
+    //         musicRecord.missCount = (s.combo === chartInfo.maxCombo) ? 0 : (s.ms <= 0) ? ((s.ct >= 3) ? computeMaxMissCount(s.scr, s.combo, chartInfo) : -1) : s.ms
+    //         musicRecord.param = (s.combo === chartInfo.maxCombo) ? (s.param === 0) ? 1 : s.param : s.param
+    //         musicRecord.playCount = s.pc
+    //         musicRecord.time = s.time
+    //         musicRecord.bestComboUpdateTime = s.time
+    //         musicRecord.bestAchievementRateUpdateTime = s.time
+    //         musicRecord.bestMissCountUpdateTime = s.time
+    //         musicRecord.bestScoreUpdateTime = s.time
+    //         t.insert(rid, musicRecord)
+    //     } else {
+    //         if (musicRecord.clearType < s.ct) musicRecord.clearType = s.ct
+    //         if (musicRecord.achievementRateTimes100 < s.ar) {
+    //             musicRecord.bestAchievementRateUpdateTime = s.time
+    //             musicRecord.achievementRateTimes100 = s.ar
+    //         }
+    //         if (musicRecord.score < s.score) {
+    //             musicRecord.bestScoreUpdateTime = s.time
+    //             musicRecord.score = s.score
+    //         }
+    //         if (musicRecord.combo < s.combo) {
+    //             musicRecord.bestComboUpdateTime = s.time
+    //             musicRecord.combo = s.combo
+    //         }
+    //         if (musicRecord.param < s.param) musicRecord.param = s.param
+    //         if ((s.ms > 0) && ((musicRecord.missCount < s.ms) || (musicRecord.missCount < 0))) {
+    //             musicRecord.bestMissCountUpdateTime = s.time
+    //             musicRecord.missCount = s.ms
+    //         }
+    //         if ((musicRecord.combo === chartInfo.maxCombo) && ((musicRecord.missCount !== 0) || (musicRecord.param === 0))) {
+    //             musicRecord.bestMissCountUpdateTime = s.time
+    //             musicRecord.missCount = 0
+    //             if (musicRecord.param === 0) musicRecord.param = 1
+    //         }
+    //         musicRecord.playCount += s.pc
+    //         musicRecord.time = Math.max(musicRecord.time, s.time)
+    //         t.update(rid, query, musicRecord)
+    //     }
+    // }
+    // base.matchingGrade = Math.max(base.matchingGrade, profile.mg)
+    // base.skillPointTimes10 = Math.max(base.skillPointTimes10, profile.skillPoint)
+    // base.pastelExperiences += profile.pastelExp
+    // t.update(rid, { collection: "rb.rb6.player.base" }, base)
+
+    // try {
+    //     await t.commit()
+    //     delete asphyxiaUploadSessionsContent[data.rid]
+    // } catch (ex) {
+    //     return { type: "error", code: 500, message: `Server error when import Asphyxia data: ${(ex as Error).message}` }
+    // }
+    return `""`
 }
+const abortAsphyxia: C.C<RbRequest> = async data => delete asphyxiaUploadSessionsContent[data.rid]
 
 type Rb6SettingsContext = {
     account: Rb6PlayerAccount
@@ -355,7 +365,7 @@ const rb6SettingsFactory: RbSettingsFactory<Rb6SettingsResponse, Rb6SettingsCont
         base: { collection: "rb.rb6.player.base" },
         custom: { collection: "rb.rb6.player.custom" },
         config: { collection: "rb.rb6.player.config" },
-        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb6.player.lobbySettings#userId", userId: ctx.account.userId }), "non-rid", ctx => new RbLobbySettings(version, ctx.account.userId)),
+        lobbySettings: contextQueryElement(ctx => ({ collection: "rb.rb6.player.lobbySettings#userId", userId: ctx.account.userId }), "public", ctx => new RbLobbySettings(version, ctx.account.userId)),
         miscSettings: contextQueryElement({ collection: "rb.rb6.player.misc" }, "rid", () => new Rb6MiscSettings()),
         mylist: contextQueryElement({ collection: "rb.rb6.player.mylist" }, "rid", () => new Rb6Mylist())
     },

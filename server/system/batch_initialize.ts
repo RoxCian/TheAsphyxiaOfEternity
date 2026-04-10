@@ -11,7 +11,7 @@ export function initializeBatch() {
         const jc = await DBH.find<Rb6JustCollection>({ collection: "rb.rb6.playData.justCollection#userId" })
         for (const e of jc) {
             if (!e.userId) {
-                await DBH.remove(undefined, { _id: e._id }, false)
+                await DBH.remove({ _id: e._id })
                 continue
             }
             if (!e["redData"] && !e["blueData"] && !e["redDataArray"] && !e["blueDataArray"]) continue
@@ -20,7 +20,7 @@ export function initializeBatch() {
             delete e["redDataArray"]
             delete e["blueDataArray"]
 
-            await DBH.update(undefined, { collection: "rb.rb6.playData.justCollection#userId", userId: e.userId, musicId: e.musicId, chartType: e.chartType }, e)
+            await DBH.update({ collection: "rb.rb6.playData.justCollection#userId", userId: e.userId, musicId: e.musicId, chartType: e.chartType }, e)
         }
     })
     Batch.register("batch#0.12.0", "0.12.0", async () => {
@@ -28,7 +28,7 @@ export function initializeBatch() {
         for (const account of a) {
             if (account.playCountToday == undefined) account.playCountToday = (account as any).dpc
             if (account.dayCount == undefined) account.dayCount = (account as any).tdc
-            await DBH.update(undefined, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
+            await DBH.update(account.rid, { collection: "rb.rb3.player.account", __refid: account.rid }, account)
         }
     })
     Batch.register("batch#0.12.0.part2", "1.4.0", async () => {

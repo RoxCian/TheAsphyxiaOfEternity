@@ -86,9 +86,10 @@ async function writePlayerCore(player: Rb1Player) {
     const t = new DBH.T()
     const baseQuery: Query<Rb1PlayerBase> = { collection: "rb.rb1.player.base" }
     const baseSaved: Rb1PlayerBase = await t.findOne(player.rid, baseQuery)
-    if (!baseSaved) { // after a new player set their name, the save procedure will be triggered, so skip saving player base here
+    if (!baseSaved) {
         if (player.pdata.base.userId <= 0) player.pdata.base.userId = await generateUserId()
         player.pdata.base.playCount = 0
+        t.upsert(rid, baseQuery, player.pdata.base)
     } else {
         if (baseSaved.playCount == undefined) baseSaved.playCount = 1
         else baseSaved.playCount++

@@ -3,4 +3,8 @@
         <i class="mdi mdi-emoticon-happy mdi-48px"></i>
     </span>
 </p>
-<p>{{ text() }}</p>
+@let t = text();
+@if (typeof t === "string") { <p>{{ text() }}</p> }
+@else {
+    @for (el of t; track el) { <p>{{ el }}</p> }
+}

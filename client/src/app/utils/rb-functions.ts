@@ -116,3 +116,19 @@ export function getRbDefaultComment(version: RbVersion): string {
         case 6: return "Welcome to the land of Reflesia!"
     }
 }
+
+export async function rbEmit(method: string, data: unknown): Promise<Response> {
+    const response = await fetch(`/emit/${method}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "content-type": "application/json"
+        }
+    })
+    return response
+}
+export async function rbEmitJSON<TResult>(method: string, data: unknown): Promise<TResult> {
+    const response = await rbEmit(method, data)
+    if (response.status < 400) return await response.json()
+    else throw new Error(await response.text())
+}

@@ -208,12 +208,7 @@
                 <bung-field label="Ranking Quest" help="Ranking quest can be accessed from Reflesia Mode in game." [formField]="casted.rankingQuestIndex">
                     <bung-select [formField]="casted.rankingQuestIndex" [equalFn]="selectOptionEq" dropdownClass="ranking-quest-select-dropdown">
                         <ng-template #rankingQuestOptionPlaceholder>
-                            <div class="music-icon-placeholder">
-                                <div class="figure"></div>
-                                <div class="text">&nbsp;</div>
-                                <div class="text">&nbsp;</div>
-                                <div class="text">&nbsp;</div>
-                            </div>
+                            <rb-music-icon isPlaceholder />
                         </ng-template>
                         <ng-template let-q #rankingQuestOptionTemplate>
                             <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder">
@@ -323,15 +318,11 @@
                                     </div>
                                 } @else {
                                     <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates Slot {{ $index + 1 }}" [body]="mylistEditTemplate" [bodyContext]="$index | implicit" [options]="{}" #mylistModalTrigger>
-                                        <div class="music-icon-placeholder">
-                                            <div class="figure"></div>
-                                            <div class="text">&nbsp;</div>
-                                            <div class="text">&nbsp;</div>
-                                            <div class="text">&nbsp;</div>
-                                            <button class="button addon mylist-remove-button is-small">
+                                        <rb-music-icon isPlaceholder>
+                                            <button class="button is-danger-accent mylist-remove-button is-small">
                                                 <bung-icon icon="delete">Remove</bung-icon>
                                             </button>
-                                        </div>
+                                        </rb-music-icon>
                                         <div class="edit-button-content">
                                             <p>
                                                 <span class="icon is-large">
@@ -358,13 +349,11 @@
                                 }
                             }
                             <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates" [body]="mylistEditTemplate" [options]="{ values: { 'confirm': { value: 0, elementClass: 'is-success', content: 'Confirm' } } }">
-                                <div class="music-icon-placeholder">
-                                    <div class="figure"></div>
-                                    <div class="text">&nbsp;</div>
-                                    <div class="text">&nbsp;</div>
-                                    <div class="text">&nbsp;</div>
-                                    <button class="button addon mylist-remove-button is-small"></button>
-                                </div>
+                                <rb-music-icon isPlaceholder>
+                                    <button class="button is-danger-accent mylist-remove-button is-small">
+                                        <bung-icon icon="delete">Remove</bung-icon>
+                                    </button>
+                                </rb-music-icon>
                                 <div class="edit-button-content">
                                     <p>
                                         <span class="icon is-large">
@@ -384,6 +373,9 @@
         <div class="submit-footer">
             <bung-divider />
             <div class="button-and-notification">
+                <button type="submit" class="button is-primary" [class.is-loading]="form().submitting()" [disabled]="!form().dirty() || form().invalid() || form().submitting()" (click)="settingsService.submit()">
+                    <bung-icon icon="check">Submit</bung-icon>
+                </button>
                 @if (settingsService.submitted()) {
                     <span class="saved is-success" animate.enter="enter" animate.leave="leave"><bung-icon icon="check">Settings saved</bung-icon></span>
                 } @else if (settingsService.submissionError()) {
@@ -392,9 +384,6 @@
                         <span class="is-size-7">({{ settingsService.submissionError() }})</span>
                     </span>
                 }
-                <button type="submit" class="button is-primary" [class.is-loading]="form().submitting()" [disabled]="!form().dirty() || form().invalid() || form().submitting()" (click)="settingsService.submit()">
-                    <bung-icon icon="check">Submit</bung-icon>
-                </button>
             </div>
         </div>
     </form>

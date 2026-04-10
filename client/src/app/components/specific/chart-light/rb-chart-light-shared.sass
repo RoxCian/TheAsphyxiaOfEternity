@@ -1,0 +1,66 @@
+rb-chart-light, rb-chart-light-badge
+    --blink-interval: 0.1s
+    > *
+        position: absolute
+        inset: 0
+    *
+        --back1: #70707050
+        --back2: #70707050
+        color: white
+    .f
+        --back1: var(--rb-chart-color, #70707090)
+        --back2: #70707090
+        color: white
+    .c
+        --back1: color-mix(in srgb, var(--rb-chart-color, #70707090) 80%, #fff3)
+        --back2: color-mix(in srgb, var(--rb-chart-color, #70707090) 50%, #fff7)
+        color: white
+    .hc
+        --back1: white
+        --back2: #eee9
+        color: #333
+    .shc
+        --back1: #f58e08
+        --back2: #f35525
+        color: white
+    .fc
+        --back1: #00a6f3
+        --back2: #10fd7b
+        color: white
+    .\31 miss
+        --back1: #c100e7
+        --back2: #f529fc
+        color: white
+    .\32 miss
+        --back1: #e700d4
+        --back2: #fc29b6
+        color: white
+    .exc
+        --back1: linear-gradient(135deg, #dbc926, #fff9ab, #dbc926)
+        --back2: linear-gradient(135deg, #c4ad54, #fff56c, #c4ad54)
+        color: white
+
+    .chart-light-container.blur
+        animation: chart-light-blur-animation var(--blink-interval) linear infinite
+
+    .background, .foreground
+        animation: chart-light-background-animation var(--blink-interval) linear infinite
+
+    .foreground
+        opacity: 0.3
+
+    &.no-clear-type
+        .chart-light-container.blur, .background, .foreground
+            animation-play-state: paused
+
+@keyframes chart-light-background-animation 
+    from
+        background: var(--back1)
+    to
+        background: var(--back2)
+
+@keyframes chart-light-blur-animation 
+    from
+        filter: blur(6px)
+    to
+        filter: blur(12px)

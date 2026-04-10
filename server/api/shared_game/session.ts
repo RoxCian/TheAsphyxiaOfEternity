@@ -42,7 +42,7 @@ export async function checkAllSessions() {
         now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
     )
     const t = new DBH.T()
-    for (const session of await DBH.find<RbSession>(undefined, { collection: "rb.session" })) {
+    for (const session of await t.find<RbSession>(undefined, { collection: "rb.session" })) {
         if (time - session.time <= 1000 * 60 * 30) continue
         t.remove<RbSession>(undefined, { _id: session._id })
     }

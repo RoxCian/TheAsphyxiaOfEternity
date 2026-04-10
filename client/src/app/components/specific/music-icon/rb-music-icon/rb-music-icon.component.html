@@ -1,36 +1,47 @@
 @let m = music();
-<div class="card music">
-    <figure class="jacket">
-        @if (isVirtualized()) {
-            <img [bungImgSrc]="(m.music.musicUid | rbJacket)()" placeholderSrc="./static/assets/jackets/nowloading.svg" sharedIntersectionGroup="rb-music-icon-img" >
-        } @else {
-            <img [src]="(m.music.musicUid | rbJacket)()">
-        }
-    </figure>
-    <div class="music-info">
-        <div class="music-title is-size-7"><rb-music-title [music]="m.music" /></div>
-        <bung-marquee class="music-artist is-size-7" [content]="m.music.artist" [spacing]="60" [delay]="1500" />
-        <div class="charts-level is-size-7">
-            @let ct = chartType();
-            @if (ct == undefined) {
-                @for (ct of m.charts | key; track ct) {
-                    @if (m.charts[ct]!.level > 0) {
-                        <rb-level [version]="m.version" [level]="m.charts[ct]!.level" [skillRate]="m.charts[ct]!.skillRate" [rbChartType]="ct" [version]="m.version" />
-                    }
-                }
-            } @else {
-                @let chart = m.charts[ct];
-                @let cn = ct | rbChartTypeLiteral : m.version;
-                @if (!chart) {
-                    <span class="error-text">Cannot find {{ cn }} chart</span>
-                } @else {
-                    <span class="chart-name" [rbChartType]="ct" [version]="m.version">{{ cn }}</span>
-                    <rb-level [version]="m.version" [level]="chart.level" [skillRate]="chart.skillRate" [rbChartType]="ct" [version]="m.version" />
-                }
-            }
+@if (isPlaceholder() || !m) {
+    <div class="card music placeholder">
+        <figure class="jacket"></figure>
+        <div class="music-info">
+            <div class="music-title is-size-7">&nbsp;</div>
+            <div class="music-artist is-size-7">&nbsp;</div>
+            <div class="charts-level is-size-7">&nbsp;</div>
         </div>
     </div>
-</div>
-<div class="extra-content">
+} @else {
+    <div class="card music">
+        <figure class="jacket">
+            @if (isVirtualized()) {
+                <img [bungImgSrc]="(m.music.musicUid | rbJacket)()" placeholderSrc="./static/assets/jackets/nowloading.svg" sharedIntersectionGroup="rb-music-icon-img">
+            } @else {
+                <img [src]="(m.music.musicUid | rbJacket)()">
+            }
+        </figure>
+        <div class="music-info">
+            <div class="music-title is-size-7"><rb-music-title [music]="m.music" /></div>
+            <bung-marquee class="music-artist is-size-7" [content]="m.music.artist" [spacing]="60" [delay]="1500" />
+            <div class="charts-level is-size-7">
+                @let ct = chartType();
+                @if (ct == undefined) {
+                    @for (ct of m.charts | key; track ct) {
+                        @if (m.charts[ct]!.level > 0) {
+                            <rb-level [version]="m.version" [level]="m.charts[ct]!.level" [skillRate]="m.charts[ct]!.skillRate" [rbChartType]="ct" [version]="m.version" />
+                        }
+                    }
+                } @else {
+                    @let chart = m.charts[ct];
+                    @let cn = ct | rbChartTypeLiteral : m.version;
+                    @if (!chart) {
+                        <span class="error-text">Cannot find {{ cn }} chart</span>
+                    } @else {
+                        <span class="chart-name" [rbChartType]="ct" [version]="m.version">{{ cn }}</span>
+                        <rb-level [version]="m.version" [level]="chart.level" [skillRate]="chart.skillRate" [rbChartType]="ct" [version]="m.version" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+<div class="extra-content placeholder">
     <ng-content />
 </div>

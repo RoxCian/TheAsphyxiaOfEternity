@@ -1,4 +1,4 @@
-import { Injectable, signal, Signal, Type } from "@angular/core"
+import { Injectable, signal, Type } from "@angular/core"
 
 @Injectable({ providedIn: "root" })
 export class RbSubpageService {

@@ -3,6 +3,7 @@ import { Router } from "@angular/router"
 import { RbPlayerResponse, RbRequest, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { env } from "../../../env/env"
+import { rbEmitJSON } from "../../utils/rb-functions"
 
 @Injectable({ providedIn: "root" })
 export class RbProfileService {
@@ -22,6 +23,14 @@ export class RbProfileService {
         5: this.rb5Profile.hasValue() ? this.rb5Profile.value() : undefined,
         6: this.rb6Profile.hasValue() ? this.rb6Profile.value() : undefined
     }))
+    readonly hasProfiles = computed(() => 
+        (!this.rb1Profile.isLoading() && this.rb1Profile.value()) ||
+        (!this.rb2Profile.isLoading() && this.rb2Profile.value()) ||
+        (!this.rb3Profile.isLoading() && this.rb3Profile.value()) ||
+        (!this.rb4Profile.isLoading() && this.rb4Profile.value()) ||
+        (!this.rb5Profile.isLoading() && this.rb5Profile.value()) ||
+        (!this.rb6Profile.isLoading() && this.rb6Profile.value())
+    )
     readonly isLoading = computed(() => {
         return !this.rid() ||
             this.rb1Profile.isLoading() ||
@@ -41,6 +50,9 @@ export class RbProfileService {
             6: this.rb6Profile.error()
         }
     })
+    private readonly lastDeletedProfileInternal = signal<number | undefined>(undefined)
+    private readonly rbProfilesArray = [undefined, this.rb1Profile, this.rb2Profile, this.rb3Profile, this.rb4Profile, this.rb5Profile, this.rb6Profile] as const
+    readonly lastDeletedProfile = this.lastDeletedProfileInternal.asReadonly()
     private devInitialized = false
     constructor(router: Router) {
         const updateRid = async () => {
@@ -58,13 +70,17 @@ export class RbProfileService {
     }
 
     reload(version: RbVersion) {
-        switch (version) {
-            case 1: return this.rb1Profile.reload()
-            case 2: return this.rb2Profile.reload()
-            case 3: return this.rb3Profile.reload()
-            case 4: return this.rb4Profile.reload()
-            case 5: return this.rb5Profile.reload()
-            case 6: return this.rb6Profile.reload()
+        this.rbProfilesArray[version].reload()
+    }
+    async delete(version: RbVersion): Promise<string | undefined> {
+        if (version < 1 || version > 6) return
+        try {
+            await rbEmitJSON(`rbDeleteSaveData`, { rid: this.rid(), version })
+            this.rbProfilesArray[version].set(undefined)
+            this.lastDeletedProfileInternal.set(version)
+            return
+       } catch (ex) {
+            return (ex as Error).message
         }
     }
 }

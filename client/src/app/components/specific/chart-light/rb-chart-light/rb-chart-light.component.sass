@@ -1,3 +1,4 @@
+@use "../rb-chart-light-shared.sass"
 rb-chart-light
     --start-translate: translateX(-120%)
     --start-width: 0
@@ -18,57 +19,13 @@ rb-chart-light
         .background, .foreground
             border-radius: 0 8px 8px 0
 
-    > *
-        position: absolute
-        inset: 0
-    *
-        --back1: #70707050
-        --back2: #70707050
-        color: white
-    .f
-        --back1: var(--rb-chart-color, #70707070)
-        --back2: #70707070
-        color: white
-    .c
-        --back1: var(--rb-chart-color, #70707070)
-        --back2: color-mix(in srgb, var(--rb-chart-color, #70707070) 50%, #fff3)
-        color: white
-    .hc
-        --back1: white
-        --back2: #eee
-        color: #333
-    .shc
-        --back1: #f58e08
-        --back2: #f35525
-        color: white
-    .fc
-        --back1: #00a6f3
-        --back2: #10fd7b
-        color: white
-    .\31 miss
-        --back1: #c100e7
-        --back2: #f529fc
-        color: white
-    .\32 miss
-        --back1: #e700d4
-        --back2: #fc29b6
-        color: white
-    .exc
-        --back1: linear-gradient(135deg, #dbc926, #fff9ab, #dbc926)
-        --back2: linear-gradient(135deg, #c4ad54, #fff56c, #c4ad54)
-        color: white
-
     .chart-light-container
         display: flex
         overflow: clip
         align-items: center
         justify-content: center
 
-        &.blur
-            animation: chart-light-blur-animation 0.1s linear infinite
-
     .background, .foreground
-        animation: chart-light-background-animation 0.1s linear infinite
         position: absolute
         inset: 0
         pointer-events: none
@@ -76,18 +33,14 @@ rb-chart-light
     .background
         transform: scale(var(--start-width), var(--start-height))
         transform-origin: top left
+        transition: transform calc(2 * var(--animation-duration-lv3)) var(--ease-in)
         opacity: 0
-        transition: transform 0.4s var(--ease-in)
 
         &.show:not(.leave)
             transform: none
             opacity: 1
         &.leave
             opacity: 1
-
-
-    .foreground
-        opacity: 0.3
 
     .text-container
         position: absolute
@@ -97,7 +50,7 @@ rb-chart-light
         height: 100%
         opacity: 0
         transform: var(--start-translate)
-        transition: transform 0.4s var(--ease-in)
+        transition: transform calc(2 * var(--animation-duration-lv3)) var(--ease-in)
 
         &.show:not(.leave)
             opacity: 1
@@ -123,27 +76,3 @@ rb-chart-light.is-vertical
 
     .text
         transform: rotate(180deg)
-    
-@keyframes chart-light-slide-animation
-    from
-        translate: var(--start-translate)
-    to
-        translate: none
-
-// @keyframes chart-light-swipe-animation
-//     from
-//         transform: scale(var(--start-width), var(--start-height))
-//     to
-//         transform: none
-
-@keyframes chart-light-background-animation 
-    from
-        background: var(--back1)
-    to
-        background: var(--back2)
-
-@keyframes chart-light-blur-animation 
-    from
-        filter: blur(2px)
-    to
-        filter: blur(8px)

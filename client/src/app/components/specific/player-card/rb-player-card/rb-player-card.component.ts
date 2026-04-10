@@ -4,10 +4,13 @@ import { BungBreakpointService } from "../../../../services/bung/breakpoint.serv
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
 import { RbPlayDataSubpage } from "../../../../pages/profile/play-data/play-data.component"
 import { RbSettingsSubpage } from "../../../../pages/profile/settings/settings.component"
+import { RbSaveDataSubpage } from "../../../../pages/profile/save-data/save-data.component"
+import { toggleTransform } from "../../../../signals/transforms"
 
 const profileSubpages = {
     playData: RbPlayDataSubpage,
-    settings: RbSettingsSubpage
+    settings: RbSettingsSubpage,
+    saveData: RbSaveDataSubpage
 } as const
 
 @Component({
@@ -18,6 +21,7 @@ const profileSubpages = {
 })
 export class RbPlayerCardComponent {
     readonly profile = input.required<RbPlayerResponse | undefined>()
+    readonly profileDeleted = input(false, { transform: toggleTransform })
     readonly isLoading = input(true)
     readonly className = computed(() => {
         const profile = this.profile()
@@ -70,8 +74,6 @@ export class RbPlayerCardComponent {
         const s = this.subpageService.componentType()
         return (Object.keys(profileSubpages) as (keyof typeof profileSubpages)[]).find(k => profileSubpages[k] === s)
     })
-
-    protected readonly fakeVersionArray = computed(() => [{ version: this.profile()?.version }])
 
     protected toRb3PlayerEventLevel(value?: number) {
         if (value == undefined) return 0

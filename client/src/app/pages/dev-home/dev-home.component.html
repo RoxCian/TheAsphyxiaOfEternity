@@ -8,12 +8,12 @@
     }
 </header>
 <bung-divider />
-<section>
+<section class="content">
     <p>This is the home page of debugging.</p>
     <p>You can navigate to pages by buttons down below.</p>
 </section>
 <bung-divider prompt="Profile Detail" />
-<section>
+<section class="content">
     @if (debugRid.isLoading()) {
         <p>...</p>
     } @else {
@@ -28,7 +28,7 @@
     </p>
 </section>
 <bung-divider prompt="Ingame Comments" />
-<section>
+<section class="content">
     <p>
         <a class="button router-link" routerLink="ingame_comments" [class.is-disabled]="!isRidInputValid()">Go to comments page</a>
     </p>

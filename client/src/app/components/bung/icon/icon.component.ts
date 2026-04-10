@@ -1,4 +1,4 @@
-import { Component, ElementRef, SecurityContext, ViewEncapsulation, computed, contentChildren, effect, inject, input, signal } from "@angular/core"
+import { Component, SecurityContext, ViewEncapsulation, computed, inject, input } from "@angular/core"
 import { toggleTransform } from "../../../signals/transforms"
 import { DomSanitizer } from "@angular/platform-browser"
 
@@ -19,10 +19,10 @@ export class BungIconComponent {
     readonly iconUrl = input<string | undefined>()
     readonly iconSet = input<IconSet>("mdi")
     readonly isNoWrap = input(false, { transform: toggleTransform })
-    readonly iconClass = computed(() => this.iconSet() === "fas" ? `fas fa-${this.icon()}` : `${this.iconSet()} ${this.iconSet()}-${this.icon()}`)
-    readonly iconUrlSanitized = computed(() => this.iconUrl() ? this.sanitizer.bypassSecurityTrustUrl(this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.iconUrl()!) ?? "") : undefined)
-    readonly iconFetched = computed(async () => this.iconUrl() ? await iconUrlToSvg(this.iconUrl()!, this.sanitizer) : undefined)
     readonly isLayoutReversed = input(false, { transform: toggleTransform })
+    protected readonly iconClass = computed(() => this.iconSet() === "fas" ? `fas fa-${this.icon()}` : `${this.iconSet()} ${this.iconSet()}-${this.icon()}`)
+    protected readonly iconUrlSanitized = computed(() => this.iconUrl() ? this.sanitizer.bypassSecurityTrustUrl(this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.iconUrl()!) ?? "") : undefined)
+    protected readonly iconFetched = computed(async () => this.iconUrl() ? await iconUrlToSvg(this.iconUrl()!, this.sanitizer) : undefined)
     private readonly sanitizer = inject(DomSanitizer)
 }
 
@@ -32,8 +32,11 @@ async function iconUrlToSvg(url: string, sanitizer: DomSanitizer): Promise<SVGEl
     let iconText: string | undefined
     if (svgCollection[url]) iconText = svgCollection[url]
     else {
-        const iconResponse = await fetch(url)
+        const sanitized = sanitizer.sanitize(SecurityContext.URL, url)
+        if (!sanitized) return undefined
+        const iconResponse = await fetch(sanitized)
         iconText = (await iconResponse.text())?.match(/<svg(| [^>]+)>[\s\S]+<\/svg>/)?.[0]
+        if (iconText) sanitizer.sanitize(SecurityContext.HTML, iconText)
         if (!iconText) return undefined
         svgCollection[url] = iconText
     }

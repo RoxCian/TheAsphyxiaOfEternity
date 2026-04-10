@@ -1,5 +1,7 @@
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs"
 import { initialize } from "../system/initialize"
 import { PJ } from "./pj"
+import { pluginDir } from "../system/const"
 
 export namespace C {
     export type ControllerResultText = {
@@ -7,7 +9,7 @@ export namespace C {
         data: string
     }
     export type ControllerResultJson = {
-        type: "json"
+        type: "json" | "pj"
         data: any
     }
     export type ControllerResultFile = {
@@ -39,6 +41,7 @@ export namespace C {
     export function route<T>(method: string, c: Controller<T>) {
         const cb: WebUIEventHandler = async (data: T, send: WebUISend) => {
             initialize()
+            console.log("Controller method:", method)
             const res = await c(PJ.convertFromPJ(data))
             if (!res) send.text("")
             else if (typeof res === "string") return send.text(res)
@@ -48,8 +51,8 @@ export namespace C {
                     case "buffer": return send.buffer(res.buffer)
                     case "error": return send.error(res.code, res.message)
                     case "file": return send.file(res.path)
-                    case "json":
-                        return send.json(PJ.convertToPJ(res.data))
+                    case "pj": return send.json(PJ.convertToPJ(res.data))
+                    case "json": return send.json(res.data)
                     case "redirect": return send.redirect(res.url)
                     case "text": return send.text(res.data)
                 }

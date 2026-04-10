@@ -110,7 +110,7 @@ async function updateContextUsingFactory<TSettings, TContext extends Record<stri
                     dbfn(undefined, query, contextQuery.context[k])
                     break
                 case "public":
-                    dbfn(undefined, query, contextQuery.context[k], true)
+                    dbfn(query, contextQuery.context[k])
                     break
             }
         } else dbfn(rid, q, contextQuery.context[k])
@@ -144,6 +144,7 @@ export async function readSettingsUsingFactory<TSettings, TContext extends Recor
     return result
 }
 export async function writeSettingsUsingFactory<TSettings, TContext extends Record<string, ICollection<string>>>(rid: string, settings: TSettings, factory: RbSettingsFactory<TSettings, TContext>): Promise<RbWriteSettingsResponse> {
+    if (!rid) return { state: "failed", reason: ["RID not privided."] }
     const contextQuery = await queryContextUsingFactory(rid, factory)
     const errors: string[] = []
     for (const k in factory.factory) {

@@ -74,14 +74,16 @@ export class BungPopupService {
         const resettingSubscription = result.resetting.subscribe(() => {
             if (backdrop) this.closeBackdrop(backdrop)
         })
-        const closingSubscription = result.closing.subscribe(() => {
-            if (backdrop) this.closeBackdrop(backdrop)
+        const closingSubscription = result.closing.subscribe(async e => {
+            await timeout()
+            if (!e.isCanceled && backdrop) this.closeBackdrop(backdrop)
         })
         if (backdrop && (o.backdropOptions?.clickBackdropToClose ?? true)) {
             function backdropClickHandler(ev: MouseEvent) {
-                if (ev.button == 0) {
-                    backdrop?.removeEventListener("click", backdropClickHandler)
+                if (ev.button === 0) {
                     result.close()
+                    if (!result.isReturned()) return
+                    backdrop?.removeEventListener("click", backdropClickHandler)
                 }
             }
             backdrop.addEventListener("click", backdropClickHandler)

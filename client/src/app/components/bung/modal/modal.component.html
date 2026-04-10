@@ -4,7 +4,9 @@
             <p class="modal-card-title">
                 <bung-insertion [content]="header()" [context]="headerContext()" />
             </p>
-            <button class="delete" (click)="close()"></button>
+            @if (hasDelete()) {
+                <button class="delete" (click)="close()"></button>
+            }
         </header>
         <section class="modal-card-body">
             <bung-insertion [content]="content()" [context]="context()" />
@@ -28,5 +30,7 @@
     </div>
 } @else {
     <bung-insertion class="model-content" [content]="content()" [context]="context()" />
-    <button class="modal-close is-large" (click)="close()"></button>
+    @if (hasDelete()) {
+        <button class="delete" (click)="close()"></button>
+    }
 }

@@ -2,7 +2,7 @@
     @let p = profile();
     <div class="player-card-container">
         @if (p) {
-            @for (v of fakeVersionArray(); track v.version) {
+            @for (v of [this.profile()?.version]; track v) {
                 <div class="player-card-content" animate.enter="enter" animate.leave="leave">
                     <!-- @if (p.version === 6) {
                         <div class="characard">
@@ -27,6 +27,12 @@
                     <bung-divider [isVertical]="!breakpointService.breakpointsToggled.mobile()" />
                     <div class="class-and-mg">
                         @let cn = className();
+                        <div class="mg card has-text-centered">
+                            <div class="heading">Grade</div>
+                            <div class="title">
+                                <rb-matching-grade [version]="profile()!.version" [matchingGrade]="profile()!.matchingGrade" />
+                            </div>
+                        </div>
                         @if (cn) {
                             <div class="class card has-text-centered">
                                 <div class="heading">
@@ -39,12 +45,6 @@
                                 <div class="title {{ profile()?.version === 4 ? `has-character-count-${cn.length}` : undefined }}">{{ cn }}</div>
                             </div>
                         }
-                        <div class="mg card has-text-centered">
-                            <div class="heading">Grade</div>
-                            <div class="title">
-                                <rb-matching-grade [version]="profile()!.version" [matchingGrade]="profile()!.matchingGrade" />
-                            </div>
-                        </div>
                     </div>
                 </div>
             }
@@ -57,8 +57,13 @@
                         </span>
                     </div>
                     <div class="error-text">
-                        <p>No profile found.</p>
-                        <p>Maybe navigate to another game version?</p>
+                        @if (profileDeleted()) {
+                            <p>All save data of this RB version has been deleted.</p>
+                            <p>It's time to navigate to another game version.</p>
+                        } @else {
+                            <p>No profile found.</p>
+                            <p>Maybe navigate to another game version?</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -77,6 +82,7 @@
                     <div class="buttons has-addons rb-nav-buttons" animate.enter="enter" animate.leave="leave">
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')"><bung-icon icon="account-circle">Play Data</bung-icon></button>
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')"><bung-icon icon="cog">Settings</bung-icon></button>
+                        <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'saveData'" (click)="onNavToSubpage('saveData')"><bung-icon icon="database">Save Data</bung-icon></button>
                     </div>
                 }
             </div>
@@ -84,7 +90,7 @@
         </div>
     </div>
     @if (p) {
-        @for (v of fakeVersionArray(); track v.version) {
+        @for (v of [this.profile()?.version]; track v) {
             <div class="bg-container" animate.enter="enter" animate.leave="leave">
                 <img class="bg is-rb{{ p.version }}" [class.is-loaded]="isImageLoaded()" [src]="`static/assets/images/bg/rb${p.version}.png`" (load)="onImgLoaded()">
             </div>

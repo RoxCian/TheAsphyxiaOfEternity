@@ -56,7 +56,7 @@ export function createWriteCommentHandler<TVersion extends RbVersion>(version: T
         comment.version = closure.version
         do comment.entryId = Math.round(Math.random() * 99999999)
         while (await DB.FindOne<RbCommentBase<TVersion>>({ collection: "rb.info.comment", entryId: comment.entryId }))
-        await DBH.insert(undefined, comment)
+        await DBH.insert(comment)
         return H.success
     }
 }
