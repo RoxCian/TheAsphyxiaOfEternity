@@ -57,10 +57,10 @@ export async function findPlayer(rid: string, version: RbVersion): Promise<FindP
     }
     return result
 }
-export async function findPlayerByUserIdFromOtherVersion(userId: number, forVersion?: RbVersion): Promise<FindPlayerResult> {
+export async function findPlayerByUserIdFromOtherVersion(userId: number, forVersion?: RbVersion): Promise<FindPlayerResult | undefined> {
     const result = {} as FindPlayerResult
-    let account: RbPlayerAccount
-    let base: RbPlayerBase
+    let account: RbPlayerAccount | undefined
+    let base: RbPlayerBase | undefined
 
     // RB1
     if (forVersion !== 1) {
@@ -89,9 +89,10 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     // RB3
     if (forVersion !== 3) {
         account = await DBH.findOne<Rb3PlayerAccount>(undefined, { collection: "rb.rb3.player.account", userId })
-        if (account) {
+        base = await DBH.findOne<Rb3PlayerBase>(undefined, { collection: "rb.rb3.player.base", userId })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb3PlayerBase>(undefined, { collection: "rb.rb3.player.base", userId })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 3
@@ -102,9 +103,10 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     // RB4
     if (forVersion !== 4) {
         account = await DBH.findOne<Rb4PlayerAccount>(undefined, { collection: "rb.rb4.player.account", userId })
-        if (account) {
+        base = await DBH.findOne<Rb4PlayerBase>(undefined, { collection: "rb.rb4.player.base", userId })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb4PlayerBase>(undefined, { collection: "rb.rb4.player.base", userId })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 4
@@ -115,9 +117,10 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     // RB5
     if (forVersion !== 5) {
         account = await DBH.findOne<Rb5PlayerAccount>(undefined, { collection: "rb.rb5.player.account", userId })
-        if (account) {
+        base = await DBH.findOne<Rb5PlayerBase>(undefined, { collection: "rb.rb5.player.base", userId })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb5PlayerBase>(undefined, { collection: "rb.rb5.player.base", userId })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 5
@@ -128,22 +131,23 @@ export async function findPlayerByUserIdFromOtherVersion(userId: number, forVers
     // RB6
     if (forVersion !== 6) {
         account = await DBH.findOne<Rb6PlayerAccount>(undefined, { collection: "rb.rb6.player.account", userId })
-        if (account) {
+        base = await DBH.findOne<Rb6PlayerBase>(undefined, { collection: "rb.rb6.player.base", userId })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb6PlayerBase>(undefined, { collection: "rb.rb6.player.base", userId })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 6
             return result
         }
     }
-
-    return result
+    
+    return undefined
 }
-export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVersion): Promise<FindPlayerResult> {
+export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVersion): Promise<FindPlayerResult | undefined> {
     const result = {} as FindPlayerResult
-    let account: RbPlayerAccount
-    let base: RbPlayerBase
+    let account: RbPlayerAccount | undefined
+    let base: RbPlayerBase | undefined
 
     // RB1
     if (forVersion !== 1) {
@@ -172,9 +176,10 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     // RB3
     if (forVersion !== 3) {
         account = await DBH.findOne<Rb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })
-        if (account) {
+        base = await DBH.findOne<Rb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 3
@@ -185,9 +190,10 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     // RB4
     if (forVersion !== 4) {
         account = await DBH.findOne<Rb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
-        if (account) {
+        base = await DBH.findOne<Rb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 4
@@ -198,9 +204,10 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     // RB5
     if (forVersion !== 5) {
         account = await DBH.findOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
-        if (account) {
+        base = await DBH.findOne<Rb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb5PlayerBase>(rid, { collection: "rb.rb5.player.base" })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 5
@@ -211,13 +218,16 @@ export async function findPlayerFromOtherVersion(rid: string, forVersion?: RbVer
     // RB6
     if (forVersion !== 6) {
         account = await DBH.findOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
-        if (account) {
+        base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
+        if (account && base) {
             result.account = account
-            result.base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
+            result.base = base
             result.name = result.base.name
             result.userId = result.account.userId
             result.version = 6
             return result
         }
     }
+
+    return undefined
 }

@@ -75,7 +75,7 @@ export namespace H {
         handlers = [currentQueryHandler]
         HS.routes[method] = handlers
         const fn: EPR = async (req, data, send) => {
-            initialize()
+            await initialize()
             console.log("Handler method:", method)
             for (const _h of handlers) {
                 if (!HS.matchInfo(req, _h.query)) continue
@@ -104,11 +104,11 @@ export namespace H {
         }
         R.Route(method, fn)
     }
-    export function redirect<T>(method: string, data: X<T>, req: EamuseInfo): Promise<HandlerResult | object> | HandlerResult | object {
-        initialize()
+    export async function redirect<T>(method: string, data: X<T>, req: EamuseInfo): Promise<Promise<HandlerResult | object> | HandlerResult | object> {
+        await initialize()
         for (const h of HS.routes[method]) {
             if (!HS.matchInfo(req, h.query)) continue
-            return h.handler(data, req)
+            return await h.handler(data, req)
         }
     }
 }

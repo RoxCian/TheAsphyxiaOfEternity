@@ -40,7 +40,7 @@ export namespace C {
 
     export function route<T>(method: string, c: Controller<T>) {
         const cb: WebUIEventHandler = async (data: T, send: WebUISend) => {
-            initialize()
+            await initialize()
             console.log("Controller method:", method)
             const res = await c(PJ.convertFromPJ(data))
             if (!res) send.text("")
@@ -63,8 +63,9 @@ export namespace C {
         R.WebUIEvent(method, cb)
         CS.routes[method] = c
     }
-    export function redirect<T>(method: string, data: T): ControllerResult | string | object | Buffer | Promise<ControllerResult | string | object | Buffer> {
-        return CS.routes[method]?.(data)
+    export async function redirect<T>(method: string, data: T): Promise<ControllerResult | string | object | Buffer | Promise<ControllerResult | string | object | Buffer>> {
+        await initialize()
+        return await CS.routes[method]?.(data)
     }
 }
 namespace CS {

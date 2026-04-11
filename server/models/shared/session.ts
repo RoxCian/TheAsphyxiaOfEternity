@@ -1,4 +1,5 @@
 import { ICollection } from "../../utils/db/db_types"
+import { utcNow } from "../../utils/utility_functions"
 import { RbVersion } from "./rb_types"
 
 export class RbSession implements ICollection<"rb.session"> {
@@ -12,11 +13,7 @@ export class RbSession implements ICollection<"rb.session"> {
 
     constructor(version: RbVersion) {
         this.version = version
-        const now = new Date()
-        this.time = Date.UTC(
-            now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
-            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
-        )
+        this.time = utcNow()
         this.unlockSettings = {
             unlockAllSongs: U.GetConfig("unlock_all_songs"),
             unlockAllItems: U.GetConfig("unlock_all_items")

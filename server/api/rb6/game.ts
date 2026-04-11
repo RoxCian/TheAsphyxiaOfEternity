@@ -17,12 +17,13 @@ import { Rb6PlayerStart, Rb6PlayerSucceed } from "../../models/rb6/common"
 import { rb6UnlockItems } from "../../data/tables/rb6_unlock_items"
 import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
-import { Rb6ChartType, Rb6ClasscheckIndex } from "../../models/shared/rb_types"
+import { Rb6ChartType, Rb6ClasscheckIndex, RbColor } from "../../models/shared/rb_types"
 import { Rb6JustCollection, Rb6ReadJustCollection, Rb6ReadJustCollectionParameters } from "../../models/rb6/just_collection"
 import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghost"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { inspect } from "util"
 
 export function registerRb6Handlers() {
     H.route("info.rb6_info_read", readInfo)
@@ -117,9 +118,9 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
             result.pdata.account.userId = rbPlayer.userId
             result.pdata.base.name = rbPlayer.name
         } else {
-            result.pdata.base.name = "RBPlayer"
+            return H.success
         }
-        await writePlayerCore(result)
+        // await writePlayerCore(result)
         result.pdata.account.playCount = 1
     } else {
         const base = await DBH.findOne(read.rid, Rb6PlayerBase, { collection: "rb.rb6.player.base" })
@@ -210,7 +211,12 @@ const writePlayer: H.H<Rb6Player> = async data => {
     const player = XF.o(data, Rb6Player)
     if (!await getSession(player.pdata.account.rid, 6)) return H.deny
     await writePlayerPreProcess(player)
-    await writePlayerCore(player)
+    try {
+        await writePlayerCore(player)
+    } catch (ex) {
+        removeSession(player.pdata.account.rid, 6)
+        throw ex
+    }
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
@@ -318,10 +324,10 @@ async function writePlayerCore(player: Rb6Player) {
     if (player.pdata.quest?.list?.length > 0) for (const q of player.pdata.quest.list) {
         const now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
         if ((q.dungeonId === 47) && player.pdata?.stageLogs?.log) { // Ranking Quest
-            const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
+            const misc = await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
             const score = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
             q.rankingId = misc ? misc.rankingQuestIndex || 0 : 0
-            const oldRecord = await DB.FindOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: 47, dungeonGrade: q.dungeonGrade, rankingId: q.rankingId })
+            const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: 47, dungeonGrade: q.dungeonGrade, rankingId: q.rankingId })
             if (!oldRecord || (oldRecord.score < score)) {
                 q.updateTime = now
                 q.score = score
@@ -385,10 +391,10 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerSta
             musicRecord.bestMissCountUpdateTime = stageLog.time
             musicRecord.missCount = stageLog.missCount
         }
-        if ((stageLog.color == 0) && (musicRecord.justCollectionRateTimes100Red < stageLog.justCollectionRateTimes100)) { // just collection red
+        if ((stageLog.color === RbColor.red) && (musicRecord.justCollectionRateTimes100Red < stageLog.justCollectionRateTimes100)) { // just collection red
             musicRecord.justCollectionRateTimes100Red = stageLog.justCollectionRateTimes100
         }
-        if ((stageLog.color == 1) && (musicRecord.justCollectionRateTimes100Blue < stageLog.justCollectionRateTimes100)) { // just collection blue
+        if ((stageLog.color === RbColor.blue) && (musicRecord.justCollectionRateTimes100Blue < stageLog.justCollectionRateTimes100)) { // just collection blue
             musicRecord.justCollectionRateTimes100Blue = stageLog.justCollectionRateTimes100
         }
     }

@@ -1,6 +1,7 @@
 import { ICollection } from "./db_types"
 import { GetType, isType, Type } from "../types"
 import { getPropertyDescriptor } from "../utility_functions"
+import { inspect } from "util"
 
 export namespace DBH {
     // DB operation serialization
@@ -32,6 +33,7 @@ export namespace DBH {
             const task = dbTaskQueue.pop()
             try {
                 const result = await task.generator()
+                console.log("Task OK")
                 task.resolve(result)
             } catch (ex) {
                 task.reject(ex)
@@ -146,15 +148,15 @@ export namespace DBH {
         return docs
     }
     function reorderReadParams<T>(refidOrQueryOrType: string | undefined | Type<T> | GetType<T> | Query<T>, queryOrType: Type<T> | GetType<T> | Query<T> | undefined, query: Query<T> | undefined): { refid: string | undefined, query: Query<T>, type?: Type<T> | GetType<T>, isPublicDoc: boolean } {
-        const isPublicDoc = !!refidOrQueryOrType && typeof refidOrQueryOrType !== "string"
-        const refid = (typeof refidOrQueryOrType === "string" || refidOrQueryOrType == undefined) ? refidOrQueryOrType as string | undefined : undefined
+        const isPublicDoc = typeof refidOrQueryOrType !== "string" && refidOrQueryOrType != undefined
+        const refid = !isPublicDoc ? refidOrQueryOrType as string | undefined : undefined
         const type = isType(refidOrQueryOrType) || typeof refidOrQueryOrType === "function" ? refidOrQueryOrType : isType(queryOrType) || typeof queryOrType === "function" ? queryOrType : undefined
         query ??= refidOrQueryOrType && typeof refidOrQueryOrType !== "string" && !isType(refidOrQueryOrType) && typeof refidOrQueryOrType !== "function" ? refidOrQueryOrType : queryOrType && !isType(queryOrType) && typeof queryOrType !== "function" ? queryOrType : query
         return { refid, query, type, isPublicDoc }
     }
     function reorderWriteParams<T>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, data?: Doc<T> | Update<T>): { refid: string | undefined, query: Query<T>, data: Doc<T> | Update<T>, isPublicDoc: boolean } {
-        const isPublicDoc = !!refidOrQuery && typeof refidOrQuery !== "string"
-        const refid = (typeof refidOrQuery === "string" || refidOrQuery == undefined) ? refidOrQuery as string | undefined : undefined
+        const isPublicDoc = typeof refidOrQuery !== "string" && refidOrQuery != undefined
+        const refid = !isPublicDoc ? refidOrQuery as string | undefined : undefined
         const query = refidOrQuery && typeof refidOrQuery !== "string" ? refidOrQuery : queryOrData as Query<T>
         data ??= queryOrData as Doc<T> | Update<T>
         return { refid, query, data, isPublicDoc }
@@ -192,7 +194,8 @@ export namespace DBH {
     export async function update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, dataDocOrUpdate?: Doc<T> | Update<T>): Promise<DBUpdateResult<T> | DBUpdateProfileResult<T>> {
         const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)
         checkData(data, true)
-        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Update(query, data)) : await enqueueTask(() => DB.Update(undefined, query, data))
+        console.log("Enqueue update task: ", inspect(reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)))
+        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Update(query, data)) : await enqueueTask(() => DB.Update(null!, query, data))
         else return await enqueueTask(() => DB.Update(refid, query, data))
     }
     export async function upsert<T extends ICollection<any>>(query: Query<T>, data: Doc<T>): Promise<DBUpsertResult<T>>
@@ -200,7 +203,8 @@ export namespace DBH {
     export async function upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, dataDocOrUpdate?: Doc<T>): Promise<DBUpsertResult<T> | DBUpsertProfileResult<T>> {
         const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)
         checkData(data, false)
-        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Upsert(query, data)) : await enqueueTask(() => DB.Upsert(undefined, query, data))
+        console.log("Enqueue upsert task: ", inspect(reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)))
+        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Upsert(query, data)) : await enqueueTask(() => DB.Upsert(null!, query, data))
         else return await enqueueTask(() => DB.Upsert(refid, query, data))
     }
     export async function insert<T extends ICollection<any>>(data: Doc<T>): Promise<Doc<T>>
@@ -208,16 +212,18 @@ export namespace DBH {
     export async function insert<T extends ICollection<any>>(refidOrData: string | Doc<T>, data?: Doc<T>): Promise<Doc<T> | ProfileDoc<T>> {
         const refid = typeof refidOrData === "string" ? refidOrData : undefined
         checkData(data, false)
+        console.log("Enqueue insert task: ", inspect({ refid, data }))
         if (refid == undefined) return await enqueueTask(() => DB.Insert(data))
         else return await enqueueTask(() => DB.Insert(refid, data))
     }
     export async function remove<T extends ICollection<any>>(query: Query<T>): Promise<number>
     export async function remove<T extends ICollection<any>>(refid: string | undefined, query: Query<T>): Promise<number>
     export async function remove<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, query?: Query<T>): Promise<number> {
-        const isPublicDoc = typeof refidOrQuery === "string" || refidOrQuery == undefined
-        const refid = isPublicDoc ? refidOrQuery as string | undefined : undefined
+        const isPublicDoc = typeof refidOrQuery !== "string" && refidOrQuery != undefined
+        const refid = !isPublicDoc ? refidOrQuery as string | undefined : undefined
         query ??= refidOrQuery as Query<T>
-        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Remove(query)) : await enqueueTask(() => DB.Remove(undefined, query))
+        console.log("Enqueue remove task: ", inspect({ refid, query }))
+        if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Remove(query)) : await enqueueTask(() => DB.Remove(null, query))
         else return await enqueueTask(() => DB.Remove(refid, query))
     }
     export async function findOne<T extends ICollection<any>>(query: Query<T>): Promise<Doc<T> | undefined>
@@ -226,7 +232,8 @@ export namespace DBH {
     export async function findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T>, query: Query<T>): Promise<Doc<T> | undefined>
     export async function findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParam?: Query<T> | undefined): Promise<Doc<T> | undefined> {
         const { refid, query, type, isPublicDoc } = reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)
-        const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid, query))
+        console.log("Enqueue findOne task: ", inspect(reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)))
+        const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid ?? null, query))
         if (!doc) return undefined
         return docToObj(doc, type)
     }
@@ -236,7 +243,8 @@ export namespace DBH {
     export async function find<T extends ICollection<any>>(refid: string | undefined, type: Type<T>, query: Query<T>): Promise<Doc<T>[]>
     export async function find<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParam?: Query<T> | undefined): Promise<Doc<T>[]> {
         const { refid, query, type, isPublicDoc } = reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)
-        return docsToObjs((((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.Find<T>(query)) : await enqueueTask(() => DB.Find<T>(refid, query))), type)
+        console.log("Enqueue find task: ", inspect(reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)))
+        return docsToObjs((((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.Find<T>(query)) : await enqueueTask(() => DB.Find<T>(refid ?? null, query))), type)
     }
 
     export async function getCollectionNames(filter?: string): Promise<IDBCollectionName[]> {
@@ -339,7 +347,9 @@ export namespace DBH {
         async findOne<T extends ICollection<any>>(refid: string | undefined, query: Query<T>): Promise<(T & Doc<T>) | undefined>
         async findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T> | GetType<T>, query: Query<T>): Promise<(T & Doc<T>) | undefined>
         async findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParam?: Query<T> | undefined): Promise<(T & Doc<T>) | undefined> {
+            console.log(JSON.stringify(reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)))
             const { refid, query, type, isPublicDoc } = reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)
+            console.log(JSON.stringify(this.submissions))
             for (let i = this.submissions.length - 1; i >= 0; i--) {
                 const s = this.submissions[i]
                 if (s.doc == undefined) continue
@@ -347,6 +357,7 @@ export namespace DBH {
             }
             const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid, query))
             if (!doc) return undefined
+            console.log(JSON.stringify(doc))
             return docToObj(doc, type)
         }
         async find<T extends ICollection<any>>(query: Query<T>): Promise<(T & Doc<T>)[]>

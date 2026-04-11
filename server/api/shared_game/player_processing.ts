@@ -34,7 +34,7 @@ const songReleaseInfoBackup = new Map<Type<IRbReleasedInfo>, IRbReleasedInfo[]>(
 const itemReleaseInfoBackup = new Map<Type<IRbReleasedInfo>, IRbReleasedInfo[][]>()
 
 export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo extends IRbReleasedInfo>(version: RbVersion, player: T, releasedInfoType: Type<TReleasedInfo>, ctrlArray: number[], onAttachItems?: Function) {
-    const rid = player.rid ?? player.pdata.account.rid
+    const rid = player.rid ?? player.pdata.account?.rid
     if (!rid) return
     const session = await getSession(rid, version)
     if (!session) return
@@ -44,6 +44,10 @@ export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo exten
 
     if (unlockAllSongs) {
         let songReleaseInfoArray = songReleaseInfoBackup.get(releasedInfoType)
+        if (!songReleaseInfoArray) {
+            songReleaseInfoArray = []
+            songReleaseInfoBackup.set(releasedInfoType, songReleaseInfoArray)
+        }
         if (songReleaseInfoArray.length < ctrlArray[0]) addReleaseInfo(releasedInfoType, songReleaseInfoArray, ctrlArray[0])
         else if (songReleaseInfoArray.length > ctrlArray[0]) songReleaseInfoArray = songReleaseInfoArray.slice(0, ctrlArray[0])
         if (player.pdata.released.info) player.pdata.released.info.push(...songReleaseInfoArray)
@@ -68,7 +72,7 @@ export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo exten
     }
 }
 export async function detachReleaseInfo<T extends IRbPlayer>(version: RbVersion, player: T, onDetachSongsOrItems?: (isUnlockSongs: boolean, isUnlockItems: boolean) => void | Promise<void>) {
-    const rid = player.rid ?? player.pdata.account.rid
+    const rid = player.rid ?? player.pdata.account?.rid
     if (!rid) return
     const session = await getSession(rid, version)
 
