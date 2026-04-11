@@ -13,7 +13,6 @@ export function createAddLobbyHandler<TVersion extends RbVersion>(version: TVers
         const params = XF.o(data, RbLobbyEntry as Type<RbLobbyEntry<TVersion>>)
         const settings = await DBH.findOne<RbLobbySettings<TVersion>>({ collection: `rb.rb${closure.version}.player.lobbySettings#userId` as const, userId: params.entries[0].userId }) ?? new RbLobbySettings(closure.version, params.entries[0].userId)
         if (!settings.isEnabled) return H.deny
-
         const result = await RbLobbyEntry.create(closure.version, params.entries[0])
         await DBH.upsert({ userId: params.entries[0].userId, collection: `rb.rb${closure.version}.temporary.lobbyEntry` as const }, result.entries[0])
 
@@ -63,7 +62,7 @@ export function createReadLobbyHandler<TVersion extends RbVersion>(version: TVer
             } : {} : {}]
         } // pside may represents color (red == 0 / blue == 1)
         const lobbies = await DBH.find<RbLobbyEntryElement<TVersion>>(RbLobbyEntryElement, query)
-        const result = new RbLobbyEntry(await generateLobbyEntryId(version))
+        const result = new RbLobbyEntry(tempLobbies.get(params.userId)?.[closure.version]?.entryId ?? 0)
         result.entries = lobbies.slice(0, params.maxRivalCount)
         return XF.x(result)
     }

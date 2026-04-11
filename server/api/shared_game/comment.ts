@@ -18,7 +18,7 @@ export function createReadCommentHandler<TVersion extends RbVersion>(version: TV
     }
     return async data => {
         const param = XF.o(data, RbReadCommentParam)
-        const comments = (await DBH.find(undefined, closure.type, { collection: "rb.info.comment" }))
+        const comments = (await DBH.find(closure.type, { collection: "rb.info.comment" }))
             .sort((l, r) => r.time - l.time).slice(0, param.limit)
         if (closure.version === 2) {
             const result = new Rb2Comments()

@@ -76,31 +76,38 @@ export namespace H {
         HS.routes[method] = handlers
         const fn: EPR = async (req, data, send) => {
             await initialize()
-            console.log("Handler method:", method)
-            for (const _h of handlers) {
-                if (!HS.matchInfo(req, _h.query)) continue
-                const res = await _h.handler(data, req)
-                if (!res) return send.success()
-                else if (isHandlerResult(res)) {
-                    switch (res.type) {
-                        case "success": return await send.success(res.options)
-                        case "deny": return await send.deny(res.options)
-                        case "status": return await send.status(res.code, res.options)
-                        case "object": return await send.object(res.res, res.options)
-                        case "xml": return await send.xml(res.res, res.data, res.options)
-                        case "pug": return await send.pug(res.res, res.data, res.options)
-                        case "xmlFile": return await send.xmlFile(res.file, res.data, res.options)
-                        case "pugFile": return await send.pugFile(res.file, res.data, res.options)
-                    }
-                } else {
-                    try {
-                        return await send.object(res)
-                    } catch (ex) {
-                        throw ex
+            console.log("Start handler method:", method)
+            try {
+                for (const _h of handlers) {
+                    if (!HS.matchInfo(req, _h.query)) continue
+                    const res = await _h.handler(data, req)
+                    if (!res) return send.success()
+                    else if (isHandlerResult(res)) {
+                        switch (res.type) {
+                            case "success": return await send.success(res.options)
+                            case "deny": return await send.deny(res.options)
+                            case "status": return await send.status(res.code, res.options)
+                            case "object": return await send.object(res.res, res.options)
+                            case "xml": return await send.xml(res.res, res.data, res.options)
+                            case "pug": return await send.pug(res.res, res.data, res.options)
+                            case "xmlFile": return await send.xmlFile(res.file, res.data, res.options)
+                            case "pugFile": return await send.pugFile(res.file, res.data, res.options)
+                        }
+                    } else {
+                        try {
+                            return await send.object(res)
+                        } catch (ex) {
+                            throw ex
+                        }
                     }
                 }
+                return await send.success()
+            } catch (ex) {
+                console.log("Handler error:", method)
+                throw ex
+            } finally {
+                console.log("Finish handler method:", method)
             }
-            return await send.success()
         }
         R.Route(method, fn)
     }

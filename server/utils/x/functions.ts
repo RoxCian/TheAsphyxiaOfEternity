@@ -47,7 +47,7 @@ export namespace XF {
         return !!(map as any).$xSide || !!(map as any).$oSide
     }
     export function x<T>(value: T): X<T>
-    export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, map: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): X<T>
+    export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, map?: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): X<T>
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, type: Type<T> | TypeToken<T>, typeInjector?: TypeInjector): X<T>
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, type: Type<T> | TypeToken<T>, map?: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): X<T>
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, mapOrType?: Type<T> | TypeToken<T> | XMap<T, TXType, TTarget, TXKey>, mapOrTypeInjector?: XMap<T, TXType, TTarget, TXKey> | TypeInjector, typeInjector?: TypeInjector): X<T> {
@@ -263,7 +263,7 @@ export namespace XF {
         }
         const content = xValue?.["@content"] ?? xValue
         if (content == undefined && xType) return undefined
-        const isArray = (typeof xType === "string" && xValue?.["@attr"]?.__count != undefined) || (typeof xType !== "string" && Array.isArray(content) || ((map as any).$el || (map as any).$oSide?.$el))
+        const isArray = (typeof xType === "string" && xValue?.["@attr"]?.__count != undefined) || (typeof xType !== "string" && Array.isArray(content) || !!((map as any).$el || (map as any).$oSide?.$el))
         switch (xType) {
             case "xignore":
                 setValue(map.$fallbackValue)

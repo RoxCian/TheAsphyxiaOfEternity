@@ -3,7 +3,7 @@ import { XD } from "../../utils/x"
 import { RbChartType, RbVersion } from "./rb_types"
 
 export class RbLobbyEntryElement<TVersion extends RbVersion> implements ICollection<`rb.rb${TVersion}.temporary.lobbyEntry`> {
-    readonly collection: `rb.rb${TVersion}.temporary.lobbyEntry`
+    collection: `rb.rb${TVersion}.temporary.lobbyEntry`
     @XD.s32("eid") entryId: number
     @XD.u16("mid") musicId: number
     @XD.u8("ng") chartType: RbChartType<TVersion>
@@ -28,11 +28,9 @@ export class RbLobbyEntryElement<TVersion extends RbVersion> implements ICollect
     isHanging: boolean
     ticking: number
 
-    constructor(version: TVersion) {
+    async initialize(version: TVersion) {
         this.collection = `rb.rb${version}.temporary.lobbyEntry` as const
-        do {
-            this.entryId = Math.trunc(Math.random() * 99999999)
-        } while (hasLobby(version, this.entryId))
+        this.entryId = await generateLobbyEntryId(version)
     }
 }
 export async function generateLobbyEntryId<TVersion extends RbVersion>(version: TVersion): Promise<number> {
@@ -42,7 +40,7 @@ export async function generateLobbyEntryId<TVersion extends RbVersion>(version: 
     return result
 }
 async function hasLobby<TVersion extends RbVersion>(version: TVersion, entryId: number): Promise<boolean> {
-    return !!(await DB.FindOne<RbLobbyEntryElement<TVersion>>({ collection: `rb.rb${version}.temporary.lobbyEntry` as const, entryId: entryId }))
+    return !!(await DB.FindOne<RbLobbyEntryElement<TVersion>>({ collection: `rb.rb${version}.temporary.lobbyEntry` as const, entryId }))
 }
 
 export class RbLobbyEntry<TVersion extends RbVersion> {
@@ -62,8 +60,7 @@ export class RbLobbyEntry<TVersion extends RbVersion> {
         }
     }
     static async create<TVersion extends RbVersion>(version: TVersion, entry: RbLobbyEntryElement<TVersion>): Promise<RbLobbyEntry<TVersion>> {
-        const entryId = await generateLobbyEntryId(version)
-        entry.entryId = entryId
+        await entry.initialize(version) // MUST INITIALIZE
         return new RbLobbyEntry(entry)
     }
 }
@@ -85,5 +82,5 @@ export class ReadLobbyParams {
     @XD.str("lid") lobbyId = "ea"
     @XD.s32("max") maxRivalCount = 0
     @XD.s32() friend: number[] = []
-    @XD.u8("var") version = 0 // TODO: check the tag name
+    @XD.u8("var") version = 0 // yeah it's *var*, maybe not a version field
 }

@@ -23,7 +23,6 @@ import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghos
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createSession, getSession, removeSession } from "../shared_game/session"
-import { inspect } from "util"
 
 export function registerRb6Handlers() {
     H.route("info.rb6_info_read", readInfo)
@@ -32,7 +31,7 @@ export function registerRb6Handlers() {
     H.route("player.rb6_player_start", startPlayer)
     H.route("player.rb6_player_read", readPlayer)
     H.route("player.rb6_player_write", writePlayer)
-    H.route("player.rb5_player_end", endPlayer)
+    H.route("player.rb6_player_end", endPlayer)
     H.route("player.rb6_player_delete", deletePlayer)
     H.route("player.rb6_player_read_score", readPlayerScore)
     H.route("player.rb6_player_read_jc", readPlayerJustCollections)
@@ -113,15 +112,8 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const account = await DBH.findOne(read.rid, Rb6PlayerAccount, { collection: "rb.rb6.player.account" })
     const result = new Rb6Player(read.rid)
     if (!account) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 6)
-        if (rbPlayer) {
-            result.pdata.account.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            return H.success
-        }
-        // await writePlayerCore(result)
-        result.pdata.account.playCount = 1
+        // new user registration process: start -> delete -> write -> read, it's not possible to read an account dosen't exist 
+        return H.deny
     } else {
         const base = await DBH.findOne(read.rid, Rb6PlayerBase, { collection: "rb.rb6.player.base" })
         const config = await DBH.findOne(read.rid, Rb6PlayerConfig, { collection: "rb.rb6.player.config" })
@@ -141,11 +133,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         if (mylist?.index < 0) mylist.index = 0
 
         if (!account || !base) throw new Error("no player data for rid=" + read.rid)
-        if (characterCards.length < 1) {
-            const newCard = new Rb6CharacterCard(0)
-            characterCards.push(newCard)
-            await DBH.insert(read.rid, newCard)
-        }
         account.intrvld ??= 0
         account.succeed ??= true
         account.pst ??= BigInt(0)
@@ -276,8 +263,12 @@ async function writePlayerCore(player: Rb6Player) {
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
 
     if (!accountSaved) { // save the new player
-        player.pdata.account.userId = await generateUserId()
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 6)
+        if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
+        else player.pdata.account.userId = await generateUserId()
         player.pdata.account.isFirstFree = true
+        player.pdata.account.playCount = 0
+        player.pdata.account.playCountToday = 0
         t.upsert(rid, { collection: "rb.rb6.player.account" }, player.pdata.account)
         t.upsert(rid, { collection: "rb.rb6.player.base" }, player.pdata.base)
         t.upsert(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
@@ -364,8 +355,8 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerSta
         musicRecord.combo = stageLog.combo
         musicRecord.missCount = stageLog.missCount
         musicRecord.param = stageLog.param
-        musicRecord.justCollectionRateTimes100Red = (stageLog.color == 0) ? stageLog.justCollectionRateTimes100 : null
-        musicRecord.justCollectionRateTimes100Blue = (stageLog.color == 1) ? stageLog.justCollectionRateTimes100 : null
+        musicRecord.justCollectionRateTimes100Red = (stageLog.color == 0) ? stageLog.justCollectionRateTimes100 : 0
+        musicRecord.justCollectionRateTimes100Blue = (stageLog.color == 1) ? stageLog.justCollectionRateTimes100 : 0
         musicRecord.bestScoreUpdateTime = stageLog.time
         musicRecord.bestMissCountUpdateTime = stageLog.time
         musicRecord.bestAchievementRateUpdateTime = stageLog.time
