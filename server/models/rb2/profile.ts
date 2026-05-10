@@ -107,8 +107,8 @@ export class Rb2Glass implements ICollection<"rb.rb2.player.glass"> {
 
 export class Rb2LincleLink implements ICollection<"rb.rb2.player.lincleLink"> {
     readonly collection = "rb.rb2.player.lincleLink"
-    @XD.u32("qpro_add") qproParam: number
-    @XD.u32("glass_add") glassParam: number
+    @XD.u32("qpro_add") qproParam = 0
+    @XD.u32("glass_add") glassParam = 0
     @XD.bool("for_iidx_0_0") iidxParam0Sub0 = false
     @XD.bool("for_iidx_0_1") iidxParam0Sub1 = false
     @XD.bool("for_iidx_0_2") iidxParam0Sub2 = false

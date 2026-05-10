@@ -1,7 +1,7 @@
 import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
-import { RbLobbyEntryElement, RbLobbyEntry, RbLobbySettings, ReadLobbyParams, generateLobbyEntryId } from "../../models/shared/lobby"
+import { RbLobbyEntryElement, RbLobbyEntry, RbLobbySettings, ReadLobbyParams } from "../../models/shared/lobby"
 import { RbVersion } from "../../models/shared/rb_types"
 import { Type } from "../../utils/types"
 
@@ -28,10 +28,10 @@ export function createAddLobbyHandler<TVersion extends RbVersion>(version: TVers
             $not: { userId: params.entries[0].userId },
             $and: [{
                 collection: `rb.rb${closure.version}.temporary.lobbyEntry` as const,
-                matchingGrade: {
-                    $gte: params.entries[0].matchingGrade - 5,
-                    $lte: params.entries[0].matchingGrade + 5
-                }
+                // matchingGrade: {
+                //     $gte: (params.entries[0].matchingGrade ?? 0) - 5,
+                //     $lte: (params.entries[0].matchingGrade ?? 0) + 5
+                // }
             }, myLobbies ? myLobbies[closure.version]?.pside ? {
                 pside: (myLobbies[closure.version].pside === 0) ? 1 : 0
             } : {} : {}]
@@ -53,10 +53,10 @@ export function createReadLobbyHandler<TVersion extends RbVersion>(version: TVer
             $not: { userId: params.userId },
             $and: [{
                 collection: `rb.rb${closure.version}.temporary.lobbyEntry` as const,
-                matchingGrade: {
-                    $gte: params.matchingGrade - 5,
-                    $lte: params.matchingGrade + 5
-                }
+                // matchingGrade: {
+                //     $gte: params.matchingGrade - 5,
+                //     $lte: params.matchingGrade + 5
+                // }
             }, myLobbies ? myLobbies[closure.version]?.pside ? {
                 pside: (myLobbies[closure.version].pside === 0) ? 1 : 0
             } : {} : {}]

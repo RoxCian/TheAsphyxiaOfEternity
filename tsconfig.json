@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "module": "es2015",
+        "module": "node16",
         "target": "es2018",
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
         "noImplicitAny": false,
         "types": [
             "./asphyxia-core"

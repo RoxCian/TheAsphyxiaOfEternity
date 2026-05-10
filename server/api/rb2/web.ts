@@ -28,7 +28,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     const result = {} as RbPlayerResponse
     const base = await DBH.findOne<Rb2PlayerBase>(data.rid, { collection: "rb.rb2.player.base" })
     if (!base) return undefined
-    const custom = await DBH.findOne<Rb2PlayerCustom>(data.rid, { collection: "rb.rb2.player.custom" })
+    const custom = await DBH.findOne<Rb2PlayerCustom>(data.rid, { collection: "rb.rb2.player.custom" }) ?? new Rb2PlayerCustom()
     result.version = version
     result.userId = base.userId
     result.name = base.name
@@ -103,7 +103,7 @@ type Rb2SettingsContext = {
     base: Rb2PlayerBase
     custom: Rb2PlayerCustom
     lobbySettings: RbLobbySettings<V>
-    mylist?: Rb2Mylist
+    mylist: Rb2Mylist
 }
 const rb2SettingsFactory: RbSettingsFactory<Rb2SettingsResponse, Rb2SettingsContext> = {
     contextQuery: {

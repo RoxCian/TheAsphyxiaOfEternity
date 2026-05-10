@@ -124,65 +124,65 @@ export class Rb6PlayerCustom implements ICollection<"rb.rb6.player.custom"> {
 
 export class Rb6PlayerStageLog implements ICollection<"rb.rb6.playData.stageLog"> {
     readonly collection = "rb.rb6.playData.stageLog"
-    @XD.s8("stg") stageIndex: number
-    @XD.s16("mid") musicId: number
-    @XD.s8("ng") chartType: Rb6ChartType
-    @XD.s8("col") color: RbColor
-    @XD.s8() mt: number
-    @XD.s8() rt: number
-    @XD.s8("ct") clearType: Rb6ClearType // 1: played, 2: played (hard gauge), 3: cleared, 4: hard clear
-    @XD.s16() param: number
-    @XD.s16("grd") matchingGrade: number
-    @XD.s16("cl_gauge") clearGaugeTimes100: number
-    @XD.s16("ar") achievementRateTimes100: number
-    @XD.s16("sc") score: number
-    @XD.s16() combo: number
-    @XD.s16("jt_jst") justCount: number
-    @XD.s16("jt_grt") greatCount: number
-    @XD.s16("jt_gd") goodCount: number
-    @XD.s16("jt_keep") keepCount: number
-    @XD.s16("jt_ms") missCount: number
-    @XD.s16("jt_jr") justReflecCount: number
-    @XD.s16("justcoll") justCollectionRateTimes100: number
-    @XD.s32("r_uid") rivalUserId: number
-    @XD.s32("r_plyid") rivalPlayerId: number
-    @XD.s8("r_stg") rivalStageIndex: number
-    @XD.s8("r_ct") rivalClearType: Rb6ClearType
-    @XD.s16("r_sc") rivalScore: number
-    @XD.s16("r_grd") rivalMatchingGrade: number
-    @XD.s16("r_cl_gauge") rivalClearGaugeTimes100: number
-    @XD.s16("r_ar") rivalAchievementRateTimes100: number
-    @XD.s8("r_cpuid") rivalCpuId: number
-    @XD.s32() time: number
-    @XD.s8() decide: number
+    @XD.s8("stg") stageIndex = 0
+    @XD.s16("mid") musicId = 0
+    @XD.s8("ng") chartType = Rb6ChartType.basic
+    @XD.s8("col") color = RbColor.red
+    @XD.s8() mt = 0
+    @XD.s8() rt = 0
+    @XD.s8("ct") clearType = Rb6ClearType.none // 1: played, 2: played (hard gauge), 3: cleared, 4: hard clear
+    @XD.s16() param = 0
+    @XD.s16("grd") matchingGrade = 0
+    @XD.s16("cl_gauge") clearGaugeTimes100 = 0
+    @XD.s16("ar") achievementRateTimes100 = 0
+    @XD.s16("sc") score = 0
+    @XD.s16() combo = 0
+    @XD.s16("jt_jst") justCount = 0
+    @XD.s16("jt_grt") greatCount = 0
+    @XD.s16("jt_gd") goodCount = 0
+    @XD.s16("jt_keep") keepCount = 0
+    @XD.s16("jt_ms") missCount = 0
+    @XD.s16("jt_jr") justReflecCount = 0
+    @XD.s16("justcoll") justCollectionRateTimes100 = 0
+    @XD.s32("r_uid") rivalUserId = 0
+    @XD.s32("r_plyid") rivalPlayerId = 0
+    @XD.s8("r_stg") rivalStageIndex = 0
+    @XD.s8("r_ct") rivalClearType = Rb6ClearType.none
+    @XD.s16("r_sc") rivalScore = 0
+    @XD.s16("r_grd") rivalMatchingGrade = 0
+    @XD.s16("r_cl_gauge") rivalClearGaugeTimes100 = 0
+    @XD.s16("r_ar") rivalAchievementRateTimes100 = 0
+    @XD.s8("r_cpuid") rivalCpuId = 0
+    @XD.s32() time = 0
+    @XD.s8() decide = 0
 }
 
 export class Rb6PlayerReleasedInfo implements ICollection<"rb.rb6.player.releasedInfo"> {
     readonly collection = "rb.rb6.player.releasedInfo"
-    @XD.u8() type: number
-    @XD.u16() id: number
-    @XD.u16() param: number
-    @XD.s32() insertTime: number
+    @XD.u8() type = 0
+    @XD.u16() id = 0
+    @XD.u16() param = 0
+    @XD.s32() insertTime = 0
 }
 
 export class Rb6PlayerParameters implements ICollection<"rb.rb6.player.parameters"> {
     readonly collection = "rb.rb6.player.parameters"
-    @XD.s32() type: number
-    @XD.s32() bank: number
-    @XD.s32() data: number[]
+    @XD.s32() type = 0
+    @XD.s32() bank = 0
+    @XD.s32() data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 
 export class Rb6QuestRecord implements ICollection<"rb.rb6.playData.quest"> {
     readonly collection = "rb.rb6.playData.quest"
-    @XD.s32() dungeonId: number
-    @XD.s8() dungeonGrade: number
-    rankingId: number
-    @XD.s32("clear_num") clearCount: number
-    @XD.s32("play_num") playCount: number
-    @XD.bool("clear_flg") isCleared: boolean
-    score?: number
-    lastPlayTime: number
-    updateTime: number
+    @XD.s32() dungeonId = 0
+    @XD.s8() dungeonGrade = 0
+    rankingId = 0
+    @XD.s32("clear_num") clearCount = 0
+    @XD.s32("play_num") playCount = 0
+    @XD.bool("clear_flg") isCleared = false
+    score = 0
+    lastPlayTime = 0
+    updateTime = 0
 }
 
 class Rb6PlayerData {

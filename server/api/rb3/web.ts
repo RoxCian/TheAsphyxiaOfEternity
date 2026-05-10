@@ -31,7 +31,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     const account = await DBH.findOne<Rb3PlayerAccount>(data.rid, { collection: "rb.rb3.player.account" })
     const base = await DBH.findOne<Rb3PlayerBase>(data.rid, { collection: "rb.rb3.player.base" })
     if (!account || !base) return undefined
-    const config = await DBH.findOne<Rb3PlayerConfig>(data.rid, { collection: "rb.rb3.player.config" })
+    const config = await DBH.findOne<Rb3PlayerConfig>(data.rid, { collection: "rb.rb3.player.config" }) ?? new Rb3PlayerConfig()
     result.version = version
     result.userId = account.userId
     result.name = base.name
@@ -160,8 +160,8 @@ const rb3SettingsFactory: RbSettingsFactory<Rb3SettingsResponse, Rb3SettingsCont
         touchMarkerDisplayingType: "custom.stageTouchMarkerDisplayingType",
         isLobbyEnabled: "lobbySettings.isEnabled",
         mylist: {
-            read: ctx => ctx.mylist.slot?.map(m => m.musicId) ?? [],
-            write: (v, ctx) => ctx.mylist.slot = v.filter(m => m >= 0).map((m, i) => ({ slotId: i, musicId: m }))
+            read: ctx => ctx.mylist?.slot?.map(m => m.musicId) ?? [],
+            write: (v, ctx) => ctx.mylist = { collection: "rb.rb3.player.mylist", slot: v.filter(m => m >= 0).map((m, i) => ({ slotId: i, musicId: m })) }
         }
     }
 }

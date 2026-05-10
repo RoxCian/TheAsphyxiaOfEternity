@@ -10,7 +10,7 @@ import { Rb6Player, Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerC
 import { Rb6ShopInfo } from "../../models/rb6/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
-import { isToday } from "../../utils/utility_functions"
+import { hasAny, isToday, sumBy } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
 import { Rb6PlayerStart, Rb6PlayerSucceed } from "../../models/rb6/common"
@@ -25,7 +25,6 @@ import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler
 import { createSession, getSession, removeSession } from "../shared_game/session"
 
 export function registerRb6Handlers() {
-    H.route("info.rb6_info_read", readInfo)
     H.route("info.rb6_info_read_hit_chart", readHitChartInfo)
     H.route("pcb.rb6_pcb_boot", bootPcb)
     H.route("player.rb6_player_start", startPlayer)
@@ -41,30 +40,13 @@ export function registerRb6Handlers() {
     H.route("lobby.rb6_lobby_entry", createAddLobbyHandler(6))
     H.route("lobby.rb6_lobby_read", createReadLobbyHandler(6))
     H.route("lobby.rb6_lobby_delete_entry", createDeleteLobbyHandler(6))
-    // H.route("shop.rb6_shop_write_info", writeShopInfo)
     H.route("info.rb6pzlcmt_read", createReadCommentHandler(6))
     H.route("info.rb6pzlcmt_write", createWriteCommentHandler(6))
 }
 
-
 const bootPcb: H.H = () => XF.x(new Rb6ShopInfo())
 
-const bypassMethod: H.H = () => H.success
-
 const readHitChartInfo: H.H = () => ({ ver: {} })
-
-const readInfo: H.H = () => ({
-    sinfo: {
-        lid: K.ITEM("str", "ea"),
-        nm: K.ITEM("str", "Asphyxia shop"),
-        cntry: K.ITEM("str", "Japan"),
-        rgn: K.ITEM("str", "1"),
-        prf: K.ITEM("s16", 13),
-        cl_enbl: K.ITEM("bool", 0),
-        cl_h: K.ITEM("u8", 8),
-        cl_m: K.ITEM("u8", 0)
-    }
-})
 
 const playerSucceeded: H.H = async data => {
     const rid = $(data).str("rid")
@@ -88,9 +70,9 @@ const playerSucceeded: H.H = async data => {
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     if (rid && !await createSession(rid, 6)) return H.deny
-    const account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
+    const account = rid == undefined ? undefined : await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
     const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
-    const result = new Rb6PlayerStart(account?.playerId ?? -1)
+    const result = new Rb6PlayerStart(account?.playerId)
     result.questCtrl.data = await Rb6Quest.createExamples(misc?.rankingQuestIndex ?? 0)
     const today = new Date()
     result.itemCtrl.data = (await rb6UnlockItems).filter(i => {
@@ -112,73 +94,76 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const account = await DBH.findOne(read.rid, Rb6PlayerAccount, { collection: "rb.rb6.player.account" })
     const result = new Rb6Player(read.rid)
     if (!account) {
-        // new user registration process: start -> delete -> write -> read, it's not possible to read an account dosen't exist 
-        return H.deny
-    } else {
-        const base = await DBH.findOne(read.rid, Rb6PlayerBase, { collection: "rb.rb6.player.base" })
-        const config = await DBH.findOne(read.rid, Rb6PlayerConfig, { collection: "rb.rb6.player.config" })
-        const custom = await DBH.findOne(read.rid, Rb6PlayerCustom, { collection: "rb.rb6.player.custom" })
-        const classcheck = await DBH.find(read.rid, Rb6Classcheck, { collection: "rb.rb6.playData.classcheck" })
-        const characterCards = await DBH.find(read.rid, Rb6CharacterCard, { collection: "rb.rb6.player.characterCard" })
-        const releasedInfos = await DBH.find(read.rid, Rb6PlayerReleasedInfo, { collection: "rb.rb6.player.releasedInfo" })
-        const param = await DBH.find(read.rid, Rb6PlayerParameters, { collection: "rb.rb6.player.parameters" })
-        const mylist = await DBH.findOne(read.rid, Rb6Mylist, { collection: "rb.rb6.player.mylist" })
-        const misc = await DB.FindOne<Rb6MiscSettings>(read.rid, { collection: "rb.rb6.player.misc" })
-        const questRecords = await DBH.find(read.rid, Rb6QuestRecord, {
-            collection: "rb.rb6.playData.quest", $or: [
-                { dungeonId: { $ne: 47 } },
-                { dungeonId: 47, rankingId: misc?.rankingQuestIndex ?? 0 }
-            ]
-        })
-        if (mylist?.index < 0) mylist.index = 0
-
-        if (!account || !base) throw new Error("no player data for rid=" + read.rid)
-        account.intrvld ??= 0
-        account.succeed ??= true
-        account.pst ??= BigInt(0)
-        account.st ??= BigInt(0)
-        account.opc ??= 0
-        account.dayCount ??= 0
-        account.playCountToday ??= 0
-        if (!isToday(toBigInt(account.st))) account.playCountToday = 1
-        else account.playCountToday++
-        account.playCount++
-        account.lpc ??= 0
-        account.cpc ??= 0
-        account.mpc ??= 0
-        base.comment ||= "Welcome to the land of Reflesia!"
-        base.abilityPointTimes100 ??= base["averagePrecisionTimes100"]  // For compatibility
-        for (const c of characterCards) if (c.level == undefined) c.level = 0
-        base.rankQuestScore = [0, 0, 0]
-        base.rankQuestRank = [-1, -1, -1]
-        const rankingId = misc?.rankingQuestIndex ?? 0
-        const rankQuestRecords = questRecords.filter((q) => (q.dungeonId == 47) && (q.rankingId == rankingId))
-        if (rankQuestRecords) for (const r of rankQuestRecords) {
-            base.rankQuestScore[r.dungeonGrade] = r.score
-            base.rankQuestRank[r.dungeonGrade] = 1
-        }
-
-        const scores = await DBH.find(read.rid, Rb6MusicRecord, { collection: "rb.rb6.playData.musicRecord" })
-
-        for (const s of scores) {
-            base.totalBestScore += s.score
-            base.totalBestScoreEachChartType[s.chartType] += s.score
-        }
-
-        const p = result.pdata
-
-        p.account = account
-        p.base = base
-        p.config = config
-        p.custom = custom
-        if (classcheck?.length > 0) p.classcheck = { rec: classcheck }
-        if (characterCards?.length > 0) p.characterCards.list = characterCards
-        if (releasedInfos?.length > 0) p.released.info = releasedInfos
-        if (param.length > 0) p.playerParam.item = param
-        if (mylist) p.mylist.list = [mylist]
-        if (questRecords?.length > 0) p.quest.list = questRecords
-        p.ghostWinCount.info = base.ghostWinCount
+        // new card registration process: start -> delete -> write -> read, if card has registered, delete and write will not happen.
+        const player = await findPlayerFromOtherVersion(read.rid, 6)
+        if (!player) return H.deny
+        result.pdata.account.isFirstFree = true
+        result.pdata.account.userId = player.userId
+        result.pdata.base.name = player.name
+        return XF.x(result)
     }
+    const base = await DBH.findOne(read.rid, Rb6PlayerBase, { collection: "rb.rb6.player.base" }, true)
+    const config = await DBH.findOne(read.rid, Rb6PlayerConfig, { collection: "rb.rb6.player.config" }, true)
+    const custom = await DBH.findOne(read.rid, Rb6PlayerCustom, { collection: "rb.rb6.player.custom" }, true)
+    const classcheck = await DBH.find(read.rid, Rb6Classcheck, { collection: "rb.rb6.playData.classcheck" })
+    const characterCards = await DBH.find(read.rid, Rb6CharacterCard, { collection: "rb.rb6.player.characterCard" })
+    const releasedInfos = await DBH.find(read.rid, Rb6PlayerReleasedInfo, { collection: "rb.rb6.player.releasedInfo" })
+    const param = await DBH.find(read.rid, Rb6PlayerParameters, { collection: "rb.rb6.player.parameters" })
+    const mylist = await DBH.findOne(read.rid, Rb6Mylist, { collection: "rb.rb6.player.mylist" })
+    const misc = await DB.FindOne<Rb6MiscSettings>(read.rid, { collection: "rb.rb6.player.misc" })
+    const questRecords = await DBH.find(read.rid, Rb6QuestRecord, {
+        collection: "rb.rb6.playData.quest", $or: [
+            { dungeonId: { $ne: 47 } },
+            { dungeonId: 47, rankingId: misc?.rankingQuestIndex ?? 0 }
+        ]
+    })
+
+    account.intrvld ??= 0
+    account.succeed ??= true
+    account.pst ??= BigInt(0)
+    account.st ??= BigInt(0)
+    account.opc ??= 0
+    account.dayCount ??= 0
+    account.playCountToday ??= 0
+    if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+    else account.playCountToday++
+    account.playCount++
+    account.lpc ??= 0
+    account.cpc ??= 0
+    account.mpc ??= 0
+    base.comment ||= "Welcome to the land of Reflesia!"
+    base.abilityPointTimes100 ??= base["averagePrecisionTimes100"]  // For compatibility
+    for (const c of characterCards) if (c.level == undefined) c.level = 0
+    base.rankQuestScore = [0, 0, 0]
+    base.rankQuestRank = [-1, -1, -1]
+    if (mylist && mylist.index < 0) mylist.index = 0
+    const rankingId = misc?.rankingQuestIndex ?? 0
+    const rankQuestRecords = questRecords.filter((q) => (q.dungeonId == 47) && (q.rankingId == rankingId))
+    if (rankQuestRecords) for (const r of rankQuestRecords) {
+        base.rankQuestScore[r.dungeonGrade] = r.score ?? 0
+        base.rankQuestRank[r.dungeonGrade] = 1
+    }
+
+    const scores = await DBH.find<Rb6MusicRecord>(read.rid, { collection: "rb.rb6.playData.musicRecord" })
+
+    for (const s of scores) {
+        base.totalBestScore += s.score
+        base.totalBestScoreEachChartType[s.chartType] += s.score
+    }
+
+    const p = result.pdata
+
+    p.account = account
+    p.base = base
+    p.config = config
+    p.custom = custom
+    if (classcheck?.length > 0) p.classcheck = { rec: classcheck }
+    if (characterCards?.length > 0) p.characterCards.list = characterCards
+    if (releasedInfos?.length > 0) p.released.info = releasedInfos
+    if (param.length > 0) p.playerParam.item = param
+    if (mylist) p.mylist.list = [mylist]
+    if (questRecords?.length > 0) p.quest.list = questRecords
+    p.ghostWinCount.info = base.ghostWinCount
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -198,12 +183,7 @@ const writePlayer: H.H<Rb6Player> = async data => {
     const player = XF.o(data, Rb6Player)
     if (!await getSession(player.pdata.account.rid, 6)) return H.deny
     await writePlayerPreProcess(player)
-    try {
-        await writePlayerCore(player)
-    } catch (ex) {
-        removeSession(player.pdata.account.rid, 6)
-        throw ex
-    }
+    await writePlayerCore(player)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
@@ -266,13 +246,11 @@ async function writePlayerCore(player: Rb6Player) {
         const rbPlayer = await findPlayerFromOtherVersion(rid, 6)
         if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
         else player.pdata.account.userId = await generateUserId()
-        player.pdata.account.isFirstFree = true
-        player.pdata.account.playCount = 0
-        player.pdata.account.playCountToday = 0
-        t.upsert(rid, { collection: "rb.rb6.player.account" }, player.pdata.account)
-        t.upsert(rid, { collection: "rb.rb6.player.base" }, player.pdata.base)
-        t.upsert(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
-        t.upsert(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
+        player.pdata.account.isFirstFree = false
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.account.playCount = isPlayed ? 1 : 0
+        player.pdata.account.playCountToday = isPlayed ? 1 : 0
+        t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
         accountSaved.playCount++
@@ -283,11 +261,8 @@ async function writePlayerCore(player: Rb6Player) {
         accountSaved.st = player.pdata.account.st
         accountSaved.playCountToday++
 
-        t.update(rid, { collection: "rb.rb6.player.account" }, accountSaved)
+        t.update(rid, accountQuery, accountSaved)
     }
-    if (player.pdata.stageLogs?.log?.length > 0) for (const l of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, l, t, player.pdata.ghost?.list)
-    if (player.pdata.justCollections?.list?.length > 0) for (const j of player.pdata.justCollections.list) await updateJustCollection(player.pdata.account.userId, j, t)
-    if (player.pdata.characterCards?.list?.length > 0) for (const c of player.pdata.characterCards.list) t.upsert(rid, { collection: "rb.rb6.player.characterCard", characterCardId: c.characterCardId }, c)
     if (player.pdata.base) {
         player.pdata.base.rankQuestScore ??= [0, 0, 0]
         player.pdata.base.rankQuestRank ??= [0, 0, 0]
@@ -303,23 +278,21 @@ async function writePlayerCore(player: Rb6Player) {
         }
         t.upsert(rid, baseQuery, player.pdata.base)
     }
-    t.upsert(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
-    t.upsert(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
-    if (((player.pdata.classcheck as Rb6Classcheck)?.class ?? Rb6ClasscheckIndex.none) > Rb6ClasscheckIndex.none) {
-        (player.pdata.classcheck as Rb6Classcheck).totalScore = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
+    if (player.pdata.config) t.upsert(rid, { collection: "rb.rb6.player.config" }, player.pdata.config)
+    if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb6.player.custom" }, player.pdata.custom)
+    if (hasAny(player.pdata.stageLogs?.log)) for (const l of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, l, t, player.pdata.ghost?.list)
+    if (((player.pdata.classcheck as Rb6Classcheck)?.class ?? Rb6ClasscheckIndex.none) > Rb6ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
+        (player.pdata.classcheck as Rb6Classcheck).totalScore = sumBy(player.pdata.stageLogs.log, l => l.score)
         await updateClasscheckRecordFromLog(rid, player.pdata.classcheck as Rb6Classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, t)
     }
-    if (player.pdata.released?.info?.length > 0) for (const r of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb6.player.releasedInfo", type: r.type, id: r.id }, r)
-    if (player.pdata.playerParam?.item?.length > 0) for (const p of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb6.player.parameters", type: p.type, bank: p.bank }, p)
-    if (player.pdata.mylist?.list) for (const l of player.pdata.mylist.list) t.upsert(rid, { collection: "rb.rb6.player.mylist", index: l.index }, l)
-    if (player.pdata.quest?.list?.length > 0) for (const q of player.pdata.quest.list) {
+    if (hasAny(player.pdata.quest?.list) && hasAny(player.pdata.stageLogs?.log)) for (const q of player.pdata.quest.list) {
         const now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
         if ((q.dungeonId === 47) && player.pdata?.stageLogs?.log) { // Ranking Quest
             const misc = await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
             const score = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
             q.rankingId = misc ? misc.rankingQuestIndex || 0 : 0
             const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: 47, dungeonGrade: q.dungeonGrade, rankingId: q.rankingId })
-            if (!oldRecord || (oldRecord.score < score)) {
+            if (!oldRecord || (oldRecord.score ?? 0 < score)) {
                 q.updateTime = now
                 q.score = score
             } else q.score = oldRecord.score
@@ -327,7 +300,12 @@ async function writePlayerCore(player: Rb6Player) {
         q.lastPlayTime = now
         t.upsert(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId === 47) ? [{ rankingId: q.rankingId }] : [] }, q)
     }
-    if (player.pdata.ghost?.list?.length > 0) for (const g of player.pdata.ghost.list) await updateGhostScore(player.pdata.account.userId, g, t)
+    if (hasAny(player.pdata.justCollections?.list)) for (const j of player.pdata.justCollections.list) await updateJustCollection(player.pdata.account.userId, j, t)
+    if (hasAny(player.pdata.characterCards?.list)) for (const c of player.pdata.characterCards.list) t.upsert(rid, { collection: "rb.rb6.player.characterCard", characterCardId: c.characterCardId }, c)
+    if (hasAny(player.pdata.released?.info)) for (const r of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb6.player.releasedInfo", type: r.type, id: r.id }, r)
+    if (hasAny(player.pdata.playerParam?.item)) for (const p of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb6.player.parameters", type: p.type, bank: p.bank }, p)
+    if (player.pdata.mylist?.list) for (const l of player.pdata.mylist.list) t.upsert(rid, { collection: "rb.rb6.player.mylist", index: l.index }, l)
+    if (hasAny(player.pdata.ghost?.list)) for (const g of player.pdata.ghost.list) await updateGhostScore(player.pdata.account.userId, g, t)
 
     await t.commit()
 }
@@ -342,7 +320,7 @@ export const readRank: H.H = () => ({
     }
 }) // TODO: Implement ranking features
 
-async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerStageLog, t: DBH.T, ghostList: Rb6Ghost[]): Promise<void> {
+async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerStageLog, t: DBH.T, ghostList?: Rb6Ghost[]): Promise<void> {
     if (!checkRecord(stageLog)) return
 
     const query: Query<Rb6MusicRecord> = { $and: [{ collection: "rb.rb6.playData.musicRecord" }, { musicId: stageLog.musicId }, { chartType: stageLog.chartType }] }

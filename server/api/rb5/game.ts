@@ -2,25 +2,27 @@ import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
-import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecords } from "../../models/rb5/music_record"
+import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecord2, Rb5MusicRecords } from "../../models/rb5/music_record"
 import { Rb5Mylist } from "../../models/rb5/mylist"
 import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog } from "../../models/rb5/profile"
 import { Rb5ShopInfo } from "../../models/rb5/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { findAllBestMusicRecord, convertToRb4ClearType } from "../shared_game/find_music_record"
-import { isToday } from "../../utils/utility_functions"
+import { hasAny, isToday } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createReadLobbyHandler, createDeleteLobbyHandler, createAddLobbyHandler } from "../shared_game/lobby"
 import { Rb5PlayerStart } from "../../models/rb5/common"
-import { Rb4ChartType, Rb5ClasscheckIndex } from "../../models/shared/rb_types"
+import { Rb4ChartType, Rb5ClasscheckIndex, RbClasscheckClearType } from "../../models/shared/rb_types"
 import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { isArrayWrapper } from "../../utils/types"
+import { inspect } from "util"
 
 export function registerRb5Handlers() {
-    H.route("pcb.rb5boot", bootPcb)
+    H.route("pcb.rb5_pcb_boot", bootPcb)
     H.route("player.rb5_player_start", startPlayer)
     H.route("player.rb5_player_read", readPlayer)
     H.route("player.rb5_player_read_5", readPlayer) // VOLZZA 2
@@ -28,7 +30,7 @@ export function registerRb5Handlers() {
     H.route("player.rb5_player_write_5", writePlayer2) // VOLZZA 2
     H.route("player.rb5_player_end", endPlayer)
     H.route("player.rb5_player_read_score", readPlayerScore)
-    H.route("player.rb5_player_read_score_5", readPlayerScore) // VOLZZA 2
+    H.route("player.rb5_player_read_score_5", readPlayerScore2) // VOLZZA 2
     H.route("player.rb5_player_read_score_old_5", readPlayerScoreOldVersion) // VOLZZA 2
     H.route("lobby.rb5_lobby_entry", createAddLobbyHandler(5))
     H.route("lobby.rb5_lobby_read", createReadLobbyHandler(5))
@@ -44,7 +46,7 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     if (rid && !await createSession(rid, 5)) return H.deny
-    const account = rid == undefined ? undefined : await DB.FindOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
+    const account = rid == undefined ? undefined : await DBH.findOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
     const result = new Rb5PlayerStart(account?.playerId)
     return XF.x(result)
 }
@@ -53,75 +55,74 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb5Player(read.rid)
     const account = await DBH.findOne(read.rid, Rb5PlayerAccount, { collection: "rb.rb5.player.account" })
+    console.log(inspect(account))
     if (!account) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 5)
-        if (rbPlayer) {
-            result.pdata.account.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            result.pdata.base.name = "RBPlayer"
-        }
-        await writePlayerCore(result, false)
-    } else {
-        const base = await DBH.findOne(read.rid, Rb5PlayerBase, { collection: "rb.rb5.player.base" })
-        const config = await DBH.findOne(read.rid, Rb5PlayerConfig, { collection: "rb.rb5.player.config" })
-        const custom = await DBH.findOne(read.rid, Rb5PlayerCustom, { collection: "rb.rb5.player.custom" })
-        const released = await DBH.find(read.rid, Rb5PlayerReleasedInfo, { collection: "rb.rb5.player.releasedInfo" })
-        const classcheck = await DBH.find(read.rid, Rb5Classcheck, { collection: "rb.rb5.playData.classcheck" })
-        const playerParam = await DBH.find(read.rid, Rb5PlayerParameters, { collection: "rb.rb5.player.parameters" })
-        const mylist = await DBH.findOne(read.rid, Rb5Mylist, { collection: "rb.rb5.player.mylist" })
-        const minigame = await DBH.findOne(read.rid, Rb5Minigame, { collection: "rb.rb5.playData.minigame" })
-        const battleRoyale = await DBH.findOne(read.rid, Rb5BattleRoyale, { collection: "rb.rb5.playData.battleRoyale" }) ?? new Rb5BattleRoyale()
-        const derby = await DBH.findOne(read.rid, Rb5Derby, { collection: "rb.rb5.player.derby" })
-        const myCourse = await DBH.findOne(read.rid, Rb5MyCourseLog, { collection: "rb.rb5.playData.myCourse" }) ?? new Rb5MyCourseLog()
-
-        account.intrvld ??= 0
-        account.succeed ??= true
-        account.pst ??= BigInt(0)
-        account.st ??= BigInt(0)
-        account.opc ??= 0
-        account.dayCount ??= 0
-        account.playCountToday ??= 0
-        if (!isToday(toBigInt(account.st))) account.playCountToday = 1
-        else account.playCountToday++
-        account.lpc ??= 0
-        account.cpc ??= 0
-        account.mpc ??= 0
-        if (!base.comment) base.comment = "Welcome to REFLEC BEAT VOLZZA!"
-        base.abilityPointTimes100 ??= base["averagePrecisionTimes100"] // For compatibility
-        base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        if (mylist.index < 0) mylist.index = 0
-        for (const i of released) i.insertTime ??= Date.now()
-        const scores = await DBH.find(read.rid, Rb5MusicRecord, { collection: "rb.rb5.playData.musicRecord" })
-
-        base.totalBestScore = 0
-        base.totalBestScoreEachChartType = [0, 0, 0, 0]
-        for (const s of scores) {
-            base.totalBestScore += s.score
-            base.totalBestScoreEachChartType[s.chartType] += s.score
-        }
-        base.totalBestScoreV2 = base.totalBestScore
-        base.totalBestScoreEachChartTypeV2 = base.totalBestScoreEachChartType
-
-        // TODO: Yurukome
-
-        const p = result.pdata
-
-        p.account = account
-        p.base = base
-        p.config = config
-        p.custom = custom
-        if (classcheck.length > 0) p.classcheck = { rec: classcheck }
-        if (released.length > 0) p.released.info = released
-        if (playerParam.length > 0) p.playerParam.item = playerParam
-        p.mylist.list = [mylist]
-        p.minigame = minigame
-        p.battleRoyale = battleRoyale
-        p.derby = derby
-        p.yurukomeList = [0, 0, 0, 0]
-        p.myCourse = myCourse
-        p.myCourseF = myCourse
+        const player = await findPlayerFromOtherVersion(read.rid, 5)
+        if (!player) return H.deny
+        result.pdata.account.isFirstFree = true
+        result.pdata.account.userId = player.userId
+        result.pdata.base.name = player.name
+        return XF.x(result)
     }
+    const base = await DBH.findOne(read.rid, Rb5PlayerBase, { collection: "rb.rb5.player.base" }, true)
+    const config = await DBH.findOne(read.rid, Rb5PlayerConfig, { collection: "rb.rb5.player.config" }, true)
+    const custom = await DBH.findOne(read.rid, Rb5PlayerCustom, { collection: "rb.rb5.player.custom" }, true)
+    const released = await DBH.find(read.rid, Rb5PlayerReleasedInfo, { collection: "rb.rb5.player.releasedInfo" })
+    const classcheck = await DBH.find(read.rid, Rb5Classcheck, { collection: "rb.rb5.playData.classcheck" })
+    const playerParam = await DBH.find(read.rid, Rb5PlayerParameters, { collection: "rb.rb5.player.parameters" })
+    const mylist = await DBH.findOne(read.rid, Rb5Mylist, { collection: "rb.rb5.player.mylist" })
+    const minigame = await DBH.findOne(read.rid, Rb5Minigame, { collection: "rb.rb5.playData.minigame" }, true)
+    const battleRoyale = await DBH.findOne(read.rid, Rb5BattleRoyale, { collection: "rb.rb5.playData.battleRoyale" }, true)
+    const derby = await DBH.findOne(read.rid, Rb5Derby, { collection: "rb.rb5.player.derby" }, true)
+    const myCourse = await DBH.findOne(read.rid, Rb5MyCourseLog, { collection: "rb.rb5.playData.myCourse" }, true)
+
+    account.intrvld ??= 0
+    account.succeed ??= true
+    account.pst ??= BigInt(0)
+    account.st ??= BigInt(0)
+    account.opc ??= 0
+    account.dayCount ??= 0
+    account.playCountToday ??= 0
+    if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+    else account.playCountToday++
+    account.lpc ??= 0
+    account.cpc ??= 0
+    account.mpc ??= 0
+    if (!base.comment) base.comment = "Welcome to REFLEC BEAT VOLZZA!"
+    base.abilityPointTimes100 ??= base["averagePrecisionTimes100"] // For compatibility
+    base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    if (mylist && mylist.index < 0) mylist.index = 0
+    for (const i of released) i.insertTime ??= Date.now()
+    const scores = await DBH.find<Rb5MusicRecord>(read.rid, { collection: "rb.rb5.playData.musicRecord" })
+
+    base.totalBestScore = 0
+    base.totalBestScoreEachChartType = [0, 0, 0, 0]
+    for (const s of scores) {
+        base.totalBestScore += s.score
+        base.totalBestScoreEachChartType[s.chartType] += s.score
+    }
+    base.totalBestScoreV2 = base.totalBestScore
+    base.totalBestScoreEachChartTypeV2 = base.totalBestScoreEachChartType
+
+    // TODO: Yurukome
+
+    const p = result.pdata
+
+    p.account = account
+    p.base = base
+    p.config = config
+    p.custom = custom
+    if (classcheck.length > 0) p.classcheck = { rec: classcheck }
+    if (released.length > 0) p.released.info = released
+    if (playerParam.length > 0) p.playerParam.item = playerParam
+    if (mylist) p.mylist.list = [mylist]
+    p.minigame = minigame
+    p.battleRoyale = battleRoyale
+    p.derby = derby
+    p.yurukomeList = [0, 0, 0, 0]
+    p.myCourse = myCourse
+    p.myCourseF = myCourse
+
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -144,12 +145,6 @@ const writePlayer: H.H<Rb5Player> = async data => {
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
-const endPlayer: H.H = async data => {
-    const rid = $(data).str("rid")
-    await removeSession(rid, 5)
-    return H.success
-}
-
 const writePlayer2: H.H<Rb5Player> = async data => {
     const player = XF.o(data, Rb5Player)
     if (!await getSession(player.pdata.account.rid, 5)) return H.deny
@@ -158,11 +153,24 @@ const writePlayer2: H.H<Rb5Player> = async data => {
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
+const endPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    await removeSession(rid, 5)
+    return H.success
+}
+
 const readPlayerScore: H.H = async data => {
     const rid = $(data).str("rid")
     const result = new Rb5MusicRecords()
     const records = await DBH.find(rid, Rb5MusicRecord, { collection: "rb.rb5.playData.musicRecord" })
     result.pdata.record = records.length > 0 ? { rec: records } : {}
+    return XF.x(result)
+}
+const readPlayerScore2: H.H = async data => {
+    const rid = $(data).str("rid")
+    const result = new Rb5MusicRecords()
+    const records = await DBH.find(rid, Rb5MusicRecord2, { collection: "rb.rb5.playData.musicRecord" })
+    result.pdata.record2 = records.length > 0 ? { rec: records } : {}
     return XF.x(result)
 }
 
@@ -182,10 +190,10 @@ const readPlayerScoreOldVersion: H.H = async data => {
         o.combo = b.combo
         o.missCount = b.missCount
         o.param = b.param
-        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime
-        o.bestComboUpdateTime = b.comboUpdateTime
-        o.bestScoreUpdateTime = b.scoreUpdateTime
-        o.bestMissCountUpdateTime = b.missCountUpdateTime
+        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime ?? 0
+        o.bestComboUpdateTime = b.comboUpdateTime ?? 0
+        o.bestScoreUpdateTime = b.scoreUpdateTime ?? 0
+        o.bestMissCountUpdateTime = b.missCountUpdateTime ?? 0
         o.version = b.scoreVersion
         oldRecords.push(o)
     }
@@ -202,9 +210,13 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
 
     if (!accountSaved) { // save the new player
-        if (player.pdata.account.userId <= 0) player.pdata.account.userId = await generateUserId()
-        player.pdata.account.playCount = 0
-        player.pdata.account.isFirstFree = true
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 5)
+        if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
+        else player.pdata.account.userId = await generateUserId()
+        player.pdata.account.isFirstFree = false
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.account.playCount = isPlayed ? 1 : 0
+        player.pdata.account.playCountToday = isPlayed ? 1 : 0
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
@@ -225,6 +237,16 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
             if (baseSaved.name) player.pdata.base.name = baseSaved.name
             player.pdata.base.comment = baseSaved.comment
             player.pdata.base.skillPointTimes10 = baseSaved.skillPointTimes10 // VOLZZA 2
+            // special process for VOLZZA classcheck
+            if (!isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck.class > Rb5ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
+                if (player.pdata.classcheck.clearType > RbClasscheckClearType.failed) {
+                    if (player.pdata.base.class >= Rb5ClasscheckIndex.class13 && player.pdata.classcheck.class < Rb5ClasscheckIndex.class13) {
+                        player.pdata.base.class = player.pdata.classcheck.class
+                    }
+                } else if (player.pdata.base.class >= Rb5ClasscheckIndex.class13 && baseSaved.class < Rb5ClasscheckIndex.class13) {
+                    player.pdata.base.class = baseSaved.class
+                }
+            }              
         } else {
             if (player.pdata.base.comment === "Welcome to REFLEC BEAT VOLZZA!") player.pdata.base.comment = ""
         }
@@ -247,13 +269,13 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
         }
         t.upsert(rid, customQuery, player.pdata.custom)
     }
-    if (player.pdata.stageLogs?.log?.length > 0) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
-    if (((player.pdata.classcheck as Rb5Classcheck)?.class ?? Rb5ClasscheckIndex.none) > Rb5ClasscheckIndex.none) {
-        (player.pdata.classcheck as Rb5Classcheck).totalScore = player.pdata.stageLogs.log[0].score + player.pdata.stageLogs.log[1]?.score + player.pdata.stageLogs.log[2]?.score
+    if (hasAny(player.pdata.stageLogs?.log)) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
+    if (!isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck.class > Rb5ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
+        (player.pdata.classcheck as Rb5Classcheck).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1]?.score ?? 0) + (player.pdata.stageLogs.log[2]?.score ?? 0)
         await updateClasscheck(rid, player.pdata.classcheck as Rb5Classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, t)
     }
-    if (player.pdata.released?.info?.length > 0) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
-    if (player.pdata.playerParam?.item?.length > 0) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
+    if (hasAny(player.pdata.released?.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
+    if (hasAny(player.pdata.playerParam?.item)) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
     if (player.pdata.mylist?.list?.[0]) t.upsert(rid, { collection: "rb.rb5.player.mylist", index: player.pdata.mylist.list[0].index }, player.pdata.mylist.list[0])
     if (player.pdata.minigame) t.upsert(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
     if (player.pdata.myCourse?.courseId >= 0) t.upsert(rid, { collection: "rb.rb5.playData.myCourse", courseId: player.pdata.myCourse.courseId }, player.pdata.myCourse)

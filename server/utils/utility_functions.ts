@@ -1,4 +1,4 @@
-import { isType, Type } from "./types"
+import { GetType, isType, Type } from "./types"
 
 export function toFullWidth(s: string): string {
     const resultCode: number[] = []
@@ -401,4 +401,11 @@ export function utcNow(): number {
         now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
         now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
     )
+}
+
+export function hasAny<TE>(array: TE[] | undefined): array is Exclude<TE[], { length: 0 }> {
+    return !!array && array.length > 0
+}
+export function sumBy<TE>(array: TE[] | undefined, valueFn: (el: TE) => number | undefined, initValue: number = 0) {
+    return array ? array.reduce((prev, curr) => prev + (valueFn(curr) ?? 0), initValue) : initValue
 }

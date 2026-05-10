@@ -20,14 +20,14 @@ export namespace XF {
     //     return map?.$xType || map?.$xKey || map?.$convert || map?.$convertBack || map?.$fallbackValue || map?.$el || map?.$type || map?.$elSubMap || map?.$subMap
     // }
     export function isTypeInjector(value: unknown): value is TypeInjector {
-        return typeof value === "object" && value[injectorSymbol]
+        return typeof value === "object" && !!value?.[injectorSymbol]
     }
     export function getMap<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(type: Type<T> | TypeToken<T>, map: XMap<T, TXType, TTarget, TXKey> | XMapNonEquivalent<T, TXType, TTarget, TXKey> | undefined, typeInjector: TypeInjector | undefined, side: "x" | "o"): XMap<T, TXType, TTarget, TXKey> | undefined {
         const mapStack: XMap<T, TXType, TTarget, TXKey>[] = map ? isNonEquivalentMap(map) ? side === "o" && map.$oSide ? [map.$oSide] : side === "x" && map.$xSide ? [map.$xSide] : [] : [map] : []
         while (type) {
             let map: any
             if (isTypeToken(type)) {
-                type = (typeInjector[type] ?? type) as Type<T>
+                type = typeInjector?.[type] as Type<T>
                 if (!type) break
             }
             map = type.hasOwnProperty("__map__") ? (type as any).__map__ : undefined
@@ -51,16 +51,16 @@ export namespace XF {
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, type: Type<T> | TypeToken<T>, typeInjector?: TypeInjector): X<T>
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, type: Type<T> | TypeToken<T>, map?: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): X<T>
     export function x<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(value: T, mapOrType?: Type<T> | TypeToken<T> | XMap<T, TXType, TTarget, TXKey>, mapOrTypeInjector?: XMap<T, TXType, TTarget, TXKey> | TypeInjector, typeInjector?: TypeInjector): X<T> {
-        let type: Type<T> | TypeToken<T>
-        let map: XMap<T, TXType, TTarget, TXKey>
+        let type: Type<T> | TypeToken<T> | undefined = undefined
+        let map: XMap<T, TXType, TTarget, TXKey> | undefined = undefined
         if (mapOrType && !isTypeOrToken(mapOrType)) map = mapOrType as XMap<T, TXType, TTarget, TXKey>
         else if (mapOrType) type = mapOrType as Type<T> | TypeToken<T>
-        else type = value ? Object.getPrototypeOf(value)?.constructor : undefined as Type<T>
+        else type = value ? Object.getPrototypeOf(value)?.constructor : undefined
         if (!isTypeInjector(mapOrTypeInjector)) map = mapOrTypeInjector as XMap<T, TXType, TTarget, TXKey>
         else typeInjector ??= mapOrTypeInjector
 
-        map = getMap(type, map, typeInjector, "x")
-        if (!map) return value
+        map = getMap(type as Type<T>, map, typeInjector, "x")
+        if (!map) return value as X<T>
 
         const xType = map.$xType
         const attr: Record<string, any> = {}
@@ -93,8 +93,8 @@ export namespace XF {
         
         // map array
         if (Array.isArray(content) && ((map as any).$el || (map as any).$xSide?.$el)) { // array of object or array of primitive types with attrs or xvalue (wrapped in objects)
-            let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never> | undefined
-            let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined> | undefined
+            let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never>
+            let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined>
             const array = content.map(el => x(el, elType, elMap, typeInjector))
             if (hasAttr) return {
                 "@attr": attr,
@@ -103,10 +103,10 @@ export namespace XF {
             else return array as X<T>
         } else if (((map as any).$el || (map as any).$xSide?.$el)) return [] as X<T>
 
-        if (content == undefined) return undefined
+        if (content == undefined) return undefined as unknown as X<T>
         // set @content
         switch (xType) {
-            case "xignore": return undefined
+            case "xignore": return undefined as unknown as X<T>
             case "xattr": return content?.toString() ?? ""
             case "bool":
                 if (Array.isArray(content)) {
@@ -216,18 +216,18 @@ export namespace XF {
     export function o<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(xValue: X<T>, map: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): T
     export function o<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(xValue: X<T>, type: Type<T> | TypeToken<T>, map: XMap<T, TXType, TTarget, TXKey>, typeInjector?: TypeInjector): T
     export function o<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(xValue: X<T>, mapOrType: XMap<T, TXType, TTarget, TXKey> | Type<T> | TypeToken<T>, mapOrTypeInjector?: XMap<T, TXType, TTarget, TXKey> | TypeInjector, typeInjector?: TypeInjector): T {
-        let type: Type<T> | TypeToken<T>
-        let map: XMap<T, TXType, TTarget, TXKey>
+        let type: Type<T> | TypeToken<T> | undefined = undefined
+        let map: XMap<T, TXType, TTarget, TXKey> | undefined = undefined
         if (!isTypeOrToken(mapOrType)) map = mapOrType as XMap<T, TXType, TTarget, TXKey>
         else type = mapOrType as Type<T> | TypeToken<T>
         if (!isTypeInjector(mapOrTypeInjector)) map = mapOrTypeInjector as XMap<T, TXType, TTarget, TXKey>
         else typeInjector ??= mapOrTypeInjector
 
-        if (isTypeToken(type)) type = (typeInjector[type]) as Type<T>
+        if (isTypeToken(type)) type = (typeInjector?.[type]) as Type<T>
         let result: any
         if (type) result = instantiate(type)
 
-        map = getMap(type, map, typeInjector, "o")
+        map = getMap(type as Type<T>, map, typeInjector, "o")
         if (!map) return result
 
         const xType = map.$xType
@@ -262,7 +262,7 @@ export namespace XF {
             else result = value
         }
         const content = xValue?.["@content"] ?? xValue
-        if (content == undefined && xType) return undefined
+        if (content == undefined && xType) return undefined as T
         const isArray = (typeof xType === "string" && xValue?.["@attr"]?.__count != undefined) || (typeof xType !== "string" && Array.isArray(content) || !!((map as any).$el || (map as any).$oSide?.$el))
         switch (xType) {
             case "xignore":
@@ -326,8 +326,8 @@ export namespace XF {
                 break
         }
         if (isArray && ((map as any).$el || (map as any).$oSide?.$el)) {
-            let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never> | undefined
-            let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined> | undefined
+            let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never>
+            let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined>
             const array = Array.isArray(content) ? content.map(el => o(el, elType, elMap, typeInjector)) : [o(content, elType, elMap, typeInjector)]
             setValue(array)
         }

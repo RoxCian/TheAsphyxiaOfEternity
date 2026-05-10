@@ -15,6 +15,7 @@ import { createReadCommentHandler, createWriteCommentHandler } from "../shared_g
 import { Rb1ChartType } from "../../models/shared/rb_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { hasAny } from "../../utils/utility_functions"
 
 export function registerRb2Handlers() {
     H.route("read.info?model=LBR", readInfo)
@@ -42,44 +43,40 @@ const startPlayer: H.H = async data => {
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb2Player(read.rid)
-    const base = await DBH.findOne(read.rid, Rb2PlayerBase, { collection: "rb.rb2.player.base" })
+    const base = await DBH.findOne(read.rid, Rb2PlayerBase, { collection: "rb.rb2.player.base" }, true)
     result.rid = read.rid
     if (!base) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 2)
-        if (rbPlayer) {
-            result.pdata.base.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            result.pdata.base.name = "RBPlayer"
-        }
-        await writePlayerCore(result)
-        if (rbPlayer) {
+        const player = await findPlayerFromOtherVersion(read.rid, 2)
+        if (!player) return H.deny
+        result.pdata.base.userId = player.userId
+        result.pdata.base.name = player.name
+        if (player) {
             const scores = await pullMusicRecords(read.rid, true)
             if (scores.length > 0) result.pdata.record.rec = scores
         }
-        result.pdata.comment = ((base?.comment != undefined) && (base?.comment !== "")) ? base.comment : "Enjoy limelight world!"
-    } else {
-        const stat = await DBH.findOne(read.rid, Rb2PlayerStat, { collection: "rb.rb2.player.stat" })
-        const custom = await DBH.findOne(read.rid, Rb2PlayerCustom, { collection: "rb.rb2.player.custom" })
-        const released = await DBH.find(read.rid, Rb2PlayerReleasedInfo, { collection: "rb.rb2.player.releasedInfo" })
-        const glass = await DBH.find(read.rid, Rb2Glass, { collection: "rb.rb2.player.glass" })
-        const lincleLink = await DBH.findOne(read.rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" })
-        const mylist = await DBH.findOne(read.rid, Rb2Mylist, { collection: "rb.rb2.player.mylist" })
-        const scores = await pullMusicRecords(read.rid)
-
-        if (base.level > 1) custom.isBeginner = false
-        if (base.playCount > 3) custom.isTutorialEnabled = false
-
-        result.pdata.comment = ((base?.comment != undefined) && (base?.comment != "")) ? base.comment : "Enjoy limelight world!"
-        result.pdata.base = base
-        result.pdata.stat = stat
-        result.pdata.custom = custom
-        if (released.length > 0) result.pdata.released.info = released
-        if (scores.length > 0) result.pdata.record.rec = scores
-        if (glass.length > 0) result.pdata.glass.g = glass
-        result.pdata.lincleLink = lincleLink
-        result.pdata.mylist = mylist
+        return XF.x(result)
     }
+    const stat = await DBH.findOne(read.rid, Rb2PlayerStat, { collection: "rb.rb2.player.stat" }, true)
+    const custom = await DBH.findOne(read.rid, Rb2PlayerCustom, { collection: "rb.rb2.player.custom" }, true)
+    const released = await DBH.find(read.rid, Rb2PlayerReleasedInfo, { collection: "rb.rb2.player.releasedInfo" })
+    const glass = await DBH.find(read.rid, Rb2Glass, { collection: "rb.rb2.player.glass" })
+    const lincleLink = await DBH.findOne(read.rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" }, true)
+    const mylist = await DBH.findOne(read.rid, Rb2Mylist, { collection: "rb.rb2.player.mylist" }, true)
+    const scores = await pullMusicRecords(read.rid)
+
+    if (base.level > 1) custom.isBeginner = false
+    if (base.playCount > 3) custom.isTutorialEnabled = false
+
+    result.pdata.comment = base.comment || "Enjoy limelight world!"
+    result.pdata.base = base
+    result.pdata.stat = stat
+    result.pdata.custom = custom
+    if (released.length > 0) result.pdata.released.info = released
+    if (scores.length > 0) result.pdata.record.rec = scores
+    if (glass.length > 0) result.pdata.glass.g = glass
+    result.pdata.lincleLink = lincleLink
+    result.pdata.mylist = mylist
+    
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -120,10 +117,13 @@ async function writePlayerCore(player: Rb2Player) {
 
     const t = new DBH.T()
     const baseQuery: Query<Rb2PlayerBase> = { collection: "rb.rb2.player.base" }
-    const baseSaved: Rb2PlayerBase = await t.findOne(player.rid, baseQuery)
+    const baseSaved: Rb2PlayerBase | undefined = await t.findOne(player.rid, baseQuery)
     if (!baseSaved) {
-        if (player.pdata.base?.userId <= 0) player.pdata.base.userId = await generateUserId()
-        player.pdata.base.playCount = 0
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 2)
+        if (rbPlayer) player.pdata.base.userId = rbPlayer.userId
+        else player.pdata.base.userId = await generateUserId()
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.base.playCount = isPlayed ? 1 : 0
         t.upsert(rid, baseQuery, player.pdata.base)
     } else {
         if (baseSaved.playCount == undefined) baseSaved.playCount = 1
@@ -139,11 +139,11 @@ async function writePlayerCore(player: Rb2Player) {
 
     if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb2.player.custom" }, player.pdata.custom)
     if (player.pdata.stat) t.upsert(rid, { collection: "rb.rb2.player.stat" }, player.pdata.stat)
-    if (player.pdata.stageLogs?.log?.length > 0) for (const l of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, l, 2)
-    if (player.pdata.record?.rec?.length > 0) for (const r of player.pdata.record.rec) updateMusicRecord(rid, r, t)
-    if (player.pdata.released?.info?.length > 0) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb2.player.releasedInfo", type: i.type, id: i.id }, i)
-    if (player.pdata.glass?.g?.length > 0) for (const g of player.pdata.glass.g) t.upsert(rid, { collection: "rb.rb2.player.glass", id: g.id }, g)
-    if (player.pdata.mylist?.slot?.length > 0) t.upsert(rid, { collection: "rb.rb2.player.mylist" }, player.pdata.mylist)
+    if (hasAny(player.pdata.stageLogs?.log)) for (const l of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, l, 2)
+    if (hasAny(player.pdata.record?.rec)) for (const r of player.pdata.record.rec) updateMusicRecord(rid, r, t)
+    if (hasAny(player.pdata.released?.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb2.player.releasedInfo", type: i.type, id: i.id }, i)
+    if (hasAny(player.pdata.glass?.g)) for (const g of player.pdata.glass.g) t.upsert(rid, { collection: "rb.rb2.player.glass", id: g.id }, g)
+    if (hasAny(player.pdata.mylist?.slot)) t.upsert(rid, { collection: "rb.rb2.player.mylist" }, player.pdata.mylist)
     if (player.pdata.lincleLink) t.upsert(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
 
     await t.commit()

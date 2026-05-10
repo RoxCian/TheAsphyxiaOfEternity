@@ -13,8 +13,8 @@ export async function writePlayerPreProcess(player: Rb3Player) {
     await detachReleaseInfo(3, player, async (isUnlockSongs, isUnlockItems) => {
         if (isUnlockSongs) {
             // Event progress should not be saved
-            delete player.pdata.eventProgress
-            delete player.pdata.seedPod
+            delete player.pdata.eventProgress.data
+            delete player.pdata.seedPod.data
         }
         if (isUnlockItems) {
             const stampsSaved = await DB.FindOne<Rb3Stamp>(player.pdata.account.rid, { collection: "rb.rb3.player.stamp" }) ?? new Rb3Stamp()

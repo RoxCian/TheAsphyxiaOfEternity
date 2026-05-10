@@ -1,6 +1,6 @@
 import { ICollection } from "./db_types"
 import { GetType, isType, Type } from "../types"
-import { getPropertyDescriptor } from "../utility_functions"
+import { getPropertyDescriptor, instantiate } from "../utility_functions"
 
 export namespace DBH {
     // DB operation serialization
@@ -10,11 +10,11 @@ export namespace DBH {
         reject: (reason?: any) => void
         generator: DBTaskGenerator<T>
     }
-    const dbTaskQueue: DBTask<unknown>[] = []
+    const dbTaskQueue: DBTask<any>[] = []
     let taskExecutorRunning = false
     function enqueueTask<T>(taskGenerator: DBTaskGenerator<T>): Promise<T> {
-        let resolve: (result: T) => void
-        let reject: (reason?: any) => void
+        let resolve: (result: T) => void = () => { }
+        let reject: (reason?: any) => void = () => { }
         const result = new Promise<T>((res, rej) => {
             resolve = res
             reject = rej
@@ -28,8 +28,8 @@ export namespace DBH {
     }
     async function executeTask() {
         taskExecutorRunning = true
-        while (dbTaskQueue.length > 0) {
-            const task = dbTaskQueue.pop()
+        let task: DBTask<any> | undefined
+        while (task = dbTaskQueue.pop()) {
             try {
                 const result = await task.generator()
                 task.resolve(result)
@@ -95,6 +95,15 @@ export namespace DBH {
     }
 
     // Typed query helpers
+    function instantiateWithDoc<T>(doc: T, typeParam: Type<T> | GetType<T>): T {
+        const type: TypeWithDBConfig<T> = isType(typeParam) ? typeParam : typeParam(doc as Doc<T>)
+        if (!(doc instanceof type)) {
+            doc = doc ? Object.assign(new type() as T & object, doc) : new type() as T & object
+            Object.setPrototypeOf(doc, type.prototype)
+        }
+        assignDoc(doc, type?.__dbConfig__)
+        return doc
+    }
     function assignDoc<T>(obj: T, dbConfig?: DBConfig<T>) {
         if (!dbConfig) return
         for (const k in dbConfig) {
@@ -102,20 +111,12 @@ export namespace DBH {
             if (!desc || desc.writable || desc.set) {
                 const conf = dbConfig[k]
                 if (conf.$one) {
-                    if (!(obj[k] instanceof conf.$one)) {
-                        obj[k] = Object.assign(new conf.$one(), obj[k])
-                        Object.setPrototypeOf(obj[k], conf.$one.prototype)
-                    }
-                    assignDoc(obj[k], conf.$one?.__dbConfig__)
+                    obj[k] = instantiateWithDoc(obj[k], conf.$one)
                 } else if (conf.$many) {
                     const a = obj[k]
                     if (Array.isArray(a)) {
                         for (let i = 0; i < a.length; i++) {
-                            if (!(a[i] instanceof conf.$many)) {
-                                a[i] = Object.assign(new conf.$many(), a[i])
-                                Object.setPrototypeOf(a[i], conf.$many.prototype)
-                            }
-                            assignDoc(a[i], conf.$many?.__dbConfig__)
+                            a[i] = instantiateWithDoc(a[i], conf.$many)
                         }
                     } else throw new Error("Type not matched (DBH.many)")
                 }
@@ -150,6 +151,7 @@ export namespace DBH {
         const refid = !isPublicDoc ? refidOrQueryOrType as string | undefined : undefined
         const type = isType(refidOrQueryOrType) || typeof refidOrQueryOrType === "function" ? refidOrQueryOrType : isType(queryOrType) || typeof queryOrType === "function" ? queryOrType : undefined
         query ??= refidOrQueryOrType && typeof refidOrQueryOrType !== "string" && !isType(refidOrQueryOrType) && typeof refidOrQueryOrType !== "function" ? refidOrQueryOrType : queryOrType && !isType(queryOrType) && typeof queryOrType !== "function" ? queryOrType : query
+        if (!query) throw new Error("No query")
         return { refid, query, type, isPublicDoc }
     }
     function reorderWriteParams<T>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, data?: Doc<T> | Update<T>): { refid: string | undefined, query: Query<T>, data: Doc<T> | Update<T>, isPublicDoc: boolean } {
@@ -162,11 +164,12 @@ export namespace DBH {
 
     // Serialized & typed DB query
     async function checkData<T extends ICollection<any>>(data: Partial<T>, isUpdate: boolean): Promise<void> {
+        if (!data.collection) throw new Error("Empty collection name")
         if (isUpdate) {
             for (let k in data) if (k.startsWith("__")) delete data[k]
         }
         if (!await enqueueTask(() => DB.FindOne<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }))) {
-            await enqueueTask(() => DB.Insert<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }))
+            await enqueueTask(() => DB.Insert<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection! }))
         }
     }
     type DBUpdateResult<T> = {
@@ -222,13 +225,17 @@ export namespace DBH {
         else return await enqueueTask(() => DB.Remove(refid, query))
     }
     export async function findOne<T extends ICollection<any>>(query: Query<T>): Promise<Doc<T> | undefined>
-    export async function findOne<T extends ICollection<any>>(type: Type<T>, query: Query<T>): Promise<Doc<T> | undefined>
+    export async function findOne<T extends ICollection<any>>(type: Type<T>, query: Query<T>, createNewWhenEmpty?: false): Promise<Doc<T> | undefined>
+    export async function findOne<T extends ICollection<any>>(type: Type<T>, query: Query<T>, createNewWhenEmpty: true): Promise<Doc<T>>
     export async function findOne<T extends ICollection<any>>(refid: string | undefined, query: Query<T>): Promise<Doc<T> | undefined>
-    export async function findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T>, query: Query<T>): Promise<Doc<T> | undefined>
-    export async function findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParam?: Query<T> | undefined): Promise<Doc<T> | undefined> {
+    export async function findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T>, query: Query<T>, createNewWhenEmpty?: false): Promise<Doc<T> | undefined>
+    export async function findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T>, query: Query<T>, createNewWhenEmpty: true): Promise<Doc<T>>
+    export async function findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParamOrCreateFlag?: Query<T> | boolean | undefined, createFlag?: boolean): Promise<Doc<T> | undefined> {
+        const queryParam = typeof queryParamOrCreateFlag === "boolean" ? undefined : queryParamOrCreateFlag
+        createFlag ??= typeof queryParamOrCreateFlag === "boolean" ? queryParamOrCreateFlag : false
         const { refid, query, type, isPublicDoc } = reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)
         const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid ?? null, query))
-        if (!doc) return undefined
+        if (!doc) return createFlag && type ? isType(type) ? new type() : new (type(doc))() : undefined
         return docToObj(doc, type)
     }
     export async function find<T extends ICollection<any>>(query: Query<T>): Promise<Doc<T>[]>
@@ -309,14 +316,14 @@ export namespace DBH {
         update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T>, dataDoc?: Doc<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
             for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
-            this.submissions.push({ refid: refid, query: query, operation: "update", doc: data, isPublicDoc: isPublicDoc })
+            this.submissions.push({ refid: refid, query: query, operation: "update", doc: data, isPublicDoc })
         }
         upsert<T extends ICollection<any>>(query: Query<T>, data: Doc<T>): void
         upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T>): void
         upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T>, dataDoc?: Doc<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
             for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
-            this.submissions.push({ refid: refid, query: query, operation: "upsert", doc: data, isPublicDoc: isPublicDoc })
+            this.submissions.push({ refid: refid, query: query, operation: "upsert", doc: data, isPublicDoc })
         }
         insert<T extends ICollection<any>>(data: Doc<T>): void
         insert<T extends ICollection<any>>(refid: string, data: Doc<T>): void
@@ -324,30 +331,34 @@ export namespace DBH {
             const isPublicDoc = typeof refidOrData !== "string"
             const refid = !isPublicDoc ? refidOrData as string : undefined
             data ??= refidOrData as Doc<T>
-            this.submissions.push({ refid: refid, operation: "insert", query: undefined, doc: data, isPublicDoc: isPublicDoc })
+            this.submissions.push({ refid: refid, operation: "insert", query: undefined, doc: data, isPublicDoc })
         }
         remove<T extends ICollection<any>>(query: Query<T>): void
         remove<T extends ICollection<any>>(refid: string | undefined, query: Query<T>): void
         remove<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, query?: Query<T>): void {
-            const isPublicDoc = refidOrQuery && typeof refidOrQuery !== "string"
+            const isPublicDoc = !!refidOrQuery && typeof refidOrQuery !== "string"
             const refid = !isPublicDoc ? refidOrQuery as string : undefined
             query ??= refidOrQuery as Query<T>
             for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
-            this.submissions.push({ refid: refid, query: query, operation: "remove", doc: undefined, isPublicDoc: isPublicDoc })
+            this.submissions.push({ refid: refid, query: query, operation: "remove", doc: undefined, isPublicDoc })
         }
         async findOne<T extends ICollection<any>>(query: Query<T>): Promise<(T & Doc<T>) | undefined>
-        async findOne<T extends ICollection<any>>(type: Type<T> | GetType<T>, query: Query<T>): Promise<(T & Doc<T>) | undefined>
+        async findOne<T extends ICollection<any>>(type: Type<T> | GetType<T>, query: Query<T>, createNewWhenEmpty?: false): Promise<(T & Doc<T>) | undefined>
+        async findOne<T extends ICollection<any>>(type: Type<T> | GetType<T>, query: Query<T>, createNewWhenEmpty: true): Promise<T & Doc<T>>
         async findOne<T extends ICollection<any>>(refid: string | undefined, query: Query<T>): Promise<(T & Doc<T>) | undefined>
-        async findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T> | GetType<T>, query: Query<T>): Promise<(T & Doc<T>) | undefined>
-        async findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParam?: Query<T> | undefined): Promise<(T & Doc<T>) | undefined> {
+        async findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T> | GetType<T>, query: Query<T>, createNewWhenEmpty?: false): Promise<(T & Doc<T>) | undefined>
+        async findOne<T extends ICollection<any>>(refid: string | undefined, type: Type<T> | GetType<T>, query: Query<T>, createNewWhenEmpty: true): Promise<T & Doc<T>>
+        async findOne<T extends ICollection<any>>(refidOrQueryOrType: string | Type<T> | GetType<T> | Query<T> | undefined, queryOrType?: Type<T> | GetType<T> | Query<T> | undefined, queryParamOrCreateFlag?: Query<T> | boolean | undefined, createFlag?: boolean): Promise<(T & Doc<T>) | undefined> {
+            const queryParam = typeof queryParamOrCreateFlag === "boolean" ? undefined : queryParamOrCreateFlag
+            createFlag ??= typeof queryParamOrCreateFlag === "boolean" ? queryParamOrCreateFlag : false
             const { refid, query, type, isPublicDoc } = reorderReadParams(refidOrQueryOrType, queryOrType, queryParam)
             for (let i = this.submissions.length - 1; i >= 0; i--) {
                 const s = this.submissions[i]
                 if (s.doc == undefined) continue
                 if (Transaction.isMatch(s.doc, query) && ((s.refid && refid) ? (s.refid === refid) : true)) return s.doc // TODO: not self-consistent
             }
-            const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid, query))
-            if (!doc) return undefined
+            const doc = ((refid == undefined) && isPublicDoc) ? await enqueueTask(() => DB.FindOne<T>(query)) : await enqueueTask(() => DB.FindOne<T>(refid!, query))
+            if (!doc) return createFlag && type ? isType(type) ? new type() : new (type(doc))() : undefined
             return docToObj(doc, type)
         }
         async find<T extends ICollection<any>>(query: Query<T>): Promise<(T & Doc<T>)[]>
@@ -361,7 +372,7 @@ export namespace DBH {
                 if (s.doc == undefined) continue
                 if (Transaction.isMatch(s.doc, query) && ((s.refid && refid) ? (s.refid == refid) : true)) result.push(s.doc)
             }
-            return result.concat(docsToObjs(await (((refid == undefined) && isPublicDoc) ? enqueueTask(() => DB.Find<T>(query)) : enqueueTask(() => DB.Find<T>(refid, query))), type))
+            return result.concat(docsToObjs(await (((refid == undefined) && isPublicDoc) ? enqueueTask(() => DB.Find<T>(query)) : enqueueTask(() => DB.Find<T>(refid!, query))), type))
         }
         private static isMatch<T>(entry: T | Doc<T>, query: Query<T>): boolean {
             if (entry == undefined) return query == undefined
@@ -373,15 +384,15 @@ export namespace DBH {
                 switch (qk) {
                     case "$or": {
                         if ($orResult == undefined) $orResult = false
-                        for (const or of query.$or) if (this.isMatch(entry, or)) $orResult = true
+                        if (query.$or) for (const or of query.$or) if (this.isMatch(entry, or)) $orResult = true
                         break
                     }
                     case "$and": {
-                        for (const and of query.$and) if (!this.isMatch(entry, and)) return false
+                        if (query.$and) for (const and of query.$and) if (!this.isMatch(entry, and)) return false
                         break
                     }
                     case "$not": {
-                        if (this.isMatch(entry, query.$not)) return false
+                        if (query.$not && this.isMatch(entry, query.$not)) return false
                         break
                     }
                     default: {
@@ -402,7 +413,7 @@ export namespace DBH {
                             if (q.$in) if (!value.toString().includes(q.$in)) return false
                             if (q.$nin) if (value.toString().includes(q.$nin)) return false
                             if (q.$ne) if (value === q.$ne) return false
-                            if (q.$regex) if (value.toString().match(q.$regex).length == 0) return false
+                            if (q.$regex) if (value.toString().match(q.$regex)?.length === 0) return false
                             continue
                         } else if (typeof value === "object") {
                             if (!this.isMatch(value, q)) return false
@@ -428,25 +439,25 @@ export namespace DBH {
             }
         }
         async commit(): Promise<any[]> {
-            const result = []
+            const result: any[] = []
             for (let s of this.submissions) {
                 if (s.operation === "skip") continue
                 if (s.doc) delete s.doc._id
                 switch (s.operation) {
                     case "insert":
-                        result.push(await insert(s.refid, s.doc))
+                        result.push(await insert(s.refid!, s.doc))
                         break
                     case "update":
-                        if (s.isPublicDoc) result.push(await update(s.query, s.doc))
-                        else result.push(await update(s.refid, s.query, s.doc))
+                        if (s.isPublicDoc) result.push(await update(s.query!, s.doc))
+                        else result.push(await update(s.refid, s.query!, s.doc))
                         break
                     case "upsert":
-                        if (s.isPublicDoc) result.push(await upsert(s.query, s.doc))
-                        else result.push(await upsert(s.refid, s.query, s.doc))
+                        if (s.isPublicDoc) result.push(await upsert(s.query!, s.doc))
+                        else result.push(await upsert(s.refid, s.query!, s.doc))
                         break
                     case "remove":
-                        if (s.isPublicDoc) result.push(await remove(s.query))
-                        else result.push(await remove(s.refid, s.query))
+                        if (s.isPublicDoc) result.push(await remove(s.query!))
+                        else result.push(await remove(s.refid, s.query!))
                         break
                 }
             }

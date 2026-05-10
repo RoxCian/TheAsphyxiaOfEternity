@@ -8,7 +8,7 @@ import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { convertToRb3ClearType, findAllBestMusicRecord } from "../shared_game/find_music_record"
 import { Rb2LincleLink } from "../../models/rb2/profile"
-import { isToday } from "../../utils/utility_functions"
+import { hasAny, isToday } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
@@ -49,99 +49,96 @@ const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     const account = await DBH.findOne(rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" })
     const result = new Rb3PlayerSucceed()
-    if (account) {
-        const base = await DBH.findOne(rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" })
-        const released = await DBH.find(rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
-        const record = await DBH.find(rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
-        result.name = base.name
-        result.lv = base.level
-        result.exp = base.onigiriTimes10
-        result.grd = base.matchingGrade
-        result.ap = base.abilityPointTimes100
-        if (released.length > 0) result.released = { i: released }
-        if (record.length > 0) result.mrecord = { mrec: record }
-    }
+    if (!account) return XF.x(result)
+    
+    const base = await DBH.findOne(rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }, true)
+    const released = await DBH.find(rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
+    const record = await DBH.find(rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
+    result.name = base.name
+    result.lv = base.level
+    result.exp = base.onigiriTimes10
+    result.grd = base.matchingGrade
+    result.ap = base.abilityPointTimes100
+    if (released.length > 0) result.released = { i: released }
+    if (record.length > 0) result.mrecord = { mrec: record }
     return XF.x(result)
 }
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb3Player(read.rid)
     const account = await DBH.findOne(read.rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" }) ?? new Rb3PlayerAccount()
-    const base = await DBH.findOne(read.rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" })
-    if (!base) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 3)
-        if (rbPlayer) {
-            result.pdata.account.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            result.pdata.base.name = "RBPlayer"
-        }
-        await writePlayerCore(result)
-    } else {
-        const base = await DBH.findOne(read.rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }) ?? new Rb3PlayerBase()
-        const config = await DBH.findOne(read.rid, Rb3PlayerConfig, { collection: "rb.rb3.player.config" })
-        const custom = await DBH.findOne(read.rid, Rb3PlayerCustom, { collection: "rb.rb3.player.custom" })
-        const released = await DBH.find(read.rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
-        const mylist = await DBH.findOne(read.rid, Rb3Mylist, { collection: "rb.rb3.player.mylist" }) ?? new Rb3Mylist()
-        const lincleLink = await DBH.findOne(read.rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" }) ?? new Rb2LincleLink()
-        const tricolettePark = await DBH.findOne(read.rid, Rb3TricolettePark, { collection: "rb.rb3.player.tricolettePark" }) ?? new Rb3TricolettePark()
-        const eventProgress = await DBH.find(read.rid, Rb3EventProgress, { collection: "rb.rb3.player.event.eventProgress" })
-        const equip = await DBH.find(read.rid, Rb3Equip, { collection: "rb.rb3.player.equip" })
-        const seedPod = await DBH.find(read.rid, Rb3SeedPod, { collection: "rb.rb3.player.event.seedPod" })
-        const order = await DBH.findOne(read.rid, Rb3Order, { collection: "rb.rb3.player.order" }) ?? new Rb3Order()
-        const stamp = await DBH.findOne(read.rid, Rb3Stamp, { collection: "rb.rb3.player.stamp" }) ?? new Rb3Stamp()
-
-        if (!isToday(toBigInt(account.st))) account.playCountToday = 1
-        else account.playCountToday = (account.playCountToday ?? 0) + 1
-
-        if (!base.comment) base.comment = "Welcome to REFLEC BEAT colette!"
-        base.abilityPointTimes100 ??= base["averagePrecisionTimes100"] // For compatibility
-        custom.stageClearGaugeType ??= 0 // Fix for v1.1.0
-        const scores = await DBH.find(read.rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
-
-        base.totalBestScore = 0
-        for (const s of scores) base.totalBestScore += s.score
-        base.totalBestScoreRival = 0
-
-        const bestRecords = await findAllBestMusicRecord(read.rid, 3)
-        const oldRecords: Rb3MusicRecord[] = []
-        for (const b of bestRecords) {
-            const o = new Rb3MusicRecord(b.musicId, b.chartType as Rb1ChartType)
-            o.playCount = b.playCount
-            o.clearType = convertToRb3ClearType(b.clearType)
-            o.achievementRateTimes100 = b.achievementRateTimes100
-            o.score = b.score
-            o.combo = b.combo
-            o.missCount = b.missCount
-            o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime
-            o.bestComboUpdateTime = b.comboUpdateTime
-            o.bestScoreUpdateTime = b.scoreUpdateTime
-            o.bestMissCountUpdateTime = b.missCountUpdateTime
-            o.version = (b.scoreVersion >= 3) ? 3 : b.scoreVersion
-            o.time = b.comboUpdateTime
-            oldRecords.push(o)
-        }
-        config.randomEntryWork ??= BigInt(Math.trunc(Math.random() * 99999999))
-        config.customFolderWork ??= BigInt(Math.trunc(Math.random() * 9999999999999))
-
-        const p = result.pdata
-
-        p.account = account
-        p.base = base
-        p.config = config
-        p.custom = custom
-        if (released.length > 0) p.released.info = released
-        p.lincleLink = lincleLink
-        p.tricolettePark = tricolettePark
-        p.stamp = stamp
-        if (eventProgress.length > 0) p.eventProgress.data = eventProgress
-        if (equip.length > 0) p.equip.data = equip
-        if (seedPod.length > 0) p.seedPod.data = seedPod
-        p.order = order
-        p.mylist = mylist
-        if (scores.length > 0) p.record.rec = scores
-        if (oldRecords.length > 0) p.recordOld.rec = oldRecords
+    if (!account) {
+        const player = await findPlayerFromOtherVersion(read.rid, 3)
+        if (!player) return H.deny
+        result.pdata.account.isFirstFree = true
+        result.pdata.account.userId = player.userId
+        result.pdata.base.name = player.name
+        return XF.x(result)
     }
+    const base = await DBH.findOne(read.rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }, true)
+    const config = await DBH.findOne(read.rid, Rb3PlayerConfig, { collection: "rb.rb3.player.config" }, true)
+    const custom = await DBH.findOne(read.rid, Rb3PlayerCustom, { collection: "rb.rb3.player.custom" }, true)
+    const released = await DBH.find(read.rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
+    const mylist = await DBH.findOne(read.rid, Rb3Mylist, { collection: "rb.rb3.player.mylist" }, true)
+    const lincleLink = await DBH.findOne(read.rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" }, true)
+    const tricolettePark = await DBH.findOne(read.rid, Rb3TricolettePark, { collection: "rb.rb3.player.tricolettePark" }, true)
+    const eventProgress = await DBH.find(read.rid, Rb3EventProgress, { collection: "rb.rb3.player.event.eventProgress" })
+    const equip = await DBH.find(read.rid, Rb3Equip, { collection: "rb.rb3.player.equip" })
+    const seedPod = await DBH.find(read.rid, Rb3SeedPod, { collection: "rb.rb3.player.event.seedPod" })
+    const order = await DBH.findOne(read.rid, Rb3Order, { collection: "rb.rb3.player.order" }, true)
+    const stamp = await DBH.findOne(read.rid, Rb3Stamp, { collection: "rb.rb3.player.stamp" }, true)
+
+    if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+    else account.playCountToday = (account.playCountToday ?? 0) + 1
+
+    if (!base.comment) base.comment = "Welcome to REFLEC BEAT colette!"
+    base.abilityPointTimes100 ??= base["averagePrecisionTimes100"] // For compatibility
+    custom.stageClearGaugeType ??= 0 // Fix for v1.1.0
+    const scores = await DBH.find(read.rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
+
+    base.totalBestScore = 0
+    for (const s of scores) base.totalBestScore += s.score
+    base.totalBestScoreRival = 0
+
+    const bestRecords = await findAllBestMusicRecord(read.rid, 3)
+    const oldRecords: Rb3MusicRecord[] = []
+    for (const b of bestRecords) {
+        const o = new Rb3MusicRecord(b.musicId, b.chartType as Rb1ChartType)
+        o.playCount = b.playCount
+        o.clearType = convertToRb3ClearType(b.clearType)
+        o.achievementRateTimes100 = b.achievementRateTimes100
+        o.score = b.score
+        o.combo = b.combo
+        o.missCount = b.missCount
+        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime ?? 0
+        o.bestComboUpdateTime = b.comboUpdateTime ?? 0
+        o.bestScoreUpdateTime = b.scoreUpdateTime ?? 0
+        o.bestMissCountUpdateTime = b.missCountUpdateTime ?? 0
+        o.version = (b.scoreVersion ?? 3 >= 3) ? 3 : b.scoreVersion
+        o.time = b.comboUpdateTime ?? 0
+        oldRecords.push(o)
+    }
+    config.randomEntryWork ??= BigInt(Math.trunc(Math.random() * 99999999))
+    config.customFolderWork ??= BigInt(Math.trunc(Math.random() * 9999999999999))
+
+    const p = result.pdata
+
+    p.account = account
+    p.base = base
+    p.config = config
+    p.custom = custom
+    if (released.length > 0) p.released.info = released
+    p.lincleLink = lincleLink
+    p.tricolettePark = tricolettePark
+    p.stamp = stamp
+    if (eventProgress.length > 0) p.eventProgress.data = eventProgress
+    if (equip.length > 0) p.equip.data = equip
+    if (seedPod.length > 0) p.seedPod.data = seedPod
+    p.order = order
+    p.mylist = mylist
+    if (scores.length > 0) p.record = { rec: scores }
+    if (oldRecords.length > 0) p.recordOld = { rec: oldRecords }
+    
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -183,12 +180,15 @@ async function writePlayerCore(player: Rb3Player) {
     const t = new DBH.T()
     const accountQuery: Query<Rb3PlayerAccount> = { collection: "rb.rb3.player.account" }
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
-    let currentVersion: number
 
     if (!accountSaved) { // save the new player
-        if (player.pdata.account.userId <= 0) player.pdata.account.userId = await generateUserId()
-        player.pdata.account.isFirstFree = true
-        currentVersion = player.pdata.account.version
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 3)
+        if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
+        else player.pdata.account.userId = await generateUserId()
+        player.pdata.account.isFirstFree = false
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.account.playCount = isPlayed ? 1 : 0
+        player.pdata.account.playCountToday = isPlayed ? 1 : 0
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
@@ -199,7 +199,6 @@ async function writePlayerCore(player: Rb3Player) {
         }
         accountSaved.st = player.pdata.account.st
         accountSaved.playCountToday++
-        currentVersion = accountSaved.version
 
         t.update(rid, accountQuery, accountSaved)
     }
@@ -214,23 +213,23 @@ async function writePlayerCore(player: Rb3Player) {
         }
         t.upsert(rid, baseQuery, player.pdata.base)
     }
-    if (player.pdata.config) t.upsert<Rb3PlayerConfig>(rid, { collection: "rb.rb3.player.config" }, player.pdata.config)
-    if (player.pdata.custom) t.upsert<Rb3PlayerCustom>(rid, { collection: "rb.rb3.player.custom" }, player.pdata.custom)
-    if (player.pdata.stageLogs?.log?.length > 0) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
-    if (player.pdata.released?.info?.length > 0) for (const i of player.pdata.released.info) t.upsert<Rb3PlayerReleasedInfo>(rid, { collection: "rb.rb3.player.releasedInfo", type: i.type, id: i.id }, i)
-    if (player.pdata.mylist?.slot?.length > 0) t.upsert<Rb3Mylist>(rid, { collection: "rb.rb3.player.mylist" }, player.pdata.mylist)
+    if (player.pdata.config) t.upsert(rid, { collection: "rb.rb3.player.config" }, player.pdata.config)
+    if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb3.player.custom" }, player.pdata.custom)
+    if (hasAny(player.pdata.stageLogs?.log)) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
+    if (hasAny(player.pdata.released?.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb3.player.releasedInfo", type: i.type, id: i.id }, i)
+    if (player.pdata.mylist?.slot) t.upsert(rid, { collection: "rb.rb3.player.mylist" }, player.pdata.mylist)
     if (player.pdata.lincleLink) t.upsert<Rb2LincleLink>(rid, { collection: "rb.rb2.player.lincleLink" }, player.pdata.lincleLink)
     if (player.pdata.tricolettePark) t.upsert<Rb3TricolettePark>(rid, { collection: "rb.rb3.player.tricolettePark" }, player.pdata.tricolettePark)
-    if (player.pdata.eventProgress?.data?.length > 0) for (const d of player.pdata.eventProgress.data) await updateEventProgress(rid, d, t)
-    if (player.pdata.equip?.data?.length > 0) for (const e of player.pdata.equip.data) {
+    if (hasAny(player.pdata.eventProgress?.data)) for (const d of player.pdata.eventProgress.data) await updateEventProgress(rid, d, t)
+    if (hasAny(player.pdata.equip?.data)) for (const e of player.pdata.equip.data) {
         const equipQuery: Query<Rb3Equip> = { collection: "rb.rb3.player.equip", index: e.index, stype: e.stype }
         const equipSaved = await t.findOne(rid, equipQuery)
         if (equipSaved) e.experience += equipSaved.experience
         t.upsert(rid, equipQuery, e)
     }
-    if (player.pdata.seedPod?.data?.length > 0) for (const s of player.pdata.seedPod.data) t.upsert(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
-    if (player.pdata.order) await updateOrder(rid, player.pdata.order, currentVersion, player.pdata.stageLogs.log, t)
-    if (player.pdata.stamp) t.upsert<Rb3Stamp>(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
+    if (hasAny(player.pdata.seedPod?.data)) for (const s of player.pdata.seedPod.data) t.upsert(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
+    if (player.pdata.order) await updateOrder(rid, player.pdata.order, player.pdata.account.version, player.pdata.stageLogs?.log, t)
+    if (player.pdata.stamp) t.upsert(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
     await t.commit()
 }
@@ -278,7 +277,7 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb3PlayerSta
     t.insert(rid, stageLog)
 }
 
-async function updateOrder(rid: string, order: Rb3Order, currentVersion: number, stageLogs: Rb3PlayerStageLog[], t: DBH.T) {
+async function updateOrder(rid: string, order: Rb3Order, currentVersion: number, stageLogs: Rb3PlayerStageLog[] | undefined, t: DBH.T) {
     const ordersSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
 
     const playerBase = await t.findOne<Rb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
@@ -286,15 +285,19 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
     const equips = await t.find<Rb3Equip>(rid, { collection: "rb.rb3.player.equip" })
     const changedEquips: Rb3Equip[] = []
     const newReleases: Rb3PlayerReleasedInfo[] = []
+    if (!playerBase || !stamp || !ordersSaved) {
+        console.warn("Data not found when update order.")
+        return
+    }
     if (!ordersSaved || !ordersSaved.details) t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
     else {
         ordersSaved.experience = order.experience
 
         function isCleared(orderIndex: number): boolean {
-            return ordersSaved.details?.find(o => o.index == orderIndex)?.clearedCount > 0
+            return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
         }
         function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1): void {
-            let order = ordersSaved.details?.find(o => o.index == orderIndex)
+            let order = ordersSaved!.details?.find(o => o.index == orderIndex)
             if (!order) {
                 order = {
                     index: orderIndex,
@@ -304,8 +307,8 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                     slot: slot,
                     param: 1
                 }
-                if (!ordersSaved.details) ordersSaved.details = []
-                ordersSaved.details.push(order)
+                if (!ordersSaved!.details) ordersSaved!.details = []
+                ordersSaved!.details.push(order)
             } else {
                 order.clearedCount += clearedCount
                 order.fragmentsCount0 += fragmentsCount
@@ -395,7 +398,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         break
                     // summer ver.
                     case 119:
-                        if (!isCleared(o.index) && stageLogs.some(l => l.musicId >= 314 && l.musicId <= 364)) playerBase.hiddenParam[14] += 3 // summer ver. inventory: golden lure
+                        if (!isCleared(o.index) && stageLogs?.some(l => l.musicId >= 314 && l.musicId <= 364)) playerBase.hiddenParam[14] += 3 // summer ver. inventory: golden lure
                         else playerBase.hiddenParam[14] += 1
                         addClearedCount(o.index, 1, 15)
                         break

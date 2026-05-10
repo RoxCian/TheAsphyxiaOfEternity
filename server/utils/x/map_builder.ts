@@ -3,8 +3,8 @@ import { isTypeOrToken, Type, TypeToken } from "../types"
 import { XMap, XSubMap, XTypeExtended } from "./types"
 
 export namespace XM {
-    export function map<T, TXType extends XTypeExtended, TTarget = T, TXKey extends string | undefined = undefined>(xType: TXType | "xremove", xKey?: TXKey, type?: Type<T> | TypeToken<T>, convert?: (source: T) => TTarget, convertBack?: (target: TTarget) => T, fallbackValue?: T, elType?: T extends Array<infer TE> ? Type<TE> | TypeToken<TE> : undefined, subMap?: XSubMap<T>, elSubMap?: T extends Array<infer TE> ? XSubMap<TE> : undefined): XMap<T, TXType, TTarget, TXKey> {
-        if (xType === "xremove") return undefined
+    export function map<T, TXType extends XTypeExtended | "xremove", TTarget = T, TXKey extends string | undefined = undefined>(xType: TXType, xKey?: TXKey, type?: Type<T> | TypeToken<T>, convert?: (source: T) => TTarget, convertBack?: (target: TTarget) => T, fallbackValue?: T, elType?: T extends Array<infer TE> ? Type<TE> | TypeToken<TE> : undefined, subMap?: XSubMap<T>, elSubMap?: T extends Array<infer TE> ? XSubMap<TE> : undefined): TXType extends "xremove" ? undefined : XMap<T, TXType & XTypeExtended, TTarget, TXKey> {
+        if (xType === "xremove") return undefined as TXType extends "xremove" ? undefined : XMap<T, TXType & XTypeExtended, TTarget, TXKey>
         else {
             return {
                 $type: type,
@@ -345,7 +345,7 @@ export namespace XM {
     export function obj<T extends object, TXKey extends string>(xKey: TXKey, subMap: XSubMap<T>): XMap<T, undefined, T, TXKey>
     export function obj<T extends object, TTarget = T, TXKey extends string | undefined = undefined>(xKey?: TXKey, type?: Type<unknown> | TypeToken<unknown>, convert?: (source: T) => TTarget, convertBack?: (target: TTarget) => T, fallbackValue?: T): XMap<T, undefined, TTarget, TXKey>
     export function obj<T extends object, TTarget = T, TXKey extends string | undefined = undefined>(xKeyOrSubMap?: TXKey | XSubMap<T>, typeOrSubMap?: Type<unknown> | TypeToken<unknown> | XSubMap<T>, convert?: (source: T) => TTarget, convertBack?: (target: TTarget) => T, fallbackValue?: T, subMap?: XSubMap<T>): XMap<T, undefined, TTarget, TXKey> {
-        if (typeof xKeyOrSubMap !== "string") return map(undefined, undefined, undefined, undefined, undefined, undefined, undefined, xKeyOrSubMap)
+        if (typeof xKeyOrSubMap !== "string") return map(undefined, undefined, undefined, undefined, undefined, undefined, undefined, xKeyOrSubMap as XSubMap<T>)
         if ((typeOrSubMap?.constructor && !typeOrSubMap?.constructor.toString().startsWith("class"))) return map(undefined, xKeyOrSubMap, undefined, undefined, undefined, undefined, undefined, typeOrSubMap as XSubMap<T>)
         return map(undefined, xKeyOrSubMap, typeOrSubMap as Type<T>, convert, convertBack, fallbackValue, undefined, subMap)
     }
@@ -358,6 +358,6 @@ export namespace XM {
     export function a<TE>(elMap: XMap<TE, XTypeExtended, unknown>): XMap<TE[], XTypeExtended, unknown>
     export function a<TE>(elType: Type<TE> | TypeToken<TE>, elMap?: XMap<TE, XTypeExtended, unknown>): XMap<TE[], XTypeExtended, unknown>
     export function a<TE>(elTypeOrMap: Type<TE> | TypeToken<TE> | XMap<TE, XTypeExtended, unknown>, elMap?: XMap<TE, XTypeExtended, unknown>): XMap<TE[], XTypeExtended, unknown> {
-        return map<TE[], XTypeExtended, unknown>(undefined, undefined, undefined, undefined, undefined, undefined, isTypeOrToken(elTypeOrMap) ? elTypeOrMap : undefined, undefined, elMap ?? !isTypeOrToken(elTypeOrMap) ? elTypeOrMap as XMap<TE, XTypeExtended, unknown> : undefined)
+        return map<TE[], XTypeExtended, unknown>(undefined, undefined, undefined, undefined, undefined, undefined, isTypeOrToken(elTypeOrMap) ? elTypeOrMap : undefined, undefined, elMap ?? !isTypeOrToken(elTypeOrMap) ? elTypeOrMap as XSubMap<TE> : undefined)
     }
 }

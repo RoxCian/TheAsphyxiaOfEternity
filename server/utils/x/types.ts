@@ -4,7 +4,7 @@ import { Type, TypeToken } from "../types"
 export type XArrayType = KNumberType | KBigIntType
 export type XGroupType = KNumberGroupType | KBigIntGroupType
 export type XType = XArrayType | XGroupType | "str" | "bin" | "ip4" | "bool"
-export type XTypeExtended = XType | null | "xignore" | "xattr" | "xvalue"
+export type XTypeExtended = XType | null | undefined | "xignore" | "xattr" | "xvalue"
 
 export type XKey<T> = keyof T & (
     T extends string ? Exclude<keyof T, keyof string> :

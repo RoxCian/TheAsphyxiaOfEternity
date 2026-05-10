@@ -28,7 +28,7 @@ export type CsvTable = {
 
 function parseCsvField(name: string, csvField: string): CsvField {
     const match = csvField.trim().toLowerCase().match(/^((?<type>number|num|n|integer|int|i|bool|boolean|bin)(?<length>[(\[]\d+[)\]])?|(?<noLengthType>str|string|str|string|range|date|datetime|t|time|json))(?<nullable>\??)$/)
-    if (!match) {
+    if (!match || !match.groups) {
         if (csvField.includes("|")) {
             const enumEls = csvField.replace("?", "").split("|")
             let currentValue = 0
@@ -131,7 +131,7 @@ export function enumerateCsvFiles(baseDir: string): CsvFile[] {
     const result: CsvFile[] = []
     const dirs: string[] = [baseDir]
     while (dirs.length > 0) {
-        const dir = dirs.pop()
+        const dir = dirs.pop()!
         for (const name of readdirSync(dir)) {
             const path = `${dir}/${name}`
             const stat = statSync(path)
@@ -244,41 +244,8 @@ function readCsvAsync(path: string): Promise<CsvTable> {
     return result
 }
 
-// const undefinedCachedValueSymbol = Symbol.for("__undefined_cache__")
 const dataCache: Record<symbol, any[][]> = {}
 const fieldCache: Record<symbol, CsvField[]> = {}
-// function createRowIndexer<T extends object>(row: any[], fields: CsvField[], type?: Type<T>): Readonly<T> {
-//     const rowCached: any[] = []
-//     return new Proxy<T>(type ? new type() : {} as T, {
-//         get: (t, p) => {
-//             if (typeof p === "symbol") return undefined
-//             if (p === "toJSON") {
-//                 const jsonParts: string[] = []
-//                 for (let i = 0; i < fields.length; i++) {
-//                     jsonParts.push(`"${fields[i].name}": ${JSON.stringify(rowCached[i])}`)
-//                 }
-//                 return `{${jsonParts.join(",")}}`
-//             }
-//             const columnNumber = fields.findIndex(f => f.name === p)
-//             if (columnNumber < 0) return undefined
-//             const cached = rowCached[columnNumber]
-//             if (rowCached == undefined) {
-//                 const value = row[columnNumber]
-//                 rowCached[columnNumber] = value ?? undefinedCachedValueSymbol
-//                 return value
-//             }
-//             return cached === undefinedCachedValueSymbol ? undefined : cached
-//         },
-//         getPrototypeOf: _ => type,
-//     })
-// }
-// function createCsvIndexer<T extends object>(csvTable: CsvTable, type?: Type<T>): Readonly<T>[] {
-//     const fields = fieldCache[csvTable.cacheKey] ?? csvTable.data[2].map((f, i) => parseCsvField(csvTable.data[0][i], f))
-//     fieldCache[csvTable.cacheKey] = fields
-//     const data = dataCache[csvTable.cacheKey] ?? csvTable.data.slice(3).map(r => r.map((c, i) => parseCsvValue(c, fields[i])))
-//     dataCache[csvTable.cacheKey] = data
-//     return data.map(r => createRowIndexer(r, fields, type))
-// }
 function createRow<T extends object>(row: any[], fields: CsvField[], type?: Type<T>): Readonly<T> {
     const result = type ? new type() : {} as T
     for (let i = 0; i < fields.length; i++) result[fields[i].name] = row[i]

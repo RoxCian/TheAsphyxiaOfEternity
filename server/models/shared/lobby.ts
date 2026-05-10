@@ -1,32 +1,36 @@
 import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
-import { RbChartType, RbVersion } from "./rb_types"
+import { RbChartType, RbColor, RbVersion } from "./rb_types"
 
 export class RbLobbyEntryElement<TVersion extends RbVersion> implements ICollection<`rb.rb${TVersion}.temporary.lobbyEntry`> {
     collection: `rb.rb${TVersion}.temporary.lobbyEntry`
-    @XD.s32("eid") entryId: number
-    @XD.u16("mid") musicId: number
-    @XD.u8("ng") chartType: RbChartType<TVersion>
-    @XD.s32("uid") userId: number
+    @XD.s32("eid") entryId = 0
+    @XD.u16("mid") musicId = 0
+    @XD.u8("ng") chartType = 0 as RbChartType<TVersion>
+    @XD.s32("uid") userId = 0
     @XD.s32() uattr?: number
     @XD.str("pn") name?: string
     @XD.s16("mg") matchingGrade?: number
-    @XD.s32("mopt") matchingOption: number
-    @XD.s32("tid") teamId: number
-    @XD.str("tn") teamName: string
-    @XD.str("topt") teamOption: number
-    @XD.str("lid") lobbyId: string
-    @XD.str("sn") shopName: string
-    @XD.u8() pref: number
-    @XD.s8("stg") stageIndex: number
-    @XD.s8() pside: number
-    @XD.s16() eatime: number
-    @XD.u8("ga") gateway: number[]
-    @XD.u16("gp") portal: number
-    @XD.u8("la") adapter: number[]
-    @XD.u8("ver") version: number
-    isHanging: boolean
-    ticking: number
+    @XD.s32("mopt") matchingOption = 0
+    @XD.s32("tid") teamId = 0
+    @XD.str("tn") teamName = 0
+    @XD.str("topt") teamOption = 0
+    @XD.str("lid") lobbyId = 0
+    @XD.str("sn") shopName = 0
+    @XD.u8() pref = 0
+    @XD.s8("stg") stageIndex = 0
+    @XD.s8() pside = RbColor.red
+    @XD.s16() eatime = 0
+    @XD.u8("ga") gateway = [0, 0, 0, 0]
+    @XD.u16("gp") portal = 0
+    @XD.u8("la") adapter = [0, 0, 0, 0]
+    @XD.u8("ver") version = 0
+    isHanging = false
+    ticking = 0
+
+    constructor(version: TVersion) {
+        this.collection = `rb.rb${version}.temporary.lobbyEntry` as const
+    }
 
     async initialize(version: TVersion) {
         this.collection = `rb.rb${version}.temporary.lobbyEntry` as const
@@ -54,10 +58,10 @@ export class RbLobbyEntry<TVersion extends RbVersion> {
     constructor(entryOrId?: number | RbLobbyEntryElement<TVersion>) {
         if (typeof entryOrId === "number") {
             this.entryId = entryOrId
-        } else {
-            this.entryId = entryOrId?.entryId ?? 0
+        } else if (entryOrId) {
+            this.entryId = entryOrId.entryId
             this.entries.push(entryOrId)
-        }
+        } else this.entryId = 0
     }
     static async create<TVersion extends RbVersion>(version: TVersion, entry: RbLobbyEntryElement<TVersion>): Promise<RbLobbyEntry<TVersion>> {
         await entry.initialize(version) // MUST INITIALIZE

@@ -1,5 +1,4 @@
 import { Rb4Player, Rb4PlayerBase, Rb4PlayerReleasedInfo } from "../../models/rb4/profile"
-import { toFullWidth, toHalfWidth } from "../../utils/utility_functions"
 import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidthPlayerName } from "../shared_game/player_processing"
 // player.pdata.released.info.type == 0 -> song
 // player.pdata.released.info.type == 1 -> sfx

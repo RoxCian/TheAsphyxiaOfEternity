@@ -6,6 +6,7 @@ import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb1ChartType, Rb1ClearType, Rb2ClearType, Rb3ClearType, Rb4ChartType, Rb4ClearType, RbChartType, RbVersion } from "../../models/shared/rb_types"
 import { convertMusicId, getMusicId } from "../../data/tables/rb_music_id"
 import { findChartInfo } from "../../data/tables/rb_chart_info"
+import { DBH } from "../../utils/db/dbh"
 
 type RbMusicRecord = Rb1MusicRecord | Rb2MusicRecord | Rb3MusicRecord | Rb4MusicRecord | Rb5MusicRecord
 
@@ -81,7 +82,7 @@ export enum RbBestMusicRecordGaugeType {
     sHard = 2
 }
 
-export async function findBestMusicRecord<TVersion extends RbVersion>(rid: string, musicUid: string, chartType: RbChartType<TVersion>, version: TVersion): Promise<RbBestMusicRecord> {
+export async function findBestMusicRecord<TVersion extends RbVersion>(rid: string, musicUid: string, chartType: RbChartType<TVersion>, version: TVersion): Promise<RbBestMusicRecord | undefined> {
     const mid = await getMusicId(musicUid, version)
     if (mid == undefined) return undefined
     const chartInfo = await findChartInfo(mid, version, chartType)
@@ -213,17 +214,23 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
     const resultMap: Record<number, RbBestMusicRecord[]> = {}
     const max = Math.max
     const min = Math.min
-    const updateScore = (prev: RbBestMusicRecord, next: Partial<RbBestMusicRecord>) => {
-        if (next.scoreVersion != undefined) prev.scoreVersion = ((prev.score < next.score) || ((prev.score === next.score) && (prev.scoreVersion > next.scoreVersion))) ? next.scoreVersion : prev.scoreVersion
-        if (next.comboVersion != undefined) prev.comboVersion = ((prev.combo < next.combo) || ((prev.combo === next.combo) && (prev.comboVersion > next.comboVersion))) ? next.scoreVersion : prev.comboVersion
-        if (next.clearTypeVersion != undefined) prev.clearTypeVersion = ((prev.clearType < next.clearType) || ((prev.clearType === next.clearType) && (prev.clearTypeVersion > next.clearTypeVersion))) ? next.clearTypeVersion : prev.clearTypeVersion
-        if (next.missCountVersion != undefined) prev.missCountVersion = ((((prev.missCount > next.missCount) || (prev.missCount < 0)) && (next.missCount >= 0)) || ((prev.missCount === next.missCount) && (prev.missCountVersion > next.missCountVersion))) ? next.missCountVersion : prev.missCountVersion
-        if (next.achievementRateVersion != undefined) prev.achievementRateVersion = ((prev.achievementRateTimes100 < next.achievementRateTimes100) || ((prev.achievementRateTimes100 === next.achievementRateTimes100) && (prev.achievementRateVersion > next.achievementRateVersion))) ? next.achievementRateVersion : prev.achievementRateVersion
-        if (next.scoreUpdateTime != undefined) prev.scoreUpdateTime = ((prev.score < next.score) || ((prev.score === next.score) && (prev.scoreUpdateTime > next.scoreUpdateTime))) ? next.scoreUpdateTime : prev.scoreUpdateTime
-        if (next.comboUpdateTime != undefined) prev.comboUpdateTime = ((prev.combo < next.combo) || ((prev.combo === next.combo) && (prev.comboUpdateTime > next.comboUpdateTime))) ? next.scoreUpdateTime : prev.comboUpdateTime
-        if (next.clearTypeUpdateTime != undefined) prev.clearTypeUpdateTime = ((prev.clearType < next.clearType) || ((prev.clearType === next.clearType) && (prev.clearTypeUpdateTime > next.clearTypeUpdateTime))) ? next.clearTypeUpdateTime : prev.clearTypeUpdateTime
-        if (next.missCountUpdateTime != undefined) prev.missCountUpdateTime = ((((prev.missCount > next.missCount) || (prev.missCount < 0)) && (next.missCount >= 0)) || ((prev.missCount === next.missCount) && (prev.missCountUpdateTime > next.missCountUpdateTime))) ? next.missCountUpdateTime : prev.missCountUpdateTime
-        if (next.achievementRateUpdateTime != undefined) prev.achievementRateUpdateTime = ((prev.achievementRateTimes100 < next.achievementRateTimes100) || ((prev.achievementRateTimes100 === next.achievementRateTimes100) && (prev.achievementRateUpdateTime > next.achievementRateUpdateTime))) ? next.achievementRateUpdateTime : prev.achievementRateUpdateTime
+    const updateVersionTime = (prev: RbBestMusicRecord, next: Partial<RbBestMusicRecord>, valueKey: keyof RbBestMusicRecord, versionTimeKey: keyof RbBestMusicRecord) => {
+        if (next[versionTimeKey] == undefined || next[valueKey] == undefined) return
+        if ((next[valueKey] ?? 0) < prev[valueKey]! || (valueKey === "missCount" && ((next.missCount ?? 0) > prev.missCount && prev.missCount >= 0 || next.missCount === prev.missCount && prev.missCount === -1))) return
+        if (next[valueKey] === prev[valueKey] && next[versionTimeKey] < prev[versionTimeKey]!) return
+        else (prev as any /** prev[versionTimeKey] is never, why? */)[versionTimeKey] = next[versionTimeKey]
+    } 
+    const update = (prev: RbBestMusicRecord, next: Partial<RbBestMusicRecord>) => {
+        updateVersionTime(prev, next, "score", "scoreVersion")
+        updateVersionTime(prev, next, "combo", "comboVersion")
+        updateVersionTime(prev, next, "clearType", "clearTypeVersion")
+        updateVersionTime(prev, next, "missCount", "missCountVersion")
+        updateVersionTime(prev, next, "achievementRateTimes100", "achievementRateVersion")
+        updateVersionTime(prev, next, "score", "scoreUpdateTime")
+        updateVersionTime(prev, next, "combo", "comboUpdateTime")
+        updateVersionTime(prev, next, "clearType", "clearTypeUpdateTime")
+        updateVersionTime(prev, next, "missCount", "missCountUpdateTime")
+        updateVersionTime(prev, next, "achievementRateTimes100", "achievementRateUpdateTime")
         if (next.clearType != undefined) prev.clearType = max(prev.clearType, next.clearType)
         if (next.gaugeType != undefined) prev.gaugeType = max(prev.gaugeType, next.gaugeType)
         if (next.score != undefined) prev.score = max(prev.score, next.score)
@@ -238,7 +245,7 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
     }
     for (const v of [1, 2, 3, 4, 5] as const) {
         if (version === v) continue
-        for (const rv of await DB.Find(rid, { collection: `rb.rb${v}.playData.musicRecord` }) as RbMusicRecord[]) {
+        for (const rv of await DBH.find(rid, { collection: `rb.rb${v}.playData.musicRecord` }) as RbMusicRecord[]) {
             if ((version === 1 || version === 2 || version === 3) && (rv.chartType === Rb4ChartType.special)) continue
             const info = await findChartInfo(rv.musicId, v, rv.chartType)
             const musicIdCurrentVersion = await convertMusicId(rv.musicId, v, version)
@@ -250,7 +257,7 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
             const record = records[rv.chartType] ?? RbBestMusicRecord(musicIdCurrentVersion, rv.chartType)
             if (v === 1) {
                 const r = rv as Rb1MusicRecord
-                updateScore(record, {
+                update(record, {
                     clearType: convertFromRb1ClearType(r.clearType, r.achievementRateTimes10 * 10),
                     gaugeType: RbBestMusicRecordGaugeType.normal,
                     score: r.score,
@@ -269,7 +276,7 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
                 })
             } else if (v === 2) {
                 const r = rv as Rb2MusicRecord
-                updateScore(record, {
+                update(record, {
                     clearType: convertFromRb2ClearType(r.newRecord.clearType, r.newRecord.achievementRateTimes10 * 10),
                     gaugeType: RbBestMusicRecordGaugeType.normal,
                     score: r.newRecord.score,
@@ -288,7 +295,7 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
                 })
             } else if (v === 3) {
                 const r = rv as Rb3MusicRecord
-                updateScore(record, {
+                update(record, {
                     clearType: convertFromRb3ClearType(r.clearType, r.missCount, r.achievementRateTimes100),
                     gaugeType: RbBestMusicRecordGaugeType.normal,
                     score: r.score,
@@ -308,7 +315,7 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
                 })
             } else {
                 const r = rv as Rb4MusicRecord | Rb5MusicRecord
-                updateScore(record, {
+                update(record, {
                     clearType: convertFromRb4ClearType(r.clearType, r.missCount, r.achievementRateTimes100),
                     gaugeType: convertGaugeTypeFromRb4ClearType(r.clearType),
                     score: r.score,

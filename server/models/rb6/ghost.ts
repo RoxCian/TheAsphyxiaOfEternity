@@ -34,7 +34,7 @@ export class Rb6Ghost implements ICollection<"rb.rb6.playData.ghost#userId"> {
 }
 
 export class Rb6ReadGhost {
-    @XD.type(Rb6Ghost) ghost: Rb6Ghost
+    @XD.type(Rb6Ghost) ghost = new Rb6Ghost()
 }
 
 export class Rb6GhostWinCount {

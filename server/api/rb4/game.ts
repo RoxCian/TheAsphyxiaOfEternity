@@ -8,7 +8,7 @@ import { Rb4ShopInfo } from "../../models/rb4/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { findAllBestMusicRecord, convertToRb4ClearType } from "../shared_game/find_music_record"
-import { isToday, shiftjisToUtf8 } from "../../utils/utility_functions"
+import { hasAny, isToday, shiftjisToUtf8 } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { toBigInt } from "../../utils/db/db_types"
 import { Rb4PlayerStart, Rb4PlayerSucceed } from "../../models/rb4/common"
@@ -43,21 +43,21 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    const rbPlayer = await findPlayerFromOtherVersion(rid, 4)
+    const account = await DBH.findOne(rid, Rb4PlayerAccount, { collection: "rb.rb4.player.account" })
     const result = new Rb4PlayerSucceed()
-    if (rbPlayer) {
-        const player = await DBH.findOne(rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" })
-        const released = await DBH.find(rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
-        const record = await DBH.find(rid, Rb4MusicRecord, { collection: "rb.rb4.playData.musicRecord" })
-        result.name = player.name
-        result.lv = 0
-        result.exp = 0
-        result.grd = 0
-        result.ap = 0
-        result.money = 0
-        if (released.length > 0) result.released.i = released
-        if (record.length > 0) result.mrecord.mrec = record
-    }
+    if (!account) return XF.x(result)
+    
+    const base = await DBH.findOne(rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" }, true)
+    const released = await DBH.find(rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
+    const record = await DBH.find(rid, Rb4MusicRecord, { collection: "rb.rb4.playData.musicRecord" })
+    result.name = base.name
+    result.lv = 0
+    result.exp = 0
+    result.grd = 0
+    result.ap = 0
+    result.money = 0
+    if (released.length > 0) result.released.i = released
+    if (record.length > 0) result.mrecord.mrec = record
     return XF.x(result)
 }
 const startPlayer: H.H = async data => {
@@ -73,68 +73,66 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const result = new Rb4Player(read.rid)
     const account = await DBH.findOne(read.rid, Rb4PlayerAccount, { collection: "rb.rb4.player.account" })
     if (!account) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 4)
-        if (rbPlayer) {
-            result.pdata.account.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            result.pdata.base.name = "RBPlayer"
-        }
-        await writePlayerCore(result)
-    } else {
-        const base = await DBH.findOne(read.rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" })
-        const config = await DBH.findOne(read.rid, Rb4PlayerConfig, { collection: "rb.rb4.player.config" })
-        const custom = await DBH.findOne(read.rid, Rb4PlayerCustom, { collection: "rb.rb4.player.custom" })
-        const stamp = await DBH.findOne(read.rid, Rb4Stamp, { collection: "rb.rb4.player.stamp" })
-        const released = await DBH.find(read.rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
-        const classcheck = await DBH.find(read.rid, Rb4Classcheck, { collection: "rb.rb4.playData.classcheck" })
-        const playerParam = await DBH.find(read.rid, Rb4PlayerParameters, { collection: "rb.rb4.player.parameters" })
-        const mylist = await DBH.findOne(read.rid, Rb4Mylist, { collection: "rb.rb4.player.mylist" })
-        const quest = await DBH.findOne(read.rid, Rb4Quest, { collection: "rb.rb4.player.quest" }) ?? new Rb4Quest()
-        const episodes = await DBH.find(Rb4Episode, { collection: "rb.rb4.player.episode#userId", userId: account.userId })
-
-        account.intrvld ??= 0
-        account.succeed ??= true
-        account.pst ??= BigInt(0)
-        account.st ??= BigInt(0)
-        if (!isToday(toBigInt(account.st))) account.playCountToday = 1
-        else account.playCountToday = (account.playCountToday ?? 0) + 1
-        account.opc ??= 0
-        account.lpc ??= 0
-        account.cpc ??= 0
-        account.mpc ??= 0
-        if (!base.comment) base.comment = "Welcome to REFLEC BEAT groovin'!"
-        base.uattr ??= 0
-        base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        if ((mylist?.index ?? -1) < 0) mylist.index = 0
-
-        const scores = await DB.Find<Rb4MusicRecord>(read.rid, { collection: "rb.rb4.playData.musicRecord" })
-
-        base.totalBestScore = 0
-        base.totalBestScoreRival = 0
-        base.totalBestScoreEachChartType = [0, 0, 0, 0]
-        base.totalBestScoreEachChartTypeRival = [0, 0, 0, 0]
-        base.totalBestScoreNewMusics = 0
-        base.totalBestScoreNewMusicsRival = 0
-        for (const s of scores) {
-            base.totalBestScore += s.score
-            base.totalBestScoreEachChartType[s.chartType] += s.score
-            if (isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
-        }
-
-        const p = result.pdata
-        p.account = account
-        p.base = base
-        p.config = config
-        p.custom = custom
-        p.stamp = stamp
-        if (classcheck.length > 0) p.classcheck = { rec: classcheck }
-        if (released.length > 0) p.released.info = released
-        if (playerParam.length > 0) p.playerParam.item = playerParam
-        p.mylist.list = [mylist]
-        p.episode.info = episodes
-        p.quest = quest
+        const player = await findPlayerFromOtherVersion(read.rid, 4)
+        if (!player) return H.deny
+        result.pdata.account.isFirstFree = true
+        result.pdata.account.userId = player.userId
+        result.pdata.base.name = player.name
+        return XF.x(result)
     }
+    const base = await DBH.findOne(read.rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" }, true)
+    const config = await DBH.findOne(read.rid, Rb4PlayerConfig, { collection: "rb.rb4.player.config" }, true)
+    const custom = await DBH.findOne(read.rid, Rb4PlayerCustom, { collection: "rb.rb4.player.custom" }, true)
+    const stamp = await DBH.findOne(read.rid, Rb4Stamp, { collection: "rb.rb4.player.stamp" }, true)
+    const released = await DBH.find(read.rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
+    const classcheck = await DBH.find(read.rid, Rb4Classcheck, { collection: "rb.rb4.playData.classcheck" })
+    const playerParam = await DBH.find(read.rid, Rb4PlayerParameters, { collection: "rb.rb4.player.parameters" })
+    const mylist = await DBH.findOne(read.rid, Rb4Mylist, { collection: "rb.rb4.player.mylist" })
+    const quest = await DBH.findOne(read.rid, Rb4Quest, { collection: "rb.rb4.player.quest" }, true)
+    const episodes = await DBH.find(Rb4Episode, { collection: "rb.rb4.player.episode#userId", userId: account.userId })
+
+    account.intrvld ??= 0
+    account.succeed ??= true
+    account.pst ??= BigInt(0)
+    account.st ??= BigInt(0)
+    if (!isToday(toBigInt(account.st))) account.playCountToday = 1
+    else account.playCountToday = (account.playCountToday ?? 0) + 1
+    account.opc ??= 0
+    account.lpc ??= 0
+    account.cpc ??= 0
+    account.mpc ??= 0
+    if (!base.comment) base.comment = "Welcome to REFLEC BEAT groovin'!"
+    base.uattr ??= 0
+    base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    if (mylist && mylist.index < 0) mylist.index = 0
+
+    const scores = await DBH.find<Rb4MusicRecord>(read.rid, { collection: "rb.rb4.playData.musicRecord" })
+
+    base.totalBestScore = 0
+    base.totalBestScoreRival = 0
+    base.totalBestScoreEachChartType = [0, 0, 0, 0]
+    base.totalBestScoreEachChartTypeRival = [0, 0, 0, 0]
+    base.totalBestScoreNewMusics = 0
+    base.totalBestScoreNewMusicsRival = 0
+    for (const s of scores) {
+        base.totalBestScore += s.score
+        base.totalBestScoreEachChartType[s.chartType] += s.score
+        if (await isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
+    }
+
+    const p = result.pdata
+    p.account = account
+    p.base = base
+    p.config = config
+    p.custom = custom
+    p.stamp = stamp
+    if (classcheck.length > 0) p.classcheck = { rec: classcheck }
+    if (released.length > 0) p.released.info = released
+    if (playerParam.length > 0) p.playerParam.item = playerParam
+    if (mylist) p.mylist.list = [mylist]
+    if (episodes.length > 0) p.episode.info = episodes
+    p.quest = quest
+    
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -176,11 +174,11 @@ const readPlayerScore: H.H = async data => {
         o.combo = b.combo
         o.missCount = b.missCount
         o.param = b.param
-        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime
-        o.bestComboUpdateTime = b.comboUpdateTime
-        o.bestScoreUpdateTime = b.scoreUpdateTime
-        o.bestMissCountUpdateTime = b.missCountUpdateTime
-        o.version = b.scoreVersion >= 4 ? 3 : b.scoreVersion
+        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime ?? 0
+        o.bestComboUpdateTime = b.comboUpdateTime ?? 0
+        o.bestScoreUpdateTime = b.scoreUpdateTime ?? 0
+        o.bestMissCountUpdateTime = b.missCountUpdateTime ?? 0
+        o.version = (b.scoreVersion ?? 4) >= 4 ? 3 : b.scoreVersion
         oldRecords.push(o)
     }
     if (oldRecords.length > 0) result.pdata.recordOld.rec = oldRecords
@@ -197,12 +195,12 @@ async function writePlayerCore(player: Rb4Player) {
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
 
     if (!accountSaved) { // save the new player
-        if (player.pdata.account.userId <= 0) player.pdata.account.userId = await generateUserId()
-        player.pdata.account.isFirstFree = true
-        if (player.pdata.base) {
-            const n = shiftjisToUtf8(player.pdata.base.name)
-            if ((n.length == 0) || (n.length > 8) || (n == "-")) player.pdata.base.name = player.pdata.account.userId.toString()
-        }
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 4)
+        if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
+        else player.pdata.account.userId = await generateUserId()
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.account.playCount = isPlayed ? 1 : 0
+        player.pdata.account.playCountToday = isPlayed ? 1 : 0
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
@@ -229,7 +227,7 @@ async function writePlayerCore(player: Rb4Player) {
     }
     if (player.pdata.config) t.upsert(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
     if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
-    if (!isArrayWrapper(player.pdata.classcheck, "rec") && (player.pdata.classcheck?.class ?? Rb4DojoIndex.none) > Rb4DojoIndex.none) {
+    if (player.pdata.classcheck && !isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck!.class > Rb4DojoIndex.none && hasAny(player.pdata.stageLogs?.log)) {
         const musicsId = [player.pdata.stageLogs.log[0].musicId, player.pdata.stageLogs.log[1]?.musicId ?? -1, player.pdata.stageLogs.log[2]?.musicId ?? -1]
         const chartsType = [player.pdata.stageLogs.log[0].chartType, player.pdata.stageLogs.log[1]?.chartType ?? Rb4ChartType.basic, player.pdata.stageLogs.log[2]?.chartType ?? -1 as Rb4ChartType.basic]
         await updateClasscheck(rid, player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, musicsId, chartsType, t)
@@ -248,13 +246,13 @@ async function writePlayerCore(player: Rb4Player) {
             if (player.pdata.stageLogs.log[2]) player.pdata.stageLogs.log[2].clearTypeForClasscheck = "Win"
         }
     }
-    if (player.pdata.stageLogs?.log?.length > 0) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
-    if (player.pdata.released?.info?.length > 0) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb4.player.releasedInfo", type: i.type, id: i.id }, i)
-    if (player.pdata.playerParam?.item?.length > 0) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb4.player.parameters", type: i.type, bank: i.bank }, i)
-    if (player.pdata.mylist?.list) for (const l of player.pdata.mylist.list) t.upsert(rid, { collection: "rb.rb4.player.mylist", index: l.index }, l)
+    if (hasAny(player.pdata.stageLogs?.log)) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
+    if (hasAny(player.pdata.released.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb4.player.releasedInfo", type: i.type, id: i.id }, i)
+    if (hasAny(player.pdata.playerParam.item)) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb4.player.parameters", type: i.type, bank: i.bank }, i)
+    if (hasAny(player.pdata.mylist?.list)) for (const l of player.pdata.mylist.list) t.upsert(rid, { collection: "rb.rb4.player.mylist", index: l.index }, l)
     if (player.pdata.quest) await updateQuest(rid, player.pdata.quest, t)
     if (player.pdata.stamp) t.upsert(rid, { collection: "rb.rb4.player.stamp" }, player.pdata.stamp)
-    if (player.pdata.episode.info) for (const i of player.pdata.episode.info) t.upsert(undefined, { collection: "rb.rb4.player.episode#userId", type: i.type }, i)
+    if (hasAny(player.pdata.episode.info)) for (const i of player.pdata.episode.info) t.upsert({ collection: "rb.rb4.player.episode#userId", type: i.type }, i)
 
     await t.commit()
 }

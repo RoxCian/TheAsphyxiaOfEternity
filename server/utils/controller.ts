@@ -1,7 +1,5 @@
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs"
 import { initialize } from "../system/initialize"
 import { PJ } from "./pj"
-import { pluginDir } from "../system/const"
 
 export namespace C {
     export type ControllerResultText = {
@@ -30,7 +28,7 @@ export namespace C {
         message: string
     }
     export type ControllerResult = ControllerResultText | ControllerResultJson | ControllerResultFile | ControllerResultBuffer | ControllerResultRedirect | ControllerResultError
-    export type Controller<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = (data: TRequest) => TResponse | Promise<TResponse>
+    export type Controller<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = (data: TRequest) => TResponse | Promise<TResponse | undefined> | undefined
     export type C<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = Controller<TRequest, TResponse>
 
     function isControllerResult(value: unknown): value is ControllerResult {
@@ -39,8 +37,9 @@ export namespace C {
     }
 
     export function route<T>(method: string, c: Controller<T>) {
-        const cb: WebUIEventHandler = async (data: T, send: WebUISend) => {
+        const cb: WebUIEventHandler = async (data: T, send?: WebUISend) => {
             await initialize()
+            if (!send) throw new Error("'send' is empty")
             console.log("Controller method:", method)
             const res = await c(PJ.convertFromPJ(data))
             if (!res) send.text("")
@@ -63,11 +62,11 @@ export namespace C {
         R.WebUIEvent(method, cb)
         CS.routes[method] = c
     }
-    export async function redirect<T>(method: string, data: T): Promise<ControllerResult | string | object | Buffer | Promise<ControllerResult | string | object | Buffer>> {
+    export async function redirect<T>(method: string, data: T): Promise<ControllerResult | string | object | Buffer | Promise<ControllerResult | string | object | Buffer | undefined> | undefined> {
         await initialize()
         return await CS.routes[method]?.(data)
     }
 }
 namespace CS {
-    export const routes: Record<string, C.C> = {}
+    export const routes: Record<string, C.C<any>> = {}
 }

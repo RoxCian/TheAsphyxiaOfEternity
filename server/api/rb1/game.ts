@@ -11,6 +11,7 @@ import { StageLogManager } from "../shared_game/stage_log_manager"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { hasAny } from "../../utils/utility_functions"
 
 export function registerRb1Handlers() {
     H.route("player.start?model=KBR", startPlayer)
@@ -34,23 +35,19 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const result = new Rb1Player(read.rid)
     const base = await DBH.findOne<Rb1PlayerBase>(read.rid, Rb1PlayerBase, { collection: "rb.rb1.player.base" })
     if (!base) {
-        const rbPlayer = await findPlayerFromOtherVersion(read.rid, 1)
-        if (!rbPlayer) {
-            result.pdata.base.userId = rbPlayer.userId
-            result.pdata.base.name = rbPlayer.name
-        } else {
-            result.pdata.base.name = "RBPlayer"
-        }
-        await writePlayerCore(result)
+        const player = await findPlayerFromOtherVersion(read.rid, 2)
+        if (!player) return H.deny
+        result.pdata.base.userId = player.userId
+        result.pdata.base.name = player.name
+        return XF.x(result)
     } else {
         if (base.level > 5) base.tutorialFlag = 0
-        const stat = await DBH.findOne(read.rid, Rb1PlayerStat, { collection: "rb.rb1.player.stat" })
-        const custom = await DBH.findOne(read.rid, Rb1PlayerCustom, { collection: "rb.rb1.player.custom" })
+        const stat = await DBH.findOne(read.rid, Rb1PlayerStat, { collection: "rb.rb1.player.stat" }, true)
+        const custom = await DBH.findOne(read.rid, Rb1PlayerCustom, { collection: "rb.rb1.player.custom" }, true)
         const released = await DBH.find(read.rid, Rb1PlayerReleasedInfo, { collection: "rb.rb1.player.releasedInfo" })
-
         const scores = await DBH.find(read.rid, Rb1MusicRecord, { collection: "rb.rb1.playData.musicRecord" })
 
-        result.pdata.comment = ((base.comment == undefined) || (base.comment == "")) ? "Welcome to REFLEC BEAT!" : base.comment
+        result.pdata.comment = base.comment || "Welcome to REFLEC BEAT!"
         result.pdata.base = base
         result.pdata.custom = custom
         result.pdata.released = { info: released.length > 0 ? released : undefined }
@@ -85,10 +82,13 @@ async function writePlayerCore(player: Rb1Player) {
 
     const t = new DBH.T()
     const baseQuery: Query<Rb1PlayerBase> = { collection: "rb.rb1.player.base" }
-    const baseSaved: Rb1PlayerBase = await t.findOne(player.rid, baseQuery)
+    const baseSaved: Rb1PlayerBase | undefined = await t.findOne(player.rid, baseQuery)
     if (!baseSaved) {
-        if (player.pdata.base.userId <= 0) player.pdata.base.userId = await generateUserId()
-        player.pdata.base.playCount = 0
+        const rbPlayer = await findPlayerFromOtherVersion(rid, 5)
+        if (rbPlayer) player.pdata.base.userId = rbPlayer.userId
+        else player.pdata.base.userId = await generateUserId()
+        const isPlayed = hasAny(player.pdata.stageLogs?.log)
+        player.pdata.base.playCount = isPlayed ? 1 : 0
         t.upsert(rid, baseQuery, player.pdata.base)
     } else {
         if (baseSaved.playCount == undefined) baseSaved.playCount = 1
@@ -104,9 +104,9 @@ async function writePlayerCore(player: Rb1Player) {
 
     if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb1.player.custom" }, player.pdata.custom)
     if (player.pdata.stat) t.upsert(rid, { collection: "rb.rb1.player.stat" }, player.pdata.stat)
-    if (player.pdata.stageLogs.log?.length > 0) for (const l of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, l, 1)
-    if (player.pdata.record.rec?.length > 0) for (const r of player.pdata.record.rec) await updateMusicRecord(rid, r, t)
-    if (player.pdata.released.info?.length > 0) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
+    if (hasAny(player.pdata.stageLogs.log)) for (const l of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, l, 1)
+    if (hasAny(player.pdata.record.rec)) for (const r of player.pdata.record.rec) await updateMusicRecord(rid, r, t)
+    if (hasAny(player.pdata.released.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
 
     await t.commit()
 }

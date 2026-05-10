@@ -10,6 +10,7 @@ export class RbSession implements ICollection<"rb.session"> {
         unlockAllSongs: boolean
         unlockAllItems: boolean
     }
+    read = false
 
     constructor(version: RbVersion) {
         this.version = version

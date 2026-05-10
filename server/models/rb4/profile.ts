@@ -33,7 +33,7 @@ export class Rb4PlayerAccount implements ICollection<"rb.rb4.player.account"> {
     @XD.s32() lpc = 0
     @XD.s32() cpc = 0
     @XD.s32() mpc = 0
-    @XD.u8("debutVer", undefined, (s: number) => s - 1, t => t + 1) debutVersion: number
+    @XD.u8("debutVer", undefined, (s: number | number[]) => Array.isArray(s) ? s[0] - 1 : s - 1, t => t + 1) debutVersion: number
     @XD.s32("upper_pt") upperPoints = 0
     @XD.s32("upper_op") upperOption = -1
 

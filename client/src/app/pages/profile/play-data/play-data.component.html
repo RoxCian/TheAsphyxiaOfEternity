@@ -142,59 +142,72 @@
                     @if (versionService.version() === 4) {
                     <div class="classcheck-container" animate.leave="rb-panel-leave">
                         @if (classcheckService.data.value().length === 0) {
-                            <lets-play [text]="'リフレク道場を挑戦しよう！\r\nNothing\'s here yet. Let\'s play!'" />
+                            <lets-play [text]="['リフレク道場を挑戦しよう！', 'Nothing\'s here yet. Let\'s play!']" />
                         } @else {
-                        <div class="rb-classcheck-list-two-columns serif">
-                            @let dojoFiltered = rb4DojoFilter(classcheckService.data.value());
-                            @if (dojoFiltered.classcheck.length > 0) {
+                            <div class="rb-classcheck-list-two-columns serif">
+                                @let dojoFiltered = rb4DojoFilter(classcheckService.data.value());
                                 <div>
                                     <bung-divider lang="jp" prompt="認定試験　Classcheck" />
-                                    <div class="rb-dojo">
-                                        @for (dojo of dojoFiltered.classcheck; track dojo.class) {
-                                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                                                <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
-                                            </bung-insertion>
-                                        }
-                                    </div>
+                                    @if (dojoFiltered.classcheck.length > 0) {
+                                            <div class="rb-dojo">
+                                                @for (dojo of dojoFiltered.classcheck; track dojo.class) {
+                                                    <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                                        <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                                    </bung-insertion>
+                                                }
+                                            </div>
+                                    } @else {
+                                        <div class="centered-vertical">
+                                            <lets-play text="">
+                                                <p class="is-size-7">No Classcheck has been challenged</p>
+                                                <p lang="jp">認定試験はまだ挑戦していない</p>
+                                            </lets-play>
+                                        </div>
+                                    }
                                 </div>
-                            } @else {
-                                <div class="centered-vertical"><lets-play lang="jp" text="認定試験はまだ挑戦しない\nNo Classcheck has been challenged" /></div>
-                            }
-                            @if (dojoFiltered.examination.length > 0) {
                                 <div>
                                     <bung-divider lang="jp" prompt="検定試験　Examination" />
-                                    <div class="rb-dojo">
-                                        @for (dojo of dojoFiltered.examination; track dojo.class) {
-                                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                                                <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
-                                            </bung-insertion>
-                                        }
-                                    </div>
+                                    @if (dojoFiltered.examination.length > 0) {
+                                        <div class="rb-dojo">
+                                            @for (dojo of dojoFiltered.examination; track dojo.class) {
+                                                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                                    <rb-classcheck [classcheck]="dojo" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                                </bung-insertion>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="centered-vertical">
+                                            <lets-play text="">
+                                                <p class="is-size-7">No Examination has been challenged</p>
+                                                <p lang="jp">検定試験はまだ挑戦していない</p>
+                                            </lets-play>
+                                        </div>
+                                    }
                                 </div>
-                            } @else {
-                                <div class="centered-vertical"><lets-play lang="jp" text="検定試験はまだ挑戦しない\nNo Examination has been challenged" /></div>
-                            }
-                        </div>
+                            </div>
                         }
                         @if (!classcheckService.data.isLoading()) {
                             <ng-template #dividerPrompt>
-                                <span lang="jp" style="margin-right: 2em">以上</span>
-                                <span>End of Reflec Dojo records</span>
+                                <span>以上　End of Reflec Dojo records</span>
                             </ng-template>
                             <bung-divider class="serif" [prompt]="dividerPrompt" />
                         }
                     </div>
                     } @else {
                         <div class="classcheck-container" animate.leave="rb-panel-leave">
-                            <div class="rb-classcheck-list">
-                                @for (classcheck of classcheckService.data.value(); track classcheck.class) {
-                                    <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                                        <rb-classcheck [classcheck]="classcheck" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
-                                    </bung-insertion>
+                            @if (classcheckService.data.value().length === 0) {
+                                <lets-play />
+                            } @else {
+                                <div class="rb-classcheck-list">
+                                    @for (classcheck of classcheckService.data.value(); track classcheck.class) {
+                                        <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                            <rb-classcheck [classcheck]="classcheck" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                                        </bung-insertion>
+                                    }
+                                </div>
+                                @if (!classcheckService.data.isLoading()) {
+                                    <bung-divider prompt="End of classcheck records" />
                                 }
-                            </div>
-                            @if (!classcheckService.data.isLoading()) {
-                                <bung-divider prompt="End of classcheck records" />
                             }
                         </div>
                     }

@@ -33,7 +33,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     const account = await DBH.findOne<Rb5PlayerAccount>(data.rid, { collection: "rb.rb5.player.account" })
     const base = await DBH.findOne<Rb5PlayerBase>(data.rid, { collection: "rb.rb5.player.base" })
     if (!account || !base) return undefined
-    const config = await DBH.findOne<Rb5PlayerConfig>(data.rid, { collection: "rb.rb5.player.config" })
+    const config = await DBH.findOne<Rb5PlayerConfig>(data.rid, { collection: "rb.rb5.player.config" }) ?? new Rb5PlayerConfig()
     result.version = version
     result.userId = account.userId
     result.name = base.name
@@ -191,7 +191,7 @@ async function toStageLogResponse(l: Rb5PlayerStageLog): Promise<RbStageLogRespo
         score: l.score,
         achievementRate: l.achievementRateTimes100 / 100,
         clearType: toLiteralClearType(version, l.clearType, l.missCount, l.achievementRateTimes100),
-        combo: undefined,
+        combo: -1,
         justCount: l.justCount,
         justReflecCount: l.justReflecCount,
         greatCount: l.greatCount,

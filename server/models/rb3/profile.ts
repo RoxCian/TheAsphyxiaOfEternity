@@ -10,10 +10,10 @@ export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     readonly collection = "rb.rb3.player.account"
     @XD.s32("usrid") userId: number
     @XD.ToO.s32("plyid") playerId = 0
-    @XD.s32("dpc") playCountToday?: number = 0
+    @XD.s32("dpc") playCountToday: number = 0
     @XD.s32() crd = 1
     @XD.s32() brd = 1
-    @XD.s32("tdc") dayCount?: number = 0
+    @XD.s32("tdc") dayCount: number = 0
     @XD.ToO.str() rid: string
     @XD.ToO.str() lid = "ea"
     @XD.ToX.s32() intrvld = 0
@@ -115,7 +115,7 @@ export class Rb3PlayerStageLog implements ICollection<"rb.rb3.playData.stageLog"
     readonly collection = "rb.rb3.playData.stageLog"
     @XD.s8("stg") stageIndex = 0
     @XD.s16("mid") musicId = 0
-    @XD.s8("ng") chartType: Rb1ChartType
+    @XD.s8("ng") chartType = Rb1ChartType.basic
     @XD.s8("col") color = RbColor.red
     @XD.s8() mt = 0
     @XD.s8() rt = 0
@@ -146,43 +146,43 @@ export class Rb3PlayerStageLog implements ICollection<"rb.rb3.playData.stageLog"
 
 export class Rb3EventProgress implements ICollection<"rb.rb3.player.event.eventProgress"> {
     readonly collection = "rb.rb3.player.event.eventProgress"
-    @XD.s16("id") index: number
-    @XD.s32("exp") experience: number
+    @XD.s16("id") index = 0
+    @XD.s32("exp") experience = 0
 }
 
 export class Rb3Equip implements ICollection<"rb.rb3.player.equip"> {
     readonly collection = "rb.rb3.player.equip"
-    @XD.s16("id") index: number
-    @XD.s32("exp") experience: number
+    @XD.s16("id") index = 0
+    @XD.s32("exp") experience = 0
     @XD.s16() stype?: number
 }
 
 export class Rb3SeedPod implements ICollection<"rb.rb3.player.event.seedPod"> {
     readonly collection = "rb.rb3.player.event.seedPod"
-    @XD.s16("id") index: number
-    @XD.s16() pod: number
+    @XD.s16("id") index = 0
+    @XD.s16() pod = 0
 }
 
 export class Rb3OrderDetails {
-    @XD.s16("order") index: number
-    @XD.s16("slt") slot: number
-    @XD.s32("ccnt") clearedCount: number
-    @XD.s32("fcnt") fragmentsCount0: number
-    @XD.s32("fcnt1") fragmentsCount1: number
-    @XD.s32("prm") param: number
+    @XD.s16("order") index = 0
+    @XD.s16("slt") slot = 0
+    @XD.s32("ccnt") clearedCount = 0
+    @XD.s32("fcnt") fragmentsCount0 = 0
+    @XD.s32("fcnt1") fragmentsCount1 = 0
+    @XD.s32("prm") param = 0
 }
 export class Rb3Order implements ICollection<"rb.rb3.player.order"> {
     readonly collection = "rb.rb3.player.order"
-    @XD.s32("exp") experience: number
+    @XD.s32("exp") experience = 0
     @XD.a(Rb3OrderDetails, "d") details?: Rb3OrderDetails[]
 }
 
 export class Rb3PlayerReleasedInfo implements ICollection<"rb.rb3.player.releasedInfo"> {
     readonly collection = "rb.rb3.player.releasedInfo"
-    @XD.u8() type: number
-    @XD.u16() id: number
-    @XD.u16() param: number
-    @XD.s32() insertTime: number
+    @XD.u8() type = 0
+    @XD.u16() id = 0
+    @XD.u16() param = 0
+    @XD.s32() insertTime = 0
 }
 
 export class Rb3Stamp implements ICollection<"rb.rb3.player.stamp"> {

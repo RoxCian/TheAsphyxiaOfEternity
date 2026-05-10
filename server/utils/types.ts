@@ -24,12 +24,12 @@ export function isTypeOrToken<T>(value: unknown): value is Type<T> | TypeToken<T
     return (typeof value === "function" && value.toString().startsWith("class ")) || typeof value === "symbol"
 }
 export function isTypeInjector(value: unknown): value is TypeInjector {
-    return typeof value === "object" && value[injectorSymbol]
+    return typeof value === "object" && !!value?.[injectorSymbol]
 }
 
 export type ArrayWrapper<TKey extends string, TE> = {
     [K in TKey]?: TE[]
 }
-export function isArrayWrapper<TKey extends string, TE>(value: unknown, key: TKey): value is ArrayWrapper<TKey, TE> {
+export function isArrayWrapper<TKey extends string, TE>(value: any, key: TKey): value is Exclude<ArrayWrapper<TKey, TE>, undefined> {
     return Array.isArray(value?.[key])
 }

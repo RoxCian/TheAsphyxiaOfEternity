@@ -159,17 +159,17 @@ export class Rb5PlayerStageLog implements ICollection<"rb.rb5.playData.stageLog"
 
 export class Rb5PlayerReleasedInfo implements ICollection<"rb.rb5.player.releasedInfo"> {
     readonly collection = "rb.rb5.player.releasedInfo"
-    @XD.u8() type: number
-    @XD.u16() id: number
-    @XD.u16() param: number
-    @XD.s32() insertTime: number
+    @XD.u8() type = 0
+    @XD.u16() id = 0
+    @XD.u16() param = 0
+    @XD.s32() insertTime = 0
 }
 
 export class Rb5PlayerParameters implements ICollection<"rb.rb5.player.parameters"> {
     readonly collection = "rb.rb5.player.parameters"
-    @XD.s32() type: number
-    @XD.s32() bank: number
-    @XD.s32() data: number[]
+    @XD.s32() type = 0
+    @XD.s32() bank = 0
+    @XD.s32() data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 
 export class Rb5Minigame implements ICollection<"rb.rb5.playData.minigame"> {
@@ -197,18 +197,18 @@ export class Rb5BattleRoyale implements ICollection<"rb.rb5.playData.battleRoyal
 export class Rb5MyCourseLog implements ICollection<"rb.rb5.playData.myCourse"> {
     readonly collection = "rb.rb5.playData.myCourse"
     @XD.s16("mycourse_id") courseId = -1
-    @XD.s32() musicId1 = 0
-    @XD.s32() musicId2 = 0
-    @XD.s32() musicId3 = 0
-    @XD.s32() musicId4 = 0
+    @XD.s32("music_id_1") musicId1 = 0
+    @XD.s32("music_id_2") musicId2 = 0
+    @XD.s32("music_id_3") musicId3 = 0
+    @XD.s32("music_id_4") musicId4 = 0
     @XD.s16("note_grade_1") chartType1 = Rb4ChartType.basic
     @XD.s16("note_grade_2") chartType2 = Rb4ChartType.basic
     @XD.s16("note_grade_3") chartType3 = Rb4ChartType.basic
     @XD.s16("note_grade_4") chartType4 = Rb4ChartType.basic
-    @XD.s32() score1 = 0
-    @XD.s32() score2 = 0
-    @XD.s32() score3 = 0
-    @XD.s32() score4 = 0
+    @XD.s32("score_1") score1 = 0
+    @XD.s32("score_2") score2 = 0
+    @XD.s32("score_3") score3 = 0
+    @XD.s32("score_4") score4 = 0
     @XD.s32("def_music_id_1") defaultMusicId1 = 0
     @XD.s32("def_music_id_2") defaultMusicId2 = 0
     @XD.s32("def_music_id_3") defaultMusicId3 = 0

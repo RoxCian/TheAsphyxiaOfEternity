@@ -27,6 +27,13 @@ export class Rb5MusicOldRecord {
 export class Rb5MusicRecord extends Rb5MusicOldRecord implements ICollection<"rb.rb5.playData.musicRecord"> {
     readonly collection = "rb.rb5.playData.musicRecord"
     @XD.s32() time = Math.trunc(Date.now() / 1000)
+    @XD.s32() kFlag = 0
+    @XD.bool("ghostr") isHasGhostRed = false
+    @XD.bool("ghostb") isHasGhostBlue = false
+}
+export class Rb5MusicRecord2 extends Rb5MusicOldRecord implements ICollection<"rb.rb5.playData.musicRecord"> {
+    readonly collection = "rb.rb5.playData.musicRecord"
+    @XD.s32() time = Math.trunc(Date.now() / 1000)
     @XD.s32("bst") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.s32("bct") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.s32("bat") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
@@ -38,6 +45,7 @@ export class Rb5MusicRecord extends Rb5MusicOldRecord implements ICollection<"rb
 
 class Rb5MusicRecordsData {
     @XD.aw("rec", Rb5MusicRecord) record?: ArrayWrapper<"rec", Rb5MusicRecord> = {}
+    @XD.aw("rec", "rec", Rb5MusicRecord2) record2?: ArrayWrapper<"rec", Rb5MusicRecord2> = {}
     @XD.aw("rec", Rb5MusicOldRecord) recordOld?: ArrayWrapper<"rec", Rb5MusicOldRecord> = {}
 }
 export class Rb5MusicRecords {

@@ -66,25 +66,30 @@ async function queryContextUsingFactory<TSettings, TContext extends Record<strin
         let query: Query<TContext[Extract<keyof TContext, string>]>
         if (isContextQueryElement(q)) {
             query = q.query instanceof Function ? q.query(result.context) : q.query
+            let context: TContext[typeof k] | undefined = undefined
             switch (q.docType ?? "rid") {
                 case "rid":
-                    result.context[k] = await DBH.findOne(rid, query)
+                    context = await DBH.findOne(rid, query)
                     break
                 case "non-rid":
-                    result.context[k] = await DBH.findOne(undefined, query)
+                    context = await DBH.findOne(undefined, query)
                     break
                 case "public":
-                    result.context[k] = await DBH.findOne(query)
+                    context = await DBH.findOne(query)
                     break
             }
-            if (!result.context[k] && q.defaultValue) {
+            if (!context) {
                 result.existed[k] = false
-                result.context[k] = q.defaultValue(result.context)
-            } else result.existed[k] = true
+                if (q.defaultValue) result.context[k] = q.defaultValue(result.context)
+            } else {
+                result.existed[k] = true
+                result.context[k] = context
+            }
         } else {
             query = q
-            result.context[k] = await DBH.findOne(rid, query)
-            result.existed[k] = !!result.context[k]
+            const context = await DBH.findOne(rid, query)
+            if (context) result.context[k] = context
+            result.existed[k] = !!context
         }
     }
     return result

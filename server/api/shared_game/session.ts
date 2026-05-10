@@ -7,10 +7,17 @@ export async function createSession(rid: string, version: RbVersion): Promise<bo
     const oldSession = await DBH.findOne<RbSession>(rid, { collection: "rb.session", version })
     if (oldSession) {
         const time = utcNow()
-        if (time - oldSession.time > 1000 * 60 * 30) return false
+        // if (time - oldSession.time < 1000 * 60 * 30 && oldSession.read) return false // TODO: rethink of game processing
     }
     const newSession = new RbSession(version)
     await DBH.upsert(rid, { collection: "rb.session", version }, newSession)
+    return true
+}
+export async function markSessionRead(rid: string, version: RbVersion): Promise<boolean> {
+    const session = await DBH.findOne<RbSession>(rid, { collection: "rb.session", version })
+    if (!session) return false
+    session.read = true
+    DBH.update<RbSession>(rid, { collection: "rb.session" }, session)
     return true
 }
 export async function getSession(rid: string, version: RbVersion): Promise<RbSession | undefined> {
@@ -36,5 +43,5 @@ export async function removeAllSessions() {
     //     t.remove<RbSession>((session as any).__rid, { _id: session._id })
     // }
     // await t.commit()
-    console.log(await DBH.remove<RbSession>(undefined, { collection: "rb.session" }))
+    await DBH.remove<RbSession>(undefined, { collection: "rb.session" })
 }

@@ -9,6 +9,6 @@ export function registerJacketController() {
 
 let jackets: string[] | undefined
 const getJackets: C.C = async () => {
-    jackets ??= readdirSync(resolve(pluginDir, "webui/assets/jackets")).map(n => n.match(/^(?<filename>\d[a-z][a-z\d]\d(_[0123]?))\..+$/)?.groups.filename).filter(n => n)
+    jackets ??= readdirSync(resolve(pluginDir, "webui/assets/jackets")).map(n => n.match(/^(?<filename>\d[a-z][a-z\d]\d(_[0123]?))\..+$/)?.groups?.filename!).filter(n => !!n)
     return jackets
 }

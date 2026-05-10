@@ -1,5 +1,4 @@
 import { ICollection } from "../../utils/db/db_types"
-import { DBH } from "../../utils/db/dbh"
 import { base64ToBuffer, bufferToBase64 } from "../../utils/utility_functions"
 import { XD } from "../../utils/x"
 import { Rb6ChartType } from "../shared/rb_types"
@@ -7,7 +6,7 @@ import { Rb6ChartType } from "../shared/rb_types"
 const JCBinSize = 10240
 
 export class Rb6JustCollection implements ICollection<"rb.rb6.playData.justCollection#userId"> {
-    readonly collection: "rb.rb6.playData.justCollection#userId"
+    readonly collection = "rb.rb6.playData.justCollection#userId"
     @XD.s32() userId?: number = 0
     @XD.s32() musicId = 0
     @XD.s32("note_grade") chartType = Rb6ChartType.basic

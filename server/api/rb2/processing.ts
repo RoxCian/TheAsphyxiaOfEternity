@@ -17,6 +17,6 @@ export async function readPlayerPostProcess(player: Rb2Player) {
 export async function writePlayerPreProcess(player: Rb2Player): Promise<void> {
     toHalfWidthPlayerName(player)
     await detachReleaseInfo(2, player, (_, isUnlockItems) => {
-        if (isUnlockItems) player.pdata.glass = undefined
+        if (isUnlockItems) player.pdata.glass.g = undefined
     })
 }

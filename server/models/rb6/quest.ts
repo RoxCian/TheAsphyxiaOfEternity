@@ -5,7 +5,7 @@ import { Rb6ChartType } from "../shared/rb_types"
 
 export class Rb6Quest {
     @XD.s32() questId = 0
-    @XD.s32() dungeonId?: number
+    @XD.s32() dungeonId = 0
     @XD.s32() questType = 0
     @XD.s32() value = 0
     @XD.s32() endTime = 0

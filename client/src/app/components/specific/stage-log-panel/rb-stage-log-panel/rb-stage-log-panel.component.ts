@@ -1,9 +1,10 @@
-import { Component, computed, inject, input } from "@angular/core"
+import { Component, computed, inject, input, SecurityContext } from "@angular/core"
 import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-popup/rb-stage-log-popup.component"
 import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
+import { DomSanitizer } from "@angular/platform-browser"
 
 @Component({
     selector: "rb-stage-log-panel",
@@ -20,17 +21,20 @@ export class RbStageLogPanelComponent<T extends RbVersion, TChart extends RbChar
     readonly isReflecMeijin = computed(() => this.stageLog().version === 4 && (this.stageLog().rivalCpuId ?? 0) >= 20 && (this.stageLog().rivalCpuId ?? 0) <= 25)
     readonly errorInfoHTML = computed(() => {
         if (!this.stageLog()) return undefined
-        if (!this.stageLog().music) {
-            this.logService.log(`No music info found for <Music ID: ${this.stageLog().musicId}>`)
-            return `No music info found for <b lang="jp"><i>Music ID: ${this.stageLog().musicId}</i></b>`
-        } else if (!this.stageLog().chart) {
-            this.logService.log(`No chart info found for "${this.stageLog().music.title}" (${toRbChartTypeLiteral(this.stageLog().chartType, this.stageLog().version)})`, this.stageLog().chartType)
-            return `No chart info found for <b lang="jp"><i>${this.stageLog().music.title} (${toRbChartTypeLiteral(this.stageLog().chartType, this.stageLog().version)})</i></b>`
+        if (!this.stageLog().music || this.stageLog().music.musicUid === "----") {
+            const musicIdStr = this.sanitizer.sanitize(SecurityContext.HTML, `${this.stageLog().musicId}`)
+            this.logService.log(`No music info found for <Music ID: ${musicIdStr}>`)
+            return `No music info found for <b lang="jp"><i>Music ID: ${musicIdStr}</i></b>`
+        } else if (!this.stageLog().chart || this.stageLog().chart.level <= 0) {
+            const title = this.sanitizer.sanitize(SecurityContext.HTML, this.stageLog().music.title)
+            this.logService.log(`No chart info found for "${title}" (${toRbChartTypeLiteral(this.stageLog().chartType, this.stageLog().version) ?? "UNKNOWN CHART"})`, this.stageLog().chartType)
+            return `No chart info found for <b lang="jp"><i>${title} (${toRbChartTypeLiteral(this.stageLog().chartType, this.stageLog().version) ?? "UNKNOWN CHART"})</i></b>`
         }
         return undefined
     })
     private readonly popupService = inject(BungPopupService)
     private readonly logService = inject(RbLogService)
+    private readonly sanitizer = inject(DomSanitizer)
 
     protected onShowPopup() {
         if (!this.stageLog().music || !this.stageLog().chart) return

@@ -47,7 +47,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     const account = await DBH.findOne<Rb6PlayerAccount>(data.rid, { collection: "rb.rb6.player.account" })
     const base = await DBH.findOne<Rb6PlayerBase>(data.rid, { collection: "rb.rb6.player.base" })
     if (!account || !base) return undefined
-    const config = await DBH.findOne<Rb6PlayerConfig>(data.rid, { collection: "rb.rb6.player.config" })
+    const config = await DBH.findOne<Rb6PlayerConfig>(data.rid, { collection: "rb.rb6.player.config" }) ?? new Rb6PlayerConfig()
     result.version = version
     result.userId = account.userId
     result.name = base.name

@@ -17,19 +17,19 @@ export type FindPlayerResult = {
     name: string
     version: RbVersion
 }
-export async function findPlayer(rid: string, version: RbVersion): Promise<FindPlayerResult> {
+export async function findPlayer(rid: string, version: RbVersion): Promise<FindPlayerResult | undefined> {
     const result = { version: version } as FindPlayerResult
-    let account: RbPlayerAccount
-    let base: RbPlayerBase
+    let account: RbPlayerAccount | undefined = undefined
+    let base: RbPlayerBase | undefined = undefined
 
     switch (version) {
         case 1:
             base = await DBH.findOne<Rb1PlayerBase>(rid, { collection: "rb.rb1.player.base" })
-            result.userId = base?.userId
+            if (base) result.userId = base?.userId
             break
         case 2:
             base = await DBH.findOne<Rb2PlayerBase>(rid, { collection: "rb.rb2.player.base" })
-            result.userId = base?.userId
+            if (base) result.userId = base?.userId
             break
         case 3:
             account = await DBH.findOne<Rb3PlayerAccount>(rid, { collection: "rb.rb3.player.account" })

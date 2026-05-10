@@ -43,13 +43,14 @@ export function initializeBatch() {
         const g = await DBH.find<Rb6Ghost>({ collection: "rb.rb6.playData.ghost#userId" })
         const accountsCache = new Map<number, Rb6PlayerAccount>()
         for (const ghost of g) {
-            const account: Rb6PlayerAccount = accountsCache.get(ghost.userId) || await DB.FindOne<Rb6PlayerAccount>(undefined, { collection: "rb.rb6.player.account", userId: ghost.userId })
+            if (!ghost.userId) continue
+            const account = accountsCache.get(ghost.userId) || await DBH.findOne<Rb6PlayerAccount>(undefined, { collection: "rb.rb6.player.account", userId: ghost.userId })
             if (!account) continue
             accountsCache.set(ghost.userId, account)
             const rid = account.rid
             const update: Update<Rb6MusicRecord> = { $set: {} }
-            if (ghost.blueDataBase64) update.$set.isHasGhostBlue = true
-            if (ghost.redDataBase64) update.$set.isHasGhostRed = true
+            if (ghost.blueDataBase64) update.$set!.isHasGhostBlue = true
+            if (ghost.redDataBase64) update.$set!.isHasGhostRed = true
             DBH.update<Rb6MusicRecord>(rid, { collection: "rb.rb6.playData.musicRecord", musicId: ghost.musicId, chartType: ghost.chartType }, update)
         }
     })

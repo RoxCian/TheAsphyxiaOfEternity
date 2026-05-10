@@ -117,6 +117,7 @@ export namespace H {
             if (!HS.matchInfo(req, h.query)) continue
             return await h.handler(data, req)
         }
+        return success
     }
 }
 namespace HS {

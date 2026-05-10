@@ -13,12 +13,22 @@ export async function findCharts<TVersion extends RbVersion>(musicId: number, ve
     const result: RbChartsInfo<TVersion> = {}
     for (const c of charts) result[c.chartType] = c
     const variations = (await rbMusicVariation).filter(v => v.version === version && v.musicId === musicId)
-    for (const v of variations) result[v.chartType as RbChartType<TVersion>].variation = v as RbMusicVariation<TVersion, RbChartType<TVersion>>
+    for (const v of variations) result[v.chartType].variation = v as RbMusicVariation<TVersion, RbChartType<TVersion>>
     return result
 }
-export async function findChartInfoResponse<TVersion extends RbVersion, TChartType extends RbChartType<TVersion>>(musicId: number, version: TVersion, chartType: TChartType): Promise<RbChartResponse<TVersion, TChartType> | undefined> {
+export async function findChartInfoResponse<TVersion extends RbVersion, TChartType extends RbChartType<TVersion>>(musicId: number, version: TVersion, chartType: TChartType): Promise<RbChartResponse<TVersion, TChartType>> {
     const result = await findChartInfo(musicId, version, chartType) as RbChartResponse<TVersion, TChartType>
-    if (!result) return undefined
+    if (!result) return {
+        version,
+        musicId,
+        chartType,
+        level: -1,
+        skillRate: -1,
+        maxCombo: 0,
+        maxKeepCount: 0,
+        maxJustReflec: 0,
+        chartVersion: version
+    }
     const variation = (await rbMusicVariation).find(v => v.version === version && v.musicId === musicId && v.chartType === chartType) as RbMusicVariation<TVersion, TChartType>
     if (variation) result.variation = variation
     return result

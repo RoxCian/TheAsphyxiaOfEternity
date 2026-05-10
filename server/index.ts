@@ -1,4 +1,3 @@
-import { PJ } from "./utils/pj"
 import { registerRb1Controllers } from "./api/rb1/web"
 import { registerRb2Controllers } from "./api/rb2/web"
 import { registerRb3Controllers } from "./api/rb3/web"
