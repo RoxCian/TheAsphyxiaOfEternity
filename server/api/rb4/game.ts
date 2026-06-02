@@ -228,14 +228,12 @@ async function writePlayerCore(player: Rb4Player) {
     if (player.pdata.config) t.upsert(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
     if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
     if (player.pdata.classcheck && !isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck!.class > Rb4DojoIndex.none && hasAny(player.pdata.stageLogs?.log)) {
-        const musicsId = [player.pdata.stageLogs.log[0].musicId, player.pdata.stageLogs.log[1]?.musicId ?? -1, player.pdata.stageLogs.log[2]?.musicId ?? -1]
-        const chartsType = [player.pdata.stageLogs.log[0].chartType, player.pdata.stageLogs.log[1]?.chartType ?? Rb4ChartType.basic, player.pdata.stageLogs.log[2]?.chartType ?? -1 as Rb4ChartType.basic]
-        await updateClasscheck(rid, player.pdata.classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, musicsId, chartsType, t)
+        await updateClasscheck(rid, player.pdata.classcheck, player.pdata.stageLogs?.log ?? [], t)
         if (player.pdata.classcheck.clearType === 1) { // Stage log mark for webui
             // Classcheck failed
-            if (musicsId[1] >= 0) {
+            if (player.pdata.stageLogs.log[1]?.musicId != undefined) {
                 player.pdata.stageLogs.log[0].clearTypeForClasscheck = "Win"
-                if (musicsId[2] >= 0) {
+                if (player.pdata.stageLogs.log[2]?.musicId != undefined) {
                     player.pdata.stageLogs.log[1].clearTypeForClasscheck = "Win"
                     player.pdata.stageLogs.log[2].clearTypeForClasscheck = (player.pdata.stageLogs.log[2].clearType >= Rb4ClearType.clear) ? "Draw" : "Lose"
                 } else player.pdata.stageLogs.log[1].clearTypeForClasscheck = (player.pdata.stageLogs.log[1].clearType >= Rb4ClearType.clear) ? "Draw" : "Lose"
@@ -257,9 +255,9 @@ async function writePlayerCore(player: Rb4Player) {
     await t.commit()
 }
 
-async function updateClasscheck(rid: string, log: Rb4Classcheck, time: number, musicsId: number[], chartsType: Rb4ChartType[], t: DBH.T) {
+async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4PlayerStageLog[], t: DBH.T) {
     const query: Query<Rb4Classcheck> = { collection: "rb.rb4.playData.classcheck", class: log.class }
-    let classRecord = await DB.FindOne(rid, query)
+    let classRecord = await t.findOne(rid, query)
     let isNeedUpdate = false
     let isInitial = false
 
@@ -279,15 +277,13 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, time: number, m
     if (isInitial || !classRecord.totalScore || (log.totalScore > classRecord.totalScore)) {
         isNeedUpdate = true
         classRecord.totalScore = log.totalScore
-        classRecord.seperateScore = log.seperateScore
-        classRecord.seperateAchievementRateTimes100 = log.seperateAchievementRateTimes100
-        classRecord.musicsId = musicsId
-        classRecord.chartsType = chartsType
+        classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
     if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true
         classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
     }
+    const time = stageLogs[stageLogs.length - 1]?.time ?? 0
     classRecord.lastPlayTime = time
     if (isNeedUpdate) classRecord.recordUpdateTime = time
     classRecord.playCount++

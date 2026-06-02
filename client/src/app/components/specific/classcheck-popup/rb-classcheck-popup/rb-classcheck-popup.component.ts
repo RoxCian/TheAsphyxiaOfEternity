@@ -1,16 +1,24 @@
-import { Component, computed, inject, input } from "@angular/core"
-import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "rbweb"
-import { BungPopupService } from "../../../../services/bung/popup.service"
-import { RbClasscheckPopupComponent } from "../../classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component"
+import { AfterViewInit, Component, computed, ElementRef, inject, input, signal, viewChild, viewChildren } from "@angular/core"
+import { Rb5ClasscheckIndex, Rb4DojoIndex, Rb6ClasscheckIndex, RbClasscheckResponse, RbVersionWithClasscheck, RbChartType } from "rbweb"
+import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
+import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
+import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"
+import { BungPopupComponent } from "../../../bung/popup/popup.component"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { timeout } from "../../../../utils/functions"
 
 @Component({
-    selector: "rb-classcheck",
+    selector: "rb-classcheck-popup",
     standalone: false,
-    templateUrl: "./rb-classcheck-panel.component.html",
-    styleUrls: ["./rb-classcheck-panel.component.sass"]
+    templateUrl: "./rb-classcheck-popup.component.html",
+    styleUrl: "./rb-classcheck-popup.component.sass",
+    host: {
+        "[class.use-default-popup-leave-animation]": "true",
+        "[style.--background-end-height]": "`${height()}px`",
+    }
 })
-export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
-    readonly classcheck = input.required<RbClasscheckResponse<T>>()
+export class RbClasscheckPopupComponent<TVersion extends RbVersionWithClasscheck> extends BungPopupComponent implements AfterViewInit {
+    readonly classcheck = input.required<RbClasscheckResponse<TVersion>>()
     readonly realIndex = computed(() => {
         const classcheck = this.classcheck()
         if (isVersion(classcheck, 5)) {
@@ -104,49 +112,65 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
         const classcheck = this.classcheck()
         if (!isVersion(classcheck, 4)) return undefined
         if (classcheck.class < Rb4DojoIndex.examination) {
-            if (classcheck.clearType > 1) return "Clear"
-            return "Failed"
+            if (classcheck.clearType > 1) return "CLASSCHECK CLEAR"
+            return "CLASSCHECK FAILED"
         }
         if (!classcheck.examination) return undefined
         const examination = classcheck.examination
         const score = classcheck.totalScore
-        if (score >= examination.scoreBorderA) return "Rank A"
-        else if (score >= examination.scoreBorderB) return "Rank B"
-        else if (score >= examination.scoreBorderC) return "Rank C"
-        else if (score >= examination.scoreBorderD) return "Rank D"
+        if (score >= examination.scoreBorderA) return "EXAMINATION RANK A"
+        else if (score >= examination.scoreBorderB) return "EXAMINATION RANK B"
+        else if (score >= examination.scoreBorderC) return "EXAMINATION RANK C"
+        else if (score >= examination.scoreBorderD) return "EXAMINATION RANK D"
         return "Rank F"
     })
     readonly clearInfoMain = computed(() => {
         const classcheck = this.classcheck()
         if (isVersion(classcheck, 4)) {
             if (classcheck.class < Rb4DojoIndex.examination || !classcheck.examination) {
-                if (classcheck.clearType > 1) return "合格"
-                return "不合格"
+                if (classcheck.clearType > 1) return "認定試験　合格"
+                return "認定試験　不合格"
             }
             const examination = classcheck.examination
             const score = classcheck.totalScore
-            if (score >= examination.scoreBorderA) return "秀"
-            else if (score >= examination.scoreBorderB) return "優"
-            else if (score >= examination.scoreBorderC) return "良"
-            else if (score >= examination.scoreBorderD) return "可"
-            return "不可"
+            if (score >= examination.scoreBorderA) return "検定試験　秀"
+            else if (score >= examination.scoreBorderB) return "検定試験　優"
+            else if (score >= examination.scoreBorderC) return "検定試験　良"
+            else if (score >= examination.scoreBorderD) return "検定試験　可"
+            return "検定試験　不可"
         } else {
-            if (classcheck.clearType > 1) return "Clear"
-            return "Failed"
+            if (classcheck.clearType > 1) return "CLASSCHECK CLEAR"
+            return "CLASSCHECK FAILED"
         }
     })
-    private readonly popupService = inject(BungPopupService)
+    protected readonly breakpointService = inject(BungBreakpointService)
+    protected readonly height = signal(0)
+    protected readonly animationState = signal<"in" | "show">("in")
+    private readonly musicTitles = viewChildren(RbMusicTitleComponent)
+    private readonly artistMarquees = viewChildren("artistMarquee", { read: BungMarqueeComponent })
+    private readonly chartLamps = viewChildren(RbChartLampComponent)
+    private readonly background = viewChild<ElementRef<HTMLElement>>("background")
 
-    protected onShowPopup() {
-        if (!this.classcheck().stageLogs) return
-        this.popupService.popup(undefined, undefined, RbClasscheckPopupComponent, {
-            layer: "rb-classcheck",
-            duration: Infinity,
-            bindings: {
-                classcheck: this.classcheck
-            }
-        })
+    async ngAfterViewInit() {
+        await timeout() // breakpoint directive will be executed after view initiated, make sure animations start after directives all settled
+        const backgroundRect = this.background()?.nativeElement.getBoundingClientRect() ?? new DOMRect()
+        this.height.set(backgroundRect.height)
+        this.animationState.set("show")
     }
+    protected toChartType(value: unknown): RbChartType<TVersion> {
+        if (typeof value === "number" && value >= 0 && value <= 3) return value as RbChartType<TVersion>
+        return 0 as RbChartType<TVersion>
+    }
+    protected onBackgroundAnimationEnd(event: AnimationEvent | TransitionEvent) {
+        // if (event.toState !== "show") return
+        setTimeout(() => {
+            for (const musicTitle of this.musicTitles()) musicTitle.isMarqueedisabled.set(false)
+            for (const artistMarquee of this.artistMarquees()) artistMarquee.disabled.set(false)
+        }, 200)
+        setTimeout(() => {
+            for (const chartLamp of this.chartLamps()) chartLamp?.isVisible.set(true)
+        }, 200 + 200 * ((this.classcheck().stageLogs?.length ?? 0) > 3 ? 4 : 3))
+    }    
 }
 
 function isVersion<T extends RbVersionWithClasscheck>(classcheck: RbClasscheckResponse<RbVersionWithClasscheck>, version: T): classcheck is RbClasscheckResponse<T> {

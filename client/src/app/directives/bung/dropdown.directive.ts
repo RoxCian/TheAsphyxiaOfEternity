@@ -139,10 +139,10 @@ export class BungDropdownDirective implements OnDestroy {
         if ((this.#component && this.#component.state() !== "out") || this.#delayTimeout == undefined) return
         this.#delayTimeout = undefined
         this.#component = this.dropdownService.dropdown(this.def, this.#lastMouseEvent ?? this.hostElement, Object.assign({}, this.options(), {
-            bindings: [
-                inputBinding("float", this.float),
-                inputBinding("isReversed", this.isReversed)
-            ]
+            bindings: {
+                float: this.float,
+                isReversed: this.isReversed
+            }
         }))
         this.#lastMouseEvent = undefined
         this.isDropdownOpenInternal.set(true)

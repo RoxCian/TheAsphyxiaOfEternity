@@ -11,6 +11,9 @@
     white-space: nowrap
     overflow: clip
 
+    &.hoverable
+        cursor: pointer
+
     .classcheck-name
         display: flex
         flex-direction: column
@@ -50,12 +53,12 @@
         > *
             font-size: 0.75em
             line-height: 1.25em
-        .classcheck-ar
+        .classcheck-score-info-heading
             grid-area: 1 / span 2
             font-size: 2em
             font-weight: bold
             justify-self: center
-        .classcheck-score
+        .classcheck-ar, .classcheck-score
             grid-area: 2 / 1
         .classcheck-play-count
             grid-area: 2 / 2
@@ -76,11 +79,24 @@
         position: absolute
         inset: 0
         filter: blur(160px)
+.hover-background
+    position: absolute
+    inset: 0
+    background: color-mix(in srgb, white 75%, black)
+    opacity: 0
+    z-index: 0
+    transition: opacity 0.2s
+    border-radius: 8px
+
+    .classcheck.hoverable:hover &
+        opacity: 0.3
+    .classcheck.hoverable:active &
+        opacity: 0.6
 @media screen and (width < 768px)
     .classcheck
         padding: 0.5em
         gap: 0.5em
-        .classcheck-name .main-name, .classcheck-clear-info .main-info, .classcheck-score-info .classcheck-ar
+        .classcheck-name .main-name, .classcheck-clear-info .main-info, .classcheck-score-info .classcheck-score-info-heading
             font-size: 1.25em
         .classcheck-name .sub-name, .classcheck-clear-info .sub-info
             font-size: 0.75em

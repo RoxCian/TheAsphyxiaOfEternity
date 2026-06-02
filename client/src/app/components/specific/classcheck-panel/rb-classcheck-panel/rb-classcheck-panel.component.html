@@ -1,10 +1,14 @@
-<div class="classcheck card rb-panel">
+<div class="classcheck card rb-panel" [class.hoverable]="classcheck().stageLogs" (click)="onShowPopup()"
+    [bungTooltip]="'Cannot find separated play data for each musics. Did you import this classcheck record from old Asphyxia?'" [disabled]="!!classcheck().stageLogs">
     @let isV4 = classcheck().version === 4;
     @if (classcheck().clearType > 1) {
         <div class="deco-background has-rb{{ classcheck().version }}-background"></div>
         <div class="deco-background-blur-box">
             <div class="deco-background has-rb{{ classcheck().version }}-background"></div>
         </div>
+    }
+    @if (classcheck().stageLogs) {
+        <div class="hover-background"></div>
     }
     <div class="classcheck-name">
         @if (classcheckNameSub()) {
@@ -20,8 +24,18 @@
     </div>
     <bung-divider isVertical />
     <div class="classcheck-score-info">
-        <div class="classcheck-ar">{{ classcheck().averageAchievementRate }}%</div>
-        <bung-icon class="classcheck-score is-first-child" icon="counter">{{ classcheck().totalScore }}</bung-icon>
+        <div class="classcheck-score-info-heading">
+            @if (isV4 && classcheck().class > 16) {
+                {{ classcheck().totalScore }}
+            } @else {
+                {{ classcheck().averageAchievementRate }}%
+            }
+        </div>
+        @if (isV4 && classcheck().class > 16) {
+            <bung-icon class="classcheck-ar is-first-child" icon="percent">{{ classcheck().averageAchievementRate }}%</bung-icon>
+        } @else {
+            <bung-icon class="classcheck-score is-first-child" icon="counter">{{ classcheck().totalScore }}</bung-icon>
+        }
         <bung-icon class="classcheck-play-count" icon="restart">{{ classcheck().playCount }}</bung-icon>
         <bung-icon class="classcheck-update is-first-child" icon="update">{{ classcheck().update | relativeTime }}</bung-icon>
         <bung-icon class="classcheck-last-play" icon="clock-time-nine-outline">{{ classcheck().lastPlay | relativeTime }}</bung-icon>

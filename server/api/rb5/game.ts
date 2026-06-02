@@ -272,7 +272,7 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
     if (hasAny(player.pdata.stageLogs?.log)) for (const i of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, i, t)
     if (!isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck.class > Rb5ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
         (player.pdata.classcheck as Rb5Classcheck).totalScore = player.pdata.stageLogs.log[0].score + (player.pdata.stageLogs.log[1]?.score ?? 0) + (player.pdata.stageLogs.log[2]?.score ?? 0)
-        await updateClasscheck(rid, player.pdata.classcheck as Rb5Classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, t)
+        await updateClasscheck(rid, player.pdata.classcheck as Rb5Classcheck, player.pdata.stageLogs.log ?? [], t)
     }
     if (hasAny(player.pdata.released?.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
     if (hasAny(player.pdata.playerParam?.item)) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
@@ -326,9 +326,9 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb5PlayerSta
     t.insert(rid, stageLog)
 }
 
-async function updateClasscheck(rid: string, log: Rb5Classcheck, time: number, t: DBH.T): Promise<void> {
+async function updateClasscheck(rid: string, log: Rb5Classcheck, stageLogs: Rb5PlayerStageLog[], t: DBH.T): Promise<void> {
     const query: Query<Rb5Classcheck> = { collection: "rb.rb5.playData.classcheck", class: log.class }
-    let classRecord = await DB.FindOne(rid, query)
+    let classRecord = await t.findOne(rid, query)
     let isNeedUpdate = false
     let isInitial = false
 
@@ -345,14 +345,16 @@ async function updateClasscheck(rid: string, log: Rb5Classcheck, time: number, t
         isNeedUpdate = true
         classRecord.rank = log.rank
     }
-    if (isInitial || (classRecord.totalScore == null) || (log.totalScore > classRecord.totalScore)) {
+    if (isInitial || (classRecord.totalScore == undefined) || (log.totalScore > classRecord.totalScore)) {
         isNeedUpdate = true
         classRecord.totalScore = log.totalScore
     }
     if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true
+        if (classRecord.clearType <= log.clearType) classRecord.stageLogs = stageLogs
         classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
     }
+    const time = stageLogs[stageLogs.length - 1]?.time ?? 0
     classRecord.lastPlayTime = time
     if (isNeedUpdate) classRecord.recordUpdateTime = time
     classRecord.playCount++

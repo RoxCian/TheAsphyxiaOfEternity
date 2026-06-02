@@ -22,10 +22,10 @@
             <bung-marquee class="music-artist is-size-7" [content]="m.music.artist" [spacing]="60" [delay]="1500" />
             <div class="charts-level is-size-7">
                 @let ct = chartType();
-                @if (ct == undefined) {
-                    @for (ct of m.charts | key; track ct) {
-                        @if (m.charts[ct]!.level > 0) {
-                            <rb-level [version]="m.version" [level]="m.charts[ct]!.level" [skillRate]="m.charts[ct]!.skillRate" [rbChartType]="ct" [version]="m.version" />
+                @if (typeof ct !== "number") {
+                    @for (el of ct ?? (m.charts | key); track el) {
+                        @if (m.charts[el]!.level > 0) {
+                            <rb-level [version]="m.version" [level]="m.charts[el]!.level" [skillRate]="m.charts[el]!.skillRate" [rbChartType]="el" [version]="m.version" />
                         }
                     }
                 } @else {
@@ -42,6 +42,6 @@
         </div>
     </div>
 }
-<div class="extra-content placeholder">
+<div class="extra-content" [class.placeholder]="isPlaceholder()">
     <ng-content />
 </div>

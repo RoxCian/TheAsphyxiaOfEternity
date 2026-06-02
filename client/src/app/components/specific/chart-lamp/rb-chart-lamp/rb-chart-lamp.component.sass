@@ -1,5 +1,5 @@
-@use "../rb-chart-light-shared.sass"
-rb-chart-light
+@use "../rb-chart-lamp-shared.sass"
+rb-chart-lamp
     --start-translate: translateX(-120%)
     --start-width: 0
     --start-height: 1
@@ -19,7 +19,7 @@ rb-chart-light
         .background, .foreground
             border-radius: 0 8px 8px 0
 
-    .chart-light-container
+    .chart-lamp-container
         display: flex
         overflow: clip
         align-items: center
@@ -61,11 +61,11 @@ rb-chart-light
     .text
         white-space: nowrap
 
-rb-chart-light.disable-animation
-    .background, .foreground, .chart-light-container.blur
+rb-chart-lamp.disable-animation
+    .background, .foreground, .chart-lamp-container.blur
         animation-play-state: paused
 
-rb-chart-light.is-vertical
+rb-chart-lamp.is-vertical
     --start-translate: translateY(-120%)
     --start-width: 1
     --start-height: 0

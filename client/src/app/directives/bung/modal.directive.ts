@@ -41,10 +41,9 @@ export class BungModalDirective<TReturn> {
     }
     open() {
         if (this.#component) return
-        const options = this.options() ?? {}
-        const bindings = options.bindings ?? []
-        bindings.push(inputBinding("isCard", this.isCard))
-        options.bindings = bindings
+        const options = Object.assign({}, this.options())
+        options.bindings ??= {}
+        options.bindings["isCard"] ??= this.isCard
         this.#component = this.modalService.modal(this.header, this.body, this.headerContext, this.bodyContext, options)
         this.#componentCloseHandle = this.#component.closed.subscribe(this.cleanEventHandler)
         this.#componentReturnedHandle = this.#component.returned.subscribe(v => this.returned.emit(v))

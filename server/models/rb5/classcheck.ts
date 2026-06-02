@@ -1,6 +1,7 @@
 import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
 import { Rb5ClasscheckIndex, RbClasscheckClearType } from "../shared/rb_types"
+import { Rb5PlayerStageLog } from "./profile"
 
 export class Rb5Classcheck implements ICollection<"rb.rb5.playData.classcheck"> {
     readonly collection = "rb.rb5.playData.classcheck"
@@ -14,6 +15,7 @@ export class Rb5Classcheck implements ICollection<"rb.rb5.playData.classcheck"> 
     @XD.ToX.s32() lastPlayTime = 0
     @XD.ToX.s32() recordUpdateTime = 0
     @XD.ToX.s32() @XD.ToO.s32("score_rank") rank = 0
+    stageLogs?: Rb5PlayerStageLog[]
 
     constructor(classIndex: Rb5ClasscheckIndex = Rb5ClasscheckIndex.none) {
         this.class = classIndex

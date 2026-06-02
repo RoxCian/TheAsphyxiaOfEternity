@@ -1,0 +1,117 @@
+@let v = classcheck().version;
+@let capacity = (classcheck().stageLogs?.length ?? 0) > 3 ? 4 : 3;
+@let isV4 = classcheck().version === 4;
+@let isMobile = breakpointService.breakpointsToggled.mobile();
+
+<ng-template let-stageLog="stageLog" let-stageIndex="stageIndex" #stageResult>
+    <div class="stage-log-container">
+        <div class="stage-log-animation-wrapper">
+            @let stgId = stageLog?.stageIndex ?? stageIndex;
+            <div class="stage-log-wrapper stage-log-{{ animationState() }}" [style.--stage-log-delay]="`${0.2 + 0.2 * stgId}s`">
+                <div class="stage-index card {{ classcheck().clearType > 1 ? `has-rb${v}-background` : '' }}" [class.failed]="classcheck().clearType <= 1" [style.--background-offset]="`calc(${100 / capacity * stgId}% + ${stgId > 0 ? 0.5 : 0}em)`">
+                    <span class="is-size-7">ROUND {{ stgId + 1 }}</span>
+                </div>
+                @if (stageLog) {
+                    <div class="stage-log-info card">
+                        <figure class="jacket">
+                            <img [src]="(stageLog.music.musicUid | rbJacket : stageLog.chartType)()" />
+                        </figure>
+                        <rb-music-title [music]="stageLog.music" [variation]="stageLog.chart.variation" />
+                        <bung-marquee class="artist" [content]="stageLog.chart.variation?.artist ?? stageLog.music.artist" [delay]="1500" #artistMarquee />
+                        @let chartName = stageLog.chart.chartType | rbChartTypeLiteral : v;
+                        <div class="chart is-{{ chartName | lowercase }}-chart">
+                            <div class="chart-name">{{ chartName }}</div>
+                            <rb-level [version]="v" [level]="stageLog.chart.level" [skillRate]="stageLog.chart.skillRate" />
+                        </div>
+                        <bung-divider />
+                        <div class="stage-log-score-grid">
+                            <bung-icon class="not-first-child" icon="counter" isNoWrap bungTooltip="Score">{{ stageLog.score }}</bung-icon>
+                            <bung-icon icon="percent" isNoWrap bungTooltip="Achievement rate">{{ stageLog.achievementRate + "%" }}</bung-icon>
+                            @if (v === 6) {
+                                <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ stageLog.combo }}</bung-icon>
+                            }
+                            <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ stageLog.missCount | rbMissCount }}</bung-icon>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="stage-log-info failed card">
+                        <i class="mdi mdi-emoticon-dead mdi-48px"></i>
+                        <p class="is-size-7">Defeated by the charts</p>
+                    </div>
+                }
+                <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [isShortened]="isMobile" [customizedText]="!stageLog ? isMobile ? '×' : 'FAILED' : undefined" />
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template let-jacketSrc="jacketSrc" let-stageIndex="stageIndex" #stageJacketBackground>
+    <figure class="jacket-large">
+        @if (jacketSrc) { <img class="jacket-{{ animationState() }}" [style.--stage-log-delay]="!jacketSrc ? '0s' : `${0.2 + 0.2 * stageIndex}s`" [src]="jacketSrc"> }
+    </figure>
+</ng-template>
+
+<div class="modal-body" bungBreakpoint="mobile" [style.--capacity]="capacity">
+    <div class="background-container background-{{ animationState() }} card" (animationend)="onBackgroundAnimationEnd($event)" #background>
+        <div class="jackets-background">
+            @for (i of (capacity | range); track i) {
+                @let stageLog = classcheck().stageLogs?.[i];
+                <ng-container [ngTemplateOutlet]="stageJacketBackground" [ngTemplateOutletContext]="{ jacketSrc: stageLog ? (stageLog.music.musicUid | rbJacket : stageLog.chartType)() : undefined, stageIndex: i }" />
+            }
+        </div>
+        <div class="modal-card-background card"></div>
+    </div>
+    <div class="info-container">
+        <div class="classcheck-info-wrapper classcheck-info-{{ animationState() }}">
+            <div class="classcheck-info">
+                <div class="classcheck-name">
+                    @if (classcheckNameSub()) {
+                        <bung-marquee class="sub-name" [content]="classcheckNameSub()" [spacing]="60" [delay]="1500" />
+                    }
+                    <bung-marquee class="main-name" [attr.lang]="classcheckNameSub() ? 'ja' : undefined" [content]="classcheckNameMain()" [spacing]="60" [delay]="1500" />
+                </div>
+                <bung-divider isVertical />
+                <div class="classcheck-score-info">
+                    <div class="classcheck-score-info-heading">
+                        @if (isV4 && classcheck().class > 16) {
+                            {{ classcheck().totalScore }}
+                        } @else {
+                            {{ classcheck().averageAchievementRate }}%
+                        }
+                    </div>
+                    @if (isV4 && classcheck().class > 16) {
+                        <bung-icon class="classcheck-ar is-first-child" icon="percent">{{ classcheck().averageAchievementRate }}%</bung-icon>
+                    } @else {
+                        <bung-icon class="classcheck-score is-first-child" icon="counter">{{ classcheck().totalScore }}</bung-icon>
+                    }
+                    @if (!isMobile) { <bung-icon class="classcheck-play-count" icon="restart">{{ classcheck().playCount }}</bung-icon> }
+                    <bung-icon class="classcheck-update is-first-child" icon="update">{{ classcheck().update | relativeTime }}</bung-icon>
+                    @if (!isMobile) { <bung-icon class="classcheck-last-play" icon="clock-time-nine-outline">{{ classcheck().lastPlay | relativeTime }}</bung-icon> }
+                </div>
+            </div>
+        </div>
+        <div class="classcheck-lamp {{ classcheck().clearType > 1 ? `has-rb${v}-background` : '' }}" [style.--lamp-delay]="`${0.6 + 0.2 * capacity}s`">
+            <div class="classcheck-lamp-wrapper classcheck-lamp-{{ animationState() }}">
+                <div class="classcheck-lamp-background-box" [class.failed]="classcheck().clearType <= 1">
+                    <div class="classcheck-lamp-background"></div>
+                    <div class="classcheck-lamp-background blur"></div>
+                </div>
+                <div class="clear-info-wrapper">
+                    <div class="clear-info classcheck-clear-info-{{ animationState() }}" [class.failed]="classcheck().clearType <= 1">
+                        <div class="line"></div>
+                        <div class="text">
+                            <span class="clear-info-main" [attr.lang]="clearInfoSub() ? 'jp' : undefined">{{ clearInfoMain() }}</span>
+                            @if (clearInfoSub()) { <span class="clear-info-sub">{{ clearInfoSub() }}</span> }
+                        </div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stage-log-info-wrapper">
+            @for (i of (capacity | range); track i) {
+                @let stageLog = classcheck().stageLogs?.[i];
+                <ng-container [ngTemplateOutlet]="stageResult" [ngTemplateOutletContext]="{ stageLog, stageIndex: i }" />
+            }
+        </div>
+    </div>
+</div>

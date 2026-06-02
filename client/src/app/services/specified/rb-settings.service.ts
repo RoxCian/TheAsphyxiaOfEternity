@@ -16,11 +16,9 @@ export class RbSettingsService {
     private readonly settingsResource = rbData<RbSettingsResponse<RbVersion>>(computed(() => `rb${this.versionService.version()}ReadSettings`), this.profileService.ridRequest)
     readonly settings = linkedSignal(computed(() => this.settingsResource.hasValue() ? this.settingsResource.value() : createRbSettingsResponse(this.versionService.version())))
     readonly settingsForm = form(this.settings, path => {
-        required(path.name)
-        minLength(path.name, 2, { message: "Name length is less than 2." })
+        required(path.name, { message: "Name is empty."})
         maxLength(path.name, 8, { message: "Name length is more than 8." })
-        validate(path.name, ctx => ctx.value() ? undefined : { kind: "", context: ctx, message: "Name is empty." })
-        validate(path.name, ctx => isInShiftJISCharset(ctx.value()) ? undefined : { kind: "", context: ctx, message: "Some of characters in name cannot convert to ShiftJIS." })
+        validate(path.name, ctx => isInShiftJISCharset(ctx.value()) ? undefined : { kind: "", context: ctx, message: "Some of characters in name cannot convert to SHIFT-JIS." })
         maxLength(path.comment, 50)
         min(path.shotVolume, 0)
         max(path.shotVolume, 100)

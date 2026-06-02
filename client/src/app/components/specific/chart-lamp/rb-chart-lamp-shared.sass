@@ -1,4 +1,4 @@
-rb-chart-light, rb-chart-light-badge
+rb-chart-lamp, rb-chart-lamp-badge
     --blink-interval: 0.1s
     > *
         position: absolute
@@ -40,26 +40,26 @@ rb-chart-light, rb-chart-light-badge
         --back2: linear-gradient(135deg, #c4ad54, #fff56c, #c4ad54)
         color: white
 
-    .chart-light-container.blur
-        animation: chart-light-blur-animation var(--blink-interval) linear infinite
+    .chart-lamp-container.blur
+        animation: chart-lamp-blur-animation var(--blink-interval) linear infinite
 
     .background, .foreground
-        animation: chart-light-background-animation var(--blink-interval) linear infinite
+        animation: chart-lamp-background-animation var(--blink-interval) linear infinite
 
     .foreground
         opacity: 0.3
 
     &.no-clear-type
-        .chart-light-container.blur, .background, .foreground
+        .chart-lamp-container.blur, .background, .foreground
             animation-play-state: paused
 
-@keyframes chart-light-background-animation 
+@keyframes chart-lamp-background-animation 
     from
         background: var(--back1)
     to
         background: var(--back2)
 
-@keyframes chart-light-blur-animation 
+@keyframes chart-lamp-blur-animation 
     from
         filter: blur(6px)
     to

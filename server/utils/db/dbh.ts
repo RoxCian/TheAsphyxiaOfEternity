@@ -162,10 +162,14 @@ export namespace DBH {
         return { refid, query, data, isPublicDoc }
     }
 
+    function isUpdate<T>(data: Partial<T> | Update<T>): data is Update<T> {
+        return data && !!((data as Update<T>).$set || (data as Update<T>).$unset || (data as Update<T>).$push || (data as Update<T>).$pull || (data as Update<T>).$pop || (data as Update<T>).$min || (data as Update<T>).$max || (data as Update<T>).$inc || (data as Update<T>).$addToSet)
+    }
     // Serialized & typed DB query
-    async function checkData<T extends ICollection<any>>(data: Partial<T>, isUpdate: boolean): Promise<void> {
+    async function checkData<T extends ICollection<any>>(data: Partial<T> | Update<T>, update: boolean): Promise<void> {
+        if (isUpdate(data) && update) return
         if (!data.collection) throw new Error("Empty collection name")
-        if (isUpdate) {
+        if (update) {
             for (let k in data) if (k.startsWith("__")) delete data[k]
         }
         if (!await enqueueTask(() => DB.FindOne<IDBCollectionName>({ collection: "dbManager.collectionName", name: data.collection }))) {
@@ -192,14 +196,14 @@ export namespace DBH {
     }
     export async function update<T extends ICollection<any>>(query: Query<T>, data: Doc<T> | Update<T>): Promise<DBUpdateResult<T>>
     export async function update<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T> | Update<T>): Promise<DBUpdateProfileResult<T>>
-    export async function update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, dataDocOrUpdate?: Doc<T> | Update<T>): Promise<DBUpdateResult<T> | DBUpdateProfileResult<T>> {
+    export async function update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, dataDocOrUpdate?: Update<T>): Promise<DBUpdateResult<T> | DBUpdateProfileResult<T>> {
         const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)
         checkData(data, true)
         if (refid == undefined) return isPublicDoc ? await enqueueTask(() => DB.Update(query, data)) : await enqueueTask(() => DB.Update(null!, query, data))
         else return await enqueueTask(() => DB.Update(refid, query, data))
     }
-    export async function upsert<T extends ICollection<any>>(query: Query<T>, data: Doc<T>): Promise<DBUpsertResult<T>>
-    export async function upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T>): Promise<DBUpsertProfileResult<T>>
+    export async function upsert<T extends ICollection<any>>(query: Query<T>, data: Doc<T> | Update<T>): Promise<DBUpsertResult<T>>
+    export async function upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T> | Update<T>): Promise<DBUpsertProfileResult<T>>
     export async function upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T> | Update<T>, dataDocOrUpdate?: Doc<T>): Promise<DBUpsertResult<T> | DBUpsertProfileResult<T>> {
         const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDocOrUpdate)
         checkData(data, false)
@@ -311,16 +315,16 @@ export namespace DBH {
         push(...s: IDBSubmission[]): void {
             this.submissions.push(...s)
         }
-        update<T extends ICollection<any>>(query: Query<T>, data: Doc<T>): void
-        update<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T>): void
-        update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T>, dataDoc?: Doc<T>): void {
+        update<T extends ICollection<any>>(query: Query<T>, data: Update<T>): void
+        update<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Update<T>): void
+        update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Update<T>, dataDoc?: Update<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
             for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
             this.submissions.push({ refid: refid, query: query, operation: "update", doc: data, isPublicDoc })
         }
-        upsert<T extends ICollection<any>>(query: Query<T>, data: Doc<T>): void
-        upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Doc<T>): void
-        upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Doc<T>, dataDoc?: Doc<T>): void {
+        upsert<T extends ICollection<any>>(query: Query<T>, data: Update<T>): void
+        upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Update<T>): void
+        upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Update<T>, dataDoc?: Update<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
             for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
             this.submissions.push({ refid: refid, query: query, operation: "upsert", doc: data, isPublicDoc })

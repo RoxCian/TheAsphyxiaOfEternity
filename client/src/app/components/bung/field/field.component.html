@@ -8,13 +8,13 @@
     <div class="control">
         <ng-content />
         @if (help()) {
-            <p class="help">
+            <p class="help first-help">
                 <bung-insertion [content]="help()" [context]="helpContext()" />
             </p>
-            @for (error of formField()?.()?.errors(); track error) {
-                <p class="help is-danger">
-                    {{ error.message }}
-                </p>
+        }
+        @for (error of formField()?.()?.errors(); let i = $index; track error.fieldTree()) {
+            @if (error && error.message && log(error)) {
+                <p class="help is-danger" [class.first-help]="!help() && i === 0">{{ error.message }}</p>
             }
         }
     </div>

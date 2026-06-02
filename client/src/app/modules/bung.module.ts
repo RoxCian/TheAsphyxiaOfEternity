@@ -27,8 +27,8 @@ import { FormField } from "@angular/forms/signals"
 import { BungToggleComponent } from "../components/bung/toggle/toggle.component"
 import { BungNumberInputComponent } from "../components/bung/number-input/number-input.component"
 import { BungModalComponent } from "../components/bung/modal/modal.component"
-import { BungModalDirective } from "../directives/bung/modal.directive";
-import { BungImgSrcDirective } from '../directives/bung/bung-img-src.directive';
+import { BungModalDirective } from "../directives/bung/modal.directive"
+import { BungImgSrcDirective } from "../directives/bung/bung-img-src.directive"
 
 @NgModule({
     declarations: [

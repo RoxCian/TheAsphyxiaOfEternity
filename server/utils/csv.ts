@@ -17,7 +17,7 @@ export type CsvField = {
     enumDefinition?: Record<string, number | string>
 }
 enum CsvFieldType {
-    integer, number, boolean, range, date, string, nullableString, bin, json, enum
+    integer, number, boolean, range, date, string, nullableString, bin, json, enum, flags
 }
 export type CsvTable = {
     readonly cacheKey: symbol
@@ -30,8 +30,10 @@ function parseCsvField(name: string, csvField: string): CsvField {
     const match = csvField.trim().toLowerCase().match(/^((?<type>number|num|n|integer|int|i|bool|boolean|bin)(?<length>[(\[]\d+[)\]])?|(?<noLengthType>str|string|str|string|range|date|datetime|t|time|json))(?<nullable>\??)$/)
     if (!match || !match.groups) {
         if (csvField.includes("|")) {
+            const isFlags = csvField.startsWith("<") && csvField.endsWith(">")
+            if (isFlags) csvField = csvField.substring(1, csvField.length - 1)
             const enumEls = csvField.replace("?", "").split("|")
-            let currentValue = 0
+            let currentValue = isFlags ? 1 : 0
             const enumDefinition: Record<string, number | string> = {}
             for (const enumEl of enumEls) {
                 const elParts = enumEl.split("=")
@@ -47,9 +49,10 @@ function parseCsvField(name: string, csvField: string): CsvField {
                         enumDefinition[elParts[0]] = currentValue
                     }
                 }
-                currentValue++
+                if (isFlags) currentValue <<= 1
+                else currentValue++
             }
-            return { name, type: CsvFieldType.enum, nullable: csvField.endsWith("?"), length: -1, enumDefinition }
+            return { name, type: isFlags ? CsvFieldType.flags : CsvFieldType.enum, nullable: csvField.endsWith("?"), length: -1, enumDefinition }
         }
         throw new Error(`cannot parse field "${csvField}"`)
     }
@@ -95,33 +98,40 @@ function parseCsvValue(value: string, field: CsvField): any {
             return buf
         case CsvFieldType.boolean:
             return value !== "0" && value !== "" && value.toLowerCase() !== "false"
-        case CsvFieldType.integer:
-            {
-                if (field.length < 0) return parseInt(value)
-                const parts = value.split(",")
-                const array = new Array(field.length < 0 ? 1 : field.length)
-                for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseInt(parts[i]) : 0
-                return array
-            }
-        case CsvFieldType.number:
-            {
-                if (field.length < 0) return parseFloat(value)
-                const parts = value.split(",")
-                const array = new Array(field.length < 0 ? 1 : field.length)
-                for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseFloat(parts[i]) : 0
-                return array
-            }
+        case CsvFieldType.integer: {
+            if (field.length < 0) return parseInt(value)
+            const parts = value.split(",")
+            const array = new Array(field.length < 0 ? 1 : field.length)
+            for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseInt(parts[i]) : 0
+            return array
+        }
+        case CsvFieldType.number: {
+            if (field.length < 0) return parseFloat(value)
+            const parts = value.split(",")
+            const array = new Array(field.length < 0 ? 1 : field.length)
+            for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseFloat(parts[i]) : 0
+            return array
+        }
         case CsvFieldType.date: return new Date(Date.parse(value))
-        case CsvFieldType.range:
-            {
-                const parts = value.split("-").map(p => parseFloat(p)).slice(0, 2) as [number, number] | [number] | []
-                if (parts.length === 0) return 0
-                else if (parts.length === 1) return parts[0]
-                return parts
-            }
+        case CsvFieldType.range: {
+            if (!value) return 0
+            const parts = value.split("-").map(parseFloat).slice(0, 2) as [number, number] | [number] | []
+            if (parts.length === 1) return parts[0]
+            return parts
+        }
         case CsvFieldType.string: return value == undefined ? "" : value
         case CsvFieldType.json: return value == undefined || value === "" ? undefined : JSON.parse(value)
         case CsvFieldType.enum: return field.enumDefinition?.[value]
+        case CsvFieldType.flags: {
+            if (!value) return 0
+            const parts = value.split("|")
+            let result = 0
+            for (const p of parts) {
+                const v = field.enumDefinition?.[p]
+                if (v != undefined && typeof v === "number") result |= v
+            }
+            return result
+        }
         default: throw new Error(`not registered type ${field.type}`)
     }
 }

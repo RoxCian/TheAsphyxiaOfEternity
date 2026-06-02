@@ -89,7 +89,7 @@ export interface RbClasscheckResponse<T extends RbVersionWithClasscheck> {
     lastPlay: Date
     update: Date
     examination: T extends 4 ? (Rb4ExaminationInfo | undefined) : undefined
-    score?: [RbStageLogResponse<T, RbChartType<T>>, RbStageLogResponse<T, RbChartType<T>> | undefined, RbStageLogResponse<T, RbChartType<T>> | undefined]
+    stageLogs?: RbStageLogResponse<T, RbChartType<T>>[]
 }
 
 export interface RbStageLogResponse<T extends RbVersion, TChart extends RbChartType<T>> {

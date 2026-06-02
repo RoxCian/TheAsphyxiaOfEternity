@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, model, signal, viewChild } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { RbChartLightComponent } from "../../chart-light/rb-chart-light/rb-chart-light.component"
+import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
 import { viewChildren } from "@angular/core"
 import { RbRankBadgeComponent } from "../../rank-badge/rb-rank-badge/rb-rank-badge.component"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
@@ -50,7 +50,7 @@ export class RbRecordPopupContentAllChartComponent<TVersion extends RbVersion> {
 
     private readonly musicTitle = viewChild(RbMusicTitleComponent)
     private readonly artistMarquee = viewChild("artistMarquee", { read: BungMarqueeComponent })
-    private readonly chartLights = viewChildren(RbChartLightComponent)
+    private readonly chartLamps = viewChildren(RbChartLampComponent)
     private readonly rankBadges = viewChildren(RbRankBadgeComponent)
     private readonly background = viewChild<ElementRef<HTMLElement>>("background")
 
@@ -91,7 +91,7 @@ export class RbRecordPopupContentAllChartComponent<TVersion extends RbVersion> {
             this.artistMarquee()?.disabled.toggle()
         }, 200)
         setTimeout(() => {
-            for (const chartLight of this.chartLights()) chartLight?.isVisible.toggle()
+            for (const chartLamp of this.chartLamps()) chartLamp?.isVisible.toggle()
             for (const rankBadge of this.rankBadges()) rankBadge?.isVisible.toggle()
         }, 1600)
     }

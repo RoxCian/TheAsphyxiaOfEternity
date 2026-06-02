@@ -1,0 +1,63 @@
+questId,questName,questNameOrig,element
+int,string,string?,fire|aqua|wood|light|dark
+,,
+0,Land of Reflesia,リフレシアの大地,fire
+1,Praying for travel,旅の祈願,aqua
+2,Searching for tresures,財宝を探して,wood
+3,The first trial,最初の試練,fire
+4,Beast in hidden place,秘境の獣,fire
+5,Ancient seals,古代の封印,aqua
+6,Wind that never stops,止まない風,wood
+7,The wanted,お尋ね者,aqua
+8,Premonition,予感,fire
+9,Determination,覚悟,aqua
+10,Relation,絆,wood
+11,Emblem of the moon,月の紋章,wood
+31,Brand new adventure,新たな冒険,fire
+32,Gathering clues,手掛かりを求めて,aqua
+33,Maniacs' hideout,狂団のアジト,wood
+34,Ceremony of gravity,重力の儀式,fire
+35,Mastermind,黒幕,fire
+36,Northward,北へ,aqua
+37,Attack,進撃,wood
+38,Monster of frost,極凍の魔獣,aqua
+39,Fight in the hellfire,炎獄の死闘,fire
+40,Duel on the lake,湖上の決戦,aqua
+41,Battle above the tree,大樹の戦い,wood
+42,Hope,希望,dark
+48,The Reflesia of Eternity,悠久のリフレシア,light
+12,Longing for the future,未来への憧れ,fire
+13,Across time...,時を越えて…,wood
+14,Maiden on board,船上の乙女,aqua
+15,Merry Christmas,,fire
+16,Place one's want to return to,戻りたい場所,wood
+17,Happy new year,謹賀新年,aqua
+18,The 6th KAC Group A,The 6th KAC グループ A,light
+19,The 6th KAC Group B,The 6th KAC グループ B,light
+20,The 6th KAC Group C,The 6th KAC グループ C,light
+21,The 6th KAC Group D,The 6th KAC グループ D,light
+22,Feast for warriors,戦士たちの宴,light
+23,Awaken your instincts,本能を呼び醒ます,fire
+24,The Six Atonements of Setrios,セトリオスの6の赦罪,dark
+25,The silver harp,白銀の竪琴,dark
+26,The awakening of dragon,翼龍の目覚め,aqua
+27,The beginning of despair,絶望の始まり,dark
+28,The third peak,第三の頂,aqua
+29,The first peak,原初の頂,aqua
+30,The last hope,最期の望み,aqua
+44,colette fishing,コレットフィッシング,aqua
+45,The fallen angel,堕ちた天使,dark,FLASE
+46,Unfulfilled wish,叶わぬ思い,light,FLASE
+47,Beach side record,砂浜のレコード,fire,FLASE
+50,I only Divide Me,,light
+51,Field that must be protected,守るべき大地,wood
+52,1 minute 40 seconds,1分40秒,aqua
+53,The secret beat,秘めたるBeat,fire
+54,make it clear,,aqua
+55,Queen of the Beasts,百獣の女王,wood
+56,Memory of chaplets,花冠の記憶,fire
+57,Shadow of sun,太陽の陰影,aqua
+58,Emperor of darkness,漆黒の魔皇帝,fire
+59,C₆H₆,,wood
+43,Tower of lament,嘆きの塔,dark
+49,Tower of ruin,破滅の塔,dark

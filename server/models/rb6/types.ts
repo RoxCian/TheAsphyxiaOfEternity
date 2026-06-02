@@ -28,3 +28,13 @@ export type Rb6PastelLevel = {
     health: number
     attack: number
 }
+export enum Rb6DungeonBuffFlag {
+    masterJudge = 1 << 0,
+    jrInfMode = 1 << 1,
+    greatAsGood = 1 << 2,
+    onlyJrDamage = 1 << 3,
+    rivalJrGreatDamage = 1 << 4,
+    noTopColor = 1 << 5,
+    lowSpeed = 1 << 6,
+    noRecovery = 1 << 7,
+}

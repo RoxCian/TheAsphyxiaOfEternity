@@ -1,5 +1,5 @@
 import { Observable } from "rxjs"
-import { Binding, Signal, TemplateRef, Type } from "@angular/core"
+import { Binding, InputSignal, Signal, TemplateRef, Type } from "@angular/core"
 import { HttpResourceRef } from "@angular/common/http"
 
 export type BungPopupState = "in" | "out" | "show"
@@ -41,9 +41,10 @@ export type BungPopupOptionsBase = {
     backdropOptions?: BungBackdropOptions
     isManual?: boolean
 }
+type InputBindingRecord = Record<string, (() => unknown) | unknown>
 export type BungPopupOptions<T, TReturn = any> = {
     values?: BungReturnContext<TReturn> | (() => BungReturnContext<TReturn>)
-    bindings?: Binding[]
+    bindings?: InputBindingRecord
     setter?: (popup: T) => void
 } & BungPopupOptionsBase
 

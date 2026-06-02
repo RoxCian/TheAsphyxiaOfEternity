@@ -11,7 +11,7 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
 })
 export class RbMusicIconComponent {
     readonly music = input<RbMusicResponse<RbVersion>>()
-    readonly chartType = input<RbChartType<RbVersion> | undefined>(undefined)
+    readonly chartType = input<RbChartType<RbVersion> | RbChartType<RbVersion>[] | undefined>(undefined)
     readonly isVirtualized = input(false, { transform: toggleTransform })
     readonly isPlaceholder = input(false, { transform: toggleTransform })
 

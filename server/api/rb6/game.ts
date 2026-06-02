@@ -283,7 +283,7 @@ async function writePlayerCore(player: Rb6Player) {
     if (hasAny(player.pdata.stageLogs?.log)) for (const l of player.pdata.stageLogs.log) await updateMusicRecordFromStageLog(rid, l, t, player.pdata.ghost?.list)
     if (((player.pdata.classcheck as Rb6Classcheck)?.class ?? Rb6ClasscheckIndex.none) > Rb6ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
         (player.pdata.classcheck as Rb6Classcheck).totalScore = sumBy(player.pdata.stageLogs.log, l => l.score)
-        await updateClasscheckRecordFromLog(rid, player.pdata.classcheck as Rb6Classcheck, player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time, t)
+        await updateClasscheckRecordFromLog(rid, player.pdata.classcheck as Rb6Classcheck, player.pdata.stageLogs.log ?? [], t)
     }
     if (hasAny(player.pdata.quest?.list) && hasAny(player.pdata.stageLogs?.log)) for (const q of player.pdata.quest.list) {
         const now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
@@ -383,9 +383,9 @@ async function updateGhostScore(userId: number, ghost: Rb6Ghost, t: DBH.T): Prom
     t.upsert({ collection: "rb.rb6.playData.ghost#userId", musicId: ghost.musicId, chartType: ghost.chartType, userId: userId }, ghost)
 }
 
-async function updateClasscheckRecordFromLog(rid: string, log: Rb6Classcheck, time: number, t: DBH.T): Promise<void> {
+async function updateClasscheckRecordFromLog(rid: string, log: Rb6Classcheck, stageLogs: Rb6PlayerStageLog[], t: DBH.T): Promise<void> {
     const query: Query<Rb6Classcheck> = { collection: "rb.rb6.playData.classcheck", class: log.class }
-    let classRecord = await DB.FindOne(rid, query)
+    let classRecord = await t.findOne(rid, query)
     let isNeedUpdate = false
     let isInitial = false
 
@@ -408,8 +408,10 @@ async function updateClasscheckRecordFromLog(rid: string, log: Rb6Classcheck, ti
     }
     if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true
+        if (classRecord.clearType <= log.clearType) classRecord.stageLogs = stageLogs
         classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
     }
+    const time = stageLogs[stageLogs.length - 1]?.time ?? 0
     classRecord.lastPlayTime = time
     if (isNeedUpdate) classRecord.recordUpdateTime = time
     classRecord.playCount++

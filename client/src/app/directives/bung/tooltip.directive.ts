@@ -3,6 +3,7 @@ import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
 import { BungTooltipComponent, BungTooltipFloat } from "../../components/bung/tooltip/tooltip.component"
 import { BungTooltipService } from "../../services/bung/tooltip.service"
 import { throttle } from "../../utils/functions"
+import { toggleTransform } from "../../signals/transforms"
 
 @Directive({
     selector: "[bungTooltip]",
@@ -16,8 +17,9 @@ export class BungTooltipDirective implements OnDestroy {
     readonly triggerMethod = input<"mouseenter" | "click">("mouseenter")
     readonly closeTriggerMethod = input<"mouseleave" | "click">("mouseleave")
     readonly float = input<BungTooltipFloat>("auto")
-    readonly delay = input<number>(250)
-    readonly duration = input<number>(Infinity)
+    readonly delay = input(250)
+    readonly duration = input(Infinity)
+    readonly disabled = input(false, { transform: toggleTransform })
     private readonly isTooltipOpenInternal = signal(false)
     readonly isTooltipOpen = this.isTooltipOpenInternal.asReadonly()
     readonly tooltipOpened = output()
@@ -91,18 +93,19 @@ export class BungTooltipDirective implements OnDestroy {
                     document.addEventListener("scroll", this.scrollEventHandler, { capture: true })
                 }
             }
-         })
+        })
+        effect(() => {
+            if (this.disabled()) this.close()
+        })
     }
     ngOnDestroy() {
         this.dispose()
     }
     open() {
-        if (this.#component || this.#delayTimeout == undefined || this.content() == undefined) return
+        if (this.disabled() || this.#component || this.#delayTimeout == undefined || this.content() == undefined) return
         this.#delayTimeout = undefined
         this.#component = this.tooltipService.tip(this.content, this.context, this.hostElement, Object.assign({}, this.options(), {
-            bindings: [
-                inputBinding("float", this.float)
-            ]
+            bindings: { float: this.float }
         } as BungPopupOptions<BungTooltipComponent>))
         this.#componentCloseHandle = this.#component.closed.subscribe(this.cleanEventHandler)
     }

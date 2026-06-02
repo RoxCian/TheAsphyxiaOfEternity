@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, computed, inject, model, signal, viewChild } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
-import { RbChartLightComponent } from "../../chart-light/rb-chart-light/rb-chart-light.component"
+import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
 import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"
 import { RbRankBadgeComponent } from "../../rank-badge/rb-rank-badge/rb-rank-badge.component"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
@@ -58,7 +58,7 @@ export class RbRecordPopupContentSingleChartComponent<TVersion extends RbVersion
     private readonly artistMarquee = viewChild("artistMarquee", { read: BungMarqueeComponent })
     private readonly scoreInfo = viewChild<ElementRef<HTMLElement>>("scoreInfo")
     private readonly background = viewChild<ElementRef<HTMLElement>>("background")
-    private readonly chartLight = viewChild(RbChartLightComponent)
+    private readonly chartLamp = viewChild(RbChartLampComponent)
     private readonly rankBadge = viewChild("rankBadge", { read: RbRankBadgeComponent })
 
     async ngAfterViewInit() {
@@ -109,7 +109,7 @@ export class RbRecordPopupContentSingleChartComponent<TVersion extends RbVersion
             this.artistMarquee()?.disabled.toggle()
         }, 200)
         setTimeout(() => {
-            this.chartLight()?.isVisible.toggle()
+            this.chartLamp()?.isVisible.toggle()
             this.rankBadge()?.isVisible.toggle()
         }, 1000)
     }

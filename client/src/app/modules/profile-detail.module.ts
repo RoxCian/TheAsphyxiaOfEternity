@@ -5,7 +5,7 @@ import { BungModule } from "./bung.module"
 import { VersionNavComponent } from "../components/misc/version-nav/version-nav.component"
 import { RbBattleStatComponent } from "../components/specific/battle-stat/rb-battle-stat/rb-battle-stat.component"
 import { RbBywordTagComponent } from "../components/specific/byword-tag/rb-byword-tag/rb-byword-tag.component"
-import { RbChartLightComponent } from "../components/specific/chart-light/rb-chart-light/rb-chart-light.component"
+import { RbChartLampComponent } from "../components/specific/chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
 import { RbClasscheckPanelComponent } from "../components/specific/classcheck-panel/rb-classcheck-panel/rb-classcheck-panel.component"
 import { Rb6JustCollectRateComponent } from "../components/specific/just-collect-rate/rb6-just-collect-rate/rb6-just-collect-rate.component"
 import { RbLevelDisplaySwitchComponent } from "../components/specific/level-display-switch/rb-level-display-switch/rb-level-display-switch.component"
@@ -62,7 +62,9 @@ import { RbMusicIconComponent } from "../components/specific/music-icon/rb-music
 import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb-mylist-editor/rb-mylist-editor.component'
 import { RbSharedComponentsModule } from "./rb-shared-components.module"
 import { RbSaveDataSubpage } from "../pages/profile/save-data/save-data.component";
-import { RbChartLightBadgeComponent } from '../components/specific/chart-light/rb-chart-light-badge/rb-chart-light-badge.component'
+import { RbChartLampBadgeComponent } from '../components/specific/chart-lamp/rb-chart-lamp-badge/rb-chart-lamp-badge.component';
+import { RbClasscheckPopupComponent } from '../components/specific/classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component';
+import { RangePipe } from '../pipes/misc/range.pipe'
 
 @NgModule({
     declarations: [
@@ -75,7 +77,7 @@ import { RbChartLightBadgeComponent } from '../components/specific/chart-light/r
         RbMusicTitleComponent,
         RbLevelDisplaySwitchComponent,
         RbRecordPopupComponent,
-        RbChartLightComponent,
+        RbChartLampComponent,
         RbTitlePipe,
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
@@ -124,7 +126,9 @@ import { RbChartLightBadgeComponent } from '../components/specific/chart-light/r
         RbSettingsSubpage,
         RbSaveDataSubpage,
         RbMylistEditorComponent,
-        RbChartLightBadgeComponent
+        RbChartLampBadgeComponent,
+        RbClasscheckPopupComponent,
+        RangePipe
     ],
     imports: [
         CommonModule,
@@ -144,7 +148,7 @@ import { RbChartLightBadgeComponent } from '../components/specific/chart-light/r
         RbMusicTitleComponent,
         RbLevelDisplaySwitchComponent,
         RbRecordPopupComponent,
-        RbChartLightComponent,
+        RbChartLampComponent,
         RbTitlePipe,
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
@@ -193,7 +197,7 @@ import { RbChartLightBadgeComponent } from '../components/specific/chart-light/r
         RbSettingsSubpage,
         RbSaveDataSubpage,
         RbMylistEditorComponent,
-        RbChartLightBadgeComponent
+        RbChartLampBadgeComponent
     ],
 })
 export class ProfileDetailModule { }

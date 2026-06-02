@@ -116,12 +116,12 @@ export class RbSaveDataSubpage {
     protected async onOpenConfirmDeleteSaveFile() {
         this.deleteResult.set("")
         this.#confirmDeleteModal = this.modalService.modal("Confirm delete save file", this.confirmModalBodyTemplate, undefined, undefined,
-            { bindings: [inputBinding("isCard", () => true), inputBinding("hasDelete", inverted(this.isDeleting))] }
+            { bindings: { isCard: true, hasDelete: inverted(this.isDeleting) } }
         )
     }
     protected async onOpenFinalConfirmDeleteSaveFile() {
         this.#finalConfirmDeleteModal = this.modalService.modal("LAST WARN", this.finalConfirmModalBodyTemplate, undefined, undefined,
-            { bindings: [inputBinding("isCard", () => true), inputBinding("hasDelete", inverted(this.isDeleting))] }
+            { bindings: { isCard: true, hasDelete: inverted(this.isDeleting) } }
         )
         const finalHandle = this.#finalConfirmDeleteModal.closing.subscribe(c => {
             finalHandle.unsubscribe()

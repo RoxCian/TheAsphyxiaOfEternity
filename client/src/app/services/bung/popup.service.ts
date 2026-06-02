@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactory, ComponentFactoryResolver, ComponentRef, inject, Injectable, Injector, input, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
+import { ApplicationRef, Binding, ComponentFactory, ComponentFactoryResolver, ComponentRef, inject, Injectable, Injector, input, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
 import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 import { BungBackdropOptions, BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase, BungReturnContext, DefaultBackdropOptions } from "../../utils/bung"
 import { BungPopupComponent } from "../../components/bung/popup/popup.component"
@@ -46,21 +46,22 @@ export class BungPopupService {
         BungPopupService.addLayer("bung-popup")
     }
     popup<T extends BungPopupComponent<TReturn>, TReturn = any>(data: BungInsertionContentOrComputation, context: any | Signal<any>, popupType: Type<T>, options?: BungPopupOptions<T, TReturn>): T {
-        const o: BungPopupOptions<T, TReturn> = Object.assign(this.defaultPopupOptions, options)
-        const backdrop = this.addBackdrop(o.layer ?? "bung-popup", o.backdropOptions)
-        const bindings = options?.bindings ?? []
-        if (typeof o.duration === "function") bindings.push(inputBinding("duration", o.duration))
+        options = Object.assign({}, this.defaultPopupOptions, options)
+        const backdrop = this.addBackdrop(options.layer ?? "bung-popup", options.backdropOptions)
+        const bindings: Binding[] = []
+        if (typeof options.duration === "function") bindings.push(inputBinding("duration", options.duration))
         if (typeof data === "function" && !data.toString().startsWith("class ")) bindings.push(inputBinding("content", data as (() => BungInsertionContent)))
         if (isSignal(context)) bindings.push(inputBinding("context", context))
-        if (typeof o.values === "function" && !o.values.toString().startsWith("class ")) bindings.push(inputBinding("returnContext", o.values))
-        const ref = this.getLayerContainer(o.layer ?? "bung-popup").createComponent(popupType, { injector: this.injector, bindings: options?.bindings })
+        if (typeof options.values === "function" && !options.values.toString().startsWith("class ")) bindings.push(inputBinding("returnContext", options.values))
+        if (options?.bindings) for (const k in options.bindings) bindings.push(inputBinding(k, typeof options.bindings[k] === "function" ? (options.bindings[k] as () => unknown) : (() => options.bindings![k])))
+        const ref = this.getLayerContainer(options.layer ?? "bung-popup").createComponent(popupType, { injector: this.injector, bindings })
 
         const result = ref.instance
         const hostViewAdded = !tryAction(() => this.application.attachView(ref.hostView)).hasError
-        if (typeof o.duration === "number") result.duration.set(o.duration)
+        if (typeof options.duration === "number") result.duration.set(options.duration)
         if (typeof data !== "function" || data.toString().startsWith("class ")) result.content.set(data as BungInsertionContent)
         if (!isSignal(context)) result.context.set(context)
-        if (typeof o.values !== "function" || o.values.toString().startsWith("class ")) result.returnContext.set(o.values as BungReturnContext<TReturn>)
+        if (typeof options.values !== "function" || options.values.toString().startsWith("class ")) result.returnContext.set(options.values as BungReturnContext<TReturn>)
         const closedSubscription = result.closed.subscribe(async () => {
             await timeout()
             ref.destroy()
@@ -70,7 +71,7 @@ export class BungPopupService {
             resettingSubscription.unsubscribe()
             closedSubscription.unsubscribe()
         })
-        const openedSubscription = backdrop ? result.opened.subscribe(() => this.openBackdrop(backdrop, o.backdropOptions)) : undefined
+        const openedSubscription = backdrop ? result.opened.subscribe(() => this.openBackdrop(backdrop, options.backdropOptions)) : undefined
         const resettingSubscription = result.resetting.subscribe(() => {
             if (backdrop) this.closeBackdrop(backdrop)
         })
@@ -78,7 +79,7 @@ export class BungPopupService {
             await timeout()
             if (!e.isCanceled && backdrop) this.closeBackdrop(backdrop)
         })
-        if (backdrop && (o.backdropOptions?.clickBackdropToClose ?? true)) {
+        if (backdrop && (options.backdropOptions?.clickBackdropToClose ?? true)) {
             function backdropClickHandler(ev: MouseEvent) {
                 if (ev.button === 0) {
                     result.close()
@@ -88,12 +89,12 @@ export class BungPopupService {
             }
             backdrop.addEventListener("click", backdropClickHandler)
         }
-        if (o.setter) {
-            o.setter(result)
+        if (options.setter) {
+            options.setter(result)
             ref.changeDetectorRef.detectChanges()
         }
 
-        if (!o.isManual) setTimeout(() => {
+        if (!options.isManual) setTimeout(() => {
             result.open()
         }, 0)
         return result

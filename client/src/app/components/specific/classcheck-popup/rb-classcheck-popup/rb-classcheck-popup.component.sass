@@ -1,0 +1,332 @@
+:host
+    display: flex
+    justify-content: center
+    align-items: center
+    pointer-events: none !important
+
+    > *
+        pointer-events: all
+
+.modal-body
+    display: block
+    position: relative
+    width: calc(var(--capacity, 3) / 3 * 48em)
+    height: unset
+    overflow: visible
+
+.background-container
+    position: absolute
+    inset: 0
+    overflow: clip
+    border-radius: 8px
+    user-select: none
+    pointer-events: none
+.jackets-background
+    display: grid
+    grid-template: 1fr / repeat(var(--capacity, 3), 1fr)
+    grid-auto-flow: row
+    position: absolute
+    inset: 0
+    bottom: 2em
+    filter: blur(8px)
+    overflow: clip
+
+    figure
+        width: 100%
+        height: 100%
+        background: var(--card-background)
+    img
+        width: 100%
+        height: max(var(--background-end-height, 0), 100%)
+        object-fit: cover
+        object-position: center center
+    
+.modal-card-background
+    position: absolute
+    inset: 0
+    border-top: 0
+    background: linear-gradient(to bottom, transparent 5em, var(--card-background) 9em)
+    backdrop-filter: blur(8px)
+    pointer-events: none
+
+.info-container
+    padding: 2em
+    padding-top: 6em
+    display: flex
+    flex-direction: column
+
+    .classcheck-info
+        display: grid
+        grid-template: 1fr / 1fr auto auto
+        gap: 1.25em
+
+    .classcheck-name
+        display: flex
+        flex-direction: column
+        flex-wrap: nowrap
+        overflow: hidden
+        align-self: center
+
+        .sub-name
+            font-size: 1em
+            opacity: 0.7
+        .main-name
+            font-size: 2em
+            font-weight: bold
+
+    .classcheck-score-info
+        display: grid
+        grid-template: auto 1.25em 1.25em / 5em 5em
+        gap: 0 0.5em
+        align-self: center
+        z-index: 1
+
+        > *
+            font-size: 0.75em
+            line-height: 1.25em
+        .classcheck-score-info-heading
+            grid-area: 1 / span 2
+            font-size: 2em
+            font-weight: bold
+            justify-self: center
+        .classcheck-ar, .classcheck-score
+            grid-area: 2 / 1
+        .classcheck-play-count
+            grid-area: 2 / 2
+        .classcheck-update
+            grid-area: 3 / 1
+        .classcheck-last-play
+            grid-area: 3 / 2
+.classcheck-lamp
+    position: relative
+    height: 2em
+    margin: 2em -2em
+    overflow-x: clip
+
+    .classcheck-lamp-wrapper
+        width: 100%
+        height: 100%
+    .classcheck-lamp-background-box
+        position: absolute
+        inset: 0
+    .classcheck-lamp-background
+        position: absolute
+        inset: 0.25em 0
+        background: var(--rb-background, #70707050)
+
+        &.blur
+            left: -18px
+            right: -18px
+            filter: blur(6px)
+    .clear-info-wrapper
+        height: 100%
+        overflow-x: clip
+    .clear-info
+        position: relative
+        display: flex
+        height: 100%
+        align-items: center
+        text-align: center
+        font-size: 0.75em
+        gap: 0.5em
+        color: var(--invert-card-background)
+
+        &.failed
+            color: white
+
+            .line
+                background: white
+
+        .line
+            flex: 1
+            background: var(--text-color)
+            height: 1px
+        
+        .clear-info-sub
+            margin-left: 4em
+.stage-log-info-wrapper
+    display: flex
+    gap: 2em
+    align-items: stretch
+    // margin-bottom: -4em
+
+    .stage-log-container
+        flex: 1
+        display: flex
+        justify-content: center
+
+    .stage-log-animation-wrapper
+        width: calc(100% + 4em)
+        height: calc(100% + 4em)
+        margin: -2em
+        padding: 2em
+        overflow: clip
+    .stage-log-wrapper
+        display: grid
+        grid-template: auto 1fr auto / minmax(0, 1fr)
+        grid-auto-flow: column
+        height: 100%
+    .stage-index
+        text-align: center
+        padding-bottom: 1em
+    .stage-index:not(.failed)
+        background: var(--rb-background)
+        background-size: calc(100% * var(--capacity, 3) + calc(var(--capacity, 3) - 1) * 1em) calc(100% - 1em + 8px)
+        background-position: var(--background-offset, 0) 0
+        color: var(--invert-card-background)
+    .stage-log-info
+        margin-top: -1em
+        padding: 1em
+        z-index: 1
+    .stage-log-info.failed
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        > *
+            opacity: 0.5
+    rb-music-title
+        width: 100%
+        font-size: 1.25em
+        font-weight: bold
+    .chart
+        display: flex
+        flex-wrap: nowrap
+        opacity: 0.7
+
+        .chart-name
+            color: var(--rb-chart-color)
+            margin-right: 0.5em
+    .jacket, img
+        width: 100%
+        overflow: clip
+        border-radius: 8px
+        aspect-ratio: 1 / 1
+    .chart, .artist, .stage-log-score-grid
+        font-size: 0.75em
+    bung-icon
+        position: relative
+    bung-icon::before
+        content: ""
+        position: absolute
+        inset: 0
+        background: #7773
+        opacity: 0
+        pointer-events: none
+        border-radius: 4px
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+    bung-icon:hover::before
+        opacity: 1
+    rb-chart-lamp
+        margin-top: -8px
+    ::ng-deep rb-chart-lamp .chart-lamp-container
+        padding-top: 8px
+
+        .text
+            font-size: 0.75em
+
+@media screen and (width < 768px)
+    .modal-body
+        width: 32em
+        max-width: 36em
+    .modal-card-background
+        background: linear-gradient(to bottom, transparent 3.75em, var(--card-background) 9em)
+    .info-container
+        padding: 0.5em
+        padding-top: 4em
+    .info-container .classcheck-info
+        gap: 0.5em
+    .info-container .classcheck-name .main-name, .info-container .classcheck-score-info .classcheck-score-info-heading
+        font-size: 1.25em
+    .info-container .classcheck-name .sub-name
+        font-size: 0.75em
+    .info-container .classcheck-score-info
+        grid-template: auto 1.25em 1.25em / 5em
+    .classcheck-lamp
+        margin: 0.5em -0.5em
+    .stage-log-info-wrapper
+        // margin-bottom: -2.5em
+        gap: 0.5em
+    .stage-log-info-wrapper .stage-log-info
+        padding: 0.5em
+    .stage-log-info-wrapper rb-music-title
+        font-size: 1em
+.classcheck-info-in
+    transform: translateY(-2em)
+    opacity: 0
+.classcheck-info-show
+    animation: show-classcheck-info 0.4s var(--ease-in) forwards
+// .background-container
+//     height: 0
+.background-show
+    animation: show-background 0.4s var(--ease-in) forwards
+.jacket-large img
+    transform: translateY(-100%)
+.jacket-show
+    animation: show-jacket 0.4s var(--stage-log-delay) var(--ease-in) forwards
+.stage-log-wrapper
+    transform: translateY(calc(-100% - 1em))
+.stage-log-show
+    animation: show-stage-log 0.4s var(--stage-log-delay) var(--ease-in) forwards
+.classcheck-lamp-wrapper
+    transform: translateX(calc(-100% - 54px))
+.classcheck-lamp-show
+    animation: classcheck-clear-lamp-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+.classcheck-lamp-background-box:not(.failed)
+    .classcheck-lamp-background
+        animation: background-blink 0.1s var(--ease-in) infinite
+    .classcheck-lamp-background.blur
+        animation: background-blur-blink 0.1s var(--ease-in) infinite
+.clear-info
+    transform: translateX(calc(100% - 12em))
+.classcheck-clear-info-show
+    animation: classcheck-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+@keyframes show-classcheck-info
+    from
+        transform: translateY(-6em)
+        opacity: 0
+    to
+        transform: none
+        opacity: 1
+@keyframes show-background
+    from
+        height: 0
+    99.9999%
+        height: var(--background-end-height)
+    to
+        height: auto
+@keyframes show-jacket
+    from
+        transform: translateY(-100%)
+    to
+        transform: none
+@keyframes show-stage-log
+    from
+        transform: translateY(calc(-100% - 1em))
+    to
+        transform: none
+@keyframes background-blink
+    from
+        opacity: 0.8
+        filter: brightness(1.3)
+    to
+        opacity: 1
+        filter: none
+@keyframes background-blur-blink
+    from
+        opacity: 0.8
+        filter: brightness(1.3) blur(6px)
+    to
+        opacity: 1
+        filter: blur(12px)
+@keyframes classcheck-clear-lamp-enter
+    from
+        transform: translateX(calc(-100% - 54px))
+    to
+        transform: none
+@keyframes classcheck-clear-info-enter
+    from
+        transform: translateX(calc(100% - 12em))
+    to
+        transform: none

@@ -219,7 +219,7 @@
                                         @if (!music) { 
                                             <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
                                         } @else {
-                                            <rb-music-icon class="ranking-quest-option" [music]="music" [chartType]="c.chartType" isVirtualized />
+                                            <rb-music-icon class="ranking-quest-option" [music]="music" [chartType]="[0, 1, c.chartType]" isVirtualized />
                                         }
                                     }
                                 </div>
@@ -279,7 +279,7 @@
                             <bung-option [value]="charaCard.id" [isHidden]="!isCharacterCardAvailable(charaCard)">
                                 <div class="characard-option-content">
                                     <img class="card" src="static/assets/characards/characard_{{ charaCard.id }}.webp">
-                                    <div class="characard-element-icon">
+                                    <div class="characard-element-icon card">
                                         @switch (charaCard.element) {
                                             @case (0) { <i class="mdi mdi-fire fire-element is-danger-accent"></i> }
                                             @case (1) { <i class="mdi mdi-water aqua-element is-info-accent"></i> }
@@ -302,7 +302,7 @@
                 <ng-template let-slot #mylistEditTemplate>
                     <rb-mylist-editor [slot]="slot" (mylistSlotChanged)="onMylistSlotChanged()" />
                 </ng-template>
-                <bung-field class="is-fullwidth" label="Favorate List" [formField]="casted.mylist">
+                <bung-field class="is-fullwidth" label="My List" [formField]="casted.mylist">
                     <div class="mylist-list">
                         @if (version === 2) {
                             @let casted = settingsService.cast(form, 2);

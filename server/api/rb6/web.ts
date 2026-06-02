@@ -137,7 +137,8 @@ const readClasschecks: C.C<RbRequest, RbClasscheckResponse<V>[]> = async data =>
             playCount: c.playCount,
             lastPlay: new Date(c.lastPlayTime * 1000),
             update: new Date(c.recordUpdateTime * 1000),
-            examination: undefined
+            examination: undefined,
+            stageLogs: c.stageLogs ? await Promise.all(c.stageLogs.map(toStageLogResponse)) : undefined
         }
         result.push(r)
     }
