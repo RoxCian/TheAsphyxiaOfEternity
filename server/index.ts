@@ -23,7 +23,7 @@ export function register() {
     R.Config("unlock_all_items", { type: "boolean", default: false })
     R.Config("comment_feature", { type: "boolean", default: true })
 
-    R.Config("<colette_all_seasons>_daily_stamp_boost", { type: "integer", default: 0 })
+    R.Config("<colette>_daily_stamp_boost", { type: "integer", default: 1, range: [1, 9] })
 
     registerRb1Handlers()
     registerRb2Handlers()

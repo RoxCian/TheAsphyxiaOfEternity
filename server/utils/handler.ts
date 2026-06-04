@@ -52,7 +52,8 @@ export namespace H {
     //     HS.routes[method] = fn
     // }
     export function route<TData = unknown>(method: string, h: Handler<TData>) {
-        const methodParts = method.split("?")[0]
+        const methodParts = method.split("?")
+        const methodName = methodParts[0]
         const paramParts = methodParts.length === 1 ? [] : methodParts[1].split("&")
         let model = "*"
         let module = "*"
@@ -66,17 +67,17 @@ export namespace H {
             handler: h
         }
 
-        let handlers = HS.routes[method]
+        let handlers = HS.routes[methodName]
         if (handlers) {
             handlers.push(currentQueryHandler)
             return
         }
 
         handlers = [currentQueryHandler]
-        HS.routes[method] = handlers
+        HS.routes[methodName] = handlers
         const fn: EPR = async (req, data, send) => {
             await initialize()
-            console.log("Start handler method:", method)
+            console.log("Start handler method:", methodName, `(model: ${req.model}, module: ${req.module})`)
             try {
                 for (const _h of handlers) {
                     if (!HS.matchInfo(req, _h.query)) continue
@@ -103,13 +104,13 @@ export namespace H {
                 }
                 return await send.success()
             } catch (ex) {
-                console.log("Handler error:", method)
+                console.log("Handler error:", methodName, `(model: ${req.model}, module: ${req.module})`)
                 throw ex
             } finally {
-                console.log("Finish handler method:", method)
+                console.log("Finish handler method:", methodName, `(model: ${req.model}, module: ${req.module})`)
             }
         }
-        R.Route(method, fn)
+        R.Route(methodName, fn)
     }
     export async function redirect<T>(method: string, data: X<T>, req: EamuseInfo): Promise<Promise<HandlerResult | object> | HandlerResult | object> {
         await initialize()
@@ -122,8 +123,31 @@ export namespace H {
 }
 namespace HS {
     export function matchInfo(info: EamuseInfo, query: { module: string, model: string }): boolean {
-        if (query.model !== "*" && info.model !== query.model) return false
         if (query.module !== "*" && info.module !== query.module) return false
+        if (query.model === "*") return true
+        const infoModelParts = info.model.split(":")
+        const queryModelParts = query.model.split(":")
+        if (queryModelParts.length > infoModelParts.length) return false
+        for (let i = 0; i < queryModelParts.length; i++) {
+            const queryModelPart = queryModelParts[i]
+            if (queryModelPart === "*") continue
+            const infoModelPart = infoModelParts[i]
+            if (queryModelPart.startsWith("{") && queryModelPart.endsWith("}")) {
+                const queryArrayParts = queryModelPart.substring(1, queryModelPart.length - 1).split(",")
+                for (const p of queryArrayParts) if (p === infoModelPart) return true
+                return false
+            }
+            if ((queryModelPart.startsWith("(") || queryModelPart.startsWith("[")) && (queryModelPart.endsWith(")") || queryModelPart.endsWith("]"))) {
+                const infoValue = parseInt(infoModelPart)
+                if (isNaN(infoValue)) return false
+                const queryRangeParts = queryModelPart.substring(1, queryModelPart.length - 1).split(",").map(parseInt)
+                const left = queryRangeParts[0]
+                const right = queryRangeParts[1]
+                if (!left || !right || isNaN(left) || isNaN(right)) return false
+                return (queryModelPart.startsWith("(") ? infoValue > left : infoValue >= left) && (queryModelPart.endsWith(")") ? infoValue < right : infoValue <= right)
+            }
+            if (queryModelPart !== infoModelPart) return false
+        }
         // no need to compare method name
         return true
     }

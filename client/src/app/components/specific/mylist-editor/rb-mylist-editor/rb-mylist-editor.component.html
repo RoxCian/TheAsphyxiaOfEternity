@@ -1,16 +1,20 @@
-<ng-template #mylistEditorMusicPlaceholder>
+<ng-template let-music #mylistEditorMusicPlaceholder>
     <div class="mylist-editor-music-placeholder">
         <div class="figure"></div>
         <div class="text">&nbsp;</div>
         <div class="text">&nbsp;</div>
         <div class="text">&nbsp;</div>
+        <div class="search-opt">
+            <span>{{ music.music.title }}</span>
+            <span>{{ music.music.artist }}</span>
+        </div>
     </div>
 </ng-template>
 
 
 @let l = mylist?.()?.value() ?? [];
 @for (music of musicsSorted(); track music.musicId) {
-    <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-mylist-editor" [placeholder]="mylistEditorMusicPlaceholder">
+    <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-mylist-editor" [placeholder]="mylistEditorMusicPlaceholder" [placeholderContext]="music | implicit">
         <div class="mylist-icon-box" animate.leave="leave">
             <rb-music-icon [music]="music" isVirtualized>
                 @let s = slot();

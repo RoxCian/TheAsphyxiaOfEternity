@@ -19,6 +19,7 @@ export class BungInsertionComponent implements AfterViewInit, OnDestroy {
     readonly isVirtualized = input(false, { transform: toggleTransform })
     readonly virtualizedParam = input<IntersectionObserverInit | undefined>(undefined)
     readonly placeholder = input<BungInsertionContent | undefined>()
+    readonly placeholderContext = input<any>()
     readonly sharedIntersectionGroup = input<string | undefined>()
     readonly viewInited = output()
 

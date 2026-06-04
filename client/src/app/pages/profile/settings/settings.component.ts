@@ -92,4 +92,8 @@ export class RbSettingsSubpage<TVersion extends RbVersion> {
         parts[part] = value
         partsField.controlValue.set(parts)
     }
+    protected log(v: any) {
+        console.log(v)
+        return true
+    }
 }

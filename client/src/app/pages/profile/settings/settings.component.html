@@ -207,15 +207,24 @@
                 @let casted = settingsService.cast(form, 6);
                 <bung-field label="Ranking Quest" help="Ranking quest can be accessed from Reflesia Mode in game." [formField]="casted.rankingQuestIndex">
                     <bung-select [formField]="casted.rankingQuestIndex" [equalFn]="selectOptionEq" dropdownClass="ranking-quest-select-dropdown">
-                        <ng-template #rankingQuestOptionPlaceholder>
+                        <ng-template let-musics #rankingQuestOptionPlaceholder>
                             <rb-music-icon isPlaceholder />
+                            <div class="search-opt">
+                                @for (m of musics; track m?.musicId) {
+                                    @if (m) {
+                                        <p>{{ m.music.title }}</p>
+                                        <p>{{ m.music.artist }}</p>
+                                    }
+                                }
+                            </div>
                         </ng-template>
                         <ng-template let-q #rankingQuestOptionTemplate>
-                            <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder">
+                            @let musics = [findMusic(q.charts[0]?.musicId), findMusic(q.charts[1]?.musicId), findMusic(q.charts[2]?.musicId)];
+                            <bung-insertion class="ranking-quest-option-insertion" isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder" [placeholderContext]="musics | implicit">
                                 <div class="ranking-quest-option-content">
                                     <span class="group-label is-size-7">Group {{ q.id + 1 }}</span>
-                                    @for (c of q.charts; track c) {
-                                        @let music = findMusic(c.musicId);
+                                    @for (c of q.charts; let i = $index; track c) {
+                                        @let music = musics[i];
                                         @if (!music) { 
                                             <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
                                         } @else {

@@ -92,7 +92,7 @@
     @if (p) {
         @for (v of [this.profile()?.version]; track v) {
             <div class="bg-container" animate.enter="enter" animate.leave="leave">
-                <img class="bg is-rb{{ p.version }}" [class.is-loaded]="isImageLoaded()" [src]="`static/assets/images/bg/rb${p.version}.png`" (load)="onImgLoaded()">
+                <img class="bg is-rb{{ p.version }}" [class.is-loaded]="isImageLoaded()" [src]="`static/assets/images/bg/rb${p.version}.webp`" (load)="onImgLoaded()">
             </div>
         }
     }

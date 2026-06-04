@@ -92,16 +92,17 @@ export namespace XF {
         if (map.$convert) content = map.$convert(content as T)
         
         // map array
-        if (Array.isArray(content) && ((map as any).$el || (map as any).$xSide?.$el)) { // array of object or array of primitive types with attrs or xvalue (wrapped in objects)
+        if (Array.isArray(content) && ((map as any).$el || (map as any).$xSide?.$el || (map as any).$elSubMap || (map as any).$xSide?.$elSubMap)) { // array of object or array of primitive types with attrs or xvalue (wrapped in objects)
             let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never>
             let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined>
             const array = content.map(el => x(el, elType, elMap, typeInjector))
+            if (array.length === 0) return undefined as unknown as X<T> // return empty value, since KBinJSON lib will still generate an empty element when array is empty and game may not be happy with that
             if (hasAttr) return {
                 "@attr": attr,
                 "@content": array
             } as X<T>
             else return array as X<T>
-        } else if (((map as any).$el || (map as any).$xSide?.$el)) return [] as X<T>
+        } else if ((map as any).$el || (map as any).$xSide?.$el || (map as any).$elSubMap || (map as any).$xSide?.$elSubMap) return undefined as unknown as X<T>
 
         if (content == undefined) return undefined as unknown as X<T>
         // set @content
@@ -325,12 +326,12 @@ export namespace XF {
                 setValue(toDate(content))
                 break
         }
-        if (isArray && ((map as any).$el || (map as any).$oSide?.$el)) {
+        if (isArray && ((map as any).$el || (map as any).$oSide?.$el || (map as any).$elSubMap || (map as any).$oSide?.$elSubMap)) {
             let elType = ((map as any).$xSide?.$el ?? (map as any).$el) as Type<T extends Array<infer TE> ? TE : never> | TypeToken<T extends Array<infer TE> ? TE : never>
             let elMap = ((map as any).$xSide?.$elSubMap ?? (map as any).$elSubMap) as XMap<T extends Array<infer TE> ? TE : never, XTypeExtended, unknown, string | undefined>
             const array = Array.isArray(content) ? content.map(el => o(el, elType, elMap, typeInjector)) : [o(content, elType, elMap, typeInjector)]
             setValue(array)
-        }
+        } else if ((map as any).$el || (map as any).$oSide?.$el || (map as any).$elSubMap || (map as any).$oSide?.$elSubMap) setValue([])
         result ??= {}
         for (const k in map) {
             switch (k) {

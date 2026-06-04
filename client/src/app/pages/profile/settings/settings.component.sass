@@ -52,16 +52,23 @@ input.input
 
     bung-icon
         transform: scaleX(-1)
+.ranking-quest-option-insertion
+    position: relative
+    padding-top: 0.5em
+    padding-bottom: 0.5em
 .ranking-quest-option-content
     display: flex
     gap: 1em
-    padding-top: 0.5em
-    padding-bottom: 0.5em
     align-items: center
 
     .group-label
         writing-mode: vertical-lr
         transform: rotate(180deg)
+.ranking-quest-option-insertion .search-opt
+    position: absolute
+    inset: 0
+    overflow: clip
+    opacity: 0
 ::ng-deep rb-music-icon.ranking-quest-option .music
     background-color: color-mix(in srgb, var(--card-background), transparent 30%)
 ::ng-deep .ranking-quest-select-dropdown .dropdown-container

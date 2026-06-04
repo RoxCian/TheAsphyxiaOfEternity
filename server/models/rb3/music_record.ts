@@ -14,10 +14,10 @@ export class Rb3MusicOldRecord implements ICollection<"rb.rb3.playData.musicReco
     @XD.s16("cmb") combo = 0
     @XD.s16("ms") missCount = -1
     @XD.s32() time = Math.trunc(Date.now() / 1000)
-    @XD.s32("bscrt") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bart") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bctt") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bmst") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bst") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bat") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bct") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bmt") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.u16("ver") version?: number
 
     constructor(musicId: number, chartType: Rb1ChartType) {
@@ -26,10 +26,10 @@ export class Rb3MusicOldRecord implements ICollection<"rb.rb3.playData.musicReco
     }
 }
 export class Rb3MusicRecord extends Rb3MusicOldRecord {
-    @XD.s32("bst") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bat") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bct") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bmt") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bscrt") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bart") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bctt") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bmst") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.s32() kFlag = 0
     @XD.bool("ghostb") isHasGhostRed = false
     @XD.bool("ghostr") isHasGhostBlue = false

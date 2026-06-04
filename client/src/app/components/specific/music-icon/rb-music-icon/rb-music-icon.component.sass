@@ -23,6 +23,7 @@
         aspect-ratio: 1 / 1
 .music-info
     display: flex
+    position: relative
     flex-direction: column
     overflow-x: hidden
 
@@ -38,6 +39,10 @@
         color: var(--rb-chart-color)
     rb-level:not(:first-child)
         margin-left: 0.5em
+    .search-opt
+        position: absolute
+        inset: 0
+        overflow: clip
 .extra-content
     width: 100%
     min-height: 8px

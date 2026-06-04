@@ -3,9 +3,13 @@
     <div class="card music placeholder">
         <figure class="jacket"></figure>
         <div class="music-info">
-            <div class="music-title is-size-7">&nbsp;</div>
-            <div class="music-artist is-size-7">&nbsp;</div>
+            <div class="music-title is-size-7">&nbsp;{{ m?.music?.title ?? "" }}</div>
+            <div class="music-artist is-size-7">&nbsp;{{ m?.music?.artist ?? "" }}</div>
             <div class="charts-level is-size-7">&nbsp;</div>
+            <div class="search-opt">
+                <span>{{ m?.music?.title ?? "" }}</span>&nbsp;
+                <span>{{ m?.music?.artist ?? "" }}</span>
+            </div>
         </div>
     </div>
 } @else {

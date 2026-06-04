@@ -139,11 +139,14 @@
 
         .line
             flex: 1
-            background: var(--text-color)
+            background: var(--invert-card-background)
             height: 1px
-        
-        .clear-info-sub
-            margin-left: 4em
+        .line.middle
+            min-width: 12em
+        .text
+            display: flex
+            align-items: center
+            gap: 0.5em
 .stage-log-info-wrapper
     display: flex
     gap: 2em
@@ -231,7 +234,7 @@
         width: 32em
         max-width: 36em
     .modal-card-background
-        background: linear-gradient(to bottom, transparent 3.75em, var(--card-background) 9em)
+        background: linear-gradient(to bottom, transparent 3.75em, var(--card-background) 6.75em)
     .info-container
         padding: 0.5em
         padding-top: 4em
@@ -279,7 +282,7 @@
     .classcheck-lamp-background.blur
         animation: background-blur-blink 0.1s var(--ease-in) infinite
 .clear-info
-    transform: translateX(calc(100% - 12em))
+    transform: translateX(calc(100% - 8em))
 .classcheck-clear-info-show
     animation: classcheck-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
 @keyframes show-classcheck-info
@@ -327,6 +330,6 @@
         transform: none
 @keyframes classcheck-clear-info-enter
     from
-        transform: translateX(calc(100% - 12em))
+        transform: translateX(calc(100% - 8em))
     to
         transform: none

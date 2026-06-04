@@ -6,7 +6,7 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 
 export async function readPlayerPostProcess(player: Rb3Player) {
     toFullWidthPlayerName(player)
-    await attachReleaseInfo(3, player, Rb3PlayerReleasedInfo, [550, 30, 30, 30, 30, 30, 200, 30])
+    await attachReleaseInfo(3, player, Rb3PlayerReleasedInfo, [550, 30, 30, 30, 30, 30, 200, 80])
 }
 export async function writePlayerPreProcess(player: Rb3Player) {
     toHalfWidthPlayerName(player)

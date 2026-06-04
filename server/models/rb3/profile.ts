@@ -9,7 +9,7 @@ import { Rb1ChartType, Rb3ClearType, RbColor } from "../shared/rb_types"
 export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     readonly collection = "rb.rb3.player.account"
     @XD.s32("usrid") userId: number
-    @XD.ToO.s32("plyid") playerId = 0
+    @XD.ToO.s32("plyid") sessionId = 0
     @XD.s32("dpc") playCountToday: number = 0
     @XD.s32() crd = 1
     @XD.s32() brd = 1
@@ -45,7 +45,7 @@ export class Rb3PlayerBase implements ICollection<"rb.rb3.player.base"> {
     readonly collection = "rb.rb3.player.base"
     @XD.str("cmnt") comment = ""
     @XD.s32("tid") teamId = -1
-    @XD.s32("tname") teamName = "Asphyxia"
+    @XD.str("tname") teamName = "Asphyxia"
     @XD.s32("tbs") totalBestScore = 0
     @XD.s32("tbs_r") totalBestScoreRival = 0
     @XD.str() name = ""
@@ -108,7 +108,7 @@ export class Rb3PlayerCustom implements ICollection<"rb.rb3.player.custom"> {
     @XD.u8("st_clr_gauge") stageClearGaugeType = 0
     @XD.u8("st_jdg_disp") stageJudgeDisplayingType = 0
     @XD.u8("st_tm_disp") stageTouchMarkerDisplayingType = 0
-    stageRandom = 0 // ?
+    @XD.u8("st_rnd") stageRandom = 0 // ?
 }
 
 export class Rb3PlayerStageLog implements ICollection<"rb.rb3.playData.stageLog"> {
@@ -154,7 +154,7 @@ export class Rb3Equip implements ICollection<"rb.rb3.player.equip"> {
     readonly collection = "rb.rb3.player.equip"
     @XD.s16("id") index = 0
     @XD.s32("exp") experience = 0
-    @XD.s16() stype?: number
+    @XD.s16() stype?: number // season
 }
 
 export class Rb3SeedPod implements ICollection<"rb.rb3.player.event.seedPod"> {
@@ -169,7 +169,7 @@ export class Rb3OrderDetails {
     @XD.s32("ccnt") clearedCount = 0
     @XD.s32("fcnt") fragmentsCount0 = 0
     @XD.s32("fcnt1") fragmentsCount1 = 0
-    @XD.s32("prm") param = 0
+    @XD.s32("prm") param = 0 // can control unlock state, useful in Verdet des Krieges
 }
 export class Rb3Order implements ICollection<"rb.rb3.player.order"> {
     readonly collection = "rb.rb3.player.order"
@@ -182,7 +182,7 @@ export class Rb3PlayerReleasedInfo implements ICollection<"rb.rb3.player.release
     @XD.u8() type = 0
     @XD.u16() id = 0
     @XD.u16() param = 0
-    @XD.s32() insertTime = 0
+    // @XD.s32() insertTime = 0
 }
 
 export class Rb3Stamp implements ICollection<"rb.rb3.player.stamp"> {
@@ -190,7 +190,7 @@ export class Rb3Stamp implements ICollection<"rb.rb3.player.stamp"> {
     @XD.s32("stmpcnt") stampCount = [0, 0, 0, 0, 0]
     @XD.s32("tcktcnt") ticketCount = [0, 0, 0, 0, 0]
     @XD.s64() area: bigint | DBBigInt = BigInt(7)
-    @XD.s64() magic: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 99999999))
+    @XD.s64("prfvst") magic: bigint | DBBigInt = BigInt(0) // is this some kind of time?
     @XD.s32() reserve = 0
 }
 
@@ -217,7 +217,7 @@ class Rb3PlayerData {
     @XD.type(Rb3PlayerCustom) custom = new Rb3PlayerCustom()
     @XD.obj({}) rival = {}
     @XD.type("lincle_link_4", Rb2LincleLink) lincleLink = new Rb2LincleLink()
-    @XD.type("tricolette_park", Rb3TricolettePark) tricolettePark = new Rb3TricolettePark()
+    @XD.type("tricolettepark", Rb3TricolettePark) tricolettePark = new Rb3TricolettePark()
     @XD.type(Rb3Stamp) stamp = new Rb3Stamp()
     @XD.aw("evntexp", "data", Rb3EventProgress) eventProgress: { data?: Rb3EventProgress[] } = {}
     @XD.aw("eqpexp", "data", Rb3Equip) equip: { data?: Rb3Equip[] } = {}

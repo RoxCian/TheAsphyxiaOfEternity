@@ -22,6 +22,7 @@
     &:active:not([disabled])
         background: color-mix(in srgb, var(--accent-color), var(--card-background) 20%)
 .mylist-editor-music-placeholder
+    position: relative
     padding: 0.5em
 
     .figure
@@ -29,3 +30,8 @@
         margin-bottom: 0.5em
     .text
         font-size: 0.75em
+    .search-opt
+        position: absolute
+        inset: 0
+        overflow: clip
+        opacity: 0

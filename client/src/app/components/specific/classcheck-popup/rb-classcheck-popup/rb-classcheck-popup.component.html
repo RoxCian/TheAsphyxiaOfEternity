@@ -39,7 +39,7 @@
                         <p class="is-size-7">Defeated by the charts</p>
                     </div>
                 }
-                <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [isShortened]="isMobile" [customizedText]="!stageLog ? isMobile ? '×' : 'FAILED' : undefined" />
+                <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [customizedText]="!stageLog ? 'FAILED' : undefined" />
             </div>
         </div>
     </div>
@@ -100,7 +100,10 @@
                         <div class="line"></div>
                         <div class="text">
                             <span class="clear-info-main" [attr.lang]="clearInfoSub() ? 'jp' : undefined">{{ clearInfoMain() }}</span>
-                            @if (clearInfoSub()) { <span class="clear-info-sub">{{ clearInfoSub() }}</span> }
+                            @if (clearInfoSub()) {
+                                <span class="line middle"></span>
+                                <span class="clear-info-sub">{{ clearInfoSub() }}</span>
+                            }
                         </div>
                         <div class="line"></div>
                     </div>

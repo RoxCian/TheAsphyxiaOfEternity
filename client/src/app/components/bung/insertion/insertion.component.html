@@ -22,9 +22,9 @@
     <div class="insertion-placeholder">
         @let p = placeholder();
         @if (isTemplateRef(p)) {
-            <ng-container *ngTemplateOutlet="p; context: context()"/>
+            <ng-container *ngTemplateOutlet="p; context: placeholderContext()"/>
         } @else if (isComponentType(p)) {
-            <ng-container *ngComponentOutlet="p; context: context()" />
+            <ng-container *ngComponentOutlet="p; context: placeholderContext()" />
         } @else if (isString(p)) {
             @if (textContentTag() == undefined) {
                 {{ p }}

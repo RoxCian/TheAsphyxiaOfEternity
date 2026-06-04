@@ -3,7 +3,7 @@ import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb3MusicRecord, Rb3ReadPlayerMusicRecord } from "../../models/rb3/music_record"
 import { Rb3Mylist } from "../../models/rb3/mylist"
-import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
+import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { convertToRb3ClearType, findAllBestMusicRecord } from "../shared_game/find_music_record"
@@ -42,7 +42,9 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     if (!await createSession(rid, 3)) return H.deny
-    return XF.x(new Rb3PlayerStart())
+    const result = new Rb3PlayerStart()
+    result.sessionId = 5501
+    return XF.x(result)
 }
 
 const succeedPlayer: H.H = async data => {
@@ -50,7 +52,7 @@ const succeedPlayer: H.H = async data => {
     const account = await DBH.findOne(rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" })
     const result = new Rb3PlayerSucceed()
     if (!account) return XF.x(result)
-    
+
     const base = await DBH.findOne(rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }, true)
     const released = await DBH.find(rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
     const record = await DBH.find(rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
@@ -134,11 +136,18 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     if (eventProgress.length > 0) p.eventProgress.data = eventProgress
     if (equip.length > 0) p.equip.data = equip
     if (seedPod.length > 0) p.seedPod.data = seedPod
+    order.details ??= []
+    const order139 = new Rb3OrderDetails()
+    order139.clearedCount = 0
+    order139.index = 174
+    order139.slot = -1
+    order139.param = 1
+    order.details.push(order139)
     p.order = order
     p.mylist = mylist
     if (scores.length > 0) p.record = { rec: scores }
     if (oldRecords.length > 0) p.recordOld = { rec: oldRecords }
-    
+
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
@@ -458,7 +467,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                 type: 7,
                                 id: 82,
                                 param: 0,
-                                insertTime: Date.now()
+                                // insertTime: Date.now()
                             })
                             addClearedCount(o.index, 1, 20)
                         }

@@ -5,7 +5,7 @@ import { Rb3MusicRecord } from "./music_record"
 import { Rb3PlayerReleasedInfo } from "./profile"
 
 export class Rb3PlayerStart {
-    @XD.s32() plyid = 0
+    @XD.s32("plyid") sessionId = 0
     @XD.s32() nm = 0
     @XD.u64() startTime = BigInt(Date.now() * 1000)
     @XD.aw("data", Rb3EventControl) eventCtrl: ArrayWrapper<"data", Rb3EventControl> = {
