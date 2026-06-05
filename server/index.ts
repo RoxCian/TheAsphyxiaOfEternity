@@ -40,5 +40,5 @@ export function register() {
     registerRb6Controllers()
     registerSharedControllers()
 
-    R.Unhandled((_r, _d, send) => send.success())
+    R.Unhandled()
 }

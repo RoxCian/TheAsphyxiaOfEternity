@@ -12,13 +12,14 @@ import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { hasAny } from "../../utils/utility_functions"
+import { inspect } from "util"
 
 export function registerRb1Handlers() {
     H.route("player.start?model=KBR", startPlayer)
     H.route("player.read?model=KBR", readPlayer)
     H.route("player.write?model=KBR", writePlayer)
     H.route("player.end?model=KBR", endPlayer)
-    H.route("log.player?model=KBR", logPlayer)
+    H.route("log.play?model=KBR", logPlay)
     H.route("lobby.entry?model=KBR", createAddLobbyHandler(1))
     H.route("lobby.read?model=KBR", createReadLobbyHandler(1))
     H.route("lobby.delete?model=KBR", createDeleteLobbyHandler(1))
@@ -69,7 +70,7 @@ const endPlayer: H.H = async data => {
     await removeSession(rid, 1)
     return H.success
 }
-const logPlayer: H.H<RbStageLogStandalone> = async data => {
+const logPlay: H.H<RbStageLogStandalone> = async data => {
     const log = XF.o(data, RbStageLogStandalone)
     StageLogManager.pushStandaloneStageLog(log, 1)
     StageLogManager.update()
@@ -108,6 +109,9 @@ async function writePlayerCore(player: Rb1Player) {
     if (hasAny(player.pdata.record.rec)) for (const r of player.pdata.record.rec) await updateMusicRecord(rid, r, t)
     if (hasAny(player.pdata.released.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
 
+    console.log(inspect(player.pdata.record.rec))
+    console.log(inspect(player.pdata.stageLogs.log))
+    
     await t.commit()
 }
 

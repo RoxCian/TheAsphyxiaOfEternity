@@ -18,7 +18,7 @@ export enum Rb1ClearType {
     none, failed, clear, fullCombo
 }
 export enum Rb2ClearType {
-    none, failed, clear = 3, fullCombo
+    none, failed = 2, clear = 3, fullCombo
 }
 export enum Rb3ClearType {
     none, battleFailed /* TODO: Should check in game **/, failed, clear, fullCombo

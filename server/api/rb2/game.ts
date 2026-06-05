@@ -23,7 +23,7 @@ export function registerRb2Handlers() {
     H.route("player.read?model=LBR", readPlayer)
     H.route("player.write?model=LBR", writePlayer)
     H.route("player.end?model=LBR", endPlayer)
-    H.route("log.player?model=LBR", logPlayer)
+    H.route("log.play?model=LBR", logPlay)
     H.route("event_w.update_status?model=LBR", updateEventStatus)
     H.route("lobby.entry?model=LBR", createAddLobbyHandler(2))
     H.route("lobby.read?model=LBR", createReadLobbyHandler(2))
@@ -98,7 +98,7 @@ const endPlayer: H.H = async data => {
     return H.success
 }
 
-const logPlayer: H.H<RbStageLogStandalone> = async data => {
+const logPlay: H.H<RbStageLogStandalone> = async data => {
     const log = XF.o(data, RbStageLogStandalone)
     StageLogManager.pushStandaloneStageLog(log, 2)
     StageLogManager.update()

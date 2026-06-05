@@ -393,7 +393,7 @@ int,int,red|blue,none=-1|bronze|silver|gold|platinum,string,string
 5,73,blue,none,friends,ともだち
 5,74,blue,none,unbreakable heard,折れない心
 5,75,red,none,Together,一緒に
-5,76,red,none,Failnaught,負けられない
+5,76,red,none,Cannot-lose,負けられない
 5,77,blue,none,Playing,遊び
 5,78,red,none,Rumored,噂の
 5,79,red,none,Forgotten,忘れられた
@@ -474,7 +474,7 @@ int,int,red|blue,none=-1|bronze|silver|gold|platinum,string,string
 6,20,blue,none,hero,英雄
 6,21,red,none,Thousand,千の
 6,22,red,none,Together,一緒に
-6,23,red,none,Failnaught,負けられない
+6,23,red,none,Cannot-lose,負けられない
 6,24,blue,none,play,遊び
 6,25,red,none,Rumored,噂の
 6,26,red,none,Legendary,伝説の
@@ -555,7 +555,7 @@ int,int,red|blue,none=-1|bronze|silver|gold|platinum,string,string
 6,101,blue,none,The good friend is,仲良きことは
 6,102,red,none,Unfortunate,数奇な
 6,103,blue,none,friends,ともだち
-6,104,blue,none,unbreakable heard,折れない心
+6,104,blue,none,unbreakable heart,折れない心
 6,105,red,none,Good old,古き良き
 6,106,red,none,Intangible,形のない
 6,107,red,none,Late,遅れてきた

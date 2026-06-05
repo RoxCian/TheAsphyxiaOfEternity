@@ -44,10 +44,10 @@ export class Rb2PlayerCustom implements ICollection<"rb.rb2.player.custom"> {
     @XD.s16() lastMusicId = 0
     @XD.u8("last_note_grade") lastChartType = Rb1ChartType.basic
     @XD.u8("narrowdown_type") narrowDownType = 0
-    @XD.bool() isBeginner = true
+    @XD.bool("is_begginer") isBeginner = true // beggin' you
     @XD.bool("is_tut") isTutorialEnabled = true
-    @XD.s16("symbol_chat_1") symbolChatSet1 = [0, 1, 2, 3, 4, 5]
-    @XD.s16("symbol_chat_2") symbolChatSet2 = [0, 1, 2, 3, 4, 5]
+    @XD.s16("symbol_chat_0") symbolChatSet1 = [0, 1, 2, 3, 4, 5]
+    @XD.s16("symbol_chat_1") symbolChatSet2 = [0, 1, 2, 3, 4, 5]
     @XD.u8() gaugeStyle = 0
     @XD.u8("obj_shade") objectShade = 0
     @XD.u8("obj_size") objectSize = 0
@@ -150,7 +150,7 @@ export class Rb2PlayerData {
         teamName: "Asphyxia"
     }
     @XD.type(Rb2PlayerBase) base: Rb2PlayerBase
-    @XD.type(Rb2PlayerStat) stat = new Rb2PlayerStat()
+    @XD.type("con", Rb2PlayerStat) stat = new Rb2PlayerStat()
     @XD.type(Rb2PlayerCustom) custom = new Rb2PlayerCustom()
     @XD.aw("info", Rb2PlayerReleasedInfo) released: ArrayWrapper<"info", Rb2PlayerReleasedInfo> = {
         info: [new Rb2PlayerReleasedInfo]
@@ -159,7 +159,7 @@ export class Rb2PlayerData {
     @XD.aw("blog", "log", Rb2StageLog) stageLogs: ArrayWrapper<"log", Rb2StageLog> = {}
     @XD.obj({}) rival = {}
     @XD.aw("g", Rb2Glass) glass: ArrayWrapper<"g", Rb2Glass> = {}
-    @XD.type(Rb2Mylist) mylist = new Rb2Mylist()
+    @XD.type("fav_music_slot", Rb2Mylist) mylist = new Rb2Mylist()
     @XD.type(Rb2LincleLink) lincleLink = new Rb2LincleLink()
 
     constructor(userId: number = 0) {
