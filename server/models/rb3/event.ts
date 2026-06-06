@@ -1,3 +1,4 @@
+import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
 
 export class Rb3EventControl {
@@ -46,3 +47,13 @@ export class Rb3EventControl {
     }
 }
 Rb3EventControl.init()
+
+export class Rb3VerdetDesKrieges implements ICollection<"rb.rb3.event.verdetDesKrieges"> {
+    readonly collection = "rb.rb3.event.verdetDesKrieges"
+    completed = false
+    chapter = 1
+    page = 0
+    lastReadChapter = 1
+    lastReadPage = 0
+    progress: [number, number, number, number, number] = [0, 0, 0, 0, 0] // max is 15
+}

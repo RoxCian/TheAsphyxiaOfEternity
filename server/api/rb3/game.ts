@@ -136,13 +136,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     if (eventProgress.length > 0) p.eventProgress.data = eventProgress
     if (equip.length > 0) p.equip.data = equip
     if (seedPod.length > 0) p.seedPod.data = seedPod
-    order.details ??= []
-    const order139 = new Rb3OrderDetails()
-    order139.clearedCount = 0
-    order139.index = 174
-    order139.slot = -1
-    order139.param = 1
-    order.details.push(order139)
     p.order = order
     p.mylist = mylist
     if (scores.length > 0) p.record = { rec: scores }

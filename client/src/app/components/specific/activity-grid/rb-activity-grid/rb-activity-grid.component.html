@@ -9,8 +9,10 @@
     </p>
     <p style="text-align: center">{{ date.toLocaleDateString() }}</p>
 </ng-template>
-<div class="calendar-grid card">
-    @for (d of daysArray; track d) {
+<div class="card">
+    <div class="grid-wrapper">
+    <div class="calendar-grid">
+        @for (d of daysArray; track d) {
         @let playCount = activity()[d] ?? 0;
         @let activityLevel = getActivityLevel(playCount);
         @let rc = getGridRowColumn(d);
@@ -18,8 +20,10 @@
         <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount }">
             <div class="day-background activity-level{{ activityLevel }}"></div>
             @if (date.getDate() === 1) {
-                <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
+            <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
             }
         </div>
-    }
+        }
+    </div>
+    </div>
 </div>

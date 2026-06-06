@@ -1,3 +1,4 @@
+export * from "../rb3/types"
 export * from "../rb6/types"
 
 export type RbVersion = 1 | 2 | 3 | 4 | 5 | 6

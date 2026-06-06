@@ -5,8 +5,6 @@ bung-dropdown
     left: var(--dropdown-left, 0)
     top: var(--dropdown-top, 0)
     bottom: var(--dropdown-bottom, auto)
-    padding-bottom: var(--dropdown-padding)
-    padding-top: var(--dropdown-padding)
     font-size: 1rem
     min-width: max(12em, var(--dropdown-width))
     border-radius: 4px
@@ -30,6 +28,8 @@ bung-dropdown
     .dropdown-container
         display: block
         max-height: 33vh
+        padding-bottom: var(--dropdown-padding)
+        padding-top: var(--dropdown-padding)
         overflow-y: auto
     .dropdown-item
         --default-background: #3273dc

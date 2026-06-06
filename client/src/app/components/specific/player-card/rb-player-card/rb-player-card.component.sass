@@ -15,21 +15,16 @@
     pointer-events: none
     user-select: none
     z-index: 0
+    opacity: 0
 
-    &.enter
-        opacity: 0
 .bg
-    --opacity: 0.4
     position: absolute
     inset: 0
     width: 100%
     height: 100%
     object-fit: cover
     filter: blur(2vh)
-    opacity: 0
-
-    &.is-loaded
-        animation: player-card-content-enter-animation var(--animation-duration-lv2) var(--ease-in) forwards
+    opacity: 0.4
 
     &.is-rb1
         object-position: center 45%
@@ -39,10 +34,10 @@
         object-position: center 48%
     &.is-rb4
         object-position: center 50%
-        --opacity: 0.3
+        opacity: 0.3
     &.is-rb5
         object-position: center 50%
-        --opacity: 0.35
+        opacity: 0.35
     &.is-rb6
         object-position: center 50%
 .player-card-container
@@ -71,9 +66,9 @@
     > *
         z-index: 1
 
-.player-card-content.enter, .bg-container.enter, .rb-nav-buttons.enter
-    animation: player-card-content-enter-animation var(--animation-duration-lv2) var(--animation-duration-lv2) var(--ease-in)
-.player-card-content.leave, .bg-container.leave, .rb-nav-buttons.leave
+.player-card-content.visible.enter, .bg-container.visible.is-loaded, .rb-nav-buttons.visible.enter
+    animation: player-card-content-enter-animation var(--animation-duration-lv2) var(--animation-duration-lv2) var(--ease-in) forwards
+.player-card-content.visible.leave, .bg-container.visible.leave, .rb-nav-buttons.visible.leave
     animation: player-card-content-leave-animation var(--animation-duration-lv2) var(--ease-in)
 
 .name-grid
@@ -164,7 +159,7 @@ rb-matching-grade
     &.is-selected
         background: color-mix(in srgb, var(--accent-color), transparent 40%)
         color: var(--accent-text-color)
-
+        
 @media (prefers-color-scheme: dark)
     .name-and-byword .name
         &.rb3-player-event-level1
@@ -225,11 +220,11 @@ rb-matching-grade
         opacity: 0
         transform: translateX(4rem)
     to
-        opacity: var(--opacity, 1)
+        opacity: 1
         transform: none
 @keyframes player-card-content-leave-animation
     from
-        opacity: var(--opacity, 1)
+        opacity: 1
         transform: none
     to
         opacity: 0

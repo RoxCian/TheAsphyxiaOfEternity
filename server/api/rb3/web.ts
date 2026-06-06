@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
@@ -12,6 +12,8 @@ import { Rb3Mylist } from "../../models/rb3/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
+import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
+import { getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
 
 type V = 3
 const version = 3 as const
@@ -21,6 +23,11 @@ export function registerRb3Controllers() {
     C.route("rb3ReadPlayerPerformance", readPlayerPerformance)
     C.route("rb3ReadRecords", readRecords)
     C.route("rb3ReadStageLogs", readStageLogs)
+    C.route("rb3ReadVerdetDesKrieges", readVerdetDesKrieges)
+    C.route("rb3ReadVerdetDesKriegesPageCount", readVerdetDesKriegesPageCount)
+    C.route("rb3ReadVerdetDesKriegesPage", readVerdetDesKriegesPage)
+    C.route("rb3ReadVerdetDesKriegesNotes", readVerdetDesKriegesNotes)
+    C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges)
     C.route("rb3ReadAvailableItems", readAvailableItems)
     C.route("rb3ReadSettings", readSettings)
     C.route("rb3WriteSettings", writeSettings)
@@ -114,6 +121,84 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = async data => await Promise.all((await DBH.find<Rb3PlayerStageLog>(data.rid, { collection: "rb.rb3.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
+
+const readVerdetDesKrieges: C.C<RbRequest, Rb3VerdetDesKrieges> = async data => await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
+const readVerdetDesKriegesPageCount: C.C<{ chapter: number }, { pageCount: number }> = async data => {
+    return { pageCount: await getVerdetDesKriegesPageCount(data.chapter) }
+}
+const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesContent[]> = async data => {
+    if (data.chapter === 0 && data.page === 0) return await getVerdetDesKriegesPage(0, 0)
+    const event = await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
+    if (!event) return C.error(401, "Progress not reached")
+    if (data.chapter > event.chapter) return C.error(401, "Progress not reached")
+    if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(401, "Page number overflow")
+    if (data.chapter === event.chapter) {
+        if (data.page === 4 && event.page === 3) {
+            if (!event.progress.slice(0, 4).every(p => p < 15)) return C.error(401, "Progress not reached")
+            event.page = 4
+        } else if (data.page > event.page + 1) return C.error(401, "Progress not reached")
+        else if (data.page === event.page + 1) {
+            event.page = data.page
+        }
+    }
+    event.lastReadChapter = data.chapter
+    event.lastReadPage = data.page
+    await DBH.update(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" }, event)
+    return await getVerdetDesKriegesPage(data.chapter, data.page)
+}
+const readVerdetDesKriegesNotes: C.C<{}, Rb3VerdetDesKriegesNote[]> = () => rb3VerdetDesKriegesNotes
+const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, { modified: boolean }> = async data => {
+    const t = new DBH.T()
+    const event = await t.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
+    const result = { modified: false }
+    if (!event) {
+        if (data.type === Rb3VerdetDesKriegesUnlockRequestType.start) {
+            await DBH.insert(data.rid, new Rb3VerdetDesKrieges())
+            result.modified = true
+        }
+        return result
+    }
+    switch (data.type) {
+        case Rb3VerdetDesKriegesUnlockRequestType.hiddenLink1:
+            if (event.chapter === 1 && event.progress[3] !== 15) {
+                event.progress[3] = 15
+                result.modified = true
+            }
+            break
+        case Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2:
+            if (event.chapter === 2 && event.progress[0] !== 15) {
+                event.progress[0] = 15
+                result.modified = true
+            }
+            break
+        case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1:
+            if (event.chapter === 1 && event.progress.every(l => l === 15)) {
+                event.chapter = 2
+                event.progress.fill(0)
+                await addMusicUnlockInfo(t, data.rid, 385) // 385: 双璧のVANESSA
+                result.modified = true
+            }
+            break
+        case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish2:
+            if (event.chapter === 2 && event.progress.every(l => l === 15)) {
+                event.chapter = 3
+                event.progress.fill(0)
+                await addMusicUnlockInfo(t, data.rid, 386) // 386: Vanity shadow
+                result.modified = true
+            }
+            break
+        case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish3:
+            if (event.chapter === 3 && event.progress.every(l => l === 15)) {
+                event.completed = true
+                await addMusicUnlockInfo(t, data.rid, 387) // 387: 終焔のClaudia
+                result.modified = true
+            }
+            break
+    }
+    if (result.modified) t.update(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" }, event)
+    await t.commit()
+    return result
+}
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo" })
@@ -215,4 +300,12 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
         else result[d]++
     }
     return result
+}
+async function addMusicUnlockInfo(t: DBH.T, rid: string, musicId: number) {
+    if (await t.findOne<Rb3PlayerReleasedInfo>(rid, { collection: "rb.rb3.player.releasedInfo", type: 0, id: musicId })) return
+    const release = new Rb3PlayerReleasedInfo()
+    release.type = 0
+    release.id = musicId
+    release.param = 15
+    t.insert(rid, release)
 }

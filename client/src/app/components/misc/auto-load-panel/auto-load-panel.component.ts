@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, input, output, signal, viewChild } from "@angular/core"
+import { AfterContentInit, Component, contentChildren, effect, ElementRef, inject, input, output, signal, viewChild } from "@angular/core"
+import { BungInsertionComponent } from "../../bung/insertion/insertion.component"
 
 export type AutoLoadEvent = {
     result?: "failed" | "finished" | Promise<"failed" | "finished" | undefined>
@@ -10,7 +11,7 @@ export type AutoLoadEvent = {
     templateUrl: "./auto-load-panel.component.html",
     styleUrls: ["./auto-load-panel.component.sass"]
 })
-export class AutoLoadPanelComponent implements AfterViewInit {
+export class AutoLoadPanelComponent implements AfterContentInit {
     readonly bottomMargin = input<number>(640)
     readonly loading = output<AutoLoadEvent>()
     readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
@@ -45,7 +46,7 @@ export class AutoLoadPanelComponent implements AfterViewInit {
         })
     }
 
-    ngAfterViewInit(): void {
+    ngAfterContentInit() {
         const bottomEl = this.bottom()?.nativeElement
         if (bottomEl) this.intersectionObserver.observe(bottomEl)
     }

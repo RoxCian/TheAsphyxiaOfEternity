@@ -236,6 +236,18 @@ export type RbWriteSettingsResponse = {
     reason?: string[]
 }
 
+export type Rb3VerdetDesKriegesPageRequest = {
+    chapter: number
+    page: number
+}
+export type Rb3VerdetDesKriegesUnlockRequest = {
+    type: Rb3VerdetDesKriegesUnlockRequestType
+}
+
+export enum Rb3VerdetDesKriegesUnlockRequestType {
+    start, hiddenLink1, hiddenLink2, chapterFinish1, chapterFinish2, chapterFinish3
+}
+
 export type Rb6UploadAsphyxiaDataRequest = {
     sessionId: string
     type: "profile" | "scores"

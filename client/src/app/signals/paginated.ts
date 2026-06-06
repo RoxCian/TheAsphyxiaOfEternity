@@ -1,4 +1,4 @@
-import { effect, Injector, runInInjectionContext, signal, Signal, WritableSignal } from "@angular/core"
+import { effect, inject, Injector, runInInjectionContext, signal, Signal, WritableSignal } from "@angular/core"
 
 export type PaginatedSignal<T> = Signal<T[]> & {
     load(): void
@@ -8,7 +8,7 @@ export type PaginatedSignal<T> = Signal<T[]> & {
     destroy(): void
 }
 
-export function paginated<T>(listComputation: () => T[] | undefined, injector: Injector, preloadCount = 0): PaginatedSignal<T> {
+export function paginated<T>(listComputation: () => T[] | undefined, preloadCount = 0): PaginatedSignal<T> {
     const pageSize = signal(20)
     let listBackup: T[] = listComputation() ?? []
     const writable = signal<T[]>(listBackup.slice(0, preloadCount))
@@ -18,6 +18,7 @@ export function paginated<T>(listComputation: () => T[] | undefined, injector: I
     result.pageSize = pageSize
     result.location = location.asReadonly()
     result.isFinished = allLoaded.asReadonly()
+    const injector = inject(Injector)
     const eff = runInInjectionContext(injector, () => effect(() => {
         const newList = listComputation() ?? []
         if (newList === listBackup || (newList.length === 0 && listBackup.length === 0)) return

@@ -3,7 +3,7 @@
     <div class="player-card-container">
         @if (p) {
             @for (v of [this.profile()?.version]; track v) {
-                <div class="player-card-content" animate.enter="enter" animate.leave="leave">
+                <div class="player-card-content" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
                     <!-- @if (p.version === 6) {
                         <div class="characard">
                         </div>
@@ -49,7 +49,7 @@
                 </div>
             }
         } @else if (!isLoading()) {
-            <div class="player-card-content error-info-content" animate.enter="enter" animate.leave="leave">
+            <div class="player-card-content error-info-content" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
                 <div class="error-info">
                     <div class="error-icon">
                         <span class="icon is-large">
@@ -79,20 +79,20 @@
             </div> -->
             <div class="rb-nav-container">
                 @if (p) {
-                    <div class="buttons has-addons rb-nav-buttons" animate.enter="enter" animate.leave="leave">
+                    <div class="buttons has-addons rb-nav-buttons" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')"><bung-icon icon="account-circle">Play Data</bung-icon></button>
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')"><bung-icon icon="cog">Settings</bung-icon></button>
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'saveData'" (click)="onNavToSubpage('saveData')"><bung-icon icon="database">Save Data</bung-icon></button>
                     </div>
                 }
             </div>
-            <rb-version animate.enter="enter" animate.leave="leave" />
+            <rb-version [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave" />
         </div>
     </div>
     @if (p) {
         @for (v of [this.profile()?.version]; track v) {
-            <div class="bg-container" animate.enter="enter" animate.leave="leave">
-                <img class="bg is-rb{{ p.version }}" [class.is-loaded]="isImageLoaded()" [src]="`static/assets/images/bg/rb${p.version}.webp`" (load)="onImgLoaded()">
+            <div class="bg-container" [class.is-loaded]="isImageLoaded()" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
+                <img class="bg is-rb{{ p.version }}" [src]="`static/assets/images/bg/rb${p.version}.webp`" (load)="onImgLoaded()">
             </div>
         }
     }

@@ -15,8 +15,8 @@
         <div class="tabs-animate-slide-wrapper">
             @for (tab of tabs(); track tab.index()) {
             @if ((tab.index() === (currIndex() ?? activated() ?? getFirstAvailableTabIndex())) || (tab.index() === leftIndex()) || (tab.index() === rightIndex())) {
-            <div class="tabs-content-wrapper" [class.left]="tab.index() === leftIndex()" [class.right]="tab.index() === rightIndex()">
-                <bung-insertion [content]="tab.element.nativeElement" [attr.tab-index]="tab.index()" #contentInsertion (viewInited)="onTabViewInited()" />
+            <div class="tabs-content-wrapper" [class.left]="tab.index() === leftIndex()" [class.right]="tab.index() === rightIndex()" [style.min-height]="typeof tab.minHeight() === 'number' ? `${tab.minHeight()}px` : tab.minHeight()">
+                <bung-insertion [content]="tab.element.nativeElement" [attr.tab-index]="tab.index()" #contentInsertion (insertionInited)="onTabInited()" />
             </div>
             }
             }

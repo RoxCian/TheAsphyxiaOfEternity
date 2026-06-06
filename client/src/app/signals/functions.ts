@@ -24,10 +24,10 @@ export function asPromise<T>(httpResource: HttpResourceRef<T>, injector: Injecto
         }
         if (!httpResource.hasValue()) return
         const value = httpResource.value()
-        resolve?.(value)
-        delete (result as any).__SIGNAL__
         eff.destroy()
+        delete (result as any).__EFFECT__
+        resolve!(value)
     }, { manualCleanup: true }))
-    { (result as any).__SIGNAL__ = eff }
+    { (result as any).__EFFECT__ = eff }
     return result
 }

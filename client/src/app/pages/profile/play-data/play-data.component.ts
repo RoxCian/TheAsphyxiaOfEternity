@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Injector, signal, viewChild } from "@angular/core"
+import { AfterViewInit, Component, computed, effect, inject, signal, viewChild } from "@angular/core"
 import { RbVersion, RbChartType, RbVersionWithClasscheck, Rb4DojoIndex, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse } from "rbweb"
 import { AutoLoadPanelComponent, AutoLoadEvent } from "../../../components/misc/auto-load-panel/auto-load-panel.component"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
@@ -8,11 +8,12 @@ import { RbPlayerPerformanceService } from "../../../services/specified/rb-playe
 import { RbProfileService } from "../../../services/specified/rb-profile.service"
 import { RbStageLogService } from "../../../services/specified/rb-stagelog.service"
 import { RbVersionService } from "../../../services/specified/rb-version.service"
-import { asPromise } from "../../../signals/functions"
 import { PaginatedSignal, paginated } from "../../../signals/paginated"
 import { BungTabsComponent } from "../../../components/bung/tabs/tabs.component"
 import { RbSkillPointService } from "../../../services/specified/rb-skill-point.service"
 import { BungWaitableEvent } from "../../../utils/bung"
+import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
+import { timeout } from "../../../utils/functions"
 
 @Component({
     selector: "rb-play-data-subpage",
@@ -20,7 +21,7 @@ import { BungWaitableEvent } from "../../../utils/bung"
     styleUrl: "./play-data.component.sass",
     standalone: false
 })
-export class RbPlayDataSubpage {
+export class RbPlayDataSubpage implements AfterViewInit {
     protected readonly musicRecordPaginated: PaginatedSignal<RbMusicRecordResponse<RbVersion>>
     protected readonly stageLogPaginated: PaginatedSignal<RbStageLogResponse<RbVersion, RbChartType<RbVersion>>>
     protected readonly stageLogPanel = viewChild("stageLogPanel", { read: AutoLoadPanelComponent })
@@ -47,16 +48,26 @@ export class RbPlayDataSubpage {
         for (let i = 0; i < tiersThreshold.length; i++) if (sp < tiersThreshold[i]) return i
         return tiersThreshold.length
     })
+    protected readonly viewInited = signal(false)
+    protected readonly minTabHeight = computed(() => {
+        if (!this.viewInited() || !this.mainTabs()) return 0
+        this.breakpointService.breakpointsToggled.mobile()
+        const tabInsertion = document.querySelector("bung-insertion[tab-index]") as HTMLElement
+        const footer = document.querySelector("footer.footer") as HTMLElement
+        const tabTop = tabInsertion?.offsetTop ?? 0
+        const footerHeight = footer?.clientHeight ?? 0
+        return (window.visualViewport?.height ?? 0) - tabTop - footerHeight
+    })
 
     private readonly mainTabs = viewChild("mainTabs", { read: BungTabsComponent })
+    private readonly breakpointService = inject(BungBreakpointService)
     private readonly intersectionService = inject(BungIntersectionService)
-    private readonly injector = inject(Injector)
 
     #versionBackup: RbVersion = 6
 
     constructor() {
-        this.musicRecordPaginated = paginated(this.musicRecordService.data.value, this.injector, 30)
-        this.stageLogPaginated = paginated(this.stageLogService.data.value, this.injector, 30)
+        this.musicRecordPaginated = paginated(this.musicRecordService.data.value, 30)
+        this.stageLogPaginated = paginated(this.stageLogService.data.value, 30)
         this.intersectionService.createGroup("rb-panel", {
             rootMargin: "100% 0%"
         })
@@ -67,6 +78,9 @@ export class RbPlayDataSubpage {
             this.recordPanel()?.reset()
             this.checkLevelDisplaySwitchVisible()
         })
+    }
+    async ngAfterViewInit() {
+        this.viewInited.set(true)
     }
     protected onActivateMusicRecordTab(e: BungWaitableEvent) {
         this.musicRecordService.activate()
@@ -96,7 +110,7 @@ export class RbPlayDataSubpage {
     }
     protected loadStageLog(event: AutoLoadEvent) {
         event.result = (async () => {
-            await asPromise(this.stageLogService.data, this.injector)
+            if (!this.stageLogService.data.hasValue()) return undefined
             this.stageLogPaginated.load()
             if (this.stageLogPaginated.isFinished()) return "finished"
             return undefined
@@ -104,7 +118,7 @@ export class RbPlayDataSubpage {
     }
     protected loadRecord(event: AutoLoadEvent) {
         event.result = (async () => {
-            await asPromise(this.musicRecordService.data, this.injector)
+            if (!this.musicRecordService.data.hasValue()) return undefined
             this.musicRecordPaginated.load()
             if (this.musicRecordPaginated.isFinished()) return "finished"
             return undefined

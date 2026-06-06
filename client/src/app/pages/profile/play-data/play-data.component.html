@@ -115,7 +115,7 @@
                 </div>
             </div>
         </bung-tab>
-        <bung-tab header="Music Records" index="record" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)">
+        <bung-tab header="Music Records" index="record" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)" [minHeight]="`calc(${minTabHeight()}px - 3em)`">
             @if (musicRecordService.data.hasValue()) {
                 <auto-load-panel class="rb-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
                     @for (record of musicRecordPaginated(); track record.musicId) {
@@ -215,7 +215,7 @@
                 </div>
             </bung-tab>
         }
-        <bung-tab header="Play History" index="stglog" [disabled]="loading || noProfile" (activated)="onActivateStageLogTab($event)">
+        <bung-tab header="Play History" index="stglog" [disabled]="loading || noProfile" (activated)="onActivateStageLogTab($event)" [minHeight]="`calc(${minTabHeight()}px - 3em)`">
             @if (stageLogService.data.hasValue()) {
             <auto-load-panel class="rb-list" (loading)="loadStageLog($event)" animate.leave="rb-panel-leave" #stageLogPanel>
                 @for (stglog of stageLogPaginated(); track stglog.time) {

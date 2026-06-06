@@ -1,6 +1,6 @@
 import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
-import { findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
+import { findChartInfo, findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog } from "../../models/rb5/profile"
 import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
@@ -227,7 +227,7 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
     return result
 }
 async function computeSkillPoint(record: Rb5MusicRecord): Promise<number> {
-    const chart = (await rbChartInfo).find(ci => ci.musicId === record.musicId && ci.chartType === record.chartType)
+    const chart = await findChartInfo(record.musicId, version, record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com
     const maxScore = chart.maxCombo * 3 + chart.maxJustReflec * 10 + 50

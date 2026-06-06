@@ -13,6 +13,7 @@ export class BungTabComponent {
     readonly header = input<BungInsertionContent>()
     readonly index = input("")
     readonly headerTemplate = contentChild("header", { read: TemplateRef })
+    readonly minHeight = input<number | string | undefined>()
     readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
     readonly activated = output<BungWaitableEvent>()
     readonly deactivated = output<BungWaitableEvent>()

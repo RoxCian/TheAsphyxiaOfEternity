@@ -2,12 +2,16 @@
     display: flex
     align-items: center
     justify-content: center
+.card
+    overflow: clip
+.grid-wrapper
+    padding: 2em
+    overflow: auto
 .calendar-grid
     display: grid
     grid-template: repeat(7, 1em) / repeat(var(--weeks-count), 1em)
-    padding: 2em
+    min-width: max-content
     gap: 0.4em
-    overflow: auto
 
 .day
     display: flex

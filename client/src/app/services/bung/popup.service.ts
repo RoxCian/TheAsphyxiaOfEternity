@@ -1,4 +1,4 @@
-import { ApplicationRef, Binding, ComponentFactory, ComponentFactoryResolver, ComponentRef, inject, Injectable, Injector, input, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
+import { ApplicationRef, Binding, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
 import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 import { BungBackdropOptions, BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase, BungReturnContext, DefaultBackdropOptions } from "../../utils/bung"
 import { BungPopupComponent } from "../../components/bung/popup/popup.component"
@@ -18,11 +18,9 @@ let currentZIndex = 0
 })
 export class BungPopupService {
     private static readonly layers: { [K in string]: PopupLayer } = {}
-    private static popupContainerFactory: ComponentFactory<BungPopupContainerComponent>
     private static readonly popupLayerTop: HTMLElement = document.createElement("div")
-    private static initialized = false
 
-    private readonly resolver = inject(ComponentFactoryResolver)
+    private readonly envInjector = inject(EnvironmentInjector)
     private readonly injector = inject(Injector)
     private readonly application = inject(ApplicationRef)
 
@@ -33,18 +31,15 @@ export class BungPopupService {
         isManual: false
     }
 
-    private static init() {
-        if (this.initialized) return
-        this.initialized = true
+    static {
         this.popupLayerTop.classList.add("bung-popup-layer-top")
         document.body.appendChild(this.popupLayerTop)
     }
 
     constructor() {
-        BungPopupService.init()
-        BungPopupService.popupContainerFactory ??= this.resolver.resolveComponentFactory(BungPopupContainerComponent)
-        BungPopupService.addLayer("bung-popup")
+        BungPopupService.addLayer("bung-popup", this.envInjector, this.injector)
     }
+
     popup<T extends BungPopupComponent<TReturn>, TReturn = any>(data: BungInsertionContentOrComputation, context: any | Signal<any>, popupType: Type<T>, options?: BungPopupOptions<T, TReturn>): T {
         options = Object.assign({}, this.defaultPopupOptions, options)
         const backdrop = this.addBackdrop(options.layer ?? "bung-popup", options.backdropOptions)
@@ -100,13 +95,13 @@ export class BungPopupService {
         return result
     }
     protected addLayer(layer: string, zIndex?: number) {
-        BungPopupService.addLayer(layer, zIndex)
+        BungPopupService.addLayer(layer, this.envInjector, this.injector, zIndex)
     }
     protected getLayerContainer(layer: string): ViewContainerRef {
-        return BungPopupService.getLayerContainer(layer)
+        return BungPopupService.getLayerContainer(layer, this.envInjector, this.injector)
     }
     protected addBackdrop(layer: string, options?: BungBackdropOptions): HTMLElement | undefined {
-        return BungPopupService.addBackdrop(layer, options)
+        return BungPopupService.addBackdrop(layer, this.envInjector, this.injector, options)
     }
     protected openBackdrop(backdrop: HTMLElement, options?: BungBackdropOptions) {
         BungPopupService.openBackdrop(backdrop, options)
@@ -114,7 +109,7 @@ export class BungPopupService {
     protected closeBackdrop(backdrop: HTMLElement) {
         BungPopupService.closeBackdrop(backdrop)
     }
-    protected static addLayer(layer: string, zIndex?: number) {
+    protected static addLayer(layer: string, envInjector: EnvironmentInjector, injector: Injector, zIndex?: number) {
         if (layer in this.layers) return
         if (zIndex == undefined) {
             while (Object.keys(this.layers).some(k => this.layers[k].zIndex === currentZIndex + popupZIndexOffset)) currentZIndex++
@@ -127,17 +122,17 @@ export class BungPopupService {
         this.popupLayerTop.appendChild(layerElement)
         const placeholderElement: HTMLElement = document.createElement("div")
         layerElement.appendChild(placeholderElement)
-        const container = this.popupContainerFactory.create(Injector.create({ providers: [] }), undefined, placeholderElement)
+        const container = createComponent(BungPopupContainerComponent, { environmentInjector: envInjector, elementInjector: injector, hostElement: placeholderElement })
         this.layers[layer] = { zIndex, element: layerElement, container }
     }
-    protected static getLayerContainer(layer: string): ViewContainerRef {
-        if (!(layer in this.layers)) this.addLayer(layer)
+    protected static getLayerContainer(layer: string, envInjector: EnvironmentInjector, injector: Injector): ViewContainerRef {
+        if (!(layer in this.layers)) this.addLayer(layer, envInjector, injector)
         return this.layers[layer]!.container.instance.container
     }
-    protected static addBackdrop(layer: string, options?: BungBackdropOptions): HTMLElement | undefined {
+    protected static addBackdrop(layer: string, envInjector: EnvironmentInjector, injector: Injector, options?: BungBackdropOptions): HTMLElement | undefined {
         options ??= DefaultBackdropOptions
         if (!(options?.hasBackdrop ?? true)) return undefined
-        if (!(layer in this.layers)) this.addLayer(layer)
+        if (!(layer in this.layers)) this.addLayer(layer, envInjector, injector)
         const containerElement = this.layers[layer]!.element
         const backdrop = document.createElement("div")
         backdrop.classList.add("bung-backdrop", options.backdropClass!)

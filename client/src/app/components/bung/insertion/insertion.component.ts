@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, TemplateRef, Type, ViewEncapsulation, computed, contentChildren, effect, inject, input, model, output, signal } from "@angular/core"
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, TemplateRef, Type, ViewEncapsulation, computed, effect, inject, input, model, output, signal } from "@angular/core"
 import { BungInsertionContent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
-import { BungImgSrcDirective } from "../../../directives/bung/bung-img-src.directive"
 
 @Component({
     selector: "bung-insertion",
@@ -11,7 +10,7 @@ import { BungImgSrcDirective } from "../../../directives/bung/bung-img-src.direc
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
-export class BungInsertionComponent implements AfterViewInit, OnDestroy {
+export class BungInsertionComponent implements AfterViewInit, AfterContentInit, OnDestroy {
     readonly content = model<BungInsertionContent>()
     readonly textContentTag = model<"div" | "p" | "span">("p")
     readonly context = model<any>()
@@ -21,13 +20,16 @@ export class BungInsertionComponent implements AfterViewInit, OnDestroy {
     readonly placeholder = input<BungInsertionContent | undefined>()
     readonly placeholderContext = input<any>()
     readonly sharedIntersectionGroup = input<string | undefined>()
+    readonly contentInited = output()
     readonly viewInited = output()
+    readonly insertionInited = output()
 
     private readonly isIntersectedInternal = signal(false)
     readonly isIntersected = this.isIntersectedInternal.asReadonly()
     readonly element: ElementRef<HTMLElement> = inject(ElementRef)
 
     private readonly intersectionService = inject(BungIntersectionService)
+    private initFlag = 0
 
     #observer?: IntersectionObserver
     #intersectionGroupBackup?: string
@@ -60,6 +62,13 @@ export class BungInsertionComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.viewInited.emit()
+        this.initFlag |= 1
+        if (this.initFlag === 3) this.insertionInited.emit()
+    }
+    ngAfterContentInit() {
+        this.contentInited.emit()
+        this.initFlag |= 2
+        if (this.initFlag === 3) this.insertionInited.emit()
     }
     ngOnDestroy() {
         this.disposeObserver()

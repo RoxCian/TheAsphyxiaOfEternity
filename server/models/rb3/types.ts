@@ -22,3 +22,33 @@ export type Rb3OrderShopInfo = {
 export enum Rb3OrderFragmentColor {
     green, orange, blue, violet, red
 }
+
+export type Rb3VerdetDesKriegesPhrasePart = {
+    text: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
+    emphasisColor?: string
+    emphasisBackground?: string
+    specialEmphasis?: boolean
+    annotation?: number
+}
+
+export type Rb3VerdetDesKriegesContentOriginal = {
+    chapter: number
+    page: number
+    phrase: string
+    phraseOrig: string
+}
+
+export type Rb3VerdetDesKriegesContent = {
+    chapter: number
+    page: number
+    phrase: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
+    phraseOrig: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
+}
+
+export type Rb3VerdetDesKriegesNote = {
+    noteId: number
+    name: string
+    nameOrig: string
+    note: string
+    noteOrig: string
+}

@@ -27,9 +27,21 @@ export namespace C {
         code: number
         message: string
     }
+
+    export function error(code: number, message: string = ""): ControllerResultError {
+        return {
+            type: "error", code, message
+        }
+    }
+    export function pj(data: unknown): ControllerResultJson {
+        return {
+            type: "pj", data
+        }
+    }
+
     export type ControllerResult = ControllerResultText | ControllerResultJson | ControllerResultFile | ControllerResultBuffer | ControllerResultRedirect | ControllerResultError
     export type Controller<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = (data: TRequest) => TResponse | Promise<TResponse | undefined> | undefined
-    export type C<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = Controller<TRequest, TResponse>
+    export type C<TRequest = unknown, TResponse extends ControllerResult | string | object | Buffer = object> = Controller<TRequest, TResponse | ControllerResultError>
 
     function isControllerResult(value: unknown): value is ControllerResult {
         const type = (value as ControllerResult)?.type

@@ -1,4 +1,4 @@
-import { Type } from "@angular/core"
+import { Injector, runInInjectionContext, Type } from "@angular/core"
 
 export function isUnloaded(element?: HTMLElement): boolean {
     let parent: HTMLElement | null | undefined = element
@@ -94,7 +94,7 @@ export function mapObject<T, TMapFnResult>(object: T, mapFn: (key: keyof T) => T
     return result
 }
 
-export async function timeout(ms: number = 0): Promise<void> {
+export function timeout(ms: number = 0): Promise<void> {
     let resolver: () => void
     const result = new Promise<void>(res => resolver = res)
     setTimeout(resolver!, ms)

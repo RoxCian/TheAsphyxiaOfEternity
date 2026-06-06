@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from "@angular/core"
+import { Component, computed, ElementRef, inject, input, OnInit, signal, viewChildren } from "@angular/core"
 import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
@@ -19,7 +19,7 @@ const profileSubpages = {
     styleUrl: "./rb-player-card.component.sass",
     standalone: false
 })
-export class RbPlayerCardComponent {
+export class RbPlayerCardComponent implements OnInit {
     readonly profile = input.required<RbPlayerResponse | undefined>()
     readonly profileDeleted = input(false, { transform: toggleTransform })
     readonly isLoading = input(true)
@@ -66,8 +66,10 @@ export class RbPlayerCardComponent {
             }
         }
     })
+    protected readonly pageVisible = signal(false)
     protected readonly isImageLoaded = signal(false)
     protected readonly breakpointService = inject(BungBreakpointService)
+    private readonly forceAnimateElements = viewChildren<ElementRef<HTMLElement>>("forceAnimate")
 
     private readonly subpageService = inject(RbSubpageService)
     protected readonly subpageIndex = computed(() => {
@@ -75,6 +77,13 @@ export class RbPlayerCardComponent {
         return (Object.keys(profileSubpages) as (keyof typeof profileSubpages)[]).find(k => profileSubpages[k] === s)
     })
 
+    ngOnInit() {
+        // fix the issue of not playing animations when awake the tab
+        this.pageVisible.set(!document.hidden)
+        document.addEventListener("visibilitychange", () => {
+            this.pageVisible.set(!document.hidden)
+        })
+    }
     protected toRb3PlayerEventLevel(value?: number) {
         if (value == undefined) return 0
         if ((value | 1) !== value) return 0
@@ -89,5 +98,6 @@ export class RbPlayerCardComponent {
     }
     protected onNavToSubpage(index: keyof typeof profileSubpages) {
         this.subpageService.componentType.set(profileSubpages[index])
+        this.subpageService
     }
 }
