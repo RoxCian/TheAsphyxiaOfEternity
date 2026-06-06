@@ -123,7 +123,7 @@ export class BungTabsComponent implements AfterViewInit, OnDestroy {
         this.activatedBackupInternal.set(index)
         this.indexChanged.emit(index)
     }
-    protected onTabViewInited() {
+    protected onTabInited() {
         this.onStartAnimation()
     }
     private async onStartAnimation() {
