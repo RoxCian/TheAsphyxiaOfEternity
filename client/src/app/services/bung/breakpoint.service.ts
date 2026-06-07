@@ -1,4 +1,4 @@
-import { Injectable, Signal, computed, signal } from "@angular/core"
+import { Service, Signal, computed, signal } from "@angular/core"
 
 export type BungBreakpoint = "mobile" | "tablet" | "desktop" | "widescreen" | "fullhd"
 const mobileBreakpoint = 768
@@ -6,7 +6,7 @@ const tabletBreakpoint = 1024
 const desktopBreakpoint = 1216
 const widescreenBreakpoint = 1408
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class BungBreakpointService {
     readonly breakpoint = signal<BungBreakpoint>("fullhd")
     readonly breakpointsToggled: Record<BungBreakpoint, Signal<boolean>> = {

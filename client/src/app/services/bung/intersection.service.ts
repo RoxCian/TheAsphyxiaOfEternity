@@ -1,4 +1,4 @@
-import { ElementRef, Injectable } from "@angular/core"
+import { ElementRef, Service } from "@angular/core"
 
 export type BungIntersectionElement = {
     element: ElementRef<HTMLElement>
@@ -8,9 +8,7 @@ type BungIntersectionGroup = {
     observer?: IntersectionObserver
     elements: BungIntersectionElement[]
 }
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungIntersectionService {
     readonly intersectionGroups: Record<string, BungIntersectionGroup> = {}
     private readonly observerNameKey = "__Bung_observerNameKey__"

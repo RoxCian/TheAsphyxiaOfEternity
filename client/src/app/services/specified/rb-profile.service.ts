@@ -1,11 +1,11 @@
-import { computed, Injectable, signal } from "@angular/core"
+import { computed, inject, Service, signal } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbPlayerResponse, RbRequest, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { env } from "../../../env/env"
 import { rbEmitJSON } from "../../utils/rb-functions"
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class RbProfileService {
     readonly rid = signal("")
     readonly ridRequest = computed<RbRequest>(() => ({ rid: this.rid() }))
@@ -23,7 +23,7 @@ export class RbProfileService {
         5: this.rb5Profile.hasValue() ? this.rb5Profile.value() : undefined,
         6: this.rb6Profile.hasValue() ? this.rb6Profile.value() : undefined
     }))
-    readonly hasProfiles = computed(() => 
+    readonly hasProfiles = computed(() =>
         (!this.rb1Profile.isLoading() && this.rb1Profile.value()) ||
         (!this.rb2Profile.isLoading() && this.rb2Profile.value()) ||
         (!this.rb3Profile.isLoading() && this.rb3Profile.value()) ||
@@ -53,19 +53,21 @@ export class RbProfileService {
     private readonly lastDeletedProfileInternal = signal<number | undefined>(undefined)
     private readonly rbProfilesArray = [undefined, this.rb1Profile, this.rb2Profile, this.rb3Profile, this.rb4Profile, this.rb5Profile, this.rb6Profile] as const
     readonly lastDeletedProfile = this.lastDeletedProfileInternal.asReadonly()
+
+    private readonly router = inject(Router)
     private devInitialized = false
-    constructor(router: Router) {
+    constructor() {
         const updateRid = async () => {
             if (!env.production && !this.devInitialized) {
                 this.rid.set(await (await fetch("./dev/debug-rid")).text())
                 this.devInitialized = true
             }
-            const currentRid = router.parseUrl(router.url).queryParams["refid"]
+            const currentRid = this.router.parseUrl(this.router.url).queryParams["refid"]
             if (currentRid !== this.rid() && typeof currentRid === "string") {
                 this.rid.set(currentRid)
             }
         }
-        router.events.subscribe(updateRid)
+        this.router.events.subscribe(updateRid)
         updateRid()
     }
 
@@ -79,7 +81,7 @@ export class RbProfileService {
             this.rbProfilesArray[version].set(undefined)
             this.lastDeletedProfileInternal.set(version)
             return
-       } catch (ex) {
+        } catch (ex) {
             return (ex as Error).message
         }
     }

@@ -1,11 +1,9 @@
-import { ElementRef, Injectable, Signal } from "@angular/core"
+import { ElementRef, Service, Signal } from "@angular/core"
 import { BungPopupService } from "./popup.service"
 import { BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungTooltipComponent } from "../../components/bung/tooltip/tooltip.component"
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungTooltipService extends BungPopupService {
     protected override readonly defaultPopupOptions: BungPopupOptionsBase = {
         layer: "bung-tooltip",

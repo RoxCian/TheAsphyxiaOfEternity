@@ -1,8 +1,6 @@
-import { Injectable, signal } from "@angular/core"
+import { Service, signal } from "@angular/core"
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungThemeService {
     readonly theme = signal<"dark" | "light">("light")
     readonly #mediaQuery = window?.matchMedia("(prefers-color-scheme: dark)")

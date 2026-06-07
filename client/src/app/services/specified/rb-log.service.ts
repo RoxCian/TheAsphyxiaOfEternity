@@ -1,8 +1,8 @@
-import { inject, Injectable } from "@angular/core"
+import { inject, Service } from "@angular/core"
 import { RbVersionService } from "./rb-version.service"
 import { RbVersion } from "rbweb"
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class RbLogService {
     readonly versionService = inject(RbVersionService)
 

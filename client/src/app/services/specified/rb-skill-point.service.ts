@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from "@angular/core"
+import { computed, inject, Service, signal } from "@angular/core"
 import { RbChartInfo, RbChartType, RbMusicInfo, RbMusicRecordResponse, RbScoreResponse, RbVersion } from "rbweb"
 import { RbMusicRecordService } from "./rb-music-record.service"
 
@@ -11,9 +11,7 @@ export type RbSkillPointEntry<TVersion extends RbVersion> = {
     skillPoint: number
 } | undefined
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class RbSkillPointService {
     readonly entries = computed(() => {
         const version = this.recordService.dataVersion()

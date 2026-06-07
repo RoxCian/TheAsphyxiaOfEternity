@@ -1,11 +1,9 @@
-import { computed, Injectable } from "@angular/core"
+import { computed, Service } from "@angular/core"
 import { RbChartType, RbStageLogResponse, RbVersion } from "rbweb"
-import { RbPlayDataService } from "./rb-play-data.service"
+import { RbPlayDataServiceBase } from "./rb-play-data.service"
 
-@Injectable({
-    providedIn: "root"
-})
-export class RbStageLogService extends RbPlayDataService<RbStageLogResponse<RbVersion, RbChartType<RbVersion>>> {
+@Service()
+export class RbStageLogService extends RbPlayDataServiceBase<RbStageLogResponse<RbVersion, RbChartType<RbVersion>>> {
     constructor() {
         super(computed(() => this.dataVersion() ? `rb${this.dataVersion()}ReadStageLogs` : undefined))
     }

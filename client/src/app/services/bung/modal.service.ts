@@ -1,11 +1,9 @@
-import { Injectable, inputBinding, isSignal, Signal } from "@angular/core"
+import { Service, inputBinding, isSignal, Signal } from "@angular/core"
 import { BungPopupService } from "./popup.service"
 import { BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungModalComponent } from "../../components/bung/modal/modal.component"
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungModalService extends BungPopupService {
     protected override readonly defaultPopupOptions: BungPopupOptionsBase = {
         layer: "bung-modal",
@@ -28,7 +26,7 @@ export class BungModalService extends BungPopupService {
         if (bindingsHasAdded) {
             options.bindings = bindings
         }
-        
+
         if (typeof header !== "function" || header.toString().startsWith("class ") || !isSignal(headerContext)) {
             const setter = options.setter
             options.setter = popup => {

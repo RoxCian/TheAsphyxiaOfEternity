@@ -1,14 +1,11 @@
-import { effect, inject, Injectable, Signal, signal } from "@angular/core"
+import { effect, inject, Signal, signal } from "@angular/core"
 import { RbVersionService } from "./rb-version.service"
 import { RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbProfileService } from "./rb-profile.service"
 import { HttpResourceRef } from "@angular/common/http"
 
-@Injectable({
-    providedIn: "root"
-})
-export abstract class RbPlayDataService<T> {
+export abstract class RbPlayDataServiceBase<T> {
     private readonly isActivatedInternal = signal(false)
     private readonly profileService = inject(RbProfileService)
     private readonly versionService = inject(RbVersionService)

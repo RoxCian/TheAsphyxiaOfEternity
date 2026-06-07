@@ -1,11 +1,9 @@
-import { Injectable, Signal } from "@angular/core"
+import { Service, Signal } from "@angular/core"
 import { BungPopupService } from "./popup.service"
 import { BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungNotificationComponent } from "../../components/bung/notification/notification.component"
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungNotificationService extends BungPopupService {
     protected override readonly defaultPopupOptions: BungPopupOptionsBase = {
         layer: "bung-notification",

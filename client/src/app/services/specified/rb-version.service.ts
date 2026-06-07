@@ -1,10 +1,10 @@
-import { Injectable, computed, inject, output } from "@angular/core"
+import { Service, computed, inject, output } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbVersion } from "rbweb"
 import { RbProfileService } from "./rb-profile.service"
 import { initiatedSignal } from "../../signals/initiated-signal"
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class RbVersionService {
     private readonly profileService = inject(RbProfileService)
     readonly validVersions = computed<Record<RbVersion, boolean>>(() => ({

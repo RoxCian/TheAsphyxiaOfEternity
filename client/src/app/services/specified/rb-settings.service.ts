@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, linkedSignal, signal } from "@angular/core"
+import { computed, effect, inject, Service, linkedSignal, signal } from "@angular/core"
 import { createRbSettingsResponse, Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6RankingQuestResponse, RbAvailableItemResponse, RbByword, RbItemResponse, RbMusicResponse, RbRequest, RbSettingsResponse, RbVersion, RbWriteSettingsResponse } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbVersionService } from "./rb-version.service"
@@ -7,7 +7,7 @@ import { FieldTree, form, max, maxLength, min, minLength, PathKind, required, Sc
 import { isInShiftJISCharset } from "../../utils/functions"
 import { rbEmitJSON } from "../../utils/rb-functions"
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class RbSettingsService {
     private readonly versionService = inject(RbVersionService)
     private readonly profileService = inject(RbProfileService)
@@ -16,7 +16,7 @@ export class RbSettingsService {
     private readonly settingsResource = rbData<RbSettingsResponse<RbVersion>>(computed(() => `rb${this.versionService.version()}ReadSettings`), this.profileService.ridRequest)
     readonly settings = linkedSignal(computed(() => this.settingsResource.hasValue() ? this.settingsResource.value() : createRbSettingsResponse(this.versionService.version())))
     readonly settingsForm = form(this.settings, path => {
-        required(path.name, { message: "Name is empty."})
+        required(path.name, { message: "Name is empty." })
         maxLength(path.name, 8, { message: "Name length is more than 8." })
         validate(path.name, ctx => isInShiftJISCharset(ctx.value()) ? undefined : { kind: "", context: ctx, message: "Some of characters in name cannot convert to SHIFT-JIS." })
         maxLength(path.comment, 50)

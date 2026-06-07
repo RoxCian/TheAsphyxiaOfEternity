@@ -1,4 +1,4 @@
-import { ApplicationRef, Binding, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
+import { ApplicationRef, Binding, ComponentRef, createComponent, EnvironmentInjector, inject, Service, Injector, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
 import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 import { BungBackdropOptions, BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase, BungReturnContext, DefaultBackdropOptions } from "../../utils/bung"
 import { BungPopupComponent } from "../../components/bung/popup/popup.component"
@@ -13,9 +13,7 @@ type PopupLayer = {
 const popupZIndexOffset = 5000
 let currentZIndex = 0
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungPopupService {
     private static readonly layers: { [K in string]: PopupLayer } = {}
     private static readonly popupLayerTop: HTMLElement = document.createElement("div")

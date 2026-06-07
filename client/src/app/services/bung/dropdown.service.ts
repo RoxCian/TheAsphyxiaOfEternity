@@ -1,12 +1,10 @@
-import { Binding, ElementRef, Injectable, inputBinding } from "@angular/core"
+import { ElementRef, Service } from "@angular/core"
 import { BungPopupService } from "./popup.service"
 import { BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungDropdownComponent } from "../../components/bung/dropdown/dropdown.component"
 import { BungMenuDef, BungMenuDefOrComputation } from "../../components/bung/menu-def/menu-def.component"
 
-@Injectable({
-    providedIn: "root"
-})
+@Service()
 export class BungDropdownService extends BungPopupService {
     protected override readonly defaultPopupOptions: BungPopupOptionsBase = {
         layer: "bung-dropdown",

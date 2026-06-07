@@ -1,11 +1,9 @@
-import { computed, Injectable } from "@angular/core"
+import { computed, Service } from "@angular/core"
 import { RbClasscheckResponse, RbVersionWithClasscheck } from "rbweb"
-import { RbPlayDataService } from "./rb-play-data.service"
+import { RbPlayDataServiceBase } from "./rb-play-data.service"
 
-@Injectable({
-    providedIn: "root"
-})
-export class RbClasscheckService extends RbPlayDataService<RbClasscheckResponse<RbVersionWithClasscheck>> {
+@Service()
+export class RbClasscheckService extends RbPlayDataServiceBase<RbClasscheckResponse<RbVersionWithClasscheck>> {
     constructor() {
         super(computed(() => (this.dataVersion() ?? 0) >= 4 ? `rb${this.dataVersion()}ReadClasschecks` : undefined))
     }
