@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core"
+import { Component, input, ChangeDetectionStrategy } from "@angular/core"
 
 @Component({
     selector: "lets-play",
@@ -8,6 +8,7 @@ import { Component, input } from "@angular/core"
         "[class.has-text-gray]": "true",
         "[class.has-text-centered]": "true"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LetsPlayComponent {

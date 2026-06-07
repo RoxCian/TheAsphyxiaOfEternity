@@ -219,7 +219,7 @@
                             </div>
                         </ng-template>
                         <ng-template let-q #rankingQuestOptionTemplate>
-                            @let musics = [findMusic(q.charts[0]?.musicId), findMusic(q.charts[1]?.musicId), findMusic(q.charts[2]?.musicId)];
+                            @let musics = [findMusic($safeNavigationMigration(q.charts[0]?.musicId)), findMusic($safeNavigationMigration(q.charts[1]?.musicId)), findMusic($safeNavigationMigration(q.charts[2]?.musicId))];
                             <bung-insertion class="ranking-quest-option-insertion" isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder" [placeholderContext]="musics | implicit">
                                 <div class="ranking-quest-option-content">
                                     <span class="group-label is-size-7">Group {{ q.id + 1 }}</span>

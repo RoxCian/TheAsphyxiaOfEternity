@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from "@angular/core"
+import { Component, ViewEncapsulation, input, ChangeDetectionStrategy } from "@angular/core"
 import { size, sizeTransform } from "../../../signals/transforms"
 
 @Component({
@@ -7,6 +7,7 @@ import { size, sizeTransform } from "../../../signals/transforms"
     styleUrls: ["./loader.component.sass"],
     encapsulation: ViewEncapsulation.None,
     host: { "[style.--size]": "size()" },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungLoaderComponent {

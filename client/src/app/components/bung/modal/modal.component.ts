@@ -1,4 +1,4 @@
-import { Component, input, isSignal, model, ViewEncapsulation } from "@angular/core"
+import { Component, input, isSignal, model, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungPopupComponent } from "../popup/popup.component"
 import { BungInsertionContent, BungInsertionContentOrComputation } from "../../../utils/bung"
@@ -9,6 +9,7 @@ import { BungInsertionContent, BungInsertionContentOrComputation } from "../../.
     styleUrl: "./modal.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.modal]": "true",
         "[class.is-active]": "true",

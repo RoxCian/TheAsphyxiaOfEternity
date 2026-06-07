@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from "@angular/core"
+import { Component, ViewEncapsulation, input, ChangeDetectionStrategy } from "@angular/core"
 import { RbChartType, RbMusicInfo, RbMusicVariation, RbVersion } from "rbweb"
 import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
 
@@ -7,6 +7,7 @@ import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
     templateUrl: "./rb-music-title.component.html",
     styleUrls: ["./rb-music-title.component.sass"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbMusicTitleComponent<TVersion extends RbVersion> {

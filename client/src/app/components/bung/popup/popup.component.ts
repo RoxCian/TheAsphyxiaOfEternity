@@ -1,4 +1,4 @@
-import { Component, ElementRef, contentChildren, effect, inject, input, model, output, signal, viewChildren } from "@angular/core"
+import { Component, ElementRef, contentChildren, effect, inject, input, model, output, signal, viewChildren, ChangeDetectionStrategy } from "@angular/core"
 import { BungInsertionContent, BungPopupState, BungReturnContext } from "../../../utils/bung"
 import { BungReturnDirective } from "../../../directives/bung/return.directive"
 import { toggle, toggleTransform } from "../../../signals/transforms"
@@ -12,6 +12,7 @@ export type PopupEvent = {
     host: {
         "[class]": "`popup-${ state() } ${ state() }`",
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export abstract class BungPopupComponent<T = any> {

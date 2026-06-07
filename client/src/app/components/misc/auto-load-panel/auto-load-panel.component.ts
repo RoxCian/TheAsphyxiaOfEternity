@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, contentChildren, effect, ElementRef, inject, input, output, signal, viewChild } from "@angular/core"
+import { AfterContentInit, Component, contentChildren, effect, ElementRef, inject, input, output, signal, viewChild, ChangeDetectionStrategy } from "@angular/core"
 import { BungInsertionComponent } from "../../bung/insertion/insertion.component"
 
 export type AutoLoadEvent = {
@@ -9,6 +9,7 @@ export type AutoLoadEvent = {
     selector: "auto-load-panel",
     standalone: false,
     templateUrl: "./auto-load-panel.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ["./auto-load-panel.component.sass"]
 })
 export class AutoLoadPanelComponent implements AfterContentInit {

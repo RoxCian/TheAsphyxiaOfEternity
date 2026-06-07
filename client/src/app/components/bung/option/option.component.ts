@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, ViewEncapsulation } from "@angular/core"
+import { Component, ElementRef, inject, input, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
 import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent } from "../../../utils/bung"
 @Component({
@@ -6,6 +6,7 @@ import { BungInsertionContent } from "../../../utils/bung"
     template: "<ng-content />",
     styleUrls: ["./option.component.sass"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungOptionComponent<T> {

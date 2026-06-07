@@ -1,4 +1,4 @@
-import { Component, ElementRef, model, signal } from "@angular/core"
+import { Component, ElementRef, model, signal, ChangeDetectionStrategy } from "@angular/core"
 import { BungPopupComponent } from "../../../bung/popup/popup.component"
 import { RbVersion, RbMusicRecordResponse, RbChartType } from "rbweb"
 
@@ -9,6 +9,7 @@ import { RbVersion, RbMusicRecordResponse, RbChartType } from "rbweb"
     host: {
         "[class.use-default-popup-leave-animation]": "true"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbRecordPopupComponent<TVersion extends RbVersion> extends BungPopupComponent<void> {

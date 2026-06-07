@@ -1,4 +1,4 @@
-import { Component, model } from "@angular/core"
+import { Component, model, ChangeDetectionStrategy } from "@angular/core"
 import { FormValueControl } from "@angular/forms/signals"
 import { RbColorSpecification } from "rbweb"
 
@@ -7,6 +7,7 @@ import { RbColorSpecification } from "rbweb"
     templateUrl: "./rb6-color-specification-select.component.html",
     styleUrl: "./rb6-color-specification-select.component.sass",
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.buttons]": "true",
     }

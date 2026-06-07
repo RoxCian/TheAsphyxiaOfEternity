@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from "@angular/core"
+import { Component, computed, inject, input, ChangeDetectionStrategy } from "@angular/core"
 import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbClasscheckPopupComponent } from "../../classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component"
@@ -7,6 +7,7 @@ import { RbClasscheckPopupComponent } from "../../classcheck-popup/rb-classcheck
     selector: "rb-classcheck",
     standalone: false,
     templateUrl: "./rb-classcheck-panel.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ["./rb-classcheck-panel.component.sass"]
 })
 export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, inputBinding, signal, TemplateRef, viewChild } from "@angular/core"
+import { Component, ElementRef, inject, inputBinding, signal, TemplateRef, viewChild, ChangeDetectionStrategy } from "@angular/core"
 import { RbVersionService } from "../../../services/specified/rb-version.service"
 import { RbProfileService } from "../../../services/specified/rb-profile.service"
 import { BungModalService } from "../../../services/bung/modal.service"
@@ -11,6 +11,7 @@ import { inverted } from "../../../signals/inverted"
     selector: "rb-save-data-subpage",
     templateUrl: "./save-data.component.html",
     styleUrl: "./save-data.component.sass",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbSaveDataSubpage {

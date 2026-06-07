@@ -1,4 +1,4 @@
-import { Component, computed, input } from "@angular/core"
+import { Component, computed, input, ChangeDetectionStrategy } from "@angular/core"
 
 type WeekInfo = {
     firstDay: number
@@ -32,6 +32,7 @@ function getWeekInfo(): WeekInfo {
     host: {
         "[style.--weeks-count]": "totalWeeksCount"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbActivityGridComponent {

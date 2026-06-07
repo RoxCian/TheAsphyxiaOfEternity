@@ -19,7 +19,6 @@ import { rb6CharacterCards } from "../../data/tables/rb6_characard"
 import { Rb6CharacterCard } from "../../models/rb6/character_card"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
-import { inspect } from "util"
 
 type V = 6
 const version = 6 as const
@@ -207,9 +206,6 @@ const importAsphyxia: C.C<RbRequest> = async data => {
     } catch {
         return C.error(401, "Invalid Asphyxia profile data.")
     }
-
-    console.log(inspect(profile))
-    console.log(inspect(scores))
 
     const base = await DBH.findOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
     const t = new DBH.T()

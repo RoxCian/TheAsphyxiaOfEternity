@@ -1,4 +1,3 @@
-import { inspect } from "util"
 import { ICollection } from "../../utils/db/db_types"
 import { XD, XM, XSubMap } from "../../utils/x"
 
@@ -12,5 +11,3 @@ export class Rb3Mylist implements ICollection<"rb.rb3.player.mylist"> {
     @XD.a({ slotId: XM.u8(), musicId: XM.s16() } as XSubMap<Rb3MylistSlot>)
     slot?: Rb3MylistSlot[] = []
 }
-
-console.log(inspect((Rb3Mylist as any).__map__))

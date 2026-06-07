@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, input } from "@angular/core"
+import { Component, ViewEncapsulation, computed, input, ChangeDetectionStrategy } from "@angular/core"
 import { RbByword, RbBywordRarity } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
 
@@ -11,6 +11,7 @@ import { toggleTransform } from "../../../../signals/transforms"
         "[class.tags]": "true",
         "[class.has-addons]": "true"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbBywordTagComponent {

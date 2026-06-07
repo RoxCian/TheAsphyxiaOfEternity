@@ -19,7 +19,6 @@ import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { isArrayWrapper } from "../../utils/types"
-import { inspect } from "util"
 
 export function registerRb5Handlers() {
     H.route("pcb.rb5_pcb_boot", bootPcb)
@@ -55,7 +54,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb5Player(read.rid)
     const account = await DBH.findOne(read.rid, Rb5PlayerAccount, { collection: "rb.rb5.player.account" })
-    console.log(inspect(account))
     if (!account) {
         const player = await findPlayerFromOtherVersion(read.rid, 5)
         if (!player) return H.deny

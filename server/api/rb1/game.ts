@@ -12,7 +12,6 @@ import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { hasAny } from "../../utils/utility_functions"
-import { inspect } from "util"
 
 export function registerRb1Handlers() {
     H.route("player.start?model=KBR", startPlayer)
@@ -108,9 +107,6 @@ async function writePlayerCore(player: Rb1Player) {
     if (hasAny(player.pdata.stageLogs.log)) for (const l of player.pdata.stageLogs.log) StageLogManager.pushStageLog(rid, player.pdata.base.userId, l, 1)
     if (hasAny(player.pdata.record.rec)) for (const r of player.pdata.record.rec) await updateMusicRecord(rid, r, t)
     if (hasAny(player.pdata.released.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb1.player.releasedInfo", type: i.type, id: i.id }, i)
-
-    console.log(inspect(player.pdata.record.rec))
-    console.log(inspect(player.pdata.stageLogs.log))
     
     await t.commit()
 }

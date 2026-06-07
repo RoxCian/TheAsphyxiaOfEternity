@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, TemplateRef, Type, ViewEncapsulation, computed, effect, inject, input, model, output, signal } from "@angular/core"
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, TemplateRef, Type, ViewEncapsulation, computed, effect, inject, input, model, output, signal, ChangeDetectionStrategy } from "@angular/core"
 import { BungInsertionContent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
@@ -8,6 +8,7 @@ import { BungIntersectionService } from "../../../services/bung/intersection.ser
     templateUrl: "./insertion.component.html",
     styles: ["bung-insertion\r\n display: grid \r\n > *\r\n  grid-area: 1/1"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungInsertionComponent implements AfterViewInit, AfterContentInit, OnDestroy {

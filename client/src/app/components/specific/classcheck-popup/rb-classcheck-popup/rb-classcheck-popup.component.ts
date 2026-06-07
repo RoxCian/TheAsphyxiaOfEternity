@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, inject, input, signal, viewChild, viewChildren } from "@angular/core"
+import { AfterViewInit, Component, computed, ElementRef, inject, input, signal, viewChild, viewChildren, ChangeDetectionStrategy } from "@angular/core"
 import { Rb5ClasscheckIndex, Rb4DojoIndex, Rb6ClasscheckIndex, RbClasscheckResponse, RbVersionWithClasscheck, RbChartType } from "rbweb"
 import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
@@ -12,6 +12,7 @@ import { timeout } from "../../../../utils/functions"
     standalone: false,
     templateUrl: "./rb-classcheck-popup.component.html",
     styleUrl: "./rb-classcheck-popup.component.sass",
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.use-default-popup-leave-animation]": "true",
         "[style.--background-end-height]": "`${height()}px`",

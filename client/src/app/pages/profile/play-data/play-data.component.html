@@ -102,7 +102,7 @@
                 </div>
                 <div class="rb-highlight">
                     <bung-divider prompt="Recent Highlight" />
-                    @let highlights = playerPerformanceService.playerPerformance.value()?.recentHighlightPlay;
+                    @let highlights = $safeNavigationMigration(playerPerformanceService.playerPerformance.value()?.recentHighlightPlay);
                     @if (highlights?.length) {
                         <div class="rb-list">
                             @for (h of highlights; track h) {

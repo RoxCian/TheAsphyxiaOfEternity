@@ -54,7 +54,7 @@
     <div class="background-container background-{{ animationState() }} card" (animationend)="onBackgroundAnimationEnd($event)" #background>
         <div class="jackets-background">
             @for (i of (capacity | range); track i) {
-                @let stageLog = classcheck().stageLogs?.[i];
+                @let stageLog = $safeNavigationMigration(classcheck().stageLogs?.[i]);
                 <ng-container [ngTemplateOutlet]="stageJacketBackground" [ngTemplateOutletContext]="{ jacketSrc: stageLog ? (stageLog.music.musicUid | rbJacket : stageLog.chartType)() : undefined, stageIndex: i }" />
             }
         </div>
@@ -112,7 +112,7 @@
         </div>
         <div class="stage-log-info-wrapper">
             @for (i of (capacity | range); track i) {
-                @let stageLog = classcheck().stageLogs?.[i];
+                @let stageLog = $safeNavigationMigration(classcheck().stageLogs?.[i]);
                 <ng-container [ngTemplateOutlet]="stageResult" [ngTemplateOutletContext]="{ stageLog, stageIndex: i }" />
             }
         </div>

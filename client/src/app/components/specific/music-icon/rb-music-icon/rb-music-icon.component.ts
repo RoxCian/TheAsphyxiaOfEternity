@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core"
+import { Component, input, ChangeDetectionStrategy } from "@angular/core"
 import { RbChartType, RbMusicResponse, RbVersion } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
 import { BungIntersectionService } from "../../../../services/bung/intersection.service"
@@ -7,6 +7,7 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
     selector: "rb-music-icon",
     templateUrl: "./rb-music-icon.component.html",
     styleUrl: "./rb-music-icon.component.sass",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RbMusicIconComponent {

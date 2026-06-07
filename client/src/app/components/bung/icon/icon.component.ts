@@ -1,4 +1,4 @@
-import { Component, SecurityContext, ViewEncapsulation, computed, inject, input } from "@angular/core"
+import { Component, SecurityContext, ViewEncapsulation, computed, inject, input, ChangeDetectionStrategy } from "@angular/core"
 import { toggleTransform } from "../../../signals/transforms"
 import { DomSanitizer } from "@angular/platform-browser"
 
@@ -12,6 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser"
         "[class.no-wrap]": "isNoWrap()",
         "[class.is-reversed]": "isLayoutReversed()"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungIconComponent {

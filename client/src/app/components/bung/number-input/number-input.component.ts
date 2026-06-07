@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, input, model, signal, viewChild, ViewEncapsulation } from "@angular/core"
+import { Component, effect, ElementRef, input, model, signal, viewChild, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
 import { FormValueControl } from "@angular/forms/signals";
 import { toggleTransform } from "../../../signals/transforms";
 
@@ -8,6 +8,7 @@ import { toggleTransform } from "../../../signals/transforms";
     styleUrl: "./number-input.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.bung-input]": "true",
         "[class.is-disabled]": "disabled()",

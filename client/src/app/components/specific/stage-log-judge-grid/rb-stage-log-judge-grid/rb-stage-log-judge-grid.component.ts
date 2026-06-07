@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core"
+import { Component, input, ChangeDetectionStrategy } from "@angular/core"
 import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 
 
@@ -6,6 +6,7 @@ import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
     selector: "rb-stage-log-judge-grid",
     standalone: false,
     templateUrl: "./rb-stage-log-judge-grid.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: "./rb-stage-log-judge-grid.component.sass"
 })
 export class RbStageLogJudgeGridComponent<TVersion extends RbVersion, TChart extends RbChartType<TVersion>> {

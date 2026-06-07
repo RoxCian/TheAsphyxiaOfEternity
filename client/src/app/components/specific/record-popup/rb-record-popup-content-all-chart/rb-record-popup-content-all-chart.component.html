@@ -19,7 +19,7 @@
                                     @if (v !== 4 && v !== 5) {
                                     <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ record().scores[ct]?.combo ?? "-" }}</bung-icon>
                                     }
-                                    <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ record().scores[ct]?.miss | rbMissCount }}</bung-icon>
+                                    <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ $safeNavigationMigration(record().scores[ct]?.miss) | rbMissCount }}</bung-icon>
                                 </div>
                                 @if (v === 6 && !isMobile()) {
                                 <div class="just-collection">
@@ -45,8 +45,8 @@
                                 }
                                 @if (v !== 1 && v !== 2) {
                                 <div class="play-time">
-                                    <bung-icon icon="update" isNoWrap bungTooltip="Score update time">{{ (record().scores[ct]?.update | relativeTime) || "-" }}</bung-icon>
-                                    <bung-icon icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ (record().scores[ct]?.lastPlay | relativeTime) || "-" }}</bung-icon>
+                                    <bung-icon icon="update" isNoWrap bungTooltip="Score update time">{{ ($safeNavigationMigration(record().scores[ct]?.update) | relativeTime) || "-" }}</bung-icon>
+                                    <bung-icon icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ ($safeNavigationMigration(record().scores[ct]?.lastPlay) | relativeTime) || "-" }}</bung-icon>
                                 </div>
                                 }
                             </div>
@@ -64,13 +64,13 @@
                     }
                     @if (record().scores[ct]) {
                     <div class="rank">
-                        <rb-rank [achievementRate]="record().scores[ct]?.achievementRate!" [version]="v" hasDecoration hasAnimation #rankBadge />
+                        <rb-rank [achievementRate]="$safeNavigationMigration(record().scores[ct]?.achievementRate)!" [version]="v" hasDecoration hasAnimation #rankBadge />
                     </div>
                     }
                 </div>
             </div>
         </div>
-        <rb-chart-lamp [chartType]="ct" [version]="v" [clearType]="record().scores[ct]?.clearType!" isShortened isVertical />
+        <rb-chart-lamp [chartType]="ct" [version]="v" [clearType]="$safeNavigationMigration(record().scores[ct]?.clearType)!" isShortened isVertical />
     </div>
 </ng-template>
 <div class="modal-body all-chart" bungBreakpoint="mobile">

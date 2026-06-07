@@ -1,4 +1,4 @@
-import { Component, contentChildren, ElementRef, inject, input, output, ViewEncapsulation } from "@angular/core"
+import { Component, contentChildren, ElementRef, inject, input, output, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
 import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent } from "../../../utils/bung"
 
@@ -7,6 +7,7 @@ import { BungInsertionContent } from "../../../utils/bung"
     template: "<ng-content />",
     styleUrls: ["./menu-item.component.sass"],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungMenuItemComponent {

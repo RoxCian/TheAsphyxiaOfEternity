@@ -16,12 +16,12 @@
                         @if (p.bywords) {
                             <rb-byword-tag [leftByword]="p.bywords!.left" [rightByword]="p.bywords!.right" />
                         }
-                        @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel(p.extraValues?.[1]) : 0;
+                        @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel($safeNavigationMigration(p.extraValues?.[1])) : 0;
                         <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}">
                             {{ p.name }}
                         </div>
                         <div class="comment">
-                            <p>"{{ p.comment || (profile()?.version | rbDefaultComment) }}"</p>
+                            <p>"{{ p.comment || ($safeNavigationMigration(profile()?.version) | rbDefaultComment) }}"</p>
                         </div>
                     </div>
                     <bung-divider [isVertical]="!breakpointService.breakpointsToggled.mobile()" />

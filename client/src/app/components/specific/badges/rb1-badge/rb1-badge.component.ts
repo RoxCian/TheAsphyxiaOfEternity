@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core"
+import { Component, input, ChangeDetectionStrategy } from "@angular/core"
 import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
 
 @Component({
@@ -9,6 +9,7 @@ import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
         "[class.rb-badge]": "true",
         "[class.is-active]": "isActive()"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class Rb1BadgeComponent {

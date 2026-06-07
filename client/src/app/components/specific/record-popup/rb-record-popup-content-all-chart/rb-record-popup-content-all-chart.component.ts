@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, model, signal, viewChild } from "@angular/core"
+import { Component, ElementRef, inject, model, signal, viewChild, ChangeDetectionStrategy } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
@@ -31,6 +31,7 @@ const HSwipeAnimationParams: RbRecordPopupSwipeAnimationParams = { startWidth: "
         "[style.--background-end-width]": "backgroundSwipeAnimationParams().endWidth",
         "[style.--background-end-height]": "backgroundSwipeAnimationParams().endHeight",
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbRecordPopupContentAllChartComponent<TVersion extends RbVersion> {

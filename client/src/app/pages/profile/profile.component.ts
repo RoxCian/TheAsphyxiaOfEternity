@@ -1,4 +1,4 @@
-import { Component, computed, inject, model } from "@angular/core"
+import { Component, computed, inject, model, ChangeDetectionStrategy } from "@angular/core"
 import { ProfileDetailModule } from "../../modules/profile-detail.module"
 import { RbProfileService } from "../../services/specified/rb-profile.service"
 import { BungModule } from "../../modules/bung.module"
@@ -13,6 +13,7 @@ import { Rb6ClearTypeLiteral } from "../../../../../server/models/shared/rb_type
     selector: "profile-page",
     imports: [ProfileDetailModule, BungModule, CommonModule],
     templateUrl: "./profile.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: "./profile.component.sass",
 })
 export class ProfilePageComponent {

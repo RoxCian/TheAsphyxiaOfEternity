@@ -1,4 +1,4 @@
-import { Component, ElementRef, model, signal, ViewEncapsulation } from "@angular/core"
+import { Component, ElementRef, model, signal, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
 import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "auto"
@@ -9,6 +9,7 @@ export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "righ
     styleUrl: "./tooltip.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[style.--tooltip-left]": "`${tooltipLeft()}px`",
         "[style.--tooltip-top]": "`${tooltipTop()}px`",

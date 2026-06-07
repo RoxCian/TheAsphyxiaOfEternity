@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from "@angular/core"
+import { Component, ViewEncapsulation, input, ChangeDetectionStrategy } from "@angular/core"
 import { BungInsertionContent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
 
@@ -11,6 +11,7 @@ import { toggleTransform } from "../../../signals/transforms"
         "[class.end-to-start]": "promptLayout() === 'end'",
         "[class.is-vertical]": "isVertical()"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungDividerComponent {

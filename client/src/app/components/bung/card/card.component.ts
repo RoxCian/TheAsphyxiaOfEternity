@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewEncapsulation, computed, input, viewChild } from "@angular/core"
+import { Component, ElementRef, ViewEncapsulation, computed, input, viewChild, ChangeDetectionStrategy } from "@angular/core"
 import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 
 @Component({
@@ -9,6 +9,7 @@ import { linkedToggle, toggleTransform } from "../../../signals/transforms"
     host: {
         "[class.card]": "true"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungCardComponent {
