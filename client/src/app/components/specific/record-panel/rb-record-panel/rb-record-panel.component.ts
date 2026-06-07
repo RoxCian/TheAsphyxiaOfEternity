@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, input, SecurityContext, viewChild, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, ElementRef, inject, input, SecurityContext, viewChild } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion, RbChartResponse } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbRecordPopupComponent } from "../../record-popup/rb-record-popup/rb-record-popup.component"
@@ -13,7 +13,6 @@ function hasChart<TVersion extends RbVersion, TChart extends RbChartType<TVersio
     selector: "rb-record",
     templateUrl: "./rb-record-panel.component.html",
     styleUrls: ["./rb-record-panel.component.sass"],
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbRecordPanelComponent<TVersion extends RbVersion> {

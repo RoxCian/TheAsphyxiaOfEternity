@@ -1,4 +1,4 @@
-import { Component, input, linkedSignal, ChangeDetectionStrategy } from "@angular/core"
+import { Component, input, linkedSignal } from "@angular/core"
 import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupComponent } from "../../../bung/popup/popup.component"
 
@@ -7,7 +7,6 @@ import { BungPopupComponent } from "../../../bung/popup/popup.component"
     standalone: false,
     templateUrl: "./rb-stage-log-popup.component.html",
     styleUrl: "./rb-stage-log-popup.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.use-default-popup-animation]": "true"
     }

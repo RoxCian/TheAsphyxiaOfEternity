@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, computed, inject, model, signal, viewChild, ChangeDetectionStrategy } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, computed, inject, model, signal, viewChild } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
@@ -34,7 +34,6 @@ const HSwipeAnimationParams: RbRecordPopupSwipeAnimationParams = { startWidth: "
         "[style.--score-info-end-width]": "scoreInfoSwipeAnimationParams().endWidth",
         "[style.--score-info-end-height]": "scoreInfoSwipeAnimationParams().endHeight",
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbRecordPopupContentSingleChartComponent<TVersion extends RbVersion> implements AfterViewInit {

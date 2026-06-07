@@ -1,4 +1,4 @@
-import { Component, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, viewChild, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
+import { Component, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, viewChild, ViewEncapsulation } from "@angular/core"
 import { BungOptionComponent } from "../option/option.component"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
@@ -12,7 +12,6 @@ import { asPromise } from "../../../signals/functions"
     styleUrl: "./select.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.bung-input]": "true",
         "[class.is-disabled]": "disabled()",

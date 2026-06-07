@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, ViewEncapsulation, computed, input } from "@angular/core"
 import { RbChartType, RbClearTypeLiteral, RbVersion } from "rbweb"
 import { linkedToggle, toggleTransform } from "../../../../signals/transforms"
 import { BungInsertionContent } from "../../../../utils/bung"
@@ -16,7 +16,6 @@ const VTransitionParams = { width: "*", height: "0", translate: "translateY(-120
         "[class.is-vertical]": "isVertical()",
         "[class.no-clear-type]": "!clearType()"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbChartLampComponent<TVersion extends RbVersion> {

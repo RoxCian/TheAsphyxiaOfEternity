@@ -1,11 +1,10 @@
-import { Component, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, input } from "@angular/core"
 import { RbStageLogResponse, Rb6ChartType } from "rbweb"
 
 @Component({
     selector: "rb6-stage-log-popup-content",
     templateUrl: "./rb6-stage-log-popup-content.component.html",
     styleUrl: "./rb6-stage-log-popup-content.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class Rb6StageLogPopupContentComponent<TChart extends Rb6ChartType> {

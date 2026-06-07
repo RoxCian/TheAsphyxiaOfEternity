@@ -1,4 +1,4 @@
-import { Component, model, ChangeDetectionStrategy } from "@angular/core"
+import { Component, model } from "@angular/core"
 import { FormValueControl } from "@angular/forms/signals"
 
 @Component({
@@ -6,7 +6,6 @@ import { FormValueControl } from "@angular/forms/signals"
     templateUrl: "./rb-object-size-select.component.html",
     styleUrl: "./rb-object-size-select.component.sass",
     standalone: false,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.buttons]": "true"
     }

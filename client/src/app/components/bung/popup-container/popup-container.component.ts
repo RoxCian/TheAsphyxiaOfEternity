@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, Inject, ViewContainerRef, ViewRef, ChangeDetectionStrategy } from "@angular/core"
+import { ChangeDetectorRef, Component, Inject, ViewContainerRef, ViewRef } from "@angular/core"
 
 @Component({
     selector: "bung-popup-container", template: "<ng-content />",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungPopupContainerComponent {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, inject, input, output } from "@angular/core"
 import { RbMusicResponse, RbVersion } from "rbweb"
 import { RbSettingsService } from "../../../../services/specified/rb-settings.service"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
@@ -8,7 +8,6 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
     selector: "rb-mylist-editor",
     templateUrl: "./rb-mylist-editor.component.html",
     styleUrl: "./rb-mylist-editor.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RbMylistEditorComponent<TVersion extends RbVersion> {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, TemplateRef, ViewEncapsulation, contentChild, inject, input, output, ChangeDetectionStrategy } from "@angular/core"
+import { Component, ElementRef, TemplateRef, ViewEncapsulation, contentChild, inject, input, output } from "@angular/core"
 import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
 
@@ -7,7 +7,6 @@ import { toggleTransform } from "../../../signals/transforms"
     template: "<ng-content />",
     styleUrls: ["./tab.component.sass"],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungTabComponent {

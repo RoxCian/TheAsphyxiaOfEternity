@@ -1,4 +1,4 @@
-import { Component, Signal, ViewEncapsulation, computed, isSignal, model, ChangeDetectionStrategy } from "@angular/core"
+import { Component, Signal, ViewEncapsulation, computed, isSignal, model } from "@angular/core"
 import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungNotificationFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "none"
@@ -16,7 +16,6 @@ export type BungNotificationFloat = "left" | "top-left" | "top" | "top-right" | 
         "[class.is-single-line]": "isSingleLine()",
         "[class.has-delete]": "hasDelete()",
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungNotificationComponent<T = any> extends BungPopupComponent<T> {

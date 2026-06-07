@@ -1,4 +1,4 @@
-import { Component, computed, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, input } from "@angular/core"
 
 type WeekInfo = {
     firstDay: number
@@ -32,7 +32,6 @@ function getWeekInfo(): WeekInfo {
     host: {
         "[style.--weeks-count]": "totalWeeksCount"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbActivityGridComponent {
@@ -45,7 +44,7 @@ export class RbActivityGridComponent {
     readonly now = new Date()
     readonly totalDays = hasLeapDay() ? 366 : 365
     readonly daysArray = new Array(this.totalDays).fill(0).map((_, i) => i)
-    readonly todayRow = (this.now.getDay() - this.weekInfo.firstDay + 7) % 7 
+    readonly todayRow = (this.now.getDay() - this.weekInfo.firstDay + 7) % 7
     readonly totalWeeksCount = (this.totalDays === 366 && this.todayRow === 0) ? 54 : 53
 
     protected getGridRowColumn(dateInGrid: number): { row: number, column: number } {

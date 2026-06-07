@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, inject, input, linkedSignal, output, signal, viewChild, viewChildren, ChangeDetectionStrategy } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, inject, input, linkedSignal, output, signal, viewChild, viewChildren } from "@angular/core"
 import { BungTabComponent } from "../tab/tab.component"
 import { BungInsertionComponent } from "../insertion/insertion.component"
 import { isUnloaded } from "../../../utils/functions"
@@ -13,7 +13,6 @@ import { BungWaitableEvent } from "../../../utils/bung"
     host: {
         "[class.is-loading]": "loadingTabIndex() != undefined"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungTabsComponent implements AfterViewInit, OnDestroy {

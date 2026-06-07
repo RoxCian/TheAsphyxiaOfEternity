@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewEncapsulation, computed, effect, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, ElementRef, ViewEncapsulation, computed, effect, input } from "@angular/core"
 import { RbLevelDisplayService } from "../../../../services/specified/rb-level-display.service"
 import { RbVersion } from "rbweb"
 
@@ -7,7 +7,6 @@ import { RbVersion } from "rbweb"
     templateUrl: "./rb-level-prompt.component.html",
     styleUrls: ["./rb-level-prompt.component.sass"],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbLevelPromptComponent<TVersion extends RbVersion> {

@@ -1,4 +1,4 @@
-import { Component, input, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
+import { Component, input, ViewEncapsulation } from "@angular/core"
 import { RbChartType, RbClearTypeLiteral, RbVersion } from "rbweb"
 import { toggleTransform, linkedToggle } from "../../../../signals/transforms"
 
@@ -8,7 +8,6 @@ import { toggleTransform, linkedToggle } from "../../../../signals/transforms"
     templateUrl: "./rb-chart-lamp-badge.component.html",
     styleUrl: "./rb-chart-lamp-badge.component.sass",
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class]": "clearType()",
         "[class.no-clear-type]": "!clearType()"

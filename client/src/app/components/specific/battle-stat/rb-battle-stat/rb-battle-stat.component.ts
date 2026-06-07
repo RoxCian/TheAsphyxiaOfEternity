@@ -1,10 +1,9 @@
-import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core'
+import { Component, computed, input } from '@angular/core'
 
 @Component({
     selector: 'rb-battle-stat',
     templateUrl: './rb-battle-stat.component.html',
     styleUrls: ['./rb-battle-stat.component.sass'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbBattleStatComponent {

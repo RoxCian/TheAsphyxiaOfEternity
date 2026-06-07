@@ -1,4 +1,4 @@
-import { Component, effect, input, linkedSignal, model, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
+import { Component, effect, input, linkedSignal, model, ViewEncapsulation } from "@angular/core"
 import { FormCheckboxControl } from "@angular/forms/signals"
 import { toggleTransform } from "../../../signals/transforms"
 
@@ -8,7 +8,6 @@ import { toggleTransform } from "../../../signals/transforms"
     styleUrl: "./toggle.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.is-checked]": "checked()",
         "[class.is-disabled]": "disabled()",

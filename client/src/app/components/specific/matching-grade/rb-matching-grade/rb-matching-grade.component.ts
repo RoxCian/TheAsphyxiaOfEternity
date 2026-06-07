@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, input } from "@angular/core"
 import { RbVersion } from "rbweb"
 
 @Component({
@@ -8,7 +8,6 @@ import { RbVersion } from "rbweb"
     host: {
         "[class]": "'rb' + version() + ' is-' + design()"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbMatchingGradeComponent {

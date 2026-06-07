@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, effect, inject, signal, viewChild, ChangeDetectionStrategy } from "@angular/core"
+import { AfterViewInit, Component, computed, effect, inject, signal, viewChild } from "@angular/core"
 import { RbVersion, RbChartType, RbVersionWithClasscheck, Rb4DojoIndex, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse } from "rbweb"
 import { AutoLoadPanelComponent, AutoLoadEvent } from "../../../components/misc/auto-load-panel/auto-load-panel.component"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
@@ -19,7 +19,6 @@ import { timeout } from "../../../utils/functions"
     selector: "rb-play-data-subpage",
     templateUrl: "./play-data.component.html",
     styleUrl: "./play-data.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbPlayDataSubpage implements AfterViewInit {

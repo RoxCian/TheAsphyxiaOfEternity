@@ -1,4 +1,4 @@
-import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core'
+import { Component, inject, input } from '@angular/core'
 import { RbLevelDisplayService } from '../../../../services/specified/rb-level-display.service'
 import { BungBreakpointService } from '../../../../services/bung/breakpoint.service'
 import { toggleTransform } from '../../../../signals/transforms'
@@ -12,7 +12,6 @@ import { toggleTransform } from '../../../../signals/transforms'
         "[class.has-addons]": "!isFloated()",
         "[class.is-floated]": "isFloated()"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbLevelDisplaySwitchComponent {

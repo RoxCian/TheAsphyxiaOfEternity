@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, input, model, signal, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, ElementRef, inject, input, model, signal, ViewEncapsulation } from "@angular/core"
 import { BungPopupComponent } from "../popup/popup.component"
 import { BungMenuDef, BungMenuDefComponent } from "../menu-def/menu-def.component"
 import { BungMenuItemComponent } from "../menu-item/menu-item.component"
@@ -19,7 +19,6 @@ declare global {
     styleUrl: "./dropdown.component.sass",
     encapsulation: ViewEncapsulation.None,
     standalone: false,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class]": "class()",
         "[class.is-reversed]": "isReversed()",

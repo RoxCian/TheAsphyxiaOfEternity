@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewEncapsulation, computed, effect, inject, input, signal, viewChild, ChangeDetectionStrategy } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewEncapsulation, computed, effect, inject, input, signal, viewChild } from "@angular/core"
 import { BungInsertionComponent } from "../insertion/insertion.component"
 import { BungInsertionContent } from "../../../utils/bung"
 import { throttle } from "../../../utils/functions"
@@ -9,7 +9,6 @@ import { linkedToggle, toggleTransform } from "../../../signals/transforms"
     templateUrl: "./marquee.component.html",
     styleUrls: ["./marquee.component.sass"],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BungMarqueeComponent implements AfterViewInit, OnDestroy {

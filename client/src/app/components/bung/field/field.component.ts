@@ -1,4 +1,4 @@
-import { Component, input, InputSignal, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core"
+import { Component, input, InputSignal, ViewEncapsulation } from "@angular/core"
 import { BungInsertionContent } from "../../../utils/bung"
 import { FieldTree } from "@angular/forms/signals"
 import { toggleTransform } from "../../../signals/transforms"
@@ -9,7 +9,6 @@ import { toggleTransform } from "../../../signals/transforms"
     styleUrl: "./field.component.sass",
     standalone: false,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         "[class.field]": "true",
         "[class.is-horizontal]": "true"

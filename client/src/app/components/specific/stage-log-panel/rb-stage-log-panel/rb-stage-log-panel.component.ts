@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, SecurityContext, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, inject, input, SecurityContext } from "@angular/core"
 import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-popup/rb-stage-log-popup.component"
@@ -13,7 +13,6 @@ import { DomSanitizer } from "@angular/platform-browser"
     host: {
         "(click)": "onShowPopup()"
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbStageLogPanelComponent<T extends RbVersion, TChart extends RbChartType<T>> {

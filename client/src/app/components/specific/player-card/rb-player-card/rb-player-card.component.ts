@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, input, OnInit, signal, viewChildren, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, ElementRef, inject, input, OnInit, signal, viewChildren } from "@angular/core"
 import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
@@ -17,7 +17,6 @@ const profileSubpages = {
     selector: "rb-player-card",
     templateUrl: "./rb-player-card.component.html",
     styleUrl: "./rb-player-card.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbPlayerCardComponent implements OnInit {

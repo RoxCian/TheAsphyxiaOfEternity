@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, inject, input } from "@angular/core"
 import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { RbSkillPointEntry } from "../../../../services/specified/rb-skill-point.service"
@@ -7,7 +7,6 @@ import { RbSkillPointEntry } from "../../../../services/specified/rb-skill-point
     selector: "rb-skill-point-panel",
     templateUrl: "./rb-skill-point-panel.component.html",
     styleUrl: "./rb-skill-point-panel.component.sass",
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbSkillPointPanelComponent<TVersion extends 5 | 6> {

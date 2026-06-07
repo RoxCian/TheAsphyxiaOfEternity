@@ -1,4 +1,4 @@
-import { Component, computed, input, ChangeDetectionStrategy } from "@angular/core"
+import { Component, computed, input } from "@angular/core"
 import { RbVersion } from "rbweb"
 import { numeric, linkedToggle, toggleTransform } from "../../../../signals/transforms"
 import { getRbRank } from "../../../../utils/rb-functions"
@@ -10,7 +10,6 @@ import { getRbRank } from "../../../../utils/rb-functions"
     host: {
         "[class.has-deco]": "hasDecoration()",
     },
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RbRankBadgeComponent {
