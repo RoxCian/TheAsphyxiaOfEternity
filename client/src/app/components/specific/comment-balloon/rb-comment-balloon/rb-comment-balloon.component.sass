@@ -1,0 +1,73 @@
+:host
+    display: grid
+    grid-template: 1fr auto / auto 1fr
+    gap: 0.5em 2em
+:host .figure
+    grid-area: span 2 / 1
+    width: 6.25em
+    height: 6.25em
+    margin: 0 // bulma fix fix
+
+    img
+        width: 6.25em
+        height: 6.25em
+        aspect-ratio: 1 / 1
+        object-fit: cover
+        object-position: top center
+        border-radius: 8px
+.info
+    grid-area: 1 / 2
+    display: flex
+    width: 100%
+    max-width: 40em
+    gap: 1em
+    align-items: center
+    white-space: nowrap
+
+    .user-id, .time
+        opacity: 0.7
+    .blank
+        flex: 1
+    .badge
+        position: relative
+        width: 12em
+        height: 2em
+        padding: 1em
+        align-items: center
+        justify-content: center
+        font-size: 0.75em
+        border-radius: 9999px
+        overflow: clip
+.balloon
+    grid-area: 2 / 2
+    position: relative
+    width: 100%
+    max-width: 40em
+    padding: 1em 2em
+
+    &:has(.has-mask)
+        filter: drop-shadow(0 2px 3px var(--card-shadow-color)) drop-shadow(0 0 1px var(--card-shadow-color))
+
+    > *
+        position: relative
+        z-index: 1
+    .balloon-background
+        position: absolute
+        inset: 0
+        background: var(--card-background)
+        z-index: 0
+
+        &.is-rounded
+            border-radius: 9999px
+        &.has-mask
+            left: -1.5em
+            top: -0.5em
+            bottom: -0.5em
+
+
+.balloon-svg
+    position: absolute
+    inset: 0
+    width: 100%
+    height: 100%
+    object-fit: fill

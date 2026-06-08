@@ -8,6 +8,7 @@ import { Rb3BadgeComponent } from "../components/specific/badges/rb3-badge/rb3-b
 import { Rb4BadgeComponent } from "../components/specific/badges/rb4-badge/rb4-badge.component"
 import { Rb5BadgeComponent } from "../components/specific/badges/rb5-badge/rb5-badge.component"
 import { Rb6BadgeComponent } from "../components/specific/badges/rb6-badge/rb6-badge.component";
+import { RelativeTimePipe } from "../pipes/misc/relative-time.pipe"
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { Rb6BadgeComponent } from "../components/specific/badges/rb6-badge/rb6-b
         Rb5BadgeComponent,
         Rb6BadgeComponent,
         LetsPlayComponent,
+        RelativeTimePipe
     ],
     imports: [
         CommonModule,
@@ -31,6 +33,7 @@ import { Rb6BadgeComponent } from "../components/specific/badges/rb6-badge/rb6-b
         Rb5BadgeComponent,
         Rb6BadgeComponent,
         LetsPlayComponent,
+        RelativeTimePipe
     ],
 })
 export class RbSharedComponentsModule { }

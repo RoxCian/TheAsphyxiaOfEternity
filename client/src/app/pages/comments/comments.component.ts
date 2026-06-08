@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common"
 import { IngameCommentsModule } from "../../modules/ingame-comments.module"
 import { Component } from "@angular/core"
 import { rbData } from "../../signals/rb-data"
+import { RbComment, RbCommentBalloon, RbCommentResponse, RbRequest, RbVersion } from "rbweb"
 
 @Component({
     selector: "app-comments",
@@ -10,5 +11,5 @@ import { rbData } from "../../signals/rb-data"
     styleUrl: "./comments.component.sass",
 })
 export class CommentsPageComponent {
-    protected readonly comments = rbData("rbGetComments", {})
+    protected readonly comments = rbData<RbCommentResponse<RbVersion>[]>("rbGetComments", {} as RbRequest)
 }

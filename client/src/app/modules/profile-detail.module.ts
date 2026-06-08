@@ -33,7 +33,6 @@ import { RbChartTypeDirective } from "../directives/specific/rb-chart-type.direc
 import { RbColorDirective } from "../directives/specific/rb-color.directive"
 import { ClampPipe } from "../pipes/misc/clamp.pipe"
 import { DecimalPartPipe } from "../pipes/misc/decimal-part.pipe"
-import { RelativeTimePipe } from "../pipes/misc/relative-time.pipe"
 import { FriendlyFileSizePipe } from "../pipes/misc/friendly-file-size.pipe"
 import { TruncPipe } from "../pipes/misc/trunc.pipe"
 import { RbBywordRarityLiteralPipe } from "../pipes/specific/rb-byword-rarity-literal.pipe"
@@ -81,7 +80,6 @@ import { RangePipe } from '../pipes/misc/range.pipe'
         RbTitlePipe,
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
-        RelativeTimePipe,
         FriendlyFileSizePipe,
         RbRankLabelComponent,
         RbBattleStatComponent,
@@ -152,7 +150,6 @@ import { RangePipe } from '../pipes/misc/range.pipe'
         RbTitlePipe,
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
-        RelativeTimePipe,
         FriendlyFileSizePipe,
         RbRankLabelComponent,
         RbBattleStatComponent,

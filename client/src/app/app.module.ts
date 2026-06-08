@@ -3,7 +3,7 @@ import { AppComponent } from "./app.component"
 import { APP_BASE_HREF } from "@angular/common"
 import { BrowserModule } from "@angular/platform-browser"
 import { AppRoutingModule } from "./app-routing.module"
-import { provideHttpClient, withFetch } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 
 
 @NgModule({
@@ -16,8 +16,8 @@ import { provideHttpClient, withFetch } from "@angular/common/http";
     ],
     providers: [
         provideZonelessChangeDetection(),
-        provideHttpClient(withFetch()),
-        { provide: APP_BASE_HREF, useValue: location.pathname.substring(0, location.pathname.lastIndexOf("/")) }
+        provideHttpClient(),
+        { provide: APP_BASE_HREF, useValue: location.pathname.startsWith("/plugin/") ? location.pathname.substring(0, location.pathname.indexOf("/", 8)) : "/" }
     ],
     bootstrap: [AppComponent],
 })

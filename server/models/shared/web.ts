@@ -1,5 +1,5 @@
 import { Rb4ExaminationInfo } from "../rb4/types"
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, RbClasscheckIndex, RbColorSpecification } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, RbClasscheckIndex, RbColorSpecification, RbComment } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -261,7 +261,6 @@ export type Rb6RankingQuestResponse = {
     id: number
     charts: [Rb6RankingQuestChart, Rb6RankingQuestChart, Rb6RankingQuestChart]
 }
-
 export function createRbSettingsResponse<TVersion extends RbVersion>(version: TVersion): RbSettingsResponse<TVersion> {
     switch (version) {
         case 1: return new Rb1SettingsResponse() as RbSettingsResponse<TVersion>
@@ -278,4 +277,9 @@ export type RbUpdateSettingsRequest<TVersion extends RbVersion> = RbRequest & Pa
 }
 export type RbUpdateSettingsResponse = {
     sessionId?: string
+}
+
+export type RbCommentResponse<TVersion extends RbVersion> = RbComment<TVersion> & {
+    iconId?: number
+    characterId?: number
 }

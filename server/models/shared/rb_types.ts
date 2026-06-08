@@ -132,5 +132,5 @@ export type RbComment<TVersion extends RbVersion> = {
 }
 
 export enum RbCommentBalloon {
-    default, rounded, rectangle, cloud, exploded
+    default, rectangle, cloud, think, explode
 }

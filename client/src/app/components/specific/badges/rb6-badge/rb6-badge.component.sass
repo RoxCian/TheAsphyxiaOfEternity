@@ -2,48 +2,49 @@
     // background: linear-gradient(0deg, #2BA4F8 0%, #2BA4F800 50%, #2BA4F8 100%), linear-gradient(90deg, #2BA4F8 0%, #8E30E8 48%, #8E30E8 52%, #2BA4F8 100%)
     background: linear-gradient(to right bottom, #FFFFFF 8%, 30%, #8EACE2 52%, 66%, #ADB4BB 77%, 88%, #95C77E)
 .badge-label
+    position: relative
     span
         display: inline-block
         position: relative
     .troe
-        width: 0
-        height: 0
+        display: inline-block
         overflow: visible
-        margin-left: -65px
+        margin-left: -9.75em
+        // margin-top: -0.8em
         font-size: 0.5em
         letter-spacing: 0.75px
         color: #196bbd
-        transform: translateY(7px)
+        transform: translateY(0.8em)
         opacity: 0
 :host.is-active:not(.is-disabled), :host.enter:not(.is-disabled)
     .badge-label
         filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px white) drop-shadow(0 0 2px white)
-        transform: translateX(-12px)
         
         .yu
+            margin-left: -1em
             color: #4175FF
-            transform: scale(1.15) translateX(12px) translateY(-1.5px)
+            transform: scale(1.15) translateX(1em) translateY(-0.125em)
         .kyu
             color: #564BFF
-            transform: scale(1.0) translateX(13.5px) translateY(2px)
+            transform: scale(1.0) translateX(1.125em) translateY(0.166em)
         .no
             color: #9202E5
-            transform: scale(0.75) translateX(13px) translateY(-2px)
+            transform: scale(0.75) translateX(1.083em) translateY(-0.166em)
         .re
             color: #AC00DE
-            transform: scale(1.0) translateX(6px) translateY(-1px)
+            transform: scale(1.0) translateX(0.5em) translateY(-0.083em)
         .f
             color: #7F17D5
-            transform: scale(0.85) translateX(3px) translateY(-2px)
+            transform: scale(0.85) translateX(0.25em) translateY(-0.166em)
         .le
             color: #681DDB
-            transform: scale(0.95) translateX(-1px) translateY(-2px)
+            transform: scale(0.95) translateX(-0.083em) translateY(-0.166em)
         .si
             color: #3375F2
-            transform: scale(0.7) translateX(-7px) translateY(-2px)
+            transform: scale(0.7) translateX(-0.683em) translateY(-0.166em)
         .a
             color: #21BCFF
-            transform: scale(1.05) translateX(-10px) translateY(-2px)
+            transform: scale(1.05) translateX(-0.833em) translateY(-0.166em)
         .troe
             opacity: 1
 :host.is-centered .badge-label

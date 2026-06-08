@@ -1,1 +1,31 @@
-<p>rb-comment-balloon works!</p>
+<figure class="figure">
+    <img src="./static/assets/characards/characard_{{ comment().iconId ?? comment().characterId ?? 0 }}.webp" >
+</figure>
+<div class="info">
+    <b class="is-size-5">{{ playerName() }}</b>
+    <span class="is-size-7 user-id">RB-{{ `${comment().userId}`.padStart(8, "0").substring(0, 4) }}-{{ `${comment().userId}`.padStart(8, "0").substring(4, 8) }}</span>
+    <span class="is-size-7 time">{{ commentTime() | relativeTime }}</span>
+    <span class="blank"></span>
+    @switch (comment().version) {
+        @case (2) {
+            <rb-limelight class="badge" isActive />
+        }
+        @case (3) {
+            <rb-colette class="badge" isActive />
+        }
+        @case (4) {
+            <rb-groovin class="badge" isActive />
+        }
+        @case (5) {
+            <rb-volzza class="badge" isActive />
+        }
+        @case (6) {
+            <rb-reflesia class="badge" isActive />
+        }
+    }
+</div>
+<div class="balloon">
+    <span>{{ comment().comment }}</span>
+    @let hasMask = comment().balloon >= 2;
+    <div class="balloon-background" [class.has-mask]="hasMask" [class.card]="!hasMask" [class.is-rounded]="comment().balloon === 0" [style.mask-image]="hasMask ? `url(./static/assets/images/balloon/${balloonMaskName()}.svg)` : undefined"></div>
+</div>

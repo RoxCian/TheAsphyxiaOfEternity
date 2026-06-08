@@ -166,13 +166,6 @@ const deletePlayer: H.H = async data => {
         return H.deny
     }
 }
-const readPlayerScore: H.H = async data => {
-    const rid = $(data).str("rid")
-    const scores = await DBH.find(rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
-    const result = new Rb3ReadPlayerMusicRecord()
-    if (scores.length > 0) result.pdata.record.rec = scores
-    return XF.x(result)
-}
 // TODO: Verdet des Krieges
 
 async function writePlayerCore(player: Rb3Player) {
@@ -325,8 +318,10 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                 stype: season,
                 experience: 0
             }
-            e.experience = experience
-            changedEquips.push(e)
+            if (e && e.experience < experience) {
+                e.experience = experience
+                changedEquips.push(e)
+            }
         }
 
         if (order.details) {

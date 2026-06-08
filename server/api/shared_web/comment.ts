@@ -8,5 +8,5 @@ export function registerCommentsController() {
 }
 
 const getComments: C.C = async () => {
-    return DBH.find<RbCommentBase<RbVersion>>({ collection: "rb.info.comment" })
+    return (await DBH.find<RbCommentBase<RbVersion>>({ collection: "rb.info.comment" })).sort((l, r) => r.time - l.time)
 }

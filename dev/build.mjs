@@ -72,7 +72,7 @@ function cloneClient() {
     cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /dev-.+/])
     // copy pug file
     copyFileSync(`./client/pug/template.pug`, `${distDir}/profile_detail.pug`) // underscore please
-    copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame_comment.pug`)
+    copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame_comments.pug`)
 }
 function cloneDir(fromDir, toDir, excludes) {
     if (!existsSync(toDir) || !lstatSync(toDir).isDirectory()) mkdirSync(toDir, { recursive: true })
