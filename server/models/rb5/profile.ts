@@ -185,6 +185,11 @@ export class Rb5Derby implements ICollection<"rb.rb5.player.derby"> {
     @XD.s32() value2 = 0
 }
 
+export class Rb5Yurukome implements ICollection<"rb.rb5.event.yurukome"> {
+    readonly collection = "rb.rb5.event.yurukome"
+    @XD.s32() yurukomeId = 0
+}
+
 export class Rb5BattleRoyale implements ICollection<"rb.rb5.playData.battleRoyale"> {
     readonly collection = "rb.rb5.playData.battleRoyale"
     @XD.s32() battleId = 0
@@ -245,7 +250,7 @@ class Rb5PlayerData {
     @XD.obj({}) share = {}
     @XD.type(Rb5BattleRoyale) battleRoyale = new Rb5BattleRoyale()
     @XD.type(Rb5Derby) derby = new Rb5Derby()
-    @XD.s32() yurukomeList: [number, number, number, number] = [0, 0, 0, 0] // ゆるゆるコメント -> special comments shown on result screen
+    @XD.aw("yurukome", Rb5Yurukome) yurukomeList: ArrayWrapper<"yurukome", Rb5Yurukome> = {} // ゆるゆるコメント -> special comments shown on result screen
     @XD.type("mycourse", Rb5MyCourseLog) myCourse = new Rb5MyCourseLog()
     @XD.type("mycourse_f", Rb5MyCourseLog) myCourseF = new Rb5MyCourseLog()
     @XD.type(Rb5ChallengeEventCard) challengeEventCard = new Rb5ChallengeEventCard()

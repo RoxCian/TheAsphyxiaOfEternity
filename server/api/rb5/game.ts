@@ -4,7 +4,7 @@ import { DBH } from "../../utils/db/dbh"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
 import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecord2, Rb5MusicRecords } from "../../models/rb5/music_record"
 import { Rb5Mylist } from "../../models/rb5/mylist"
-import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog } from "../../models/rb5/profile"
+import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
 import { Rb5ShopInfo } from "../../models/rb5/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
@@ -19,6 +19,7 @@ import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { isArrayWrapper } from "../../utils/types"
+import { inspect } from "util"
 
 export function registerRb5Handlers() {
     H.route("pcb.rb5_pcb_boot", bootPcb)
@@ -73,6 +74,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const battleRoyale = await DBH.findOne(read.rid, Rb5BattleRoyale, { collection: "rb.rb5.playData.battleRoyale" }, true)
     const derby = await DBH.findOne(read.rid, Rb5Derby, { collection: "rb.rb5.player.derby" }, true)
     const myCourse = await DBH.findOne(read.rid, Rb5MyCourseLog, { collection: "rb.rb5.playData.myCourse" }, true)
+    const yurukome = await DBH.find(read.rid, Rb5Yurukome, { collection: "rb.rb5.event.yurukome" })
 
     account.intrvld ??= 0
     account.succeed ??= true
@@ -102,8 +104,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     base.totalBestScoreV2 = base.totalBestScore
     base.totalBestScoreEachChartTypeV2 = base.totalBestScoreEachChartType
 
-    // TODO: Yurukome
-
     const p = result.pdata
 
     p.account = account
@@ -117,7 +117,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     p.minigame = minigame
     p.battleRoyale = battleRoyale
     p.derby = derby
-    p.yurukomeList = [0, 0, 0, 0]
+    if (yurukome.length > 0) p.yurukomeList = { yurukome }
     p.myCourse = myCourse
     p.myCourseF = myCourse
 
@@ -279,7 +279,8 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
     if (player.pdata.myCourse?.courseId >= 0) t.upsert(rid, { collection: "rb.rb5.playData.myCourse", courseId: player.pdata.myCourse.courseId }, player.pdata.myCourse)
     if (player.pdata.derby) t.upsert(rid, { collection: "rb.rb5.player.derby" }, player.pdata.derby)
     if (player.pdata.battleRoyale) t.upsert(rid, { collection: "rb.rb5.playData.battleRoyale", battleId: player.pdata.battleRoyale.battleId }, player.pdata.battleRoyale)
-
+    if (hasAny(player.pdata.yurukomeList?.yurukome)) for (const y of player.pdata.yurukomeList.yurukome) if (!await t.findOne<Rb5Yurukome>(rid, { collection: "rb.rb5.event.yurukome", yurukomeId: y.yurukomeId })) t.insert(rid, y)
+    
     await t.commit()
 }
 async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb5PlayerStageLog, t: DBH.T): Promise<void> {
