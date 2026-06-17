@@ -2,7 +2,7 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
+import { Rb3Order, Rb3OrderDetails, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
 import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
@@ -168,12 +168,36 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
             if (event.chapter === 1 && event.progress[3] !== 60) {
                 event.progress[3] = 60
                 result.modified = true
+                if (event.progress[0] === 60 && event.progress[1] === 60 && event.progress[2] === 60) {
+                    event.page = 4
+                    const order = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
+                    if (!order) throw new Error("Order is unlockable, but order container is not found.")
+                    order.details ??= []
+                    const orderDetails = new Rb3OrderDetails()
+                    orderDetails.index = 174 // 二人の英雄
+                    orderDetails.param = 1
+                    orderDetails.slot = -1
+                    order.details.push(orderDetails)
+                    t.update(data.rid, { collection: "rb.rb3.player.order" }, order)
+                }
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2:
             if (event.chapter === 2 && event.progress[0] !== 60) {
                 event.progress[0] = 60
                 result.modified = true
+                if (event.progress[1] === 60 && event.progress[2] === 60 && event.progress[3] === 60) {
+                    event.page = 4
+                    const order = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
+                    if (!order) throw new Error("Order is unlockable, but order container is not found.")
+                    order.details ??= []
+                    const orderDetails = new Rb3OrderDetails()
+                    orderDetails.index = 175 // 白の力
+                    orderDetails.param = 1
+                    orderDetails.slot = -1
+                    order.details.push(orderDetails)
+                    t.update(data.rid, { collection: "rb.rb3.player.order" }, order)
+                }
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1:
