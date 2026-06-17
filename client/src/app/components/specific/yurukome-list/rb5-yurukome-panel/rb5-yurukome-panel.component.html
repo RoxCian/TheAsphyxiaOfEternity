@@ -1,0 +1,49 @@
+@let y = yurukome();
+@if (!y.info) {
+    <div class="rb-panel error-info card" [class.is-rare]="y.isRare">
+        <div class="yurukome-id">
+            <span>#{{ y.id + 1 }}</span>
+        </div>
+
+        <div class="error-icon">
+            <span class="icon is-large">
+                <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+            </span>
+        </div>
+        <div class="error-text">
+            <p>Play to unlock the comment</p>
+        </div>
+    </div>
+} @else {
+    <div class="card comment-box rb-panel" [class.is-rare]="y.isRare">
+        <div class="yurukome-content" #contentElement>
+            <div class="yurukome-id">
+                <span>#{{ y.id + 1 }}</span>
+            </div>
+            <figure class="jacket">
+                @switch (y.id) {
+                    @case (69) @case (70) @case (71){
+                        <img src="static/assets/images/rb5-yurukome-rare-{{ y.id }}.webp">
+                    } @default {
+                        <img [src]="(y.info.relatedMusicUid | rbJacket)()">
+                    }
+                }
+            </figure>
+            <div class="comment-wrapper">
+                <div class="comment-info">
+                    <div class="comment-title is-size-4">{{ y.info | rbText : "title" }}</div>
+                    @if (y.isRare) {
+                        <div class="rare-label is-size-7">
+                            <bung-icon icon="star">RARE</bung-icon>
+                        </div>
+                    }
+                </div>
+                <div class="comment-content is-size-7">
+                    @for (p of (y.info | rbText : "comment")?.split("\n") ?? []; track p) {
+                        <p>{{ p }}</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

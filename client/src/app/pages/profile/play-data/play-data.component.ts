@@ -13,7 +13,7 @@ import { BungTabsComponent } from "../../../components/bung/tabs/tabs.component"
 import { RbSkillPointService } from "../../../services/specified/rb-skill-point.service"
 import { BungWaitableEvent } from "../../../utils/bung"
 import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
-import { timeout } from "../../../utils/functions"
+import { Rb3VerdetDesKriegesService } from "../../../services/specified/rb3-verdet-des-krieges.service"
 
 @Component({
     selector: "rb-play-data-subpage",
@@ -33,6 +33,7 @@ export class RbPlayDataSubpage implements AfterViewInit {
     protected readonly classcheckService = inject(RbClasscheckService)
     protected readonly stageLogService = inject(RbStageLogService)
     protected readonly skillPointService = inject(RbSkillPointService)
+    protected readonly verdetDesKriegesService = inject(Rb3VerdetDesKriegesService)
     protected readonly isLevelDisplaySwitchVisible = signal(false)
     protected readonly skillPointTier = computed(() => {
         let tiersThreshold: number[]
@@ -83,22 +84,19 @@ export class RbPlayDataSubpage implements AfterViewInit {
         this.viewInited.set(true)
     }
     protected onActivateMusicRecordTab(e: BungWaitableEvent) {
-        this.musicRecordService.activate()
+        e.resource = this.musicRecordService.activate()
         this.classcheckService.deactivate()
         this.stageLogService.deactivate()
-        e.resource = this.musicRecordService.data
     }
     protected onActivateClasscheckTab(e: BungWaitableEvent) {
         this.musicRecordService.deactivate()
-        this.classcheckService.activate()
+        e.resource = this.classcheckService.activate()
         this.stageLogService.deactivate()
-        e.resource = this.classcheckService.data
     }
     protected onActivateStageLogTab(e: BungWaitableEvent) {
         this.musicRecordService.deactivate()
         this.classcheckService.deactivate()
-        this.stageLogService.activate()
-        e.resource = this.stageLogService.data
+        e.resource = this.stageLogService.activate()
     }
     protected onActivateTab() {
         this.musicRecordService.deactivate()

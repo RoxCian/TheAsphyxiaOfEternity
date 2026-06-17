@@ -1,5 +1,5 @@
 import { HttpResourceRef } from "@angular/common/http"
-import { effect, Injector, runInInjectionContext } from "@angular/core"
+import { effect, Injector, OutputRef, runInInjectionContext } from "@angular/core"
 
 export function asPromise<T>(httpResource: HttpResourceRef<T>, injector: Injector): Promise<T> {
     let resolve: ((result: T) => void) | undefined = undefined
@@ -29,5 +29,20 @@ export function asPromise<T>(httpResource: HttpResourceRef<T>, injector: Injecto
         resolve!(value)
     }, { manualCleanup: true }))
     { (result as any).__EFFECT__ = eff }
+    return result
+}
+export function outputAsPromise<T>(output: OutputRef<T>): Promise<T> {
+    let resolve: ((result: T) => void) | undefined = undefined
+    let reject: ((reason: any) => void) | undefined = undefined
+    const result = new Promise<T>((res, rej) => {
+        resolve = res
+        reject = rej
+    })
+    const sub = output.subscribe(v => {
+        resolve!(v)
+        sub.unsubscribe()
+        delete (result as any).__SUBSCRIBE__
+    })
+    { (result as any).__SUBSCRIBE__ = sub }
     return result
 }

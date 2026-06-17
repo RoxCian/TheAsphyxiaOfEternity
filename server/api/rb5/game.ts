@@ -19,7 +19,6 @@ import { toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { isArrayWrapper } from "../../utils/types"
-import { inspect } from "util"
 
 export function registerRb5Handlers() {
     H.route("pcb.rb5_pcb_boot", bootPcb)

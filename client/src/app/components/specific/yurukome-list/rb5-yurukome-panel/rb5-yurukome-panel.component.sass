@@ -1,0 +1,91 @@
+:host
+    display: flex
+    position: relative
+    min-width: 300px
+.card.is-rare
+    box-shadow: 0 2px 3px #eadda4, 0 0 0 1px #eadda4
+.error-info
+    display: flex
+    width: 100%
+    padding: 1em
+    gap: 1em
+    align-items: center
+    justify-content: center
+    opacity: 0.3
+.yurukome-id
+    position: absolute
+    display: flex
+    inset: 0
+    align-items: end
+    justify-content: end
+    overflow: clip
+    opacity: 0.1
+    user-select: none
+    pointer-events: none
+
+    span
+        font-size: 4em
+        font-weight: bold
+        margin-right: -0.15em
+        margin-bottom: -0.55em
+.comment-box
+    flex: 1
+    z-index: 10
+    overflow-x: clip
+    min-width: 0 // firefox compatibility
+    
+    .yurukome-content
+        position: relative
+        display: flex
+        justify-content: start
+        align-items: center
+        margin-bottom: 0
+        padding: 1.25em
+        gap: 1.25em
+
+        .jacket
+            flex: 0
+            margin: 0
+            min-width: 5em
+            min-height: 5em
+            width: 5em
+            height: 5em
+            border-radius: 8px
+            overflow: clip
+            user-select: none
+        .comment-wrapper
+            flex: 1
+        .comment-info
+            display: flex
+            flex-direction: row
+            align-items: center
+            overflow: clip
+        .comment-title
+            flex: 1
+            font-weight: bold
+            margin-bottom: 0
+        p:not(:last-child)
+            margin-bottom: 0 // asphyxia fix
+        .rare-label
+            padding: 0.25em 0.5em
+            border-radius: 4px
+            color: #7d6f46
+            $g: #fceab3, #eadda4
+            background: conic-gradient($g, $g, $g, $g, $g, $g, #fceab3)
+@media screen and (width < 768px)
+    :host .card.comment-box, :host .placeholder
+        margin-bottom: 0.5em
+
+        .yurukome-content
+            padding: 0.5em
+            gap: 0.5em
+
+            .jacket
+                width: 4em
+                height: 4em
+                min-width: 4em
+                min-height: 4em
+            .comment-info .comment-title
+                font-size: 1.25em !important
+    .yurukome-id span
+        font-size: 2.5em

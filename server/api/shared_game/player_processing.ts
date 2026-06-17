@@ -105,7 +105,7 @@ function addReleaseInfo<TReleaseInfo extends IRbReleasedInfo>(releaseInfoType: T
         const ri = new releaseInfoType()
         ri.type = 0
         ri.id = i
-        ri.param = 15
+        ri.param = 31
         ri.insertTime = Date.parse("April 30, 2010")
         releaseInfoArray.push(ri)
     }

@@ -1,4 +1,4 @@
-noteId,name,nameOrig,note,noteOrig
+id,name,nameOrig,note,noteOrig
 ,,,,
 int,string,string,string,string
 0,Count Vanessa de Verdet,ヴァネッサ・ド・ヴェルデ伯爵,,"とある領国を治める伯爵家に生まれ、壮年期に先代が没すると爵位を継承した。

@@ -21,9 +21,4 @@ export class BungFieldComponent {
     readonly helpContext = input<unknown>()
     readonly formField = input<FieldTree<unknown> | undefined>()
     readonly isDirty = input(false, { transform: toggleTransform })
-
-    protected log(error: unknown) {
-        console.log(error)
-        return true
-    }
 }

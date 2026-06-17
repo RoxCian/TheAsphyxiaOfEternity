@@ -1,0 +1,41 @@
+bung-tabs::ng-deep li.tab a:has(.verdet-header)
+    padding-top: 0
+    padding-bottom: 0
+p.verdet-header
+    font-size: 0.75em
+    opacity: 0.7
+    line-height: 1.1em
+    text-align: center
+    margin-bottom: 0 // asphyxia fix
+p.verdet-header-orig
+    text-align: center
+.verdet-bg
+    position: fixed
+    inset: 0
+    background: var(--bg-url)
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center bottom
+    opacity: 0
+    animation: verdet-bg-enter-animation 0.8s 0.8s var(--ease-in) forwards
+    z-index: -1
+
+    &.leave
+        animation: verdet-bg-leave-animation 0.8s var(--ease-in) forwards
+@media (prefers-color-scheme: dark)
+    .verdet-bg
+        background-image: var(--bg-url-dark)
+@keyframes verdet-bg-enter-animation
+    from
+        opacity: 0
+        transform: translateY(4em)
+    to
+        opacity: 0.3
+        transform: none
+@keyframes verdet-bg-leave-animation
+    from
+        opacity: 0.3
+        transform: none
+    to
+        opacity: 0
+        transform: translateY(4em)

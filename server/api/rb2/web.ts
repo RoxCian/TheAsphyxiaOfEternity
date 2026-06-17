@@ -96,7 +96,7 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = asy
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb2PlayerReleasedInfo>(data.rid, { collection: "rb.rb2.player.releasedInfo" })
-    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0] }, { type: 8, id: [0] }]) // bywordLeft, bywordRight
+    return await readAvailableItemsShared(version, released, [{ type: 6, id: [0, 1, 2] }, { type: 7, id: [0] }, { type: 8, id: [0] }]) // icon, bywordLeft, bywordRight
 }
 
 type Rb2SettingsContext = {

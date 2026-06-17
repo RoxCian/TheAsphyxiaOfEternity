@@ -25,17 +25,34 @@ export enum Rb3OrderFragmentColor {
 
 export type Rb3VerdetDesKriegesPhrasePart = {
     text: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
-    emphasisColor?: string
-    emphasisBackground?: string
-    specialEmphasis?: boolean
+    clueId?: number
+    highlight?: boolean
     annotation?: number
 }
 
-export type Rb3VerdetDesKriegesContentOriginal = {
+export type Rb3VerdetDesKriegesAppearance = {
+    chapter: number
+    clueId: number
+    themeColor: string
+    textColor: string
+    background: string
+    textColorDark: string
+    backgroundDark: string
+}
+
+export type Rb3VerdetDesKriegesContentRaw = {
     chapter: number
     page: number
     phrase: string
     phraseOrig: string
+}
+export type Rb3VerdetDesKriegesResponse = {
+    completed: boolean
+    chapter: number
+    page: number
+    lastReadChapter: number
+    lastReadPage: number
+    progress: [number, number, number, number, number] // max is 15
 }
 
 export type Rb3VerdetDesKriegesContent = {
@@ -46,7 +63,7 @@ export type Rb3VerdetDesKriegesContent = {
 }
 
 export type Rb3VerdetDesKriegesNote = {
-    noteId: number
+    id: number
     name: string
     nameOrig: string
     note: string

@@ -14,7 +14,7 @@
         <div class="return-buttons buttons">
             @for (kv of returnContext() | keyvalue; track kv.key) {
                 @if (kv.value) {
-                    <ng-container [ngTemplateOutlet]="kv.value.isStatic ? noButtonReturnTemplate : buttonReturnTemplate" [ngTemplateOutletContext]="kv.value | implicit" />
+                    <ng-container *ngTemplateOutlet="kv.value.isStatic ? noButtonReturnTemplate : buttonReturnTemplate; context: kv.value | implicit" />
                 }
             }
         </div>

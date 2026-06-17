@@ -1,4 +1,6 @@
 export * from "../rb3/types"
+export * from "../rb4/types"
+export * from "../rb5/types"
 export * from "../rb6/types"
 
 export type RbVersion = 1 | 2 | 3 | 4 | 5 | 6
@@ -79,8 +81,16 @@ export type RbByword = {
     side: RbColor
     id: number
     byword: string
-    bywordOriginal: string
+    bywordOrig: string
     rarity: RbBywordRarity
+}
+
+export type RbPlayerIcon = {
+    version: RbVersion
+    id: number
+    assetId: number
+    isDifferent: number
+    isUnlockedByDefault: boolean
 }
 
 export type RbChartInfo<TVersion extends RbVersion, TChart extends RbChartType<TVersion>> = {

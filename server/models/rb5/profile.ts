@@ -201,28 +201,28 @@ export class Rb5BattleRoyale implements ICollection<"rb.rb5.playData.battleRoyal
 
 export class Rb5MyCourseLog implements ICollection<"rb.rb5.playData.myCourse"> {
     readonly collection = "rb.rb5.playData.myCourse"
-    @XD.s16("mycourse_id") courseId = -1
-    @XD.s32("music_id_1") musicId1 = 0
-    @XD.s32("music_id_2") musicId2 = 0
-    @XD.s32("music_id_3") musicId3 = 0
-    @XD.s32("music_id_4") musicId4 = 0
+    @XD.s16("mycourse_id") courseId = 1
+    @XD.s32("music_id_1") musicId1 = -1
+    @XD.s32("music_id_2") musicId2 = -1
+    @XD.s32("music_id_3") musicId3 = -1
+    @XD.s32("music_id_4") musicId4 = -1
     @XD.s16("note_grade_1") chartType1 = Rb4ChartType.basic
     @XD.s16("note_grade_2") chartType2 = Rb4ChartType.basic
     @XD.s16("note_grade_3") chartType3 = Rb4ChartType.basic
     @XD.s16("note_grade_4") chartType4 = Rb4ChartType.basic
-    @XD.s32("score_1") score1 = 0
-    @XD.s32("score_2") score2 = 0
-    @XD.s32("score_3") score3 = 0
-    @XD.s32("score_4") score4 = 0
-    @XD.s32("def_music_id_1") defaultMusicId1 = 0
-    @XD.s32("def_music_id_2") defaultMusicId2 = 0
-    @XD.s32("def_music_id_3") defaultMusicId3 = 0
-    @XD.s32("def_music_id_4") defaultMusicId4 = 0
+    @XD.s32("score_1") score1 = -1
+    @XD.s32("score_2") score2 = -1
+    @XD.s32("score_3") score3 = -1
+    @XD.s32("score_4") score4 = -1
+    @XD.s32("def_music_id_1") defaultMusicId1 = -1
+    @XD.s32("def_music_id_2") defaultMusicId2 = -1
+    @XD.s32("def_music_id_3") defaultMusicId3 = -1
+    @XD.s32("def_music_id_4") defaultMusicId4 = -1
     @XD.s16("def_note_grade_1") defaultChartType1 = Rb4ChartType.basic
     @XD.s16("def_note_grade_2") defaultChartType2 = Rb4ChartType.basic
     @XD.s16("def_note_grade_3") defaultChartType3 = Rb4ChartType.basic
     @XD.s16("def_note_grade_4") defaultChartType4 = Rb4ChartType.basic
-    @XD.s32() insertTime = Math.trunc(Date.now() / 1000)
+    @XD.s32() insertTime = -1
 }
 
 class Rb5ChallengeEventCard {
@@ -252,7 +252,8 @@ class Rb5PlayerData {
     @XD.type(Rb5Derby) derby = new Rb5Derby()
     @XD.aw("yurukome", Rb5Yurukome) yurukomeList: ArrayWrapper<"yurukome", Rb5Yurukome> = {} // ゆるゆるコメント -> special comments shown on result screen
     @XD.type("mycourse", Rb5MyCourseLog) myCourse = new Rb5MyCourseLog()
-    @XD.type("mycourse_f", Rb5MyCourseLog) myCourseF = new Rb5MyCourseLog()
+    // @XD.type("mycourse_f", Rb5MyCourseLog) myCourseF = new Rb5MyCourseLog()
+    @XD.obj("mycourse_f", {}) myCourseF = {}
     @XD.type(Rb5ChallengeEventCard) challengeEventCard = new Rb5ChallengeEventCard()
 
     constructor(rid: string, userId: number = -1) {

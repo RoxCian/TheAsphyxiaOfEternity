@@ -1,0 +1,439 @@
+:host
+    display: grid
+    grid-template: auto / auto
+.storyboard
+    grid-area: 1 / 1
+.chapter-domain
+    display: grid
+    grid-template: auto auto auto / 1fr max(15%, 8em)
+    min-width: 100%
+h2
+    grid-area: 1 / span 2
+    display: flex
+    width: 100%
+    margin-bottom: 1em
+    align-items: center
+    gap: 0.5em
+    font-size: 2em
+    font-weight: bold
+h2.contents-header
+    margin-top: 6em
+    justify-content: center
+
+.back-button
+    background: transparent
+    width: 2.25em
+    border-radius: 9999px
+.back-button:not(:hover):not(:active)
+    border-color: transparent
+.storyboard-content
+    grid-area: 2 / 1
+    min-height: 50vh
+    margin: 0 2em
+    justify-content: center
+
+    &.is-centered
+        text-align: center
+
+    p:not(.static), .cover-button
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        animation: normal-phrase-animation 0.4s var(--timeout) var(--ease-in) forwards
+    span
+        position: relative
+        z-index: 2
+    span.has-emphasis
+        margin: 0 -1em
+        padding: 0 1em
+        z-index: 1
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            border-radius: 4px
+            background: linear-gradient(90deg, transparent 0%, var(--emphasis-background) 1em, var(--emphasis-background) calc(100% - 1em), transparent 100%)
+            opacity: 0
+            animation: emphasis-background-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
+            z-index: 1
+        
+        span
+            animation: emphasis-text-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
+    span.has-note
+        text-decoration: solid underline 2px
+        cursor: pointer
+        z-index: 1
+
+        &::after
+            content: ''
+            position: absolute
+            inset: 0 -0.25em
+            border-radius: 4px
+            background: #7775
+            opacity: 0
+            transition: opacity var(--animation-duration-lv3) var(--ease-in)
+            transform-origin: center center
+            z-index: 1
+        &:hover::after
+            opacity: 1
+    span.h
+        opacity: 0
+        color: white
+        animation: show-highlight-character 0.1s var(--timeout) step-end forwards
+    p.h, .highlight-bg
+        position: fixed
+        inset: 0
+        align-content: center
+        animation: show-highlight 0.8s var(--timeout) var(--ease-in) forwards, hide-highlight 0.8s var(--leave-timeout) var(--ease-in) forwards
+    p.h
+        text-align: center
+        opacity: 0
+        z-index: 4
+    .highlight-complex
+        display: grid
+        grid-template: 1fr / 1fr
+        width: 100%
+
+        &:not(:last-child)
+            margin-bottom: 1em
+        > *
+            grid-area: 1 / 1
+    .highlight-bg
+        background: #000
+        opacity: 0
+        user-select: none
+        pointer-events: none
+        backdrop-filter: blur(8px)
+        z-index: 3
+    .cover-buttons
+        display: flex
+        margin: 1em 0
+        justify-content: center
+        gap: 1em
+    .contents-buttons
+        display: grid
+        grid-template: 1fr 1fr 1fr / auto
+        gap: 1em
+        justify-content: center
+    .contents-button
+        min-width: 12em
+        max-width: 20em
+
+.progress-lamps
+    grid-area: 2 / 2
+    display: flex
+    flex-direction: column
+    gap: 2em
+    width: 100%
+.progress-card
+    display: flex
+    flex-direction: column
+    position: relative
+    padding: 1em
+    opacity: 0
+    --opacity: 0.5
+    overflow: clip
+
+    .text
+        display: flex
+    .empty
+        flex: 1
+.progress-label
+    display: grid
+    grid-template: 1fr / 1fr
+    align-items: center
+    justify-items: end
+
+    > *
+        grid-area: 1 / 1
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+    &.is-loading .loader
+        opacity: 1
+    &:not(.is-loading) span
+        opacity: 1
+.progress-base
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    height: 0.25em
+    background-color: color-mix(in srgb, var(--card-background) 70%, var(--invert-card-background))
+    
+.progress-body
+    position: absolute
+    inset: 0
+    left: var(--progress-body-left, 100%)
+    border-radius: 9999px 0 0 9999px
+    transition: left var(--animation-duration-lv3) var(--ease-in)
+nav
+    grid-area: 3 / span 2
+    padding: 1em 2em
+    padding-top: 2em
+    ul.pagination-list
+        list-style: none // asphyxia fix
+
+        li
+            margin-top: 0 // asphyxia fix
+    .pagination-previous, .pagination-next
+        width: 12em
+
+        &[disabled]
+            --opacity: 0.5
+    .pagination-next.page-enter
+        user-select: none
+        pointer-events: none
+        opacity: 0
+
+$pastel-width: 4em
+$pastel-height: 4.3478em
+$pastel-fixed-left: calc(calc(var(--position) * 100vw) - calc(var(--position) * #{$pastel-width}) + calc(#{$pastel-width} / 2))
+$pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #{$pastel-width}) + calc(#{$pastel-width} / 2))
+.pastel-kun
+    position: fixed
+    width: var(--width)
+    height: var(--height)
+    opacity: 0
+    pointer-events: none
+    cursor: pointer
+    animation: pastel-kun-enter-animation 3s 5s var(--ease-in) forwards
+    z-index: 2000
+
+    &.is-left
+        --rotation: 90deg
+        --from-left: -#{$pastel-height}
+        --from-top: #{$pastel-fixed-top}
+        --to-left: calc(#{$pastel-height} * -0.15)
+        --to-top: #{$pastel-fixed-top}
+        --width: #{$pastel-height}
+        --height: #{$pastel-width}
+        left: -#{$pastel-height}
+    &.is-top
+        --rotation: 180deg
+        --from-left: #{$pastel-fixed-left}
+        --from-top: -#{$pastel-height}
+        --to-left: #{$pastel-fixed-left}
+        --to-top: calc(#{$pastel-height} * -0.15)
+        --width: #{$pastel-width}
+        --height: #{$pastel-height}
+        top: -#{$pastel-height}
+    &.is-right
+        --rotation: -90deg
+        --from-left: 100vw
+        --from-top: #{$pastel-fixed-top}
+        --to-left: calc(100vw - #{$pastel-height} * 0.85)
+        --to-top: #{$pastel-fixed-top}
+        --width: #{$pastel-height}
+        --height: #{$pastel-width}
+        left: 100vw
+    &.is-bottom
+        --from-left: #{$pastel-fixed-left}
+        --from-top: 100vh
+        --to-left: #{$pastel-fixed-left}
+        --to-top: calc(100vh - #{$pastel-height} * 0.85)
+        --width: #{$pastel-width}
+        --height: #{$pastel-height}
+        top: 100vh
+    &.leave
+        animation: pastel-kun-leave-animation 0.4s var(--ease-in) forwards
+    img
+        rotate: var(--rotation)
+        width: var(--width)
+        height: var(--height)
+
+.unlock-box
+    display: flex
+    position: fixed
+    inset: 0
+    align-items: center
+    justify-content: center
+    animation: show-highlight 0.8s 1.6s var(--ease-in) forwards
+    opacity: 0
+    z-index: 3
+
+    &.leave
+        pointer-events: none
+        animation: hide-highlight 0.8s var(--ease-in) forwards
+
+    .unlock-bg
+        display: block
+        position: absolute
+        inset: 0
+        background: #000
+        user-select: none
+
+@media (prefers-color-scheme: dark)
+    .storyboard-content span.has-emphasis span
+        animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards
+    .storyboard-content span.has-emphasis::before
+        background: linear-gradient(90deg, transparent 0%, var(--emphasis-background-dark) 1em, var(--emphasis-background-dark) calc(100% - 1em), transparent 100%)
+.no-animation *
+    animation-duration: 0s !important
+    animation-delay: 0s !important
+.page-enter
+    animation: page-enter-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
+.page-leave
+    animation: page-leave-animation 0.4s var(--ease-in) forwards
+.lamps-enter
+    animation: lamps-enter-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
+.lamps-leave
+    animation: lamps-leave-animation 0.4s var(--ease-in) forwards
+.non-page-enter
+    animation: non-page-leave-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
+.non-page-leave
+    animation: non-page-leave-animation 0.4s var(--ease-in) forwards
+@keyframes normal-phrase-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: translateY(2em)
+    to
+        user-select: auto
+        pointer-events: all
+        opacity: 1
+        transform: none
+@keyframes emphasis-text-animation
+    from
+        color: var(--text-color) !important
+    to
+        user-select: auto
+        pointer-events: all
+        color: var(--emphasis-color) !important
+@keyframes emphasis-text-animation-dark
+    from
+        color: var(--text-color) !important
+    to
+        user-select: auto
+        pointer-events: all
+        color: var(--emphasis-color-dark) !important
+@keyframes emphasis-background-animation
+    from
+        opacity: 0
+        transform: scaleX(0)
+    to
+        opacity: 1
+        transform: none
+@keyframes show-highlight-character
+    from
+        opacity: 0
+    to
+        opacity: 1
+@keyframes show-highlight
+    from
+        display: none
+        opacity: 0
+    0%
+        display: block
+        opacity: 0
+    to
+        display: block
+        opacity: 1
+@keyframes hide-highlight
+    from
+        display: block
+        opacity: 1
+    100%
+        display: block
+        opacity: 0
+    to
+        display: none
+        opacity: 0
+@keyframes page-enter-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: translateX(-2em)
+    to
+        user-select: auto
+        pointer-events: all
+        opacity: var(--opacity, 1)
+        transform: none
+@keyframes page-leave-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: var(--opacity, 1)
+        transform: none
+    to
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: translateX(-2em)
+@keyframes lamps-enter-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: translateX(2em)
+    to
+        user-select: none
+        pointer-events: none
+        opacity: var(--opacity, 1)
+        transform: none
+@keyframes lamps-leave-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: var(--opacity, 1)
+        transform: none
+    to
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: translateX(2em)
+@keyframes non-page-enter-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: scale(80%)
+        filter: blur(8px)
+    to
+        user-select: none
+        pointer-events: none
+        opacity: var(--opacity, 1)
+        transform: none
+        filter: none
+@keyframes non-page-leave-animation
+    from
+        user-select: none
+        pointer-events: none
+        opacity: var(--opacity, 1)
+        transform: none
+        filter: none
+    to
+        user-select: none
+        pointer-events: none
+        opacity: 0
+        transform: scale(80%)
+        filter: blur(8px)
+@keyframes pastel-kun-enter-animation
+    from
+        display: block
+        left: var(--from-left)
+        top: var(--from-top)
+        opacity: 1
+        pointer-events: all
+    to
+        display: block
+        left: var(--to-left)
+        top: var(--to-top)
+        opacity: 1
+        pointer-events: all
+@keyframes pastel-kun-leave-animation
+    from
+        display: block
+        left: var(--to-left)
+        top: var(--to-top)
+        opacity: 1
+        pointer-events: all
+    to
+        display: none
+        left: var(--from-left)
+        top: var(--from-top)
+        opacity: 1
+        pointer-events: all

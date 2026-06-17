@@ -13,11 +13,12 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { toBigInt } from "../../utils/db/db_types"
-import { Rb1ChartType, Rb1ClearType } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -166,7 +167,6 @@ const deletePlayer: H.H = async data => {
         return H.deny
     }
 }
-// TODO: Verdet des Krieges
 
 async function writePlayerCore(player: Rb3Player) {
     const rid = player.pdata.account.rid
@@ -223,6 +223,7 @@ async function writePlayerCore(player: Rb3Player) {
         t.upsert(rid, equipQuery, e)
     }
     if (hasAny(player.pdata.seedPod?.data)) for (const s of player.pdata.seedPod.data) t.upsert(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
+    await updateVerdetDesKrieges(rid, player.pdata.order, player.pdata.stageLogs?.log, t)
     if (player.pdata.order) await updateOrder(rid, player.pdata.order, player.pdata.account.version, player.pdata.stageLogs?.log, t)
     if (player.pdata.stamp) t.upsert(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
@@ -272,6 +273,164 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb3PlayerSta
     t.insert(rid, stageLog)
 }
 
+async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: Rb3PlayerStageLog[] | undefined, t: DBH.T) {
+    const data = await t.findOne<Rb3VerdetDesKrieges>(rid, { collection: "rb.rb3.event.verdetDesKrieges" })
+    if (!data) return
+    let modified = false
+    function canModify(clueId: number, page?: number) {
+        page ??= clueId
+        return data && data.page >= page && data.progress[clueId] < 60
+    }
+    function increaseProgress(clueId: number, count: number) {
+        modified = true
+        if (data) data.progress[clueId] = Math.min(60, data.progress[clueId] + count)
+    }
+    const canUnlockClue5 = data.progress.slice(0, 4).every(p => p === 60)
+    if (data.chapter === 1) {
+        // clue 1
+        if (canModify(0)) {
+            const order1 = order.details?.find(o => o.index === 19) // レベル編 ☆7
+            if (order1 && order1.clearedCount > 0) {
+                increaseProgress(0, 60)
+            }
+        }
+        // clue 2
+        if (canModify(1)) {
+            if (stageLogs && stageLogs.length > 0) {
+                const timeCheck = new Date(stageLogs[stageLogs.length - 1].time * 1000).getHours() * 100 + new Date(stageLogs[stageLogs.length - 1].time * 1000).getMinutes()
+                if (timeCheck >= 700 && timeCheck < 1200) {
+                    increaseProgress(1, 20)
+                }
+            }
+        }
+        // clue 3
+        if (canModify(2)) {
+            if (stageLogs && stageLogs.length > 0) {
+                const hinabitaMusics = [236, 276, 306, 342, 343, 344, 399, 400]
+                const playCount = stageLogs.filter(log => hinabitaMusics.includes(log.musicId)).length
+                if (playCount > 0) {
+                    increaseProgress(2, 12 * playCount)
+                }
+            }
+        }
+        // clue 5 unlock
+        if (canUnlockClue5) {
+            modified = true
+            data.page = 4
+            order.details ??= []
+            const orderDetails = new Rb3OrderDetails()
+            orderDetails.index = 174 // 二人の英雄
+            orderDetails.param = 1
+            orderDetails.slot = -1
+            order.details.push(orderDetails)
+        }
+        // clue 5
+        if (canModify(4)) {
+            const orderHeroOfTwo = order.details?.find(o => o.index === 174)
+            if (orderHeroOfTwo) {
+                const count = countPhonix(orderHeroOfTwo, stageLogs)
+                if (count > 0) {
+                    increaseProgress(4, count * 3)
+                }
+            }
+        }
+    } else if (data.chapter === 2) {
+        // clue 2 (in page 3)
+        if (canModify(1, 2)) {
+            if (stageLogs && stageLogs.length > 0) {
+                const fcCount = stageLogs.filter(log => log.clearType === Rb3ClearType.fullCombo).length
+                if (fcCount > 0) {
+                    increaseProgress(1, fcCount * 12)
+                }
+            }
+        }
+        // clue 3 (in page 3)
+        if (canModify(2)) {
+            if (stageLogs && stageLogs.length > 0 && stageLogs[stageLogs.length - 1].musicId === 73) { // Anisakis -somatic mutation type'Forza'-
+                increaseProgress(2, 60)
+            }
+        }
+        // clue 4
+        if (canModify(3)) {
+            const orderA = order.details?.find(o => o.index === 58) // アーティスト編 あ行推し
+            if (orderA && orderA.clearedCount > 0) {
+                increaseProgress(3, 60)
+            }
+        }
+        // clue 5 unlock
+        if (canUnlockClue5) {
+            modified = true
+            data.page = 4
+            order.details ??= []
+            const orderDetails = new Rb3OrderDetails()
+            orderDetails.index = 175 // 白の力
+            orderDetails.param = 1
+            orderDetails.slot = -1
+            order.details.push(orderDetails)
+        }
+        // clue 5
+        if (canModify(4)) {
+            const orderDetails = order.details && order.details.find(o => o.index === 175)
+            if (orderDetails && orderDetails.fragmentsCount0 > 0) {
+                increaseProgress(4, orderDetails.fragmentsCount0 * 3)
+            }
+        }
+    } else if (data.chapter === 3) {
+        // clue 1 (in page 2)
+        if (canModify(0, 1)) {
+            const venusMusics = [33, 99, 125, 247, 272, 374, 396, 397, 434]
+            if (stageLogs && stageLogs.length > 0 && venusMusics.includes(stageLogs[stageLogs.length - 1].musicId)) {
+                increaseProgress(0, 60)
+            }
+        }
+        // clue 2 (in page 3)
+        if (canModify(1, 2)) {
+            const musicsWithStar = [16, 19, 30, 50, 103, 118, 148, 152, 162, 167, 188, 302, 310, 320, 372, 374, 399]
+            const count = stageLogs?.filter(log => musicsWithStar.includes(log.musicId)).length ?? 0
+            if (count > 0) {
+                increaseProgress(1, count * 12)
+            }
+        }
+        // clue 3 (in page 3)
+        if (canModify(2)) {
+            const qrispyMusics = [22, 104, 105, 108, 133, 146, 152, 160, 199, 215, 222, 266, 268, 372]
+            const count = stageLogs?.filter(log => qrispyMusics.includes(log.musicId)).length ?? 0
+            if (count > 0) {
+                increaseProgress(2, count * 12)
+            }
+        }
+        // clue 4
+        if (canModify(3)) {
+            const matchingOrders = [34, 177, 178, 179, 180, 181, 182]
+            if (order.details?.find(o => matchingOrders.includes(o.index) && (o.slot >= 0 || o.clearedCount > 0))) {
+                increaseProgress(3, 60)
+            }
+        }
+        // clue 5 unlock
+        if (canUnlockClue5) {
+            modified = true
+            data.page = 4
+            order.details ??= []
+            const orderDetails = new Rb3OrderDetails()
+            orderDetails.index = 176 // 朱雀の姿
+            orderDetails.param = 1
+            orderDetails.slot = -1
+            order.details.push(orderDetails)
+        }
+        // clue 5
+        if (canModify(4)) {
+            const orderPhonix = order.details?.find(o => o.index === 176)
+            if (orderPhonix) {
+                const count = countPhonix(orderPhonix, stageLogs)
+                if (count > 0) {
+                    increaseProgress(4, count * 3)
+                }
+            }
+        }
+    }
+    if (modified) t.upsert(rid, { collection: "rb.rb3.event.verdetDesKrieges" }, data)
+}
+
 async function updateOrder(rid: string, order: Rb3Order, currentVersion: number, stageLogs: Rb3PlayerStageLog[] | undefined, t: DBH.T) {
     const ordersSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
 
@@ -291,7 +450,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
         function isCleared(orderIndex: number): boolean {
             return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
         }
-        function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1): void {
+        function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: number = 1): void {
             let order = ordersSaved!.details?.find(o => o.index == orderIndex)
             if (!order) {
                 order = {
@@ -299,8 +458,8 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                     clearedCount: clearedCount,
                     fragmentsCount0: fragmentsCount,
                     fragmentsCount1: fragmentsCount1,
-                    slot: slot,
-                    param: 1
+                    slot,
+                    param
                 }
                 if (!ordersSaved!.details) ordersSaved!.details = []
                 ordersSaved!.details.push(order)
@@ -309,6 +468,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                 order.fragmentsCount0 += fragmentsCount
                 order.fragmentsCount1 += fragmentsCount1
                 order.slot = slot
+                order.param = 1
             }
         }
         function setEquipExp(index: number, season: number, experience: number): void {
@@ -332,7 +492,8 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         if (!isCleared(o.index)) {
                             stamp.ticketCount[currentVersion - 1] += 3
                             addClearedCount(o.index, 1, 1)
-                        } // the first matching order cannot be accepted again
+                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                        // the first matching order cannot be accepted again
                         break
                     case 34:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 5
@@ -354,13 +515,81 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         else stamp.ticketCount[currentVersion - 1] += 2
                         addClearedCount(o.index, 1, 15)
                         break
+                    case 174: // 二人の英雄
+                        if (isCleared(o.index)) break
+                        if (o.slot >= 0) {
+                            const fragsBase = countHeroOfTwo(o, stageLogs)
+                            let orderSaved = ordersSaved!.details?.find(os => os.index == o.index)
+                            if (!orderSaved) {
+                                if (fragsBase >= 20) stamp.ticketCount[currentVersion - 1] += 4
+                                orderSaved = {
+                                    index: o.index,
+                                    clearedCount: fragsBase >= 20 ? 1 : 0,
+                                    fragmentsCount0: fragsBase,
+                                    fragmentsCount1: 0,
+                                    slot: o.slot,
+                                    param: o.param
+                                }
+                                if (!ordersSaved!.details) ordersSaved!.details = []
+                                ordersSaved!.details.push(orderSaved)
+                            } else {
+                                const frags = fragsBase + orderSaved.fragmentsCount0
+                                if (frags >= 20) {
+                                    orderSaved.clearedCount = 1
+                                    orderSaved.slot = -1
+                                    stamp.ticketCount[currentVersion - 1] += 4
+                                }
+                                orderSaved.fragmentsCount0 = frags
+                            }
+                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                        break
+                    case 176: // 朱雀の姿
+                        if (isCleared(o.index)) break
+                        if (o.slot >= 0) {
+                            const fragsBase = countPhonix(o, stageLogs)
+                            let orderSaved = ordersSaved!.details?.find(os => os.index === o.index)
+                            if (!orderSaved) {
+                                if (fragsBase >= 20) newReleases.push({
+                                    collection: "rb.rb3.player.releasedInfo",
+                                    type: 7,
+                                    id: 82, // left byword "Red"
+                                    param: 0,
+                                })
+                                orderSaved = {
+                                    index: o.index,
+                                    clearedCount: fragsBase >= 20 ? 1 : 0,
+                                    fragmentsCount0: fragsBase,
+                                    fragmentsCount1: 0,
+                                    slot: o.slot,
+                                    param: o.param
+                                }
+                                if (!ordersSaved!.details) ordersSaved!.details = []
+                                ordersSaved!.details.push(orderSaved)
+                            } else {
+                                const frags = fragsBase + orderSaved.fragmentsCount0
+                                if (frags >= 20) {
+                                    orderSaved.clearedCount = 1
+                                    orderSaved.slot = -1
+                                    newReleases.push({
+                                        collection: "rb.rb3.player.releasedInfo",
+                                        type: 7,
+                                        id: 82,
+                                        param: 0,
+                                        // insertTime: Date.now()
+                                    })
+                                }
+                                orderSaved.fragmentsCount0 = frags
+                            }
+                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                        break
                     // start of seasonal equips / inventories
                     // winter ver.
                     case 42:
                         if (!isCleared(o.index)) {
                             setEquipExp(0, 0, 12)
                             addClearedCount(o.index, 1, 14)
-                        } // orders about equipments cannot be accepted again
+                        }
+                        // orders about equipments cannot be accepted again
                         break
                     case 48:
                         if (!isCleared(o.index)) {
@@ -442,24 +671,6 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         }
                         break
                     // end of seasonal equips / inventories
-                    case 174:
-                        if (!isCleared(o.index) && stageLogs && stageLogs[stageLogs.length - 1].chartType >= 2) {
-                            stamp.ticketCount[currentVersion - 1] += 3
-                            addClearedCount(o.index, 1, 20)
-                        }
-                        break
-                    case 176:
-                        if (!isCleared(o.index) && stageLogs?.some(l => l.musicId == 73 || l.musicId == 387)) { // Anisakis -somatic mutation type"Forza"- || 終焔のClaudia
-                            newReleases.push({
-                                collection: "rb.rb3.player.releasedInfo",
-                                type: 7,
-                                id: 82,
-                                param: 0,
-                                // insertTime: Date.now()
-                            })
-                            addClearedCount(o.index, 1, 20)
-                        }
-                        break
                     default:
                         addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
                         ordersSaved.experience -= 2788
@@ -473,6 +684,15 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
             for (const r of newReleases) t.upsert(rid, { collection: "rb.rb3.player.releasedInfo", id: r.id, type: r.type }, r)
         }
     }
+}
+
+function countHeroOfTwo(order: Rb3OrderDetails, stageLogs: Rb3PlayerStageLog[] | undefined): number {
+    return (order.index === 174 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => log.rivalCpuId == 0)?.length ?? 0)
+}
+
+function countPhonix(order: Rb3OrderDetails, stageLogs: Rb3PlayerStageLog[] | undefined): number {
+    const phonixMusics = [54, 73, 110, 156, 171, 200, 208, 262, 274, 303, 325, 382, 387]
+    return (order.index === 176 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => phonixMusics.includes(log.musicId) && log.rivalCpuId == 0)?.length ?? 0)
 }
 
 async function updateEventProgress(rid: string, e: Rb3EventProgress, t: DBH.T) {

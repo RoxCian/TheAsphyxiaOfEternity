@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation, computed, input } from "@angular/core"
+import { Component, ViewEncapsulation, computed, inject, input } from "@angular/core"
 import { RbByword, RbBywordRarity } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 
 @Component({
     selector: "rb-byword-tag",
@@ -19,15 +20,17 @@ export class RbBywordTagComponent {
     readonly leftBywordText = computed(() => {
         const byword = this.leftByword()
         if (typeof byword === "string") return byword
-        return byword?.byword
+        return this.langService.currentLanguage() === "en" ? byword?.byword : (byword?.bywordOrig ?? byword?.byword)
     })
     readonly rightBywordText = computed(() => {
         const byword = this.rightByword()
         if (typeof byword === "string") return byword
-        return byword?.byword
+        return this.langService.currentLanguage() === "en" ? byword?.byword : (byword?.bywordOrig ?? byword?.byword)
     })
     readonly leftRarity = computed(() => this.leftByword()?.rarity ?? RbBywordRarity.none)
     readonly rightRarity = computed(() => this.rightByword()?.rarity ?? RbBywordRarity.none)
     readonly noLeftPart = input(false, { transform: toggleTransform })
     readonly noRightPart = input(false, { transform: toggleTransform })
+
+    private readonly langService = inject(RbLanguageService)
 }

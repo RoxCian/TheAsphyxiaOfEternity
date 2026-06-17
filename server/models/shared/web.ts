@@ -1,5 +1,4 @@
-import { Rb4ExaminationInfo } from "../rb4/types"
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, RbClasscheckIndex, RbColorSpecification, RbComment } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -137,6 +136,12 @@ export type RbPlayerPerformanceResponse<T extends RbVersion> = {
     recentHighlightPlay: RbStageLogResponse<T, RbChartType<T>>[]
 }
 
+export type Rb5YurukomeResponse = {
+    id: number
+    info?: Rb5YurukomeInfo
+    isRare: boolean
+}
+
 export type RbAvailableItemResponse = {
     typeId: number
     value: number
@@ -245,7 +250,7 @@ export type Rb3VerdetDesKriegesUnlockRequest = {
 }
 
 export enum Rb3VerdetDesKriegesUnlockRequestType {
-    start, hiddenLink1, hiddenLink2, chapterFinish1, chapterFinish2, chapterFinish3
+    start, hiddenLink1, hiddenLink2, chapterFinish1 = 385, chapterFinish2 = 386, chapterFinish3 = 387
 }
 
 export type Rb6UploadAsphyxiaDataRequest = {

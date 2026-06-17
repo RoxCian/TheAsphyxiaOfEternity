@@ -21,9 +21,10 @@ export abstract class RbPlayDataServiceBase<T> {
             if (this.isActivated()) this.dataVersionInternal.set(this.versionService.version())
         })
     }
-    activate() {
+    activate(): HttpResourceRef<T[] | undefined> {
         this.isActivatedInternal.set(true)
         this.dataVersionInternal.set(this.versionService.version())
+        return this.data
     }
     deactivate() {
         this.isActivatedInternal.set(false)

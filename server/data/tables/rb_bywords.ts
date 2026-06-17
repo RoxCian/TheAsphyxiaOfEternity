@@ -8,7 +8,7 @@ export async function getRbByword<TVersion extends RbVersion>(version: TVersion,
     return bywords.find(b => b.version === version && b.id == /** WTF? Cannot use "===" here? */ id && ((version !== 2 && version !== 3) || b.side === side)) ?? {
         version, side, id,
         byword: "<Unknown byword>",
-        bywordOriginal: "",
+        bywordOrig: "",
         rarity: -1
     }
 }

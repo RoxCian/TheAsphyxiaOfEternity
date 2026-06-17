@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb4PlayerAccount, Rb4PlayerBase, Rb4PlayerConfig, Rb4PlayerCustom, Rb4PlayerReleasedInfo, Rb4PlayerStageLog } from "../../models/rb4/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, Rb4DojoIndex, RbPlayerPerformanceResponse, Rb4SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, Rb4DojoIndex, RbPlayerPerformanceResponse, Rb4SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb4MusicRecord } from "../../models/rb4/music_record"
 import { Rb4Classcheck } from "../../models/rb4/classcheck"
@@ -124,7 +124,7 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb4PlayerReleasedInfo>(data.rid, { collection: "rb.rb4.player.releasedInfo" })
-    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0, 1] }]) // byword
+    return await readAvailableItemsShared(version, released, [{ type: 6, id: [0, 1, 2] }, { type: 7, id: [0, 1] }]) // icon, byword
 }
 
 type Rb4SettingsContext = {

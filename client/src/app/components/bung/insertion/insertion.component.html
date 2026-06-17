@@ -4,7 +4,7 @@
         @if (isTemplateRef(c)) {
             <ng-container *ngTemplateOutlet="c; context: context()"/>
         } @else if (isComponentType(c)) {
-            <ng-container *ngComponentOutlet="c; context: context()" />
+            <ng-container *ngComponentOutlet="c; inputs: context()?.inputs; content: context()?.content; ngModule: context()?.ngModule" />
         } @else if (isString(c)) {
             @if (textContentTag() == undefined) {
                 {{ c }}

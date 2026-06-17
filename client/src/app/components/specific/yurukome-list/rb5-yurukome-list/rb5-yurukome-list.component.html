@@ -1,0 +1,13 @@
+<ng-template #placeholder>
+    <div class="rb-panel"></div>
+</ng-template>
+@if (service.isActivated()) {
+    <div class="rb-list">
+        @for (yurukome of service.data.value(); track yurukome.id) {
+            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                <rb5-yurukome-panel [yurukome]="yurukome" />
+            </bung-insertion>
+        }
+    </div>    
+}
+<bung-divider prompt="End of Pastel-kun's Casual Comments" />

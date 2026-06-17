@@ -1,5 +1,6 @@
 import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { Rb3VerdetDesKriegesResponse } from "./types"
 
 export class Rb3EventControl {
     @XD.s32() type = 0
@@ -48,7 +49,7 @@ export class Rb3EventControl {
 }
 Rb3EventControl.init()
 
-export class Rb3VerdetDesKrieges implements ICollection<"rb.rb3.event.verdetDesKrieges"> {
+export class Rb3VerdetDesKrieges implements ICollection<"rb.rb3.event.verdetDesKrieges">, Rb3VerdetDesKriegesResponse {
     readonly collection = "rb.rb3.event.verdetDesKrieges"
     completed = false
     chapter = 1

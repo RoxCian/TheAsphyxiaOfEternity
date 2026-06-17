@@ -2,8 +2,8 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfo, findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog } from "../../models/rb5/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
+import { Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
@@ -13,6 +13,7 @@ import { Rb5Mylist } from "../../models/rb5/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
+import { rb5Yurukome } from "../../data/tables/rb5_yurukome"
 
 type V = 5
 const version = 5 as const
@@ -23,6 +24,7 @@ export function registerRb5Controllers() {
     C.route("rb5ReadRecords", readRecords)
     C.route("rb5ReadClasschecks", readClasschecks)
     C.route("rb5ReadStageLogs", readStageLogs)
+    C.route("rb5ReadYurukome", readYurukome)
     C.route("rb5ReadAvailableItems", readAvailableItems)
     C.route("rb5ReadSettings", readSettings)
     C.route("rb5WriteSettings", writeSettings)
@@ -122,9 +124,18 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
+const readYurukome: C.C<RbRequest, Rb5YurukomeResponse[]> = async data => {
+    const yurukome = await DBH.find<Rb5Yurukome>(data.rid, { collection: "rb.rb5.event.yurukome" })
+    return (await rb5Yurukome).map(i => ({
+        id: i.id,
+        info: yurukome.find(y => y.yurukomeId === i.id) ? i : undefined,
+        isRare: i.isRare
+    } as Rb5YurukomeResponse))
+}
+
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb5PlayerReleasedInfo>(data.rid, { collection: "rb.rb5.player.releasedInfo" })
-    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0, 1] }]) // byword
+    return await readAvailableItemsShared(version, released, [{ type: 6, id: [0, 1, 2] }, { type: 7, id: [0, 1] }]) // icon, byword
 }
 
 type Rb5SettingsContext = {

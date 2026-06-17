@@ -1,9 +1,15 @@
 import { Observable } from "rxjs"
-import { Binding, InputSignal, Signal, TemplateRef, Type } from "@angular/core"
+import { Signal, TemplateRef, Type } from "@angular/core"
 import { HttpResourceRef } from "@angular/common/http"
 
+export type BulmaColor = "primary" | "success" | "info" | "link" | "warning" | "danger" | undefined
 export type BungPopupState = "in" | "out" | "show"
 export type BungInsertionContent = TemplateRef<any> | Type<any> | HTMLElement | SVGElement | string | undefined | null
+export type BungInsertionComponentContext = {
+    inputs?: Record<string, unknown>
+    content?: Node[][]
+    ngModule?: Type<any>
+}
 export type BungInsertionContentOrComputation = BungInsertionContent | (() => BungInsertionContent)
 export type BungPalette = string | {
     color: string

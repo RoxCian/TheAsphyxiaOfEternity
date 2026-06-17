@@ -269,7 +269,15 @@ function createCsvRows<T extends object>(csvTable: CsvTable, type?: Type<T>): Re
     return data.map(r => createRow(r, fields, type))
 }
 export async function loadCsvAsync<T extends object>(name: string, type?: Type<T>): Promise<Readonly<T>[]> {
-    const csv = await readCsvAsync(resolve(pluginDir, `data/contents/${name}.csv`))
-    // return createCsvIndexer(csv, type)
-    return createCsvRows(csv, type)
+    let hasError = false
+    try {
+        const csv = await readCsvAsync(resolve(pluginDir, `data/contents/${name}.csv`))
+        // return createCsvIndexer(csv, type)
+        return createCsvRows(csv, type)
+    } catch (ex) {
+        hasError = true
+        throw ex
+    } finally {
+        if (hasError) console.log(`csv table name: ${name}`)
+    }
 }

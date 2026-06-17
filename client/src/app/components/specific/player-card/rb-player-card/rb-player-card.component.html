@@ -69,18 +69,13 @@
             </div>
         }
         <div class="rb-nav">
-            <!-- <div class="rb-nav-container">
-                <a class="rb-nav-item">
-                    <bung-icon icon="account-circle">Play Data</bung-icon>
-                </a>
-                <a class="rb-nav-item">
-                    <bung-icon icon="cog">Settings</bung-icon>
-                </a>
-            </div> -->
             <div class="rb-nav-container">
                 @if (p) {
                     <div class="buttons has-addons rb-nav-buttons" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')"><bung-icon icon="account-circle">Play Data</bung-icon></button>
+                        @if ((this.profile()?.version ?? 0) >= 2) {
+                            <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'progress'" (click)="onNavToSubpage('progress')"><bung-icon icon="trophy">Progress</bung-icon></button>
+                        }
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')"><bung-icon icon="cog">Settings</bung-icon></button>
                         <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'saveData'" (click)="onNavToSubpage('saveData')"><bung-icon icon="database">Save Data</bung-icon></button>
                     </div>

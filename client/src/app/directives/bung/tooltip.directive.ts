@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, input, inputBinding, OnDestroy, output, OutputRefSubscription, signal } from "@angular/core"
+import { Directive, effect, ElementRef, inject, input, OnDestroy, output, OutputRefSubscription, signal } from "@angular/core"
 import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
 import { BungTooltipComponent, BungTooltipFloat } from "../../components/bung/tooltip/tooltip.component"
 import { BungTooltipService } from "../../services/bung/tooltip.service"
@@ -19,7 +19,7 @@ export class BungTooltipDirective implements OnDestroy {
     readonly float = input<BungTooltipFloat>("auto")
     readonly delay = input(250)
     readonly duration = input(Infinity)
-    readonly disabled = input(false, { transform: toggleTransform })
+    readonly disabled = input(false, { alias: "bungTooltip.disabled", transform: toggleTransform })
     private readonly isTooltipOpenInternal = signal(false)
     readonly isTooltipOpen = this.isTooltipOpenInternal.asReadonly()
     readonly tooltipOpened = output()
@@ -57,7 +57,6 @@ export class BungTooltipDirective implements OnDestroy {
     private readonly cleanEventHandler = () => {
         this.#componentCloseHandle?.unsubscribe()
         this.#componentCloseHandle = undefined
-        this.#component = undefined
         this.#delayTimeout = undefined
     }
     private readonly scrollEventHandler = throttle(() => this.#component?.updatePosition(), undefined, 17)
@@ -105,25 +104,42 @@ export class BungTooltipDirective implements OnDestroy {
         if (this.disabled() || this.#component || this.#delayTimeout == undefined || this.content() == undefined) return
         this.#delayTimeout = undefined
         this.#component = this.tooltipService.tip(this.content, this.context, this.hostElement, Object.assign({}, this.options(), {
-            bindings: { float: this.float }
+            bindings: { float: this.float, duration: this.duration }
         } as BungPopupOptions<BungTooltipComponent>))
+        const openedHandle = this.#component.opened.subscribe(() => {
+            this.tooltipOpened.emit()
+            openedHandle.unsubscribe()
+        })
+        const closedHandle = this.#component.closed.subscribe(() => {
+            this.tooltipClosed.emit()
+            closedHandle.unsubscribe()
+        })
         this.#componentCloseHandle = this.#component.closed.subscribe(this.cleanEventHandler)
     }
     close() {
         if (this.#delayTimeout != undefined) {
             clearTimeout(this.#delayTimeout)
             this.cleanEventHandler()
+            this.#component = undefined
             return
         }
         if (!this.#component) return
         if (this.#component.state() !== "show") {
             // open event not happened
-            const ref = this.#component.opening.subscribe(ev => {
-                ev.isCanceled = true
-                ref.unsubscribe()
-            })
+            try {
+                const ref = this.#component.opening.subscribe(ev => {
+                    ev.isCanceled = true
+                    ref.unsubscribe()
+                })
+            } catch {
+                this.#component.close()
+                this.#component = undefined
+                this.cleanEventHandler()
+                return
+            }
         }
-        this.#component.close()
+        if (this.duration() == Infinity) this.#component.close()
+        this.#component = undefined
     }
     dispose() {
         this.hostElement.nativeElement.removeEventListener("mouseenter", this.mouseenterEventHandler)

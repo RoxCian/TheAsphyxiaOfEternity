@@ -1,5 +1,5 @@
 <div class="classcheck card rb-panel" [class.hoverable]="classcheck().stageLogs" (click)="onShowPopup()"
-    [bungTooltip]="'Cannot find separated play data for each musics. Did you import this classcheck record from old Asphyxia?'" [disabled]="!!classcheck().stageLogs">
+    [bungTooltip]="'Cannot find separated play data for each musics. Did you import this classcheck record from old Asphyxia?'" [bungTooltip.disabled]="!!classcheck().stageLogs">
     @let isV4 = classcheck().version === 4;
     @if (classcheck().clearType > 1) {
         <div class="deco-background has-rb{{ classcheck().version }}-background"></div>

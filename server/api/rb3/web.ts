@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
@@ -13,7 +13,7 @@ import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
-import { getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
+import { getVerdetDesKriegesAppearances, getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesAppearances, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
 
 type V = 3
 const version = 3 as const
@@ -27,7 +27,9 @@ export function registerRb3Controllers() {
     C.route("rb3ReadVerdetDesKriegesPageCount", readVerdetDesKriegesPageCount)
     C.route("rb3ReadVerdetDesKriegesPage", readVerdetDesKriegesPage)
     C.route("rb3ReadVerdetDesKriegesNotes", readVerdetDesKriegesNotes)
+    C.route("rb3ReadVerdetDesKriegesAppearances", readVerdetDesKriegesAppearances)
     C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges)
+    C.route("rb3DebugResetVerdetDesKrieges", debugResetVerdetDesKrieges)
     C.route("rb3ReadAvailableItems", readAvailableItems)
     C.route("rb3ReadSettings", readSettings)
     C.route("rb3WriteSettings", writeSettings)
@@ -122,19 +124,21 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
-const readVerdetDesKrieges: C.C<RbRequest, Rb3VerdetDesKrieges> = async data => await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
+const readVerdetDesKrieges: C.C<RbRequest, Rb3VerdetDesKriegesResponse> = async data => await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 const readVerdetDesKriegesPageCount: C.C<{ chapter: number }, { pageCount: number }> = async data => {
     return { pageCount: await getVerdetDesKriegesPageCount(data.chapter) }
 }
 const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesContent[]> = async data => {
-    if (data.chapter === 0 && data.page === 0) return await getVerdetDesKriegesPage(0, 0)
     const event = await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
-    if (!event) return C.error(401, "Progress not reached")
+    if (!event) {
+        if (data.chapter === 0 && data.page === 0) return await getVerdetDesKriegesPage(0, 0)
+        else return C.error(401, "Progress not reached")
+    }
     if (data.chapter > event.chapter) return C.error(401, "Progress not reached")
     if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(401, "Page number overflow")
     if (data.chapter === event.chapter) {
         if (data.page === 4 && event.page === 3) {
-            if (!event.progress.slice(0, 4).every(p => p < 15)) return C.error(401, "Progress not reached")
+            if (!event.progress.slice(0, 4).every(p => p < 60)) return C.error(401, "Progress not reached")
             event.page = 4
         } else if (data.page > event.page + 1) return C.error(401, "Progress not reached")
         else if (data.page === event.page + 1) {
@@ -147,6 +151,7 @@ const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, 
     return await getVerdetDesKriegesPage(data.chapter, data.page)
 }
 const readVerdetDesKriegesNotes: C.C<{}, Rb3VerdetDesKriegesNote[]> = () => rb3VerdetDesKriegesNotes
+const readVerdetDesKriegesAppearances: C.C<{ chapter: number }, Rb3VerdetDesKriegesAppearance[]> = data => getVerdetDesKriegesAppearances(data.chapter)
 const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, { modified: boolean }> = async data => {
     const t = new DBH.T()
     const event = await t.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
@@ -160,37 +165,37 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
     }
     switch (data.type) {
         case Rb3VerdetDesKriegesUnlockRequestType.hiddenLink1:
-            if (event.chapter === 1 && event.progress[3] !== 15) {
-                event.progress[3] = 15
+            if (event.chapter === 1 && event.progress[3] !== 60) {
+                event.progress[3] = 60
                 result.modified = true
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2:
-            if (event.chapter === 2 && event.progress[0] !== 15) {
-                event.progress[0] = 15
+            if (event.chapter === 2 && event.progress[0] !== 60) {
+                event.progress[0] = 60
                 result.modified = true
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1:
-            if (event.chapter === 1 && event.progress.every(l => l === 15)) {
+            if (event.chapter === 1 && event.progress.every(l => l === 60)) {
                 event.chapter = 2
                 event.progress.fill(0)
-                await addMusicUnlockInfo(t, data.rid, 385) // 385: 双璧のVANESSA
+                await addMusicUnlockInfo(t, data.rid, Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) // 385: 双璧のVANESSA
                 result.modified = true
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish2:
-            if (event.chapter === 2 && event.progress.every(l => l === 15)) {
+            if (event.chapter === 2 && event.progress.every(l => l === 60)) {
                 event.chapter = 3
                 event.progress.fill(0)
-                await addMusicUnlockInfo(t, data.rid, 386) // 386: Vanity shadow
+                await addMusicUnlockInfo(t, data.rid, Rb3VerdetDesKriegesUnlockRequestType.chapterFinish2) // 386: Vanity shadow
                 result.modified = true
             }
             break
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish3:
-            if (event.chapter === 3 && event.progress.every(l => l === 15)) {
+            if (event.chapter === 3 && event.progress.every(l => l === 60)) {
                 event.completed = true
-                await addMusicUnlockInfo(t, data.rid, 387) // 387: 終焔のClaudia
+                await addMusicUnlockInfo(t, data.rid, Rb3VerdetDesKriegesUnlockRequestType.chapterFinish3) // 387: 終焔のClaudia
                 result.modified = true
             }
             break
@@ -199,10 +204,11 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
     await t.commit()
     return result
 }
+const debugResetVerdetDesKrieges: C.C<RbRequest> = data => DBH.remove<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo" })
-    return await readAvailableItemsShared(version, released, [{ type: 7, id: [0] }, { type: 8, id: [0] }]) // bywordLeft, bywordRight
+    return await readAvailableItemsShared(version, released, [{ type: 6, id: [0, 1, 2] }, { type: 7, id: [0] }, { type: 8, id: [0] }]) // icon, bywordLeft, bywordRight
 }
 
 type Rb3SettingsContext = {

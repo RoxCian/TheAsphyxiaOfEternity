@@ -37,4 +37,11 @@ export class BungModalService extends BungPopupService {
         }
         return super.popup(body, bodyContext, BungModalComponent, options)
     }
+    modalCard<TReturn = any>(header: BungInsertionContentOrComputation, body: BungInsertionContentOrComputation, headerContext: any | Signal<any>, bodyContext: any | Signal<any>, options?: BungPopupOptions<BungModalComponent<TReturn>, TReturn>): BungModalComponent<TReturn> {
+        options = Object.assign({}, options)
+        const bindings = Object.assign({}, options?.bindings)
+        bindings["isCard"] = true
+        options.bindings = bindings
+        return this.modal(header, body, headerContext, bodyContext, options)
+    }
 }

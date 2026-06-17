@@ -1,4 +1,4 @@
-version,id,side,rarity,byword,bywordOriginal
+version,id,side,rarity,byword,bywordOrig
 ,bywords are individually ordered on left/right side in rb limelight / colette and mixed ordered on both sides in later game version,,,,
 int,int,red|blue,none=-1|bronze|silver|gold|platinum,string,string
 2,0,red,none,Hopeful,期待の

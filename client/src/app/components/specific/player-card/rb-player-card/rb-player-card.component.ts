@@ -5,12 +5,14 @@ import { RbSubpageService } from "../../../../services/specified/rb-subpage.serv
 import { RbPlayDataSubpage } from "../../../../pages/profile/play-data/play-data.component"
 import { RbSettingsSubpage } from "../../../../pages/profile/settings/settings.component"
 import { RbSaveDataSubpage } from "../../../../pages/profile/save-data/save-data.component"
+import { RbProgressSubpage } from "../../../../pages/profile/progress/progress.component"
 import { toggleTransform } from "../../../../signals/transforms"
 
 const profileSubpages = {
     playData: RbPlayDataSubpage,
     settings: RbSettingsSubpage,
-    saveData: RbSaveDataSubpage
+    saveData: RbSaveDataSubpage,
+    progress: RbProgressSubpage
 } as const
 
 @Component({

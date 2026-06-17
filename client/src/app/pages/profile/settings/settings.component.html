@@ -109,10 +109,10 @@
                     </bung-select>
                 </bung-field>
             }
-            <bung-field label="Hit sound" [formField]="form.shotSound">
+            <bung-field label="Hit sound" [formField]="form.shotSound" [help]="version === 5 ? 'If you select DJ TOTTO, please do not try to open customize page 2 or game will shutdown itself.' : undefined">
                 <bung-select [formField]="form.shotSound" noOptionsPlaceholder="No options" [equalFn]="selectOptionEq">
                     @for (item of filterItems(settingsService.items.value(), "shotSound"); track item.value) {
-                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                     }
                 </bung-select>
             </bung-field>
@@ -124,29 +124,29 @@
                 <bung-field label="Music select BGM" [formField]="casted.backgroundMusic">
                     <bung-select [formField]="casted.backgroundMusic" [equalFn]="selectOptionEq">
                         @for (item of filterItems(settingsService.items.value(), "backgroundMusic"); track item.value) {
-                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                         }
                     </bung-select>
                 </bung-field>
             }
-            <bung-field label="Object explode effect" [formField]="form.explodeEffect">
+            <bung-field label="Object explode effect" [formField]="form.explodeEffect" [help]="version === 5 ? 'Do not try to open customization page 2 in game when you select DJ TOTTO.' : undefined">
                 <bung-select [formField]="form.explodeEffect" [equalFn]="selectOptionEq">
                     @for (item of filterItems(settingsService.items.value(), "explodeEffect"); track item.value) {
-                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                     }
                 </bung-select>
             </bung-field>
-            <bung-field label="Stage frame" [formField]="form.frame">
+            <bung-field label="Stage frame" [formField]="form.frame" [help]="version === 5 ? 'Do not try to open customization page 2 in game when you select DJ TOTTO.' : undefined">
                 <bung-select [formField]="form.frame" [equalFn]="selectOptionEq">
                     @for (item of filterItems(settingsService.items.value(), "frame"); track item.value) {
-                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                     }
                 </bung-select>
             </bung-field>
-            <bung-field label="Stage background" [formField]="form.background">
+            <bung-field label="Stage background" [formField]="form.background" [help]="version === 5 ? 'Do not try to open customization page 2 in game when you select DJ TOTTO.' : undefined">
                 <bung-select [formField]="form.background" [equalFn]="selectOptionEq">
                     @for (item of filterItems(settingsService.items.value(), "background"); track item.value) {
-                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                        <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                     }
                 </bung-select>
             </bung-field>
@@ -182,7 +182,7 @@
                 <bung-field label="Voice Message Set" [formField]="casted.voiceMessageSet">
                     <bung-select [formField]="casted.voiceMessageSet" [equalFn]="selectOptionEq">
                         @for (item of filterItems(settingsService.items.value(), "voiceMessageSet"); track item.value) {
-                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item.name }}</bung-option>
+                            <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>
                         }
                     </bung-select>
                 </bung-field>
@@ -251,17 +251,17 @@
                         <div class="pastel-kun-selects">
                             <bung-select class="pastel-kun-head" [value]="parts[0]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(0, $event)">
                                 @for (equip of filterEquips(settingsService.equips.value(), 0); track equip.id) {
-                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip | rbText : "name" }}</bung-option>
                                 }
                             </bung-select>
                             <bung-select class="pastel-kun-top" [value]="parts[1]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(1, $event)">
                                 @for (equip of filterEquips(settingsService.equips.value(), 1); track equip.id) {
-                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip | rbText : "name" }}</bung-option>
                                 }
                             </bung-select>
                             <bung-select class="pastel-kun-under" [value]="parts[2]" isReversed [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(2, $event)">
                                 @for (equip of filterEquips(settingsService.equips.value(), 2); track equip.id) {
-                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip | rbText : "name" }}</bung-option>
                                 }
                             </bung-select>
                         </div>
@@ -276,7 +276,7 @@
                         <div class="pastel-kun-selects">
                             <bung-select class="pastel-kun-arms" [value]="parts[3]" [equalFn]="selectOptionEq" (changed)="onRb6ChangePastelPart(3, $event)">
                                 @for (equip of filterEquips(settingsService.equips.value(), 3); track equip.id) {
-                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip.name }}</bung-option>
+                                    <bung-option [value]="equip.id" [isHidden]="!isEquipAvailable(equip)">{{ equip | rbText : "name" }}</bung-option>
                                 }
                             </bung-select>
                         </div>
@@ -297,7 +297,7 @@
                                             @case (4) { <i class="mdi mdi-moon-waning-crescent dark-element"></i> }
                                         }
                                     </div>
-                                    <div class="characard-title">{{ charaCard.name }}</div>
+                                    <div class="characard-title">{{ charaCard | rbText : "name" }}</div>
                                 </div>
                             </bung-option>
                         }

@@ -1,0 +1,39 @@
+@let m = music();
+@let ct = chartType();
+@let unlockText = `New ${ typeof ct === "number" || ct?.length === 1 ? "chart" : (ct?.length ?? 0) > 1 ? "charts" : "track" } unlocked`;
+<div class="modal-body">
+    <div class="modal-card-body">
+        <div class="modal-card-background card"></div>
+        <figure class="jacket">
+            <img [src]="(m.music.musicUid | rbJacket : (typeof ct === 'number' ? ct : ct?.length === 1 ? ct[0] : undefined))()">
+        </figure>
+        <div class="info-container">
+            <bung-divider [prompt]="unlockText" />
+            <div class="music-info-wrapper">
+                <div class="music-info">
+                    <div class="music-title is-size-4"><rb-music-title [music]="m.music" /></div>
+                    <bung-marquee class="music-artist" [content]="m.music.artist" [spacing]="60" [delay]="1500" />
+                    <div class="charts-level">
+                        @if (typeof ct !== "number") {
+                            @for (el of ct ?? (m.charts | key); track el) {
+                                @if (m.charts[el]!.level > 0) {
+                                    <rb-level [version]="m.version" [level]="m.charts[el]!.level" [skillRate]="m.charts[el]!.skillRate" [rbChartType]="el" [version]="m.version" />
+                                }
+                            }
+                        } @else {
+                            @let chart = m.charts[ct];
+                            @let cn = ct | rbChartTypeLiteral : m.version;
+                            @if (!chart) {
+                                <span class="error-text">Cannot find {{ cn }} chart</span>
+                            } @else {
+                                <span class="chart-name" [rbChartType]="ct" [version]="m.version">{{ cn }}</span>
+                                <rb-level [version]="m.version" [level]="chart.level" [skillRate]="chart.skillRate" [rbChartType]="ct" [version]="m.version" />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <bung-divider class="bottom-divider" [prompt]="unlockText" />
+        </div>
+    </div>
+</div>

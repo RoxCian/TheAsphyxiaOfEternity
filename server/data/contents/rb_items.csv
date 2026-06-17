@@ -37,7 +37,7 @@ int,string,int,int,string,string?,boolean
 5,shotSound,1,20,Volleyball,,TRUE
 5,shotSound,1,21,Powerful Pro,パワプロ,TRUE
 5,shotSound,1,22,8bit,,FALSE
-5,shotSound,1,23,DJ TOTTO,,FALSE
+5,shotSound,1,23,DJ TOTTO,,TRUE
 5,shotSound,1,24,SUPER STAR,,FALSE
 4,shotSound,1,0,Default 1,,TRUE
 4,shotSound,1,1,Default 2,,TRUE
@@ -181,7 +181,7 @@ int,string,int,int,string,string?,boolean
 6,frame,3,3,Blue,,TRUE
 6,frame,3,4,Red,,TRUE
 6,frame,3,5,Black,,TRUE
-5,frame,3,0,Default,,TRUE
+5,frame,3,0,VOLZZA 1,,TRUE
 5,frame,3,1,Pink,,FALSE
 5,frame,3,2,Yellow,,FALSE
 5,frame,3,3,Green,,FALSE
@@ -190,7 +190,8 @@ int,string,int,int,string,string?,boolean
 5,frame,3,6,White,,FALSE
 5,frame,3,7,Black,,FALSE
 5,frame,3,8,Gold,,FALSE
-5,frame,3,9,DJ TOTTO,,FALSE
+5,frame,3,9,VOLZZA 2,,TRUE
+5,frame,3,10,DJ TOTTO,,TRUE
 4,frame,3,0,Default,,TRUE
 4,frame,3,1,REFLEC DOJO,リフレク道場,FALSE
 4,frame,3,2,Pink,,FALSE
@@ -237,7 +238,7 @@ int,string,int,int,string,string?,boolean
 1,frame,3,4,Platinum,,FALSE
 1,frame,3,5,Black,,FALSE
 1,frame,3,6,Crimson,,FALSE
-6,explodeEffect,4,0,Default,,TRUE
+6,explodeEffect,4,0,VOLZZA 1,,TRUE
 6,explodeEffect,4,1,Mild,,TRUE
 5,explodeEffect,4,0,Default,,TRUE
 5,explodeEffect,4,1,Classic,,TRUE
@@ -252,7 +253,8 @@ int,string,int,int,string,string?,boolean
 5,explodeEffect,4,10,quaver♪,,TRUE
 5,explodeEffect,4,11,Heart,,TRUE
 5,explodeEffect,4,12,Rose,,TRUE
-5,explodeEffect,4,13,DJ TOTTO,,FALSE
+5,explodeEffect,4,13,VOLZZA 2,,TRUE
+5,explodeEffect,4,14,DJ TOTTO,,TRUE
 4,explodeEffect,4,0,Default,,TRUE
 4,explodeEffect,4,1,Classic,,FALSE
 4,explodeEffect,4,2,limelight,,FALSE
@@ -302,8 +304,8 @@ int,string,int,int,string,string?,boolean
 5,background,5,4,Red,,TRUE
 5,background,5,5,Purple,,TRUE
 5,background,5,6,Blue,,TRUE
-5,background,5,7,New Game!!,,FALSE
-5,background,5,8,DJ TOTTO,,FALSE
+5,background,5,7,DJ TOTTO,,TRUE
+5,background,5,8,New Game!!,,FALSE
 4,background,5,0,Default,,TRUE
 4,background,5,1,Pink,,FALSE
 4,background,5,2,Blue,,FALSE

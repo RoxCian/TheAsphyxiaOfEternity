@@ -63,7 +63,14 @@ import { RbSharedComponentsModule } from "./rb-shared-components.module"
 import { RbSaveDataSubpage } from "../pages/profile/save-data/save-data.component";
 import { RbChartLampBadgeComponent } from '../components/specific/chart-lamp/rb-chart-lamp-badge/rb-chart-lamp-badge.component';
 import { RbClasscheckPopupComponent } from '../components/specific/classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component';
-import { RangePipe } from '../pipes/misc/range.pipe'
+import { RangePipe } from '../pipes/misc/range.pipe';
+import { RbMusicUnlockPopupComponent } from '../components/specific/music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component';
+import { Rb3VerdetDesKriegesStoryboardComponent } from '../components/specific/verdet-des-krieges/rb3-verdet-des-krieges-storyboard/rb3-verdet-des-krieges-storyboard.component';
+import { RbProgressSubpage } from '../pages/profile/progress/progress.component';
+import { Rb3VerdetDesKriegesNoteComponent } from '../components/specific/verdet-des-krieges/rb3-verdet-des-krieges-note/rb3-verdet-des-krieges-note.component'
+import { RbTextPipe } from "../pipes/specific/rb-text.pipe";
+import { Rb5YurukomeListComponent } from '../components/specific/yurukome-list/rb5-yurukome-list/rb5-yurukome-list.component';
+import { Rb5YurukomePanelComponent } from '../components/specific/yurukome-list/rb5-yurukome-panel/rb5-yurukome-panel.component'
 
 @NgModule({
     declarations: [
@@ -126,7 +133,14 @@ import { RangePipe } from '../pipes/misc/range.pipe'
         RbMylistEditorComponent,
         RbChartLampBadgeComponent,
         RbClasscheckPopupComponent,
-        RangePipe
+        RangePipe,
+        RbMusicUnlockPopupComponent,
+        Rb3VerdetDesKriegesStoryboardComponent,
+        RbProgressSubpage,
+        Rb3VerdetDesKriegesNoteComponent,
+        RbTextPipe,
+        Rb5YurukomeListComponent,
+        Rb5YurukomePanelComponent
     ],
     imports: [
         CommonModule,
@@ -194,7 +208,8 @@ import { RangePipe } from '../pipes/misc/range.pipe'
         RbSettingsSubpage,
         RbSaveDataSubpage,
         RbMylistEditorComponent,
-        RbChartLampBadgeComponent
+        RbChartLampBadgeComponent,
+        RbTextPipe
     ],
 })
 export class ProfileDetailModule { }

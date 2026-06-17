@@ -5,10 +5,24 @@ import { rbMusicInfo } from "../../data/tables/rb_music_info"
 import { rbChartInfo } from "../../data/tables/rb_chart_info"
 
 export function registerMusicsController() {
+    C.route("rbReadMusic", readMusic)
     C.route("rbReadMusics", readMusics)
 }
 
+const readMusic: C.C<{ version: RbVersion, musicId: number }, RbMusicResponse<RbVersion>> = async data => {
+    const musicUid = (await rbMusicId).find(i => i.version === data.version && i.musicId === data.musicId)?.musicUid
+    if (!musicUid) return C.error(404, "Music not found")
+    const music = (await rbMusicInfo).find(i => i.musicUid === musicUid)
+    if (!music) return C.error(404, "Music info not found")
+    const charts = (await rbChartInfo).filter(i => i.version === data.version && i.musicId === data.musicId).sort((l, r) => l.chartType - r.chartType) as RbChartsInfo<RbVersion>
+    return {
+        version: data.version,
+        musicId: data.musicId,
+        music, charts
+    }
+}
 const readMusics: C.C<{ version: RbVersion }, RbMusicResponse<RbVersion>[]> = async data => {
+    // mylist feature related api
     if (data.version === 1) return [] // no mylist features, bypass for now.
 
     const musicId = await rbMusicId

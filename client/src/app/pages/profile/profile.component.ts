@@ -32,7 +32,7 @@ export class ProfilePageComponent {
     protected readonly notificationService = inject(BungNotificationService)
     protected readonly notifyModel = model("Notify button")
     notify() {
-        this.notificationService.notify("Notification", undefined, {
+        this.notificationService.notify("Notification", undefined, undefined, {
             duration: Infinity,
             values: {
                 button1: {

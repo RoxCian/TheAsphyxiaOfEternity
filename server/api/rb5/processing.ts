@@ -11,7 +11,7 @@ import { toFullWidthPlayerName, attachReleaseInfo, toHalfWidthPlayerName, detach
 // player.pdata.released.info.type == 8 -> voice chat
 export async function readPlayerPostProcess(player: Rb5Player) {
     toFullWidthPlayerName(player)
-    await attachReleaseInfo(5, player, Rb5PlayerReleasedInfo, [999, 30, 30, 30, 30, 30, 200, 30, 30])
+    await attachReleaseInfo(5, player, Rb5PlayerReleasedInfo, [999, 30, 30, 30, 30, 30, 400, 134, 30])
 }
 export async function writePlayerPreProcess(player: Rb5Player) {
     toHalfWidthPlayerName(player)

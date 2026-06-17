@@ -1,0 +1,108 @@
+:host
+    display: flex
+    justify-content: center
+    align-items: center
+    pointer-events: none !important
+
+    ::ng-deep .modal-body > *
+        pointer-events: all
+
+.modal-body
+    display: flex
+    width: 50em
+    height: 15.5em
+    max-width: 50em
+    max-height: 15.5em
+    justify-content: center
+    overflow: visible
+
+.modal-card-body
+    position: relative
+    display: flex
+    overflow: visible
+    border-radius: 8px
+    background: transparent
+    max-width: 43em
+    padding: 0
+    z-index: 1
+
+    .modal-card-background
+        position: absolute
+        inset: 0
+        border-radius: 8px
+        z-index: 0
+    .jacket
+        flex: 0
+        position: relative
+        margin: 1.5em
+        margin-right: 0
+        min-width: 12.5em
+        min-height: 12.5em
+        width: 12.5em
+        height: 12.5em
+        border-radius: 8px
+        user-select: none
+        transform-origin: top left
+        z-index: 1
+
+        img
+            position: absolute
+            inset: 0
+            border-radius: 8px
+            width: 100%
+            height: 100%
+
+    .info-container
+        flex: 1
+        display: flex
+        flex-direction: column
+        justify-content: center
+        max-width: 29em
+        padding: 0 2em
+
+    .music-info-wrapper
+        overflow: clip
+    .music-info
+        overflow: visible
+    .charts-level
+        margin-right: 0.5em
+        color: var(--rb-chart-color)
+        white-space: nowrap
+        opacity: 0.7
+    .music-title
+        font-weight: bold
+        margin-bottom: 0
+    rb-music-title
+        width: 100%
+    rb-level:not(:first-child)
+        margin-left: 0.5em
+    bung-divider
+        z-index: 1
+
+.music-artist
+    opacity: 0.7
+
+@media screen and (width < 768px)
+    .modal-body
+        width: 13.5em
+        height: unset
+        max-width: 13.5em
+        max-height: unset
+        flex-direction: column
+
+        .modal-card-body
+            flex-direction: column
+
+            .info-container
+                padding: 0.5em
+                max-width: 13.5em
+            .jacket
+                margin: 0.5em
+                margin-right: auto
+                margin-bottom: 0
+            .music-info .music-title, .unlock-title
+                font-size: 1.25em !important
+            .music-info .music-artist
+                font-size: 0.75em !important
+        .bottom-divider
+            display: none
