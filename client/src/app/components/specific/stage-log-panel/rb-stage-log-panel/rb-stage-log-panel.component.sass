@@ -30,6 +30,8 @@
         align-items: flex-end
     &.rival-play-data
         align-items: flex-start
+    .you-tag
+        display: none
     .score
         color: var(--rb-color)
         font-weight: bold
@@ -134,13 +136,18 @@
 @media screen and (width < 768px)
     .play-data, .music-info
         padding: 0.5em
+
+        .you-tag
+            display: inline-flex
+        .your-name-tag
+            display: none
     .deco .jacket
         font-size: 0.8em
     .music-info .music-title
-        font-size: 1.25em !important
+        font-size: 1em !important
         max-width: calc(100% - 0.5em)
     .play-data .score
-        font-size: 1.25em !important
+        font-size: 1em !important
     .play-data .score bung-icon
         position: relative
     .you-win .score bung-icon::ng-deep .icon

@@ -395,13 +395,13 @@ export function instantiate<T>(type: Type<T>, ...args: any[]): T {
     return undefined as T
 }
 
-export function utcNow(): number {
-    const now = new Date()
-    return Date.UTC(
-        now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
-        now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
-    )
-}
+// export function utcNow(): number {
+//     const now = new Date()
+//     return Date.UTC(
+//         now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+//         now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
+//     )
+// }
 
 export function hasAny<TE>(array: TE[] | undefined): array is Exclude<TE[], { length: 0 }> {
     return !!array && array.length > 0

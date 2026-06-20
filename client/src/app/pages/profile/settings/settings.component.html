@@ -20,16 +20,16 @@
                                 @if (autoWearLeft) { <bung-icon iconUrl="static/assets/icons/byword-auto-renew.svg" /> }
                                 @else { <bung-icon iconUrl="static/assets/icons/byword-auto-renew-off.svg" /> }
                             </button>
-                            <bung-select class="byword-select byword-left-select is-danger" isReversed dropdownClass="byword-select-dropdown" [formField]="casted.bywordLeft" [equalFn]="selectOptionEq">
+                            <bung-select class="byword-select byword-left-select is-danger" [isReversed]="!breakpointService.breakpointsToggled.mobile()" dropdownClass="byword-select-dropdown" [formField]="casted.bywordLeft" [equalFn]="selectOptionEq">
                                 @for (byword of filterBywords(settingsService.bywords.value(), 0); track byword.id) {
                                     <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 0)"><rb-byword-tag class="byword-left-select-tag" [leftByword]="byword" noRightPart /></bung-option>
                                 }
                             </bung-select>
                         </div>
                         <div class="byword-right">
-                            <bung-select class="byword-select byword-right-select is-info" dropdownClass="byword-select-dropdown" [formField]="casted.bywordRight" [equalFn]="selectOptionEq">
+                            <bung-select class="byword-select byword-right-select is-info" [isReversed]="breakpointService.breakpointsToggled.mobile()" dropdownClass="byword-select-dropdown" [formField]="casted.bywordRight" [equalFn]="selectOptionEq">
                                 @for (byword of filterBywords(settingsService.bywords.value(), 1); track byword.id) {
-                                    <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 1)"><rb-byword-tag noLeftPart [rightByword]="byword" /></bung-option>
+                                    <bung-option [value]="byword.id" [isHidden]="!isBywordAvailable(byword, 1)"><rb-byword-tag class="byword-right-select-tag" noLeftPart [rightByword]="byword" /></bung-option>
                                 }
                             </bung-select>
                             <button class="button byword-auto-wear-button byword-auto-wear-right is-info-accent" [class.is-selected]="autoWearRight" (click)="casted.isAutoBywordRight().controlValue.set(!autoWearRight)" bungTooltip="Right byword auto wear is {{ autoWearRight ? 'on' : 'off' }}.">
@@ -220,17 +220,53 @@
                         </ng-template>
                         <ng-template let-q #rankingQuestOptionTemplate>
                             @let musics = [findMusic($safeNavigationMigration(q.charts[0]?.musicId)), findMusic($safeNavigationMigration(q.charts[1]?.musicId)), findMusic($safeNavigationMigration(q.charts[2]?.musicId))];
-                            <bung-insertion class="ranking-quest-option-insertion" isVirtualized sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder" [placeholderContext]="musics | implicit">
-                                <div class="ranking-quest-option-content">
-                                    <span class="group-label is-size-7">Group {{ q.id + 1 }}</span>
-                                    @for (c of q.charts; let i = $index; track c) {
-                                        @let music = musics[i];
-                                        @if (!music) { 
-                                            <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
-                                        } @else {
-                                            <rb-music-icon class="ranking-quest-option" [music]="music" [chartType]="[0, 1, c.chartType]" isVirtualized />
+                            @let isMobile = breakpointService.breakpointsToggled.mobile();
+                            <bung-insertion class="ranking-quest-option-insertion" [class.is-mobile]="isMobile" [isVirtualized]="!isMobile" sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder" [placeholderContext]="musics | implicit">
+                                <div class="ranking-quest-option-content" [class.is-mobile]="isMobile">
+                                    <span class="group-label is-size-7" [class.is-transpose]="!isMobile">Group {{ q.id + 1 }}</span>
+                                    @if (isMobile) {
+                                        <ng-template let-music #musicNameLabel>
+                                            @if (music.musicUid !== "1t03") { <span>{{ music.title }}</span> }
+                                            @else {
+                                                <div class="label-777">
+                                                    <div class="label-7"><i class="star mdi mdi-star"></i>
+                                                        <div class="t-7">7</div>
+                                                    </div>
+                                                    <div class="label-7"><i class="star mdi mdi-star"></i>
+                                                        <div class="t-7">7</div>
+                                                    </div>
+                                                    <div class="label-7"><i class="star mdi mdi-star"></i>
+                                                        <div class="t-7">7</div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </ng-template>
+                                        <ng-template #rankingQuestOptionMarqueeTemplate>
+                                            <div class="ranking-quest-option-music-names">
+                                                @for (c of q.charts; let i = $index; track c) {
+                                                    @let music = musics[i];
+                                                    @if (!music) { 
+                                                        <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
+                                                    } @else {
+                                                        <div class="music-name is-size-7">
+                                                            <ng-container *ngTemplateOutlet="musicNameLabel; context: music.music | implicit" />
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </ng-template>
+                                        <bung-marquee class="group-marquee" [content]="rankingQuestOptionMarqueeTemplate" [delay]="1500" [spacing]="72" />
+                                    } @else {
+                                        @for (c of q.charts; let i = $index; track c) {
+                                            @let music = musics[i];
+                                            @if (!music) { 
+                                                <div class="error-message">Cannot find music <i>{{ c.musicId }}</i></div>
+                                            } @else {
+                                                <rb-music-icon class="ranking-quest-option" [music]="music" [chartType]="[0, 1, c.chartType]" isVirtualized />
+                                            }
                                         }
                                     }
+
                                 </div>
                             </bung-insertion>
                         </ng-template>

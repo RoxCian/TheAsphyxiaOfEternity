@@ -5,9 +5,6 @@ import { RbProfileService } from "./rb-profile.service"
 import { Rb3VerdetDesKriegesAppearance, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesUnlockRequestType, RbMusicResponse, RbRequest } from "rbweb"
 import { BungNotificationService } from "../bung/notification.service"
 import { rbEmitJSON } from "../../utils/rb-functions"
-import { BungModalService } from "../bung/modal.service"
-import { outputAsPromise } from "../../signals/functions"
-import { RbMusicUnlockPopupComponent } from "../../components/specific/music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
 import { HttpResourceRef } from "@angular/common/http"
 
 enum ClaudiaAbnormalType {
@@ -19,7 +16,6 @@ export class Rb3VerdetDesKriegesService {
     private readonly versionService = inject(RbVersionService)
     private readonly profileService = inject(RbProfileService)
     private readonly notificationService = inject(BungNotificationService)
-    private readonly modalService = inject(BungModalService)
     readonly verdetDesKrieges = rbData<Rb3VerdetDesKriegesResponse>(() => this.versionService.version() === 3 ? "rb3ReadVerdetDesKrieges" : undefined, this.profileService.ridRequest)
     readonly pageCount = rbData<{ pageCount: number }>(() => this.isActivated() ? "rb3ReadVerdetDesKriegesPageCount" : undefined, computed(() => ({
         rid: this.profileService.rid(),
@@ -61,12 +57,13 @@ export class Rb3VerdetDesKriegesService {
     })
     readonly claudiaAbnormal = computed(() => {
         const data = this.verdetDesKrieges.value()
-        return data?.chapter === 2 && data?.progress?.[0] !== 60 ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
+        return (data?.chapter === 2 && data?.progress?.[0] !== 60) || this.claudiaAbnormalClicked() ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
     })
     readonly isShowPastel = computed(() => {
         const data = this.verdetDesKrieges.value()
         return data && data.chapter >= 1 && data.page >= 3
     })
+    private readonly claudiaAbnormalClicked = signal(false)
     private readonly isLoadingInternal = signal(false)
     readonly isLoading = computed(() => this.verdetDesKrieges.isLoading() || this.pageCount.isLoading() || this.appearances.isLoading() || this.isLoadingInternal())
 
@@ -121,6 +118,10 @@ export class Rb3VerdetDesKriegesService {
             this.notificationService.notify((ex as Error).message, "danger")
         }
     }
+    clickClaudia(): Promise<RbMusicResponse<3> | undefined> {
+        this.claudiaAbnormalClicked.set(true)
+        return this.unlock(Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2)
+    }
     async unlock(type: Rb3VerdetDesKriegesUnlockRequestType): Promise<RbMusicResponse<3> | undefined> {
         if (this.isLoading()) return undefined
         const data = this.verdetDesKrieges.value()
@@ -146,6 +147,9 @@ export class Rb3VerdetDesKriegesService {
         if (type < Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) {
             this.verdetDesKrieges.reload()
             return undefined
+        }
+        if (type === Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2) {
+            this.notificationService.notify("You investigated Claudia, but found nothing worthy.", "warning")
         }
         const music = await rbEmitJSON<RbMusicResponse<3>>("rbGetMusic", { version: 3, musicId: type })
         this.isLoadingInternal.set(false)

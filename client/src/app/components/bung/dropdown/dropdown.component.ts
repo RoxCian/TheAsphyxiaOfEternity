@@ -36,11 +36,8 @@ export class BungDropdownComponent extends BungPopupComponent {
     readonly host = model<ElementRef<HTMLElement> | MouseEvent>()
     readonly isReversed = model(false)
 
-    protected readonly class = computed(() => {
-        let def = this.def()
-        if (def instanceof BungMenuDefComponent) return def.class()
-        return ""
-    })
+    protected readonly class = signal("")
+    protected readonly itemsClass = signal<string[]>([])
 
     protected readonly items = computed(() => {
         let def = this.def()
@@ -72,8 +69,13 @@ export class BungDropdownComponent extends BungPopupComponent {
     #subDropdown?: BungDropdownComponent
     #prevDropdown?: BungDropdownComponent
 
+    ngAfterViewInit() {
+        this.updateClass()
+    }
+
     override open() {
         document.addEventListener("click", this.pageClickHandler)
+        this.updateClass()
         this.updatePosition()
         super.open()
     }
@@ -81,6 +83,14 @@ export class BungDropdownComponent extends BungPopupComponent {
         document.removeEventListener("click", this.pageClickHandler)
         super.close()
         this.#subDropdown?.close()
+    }
+    updateClass() {
+        const def = this.def()
+        if (def instanceof BungMenuDefComponent) this.class.set(def.class())
+        else this.class.set("")
+        
+        const items = this.items()
+        this.itemsClass.set(items.map(i => i.element.nativeElement.classList.toString()))
     }
     updatePosition() {
         let float: BungDropdownFloat | `${"top" | "bottom"}-and-${"left" | "right"}` = this.float()

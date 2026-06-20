@@ -36,7 +36,7 @@
                 } @else {
                     <div class="stage-log-info failed card">
                         <i class="mdi mdi-emoticon-dead mdi-48px"></i>
-                        <p class="is-size-7">Defeated by the charts</p>
+                        <p class="is-size-7">Defeated<span class="defeated-part2"> by the charts</span></p>
                     </div>
                 }
                 <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [customizedText]="!stageLog ? 'FAILED' : undefined" />

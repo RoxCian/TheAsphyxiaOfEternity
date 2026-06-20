@@ -8,7 +8,7 @@ import { Rb5Mylist } from "./mylist"
 export class Rb5PlayerAccount implements ICollection<"rb.rb5.player.account"> {
     readonly collection = "rb.rb5.player.account"
     @XD.s32("usrid") userId: number
-    @XD.ToO.s32("plyid") playerId = 0
+    @XD.ToO.s32("plyid") sessionId = 0
     @XD.s32("dpc") playCountToday = 0
     @XD.ToX.s32("tpc") playCount = 0
     @XD.s32() crd = 1

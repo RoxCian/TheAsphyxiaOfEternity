@@ -46,7 +46,7 @@ const succeedPlayer: H.H = async data => {
     const account = await DBH.findOne(rid, Rb4PlayerAccount, { collection: "rb.rb4.player.account" })
     const result = new Rb4PlayerSucceed()
     if (!account) return XF.x(result)
-    
+
     const base = await DBH.findOne(rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" }, true)
     const released = await DBH.find(rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
     const record = await DBH.find(rid, Rb4MusicRecord, { collection: "rb.rb4.playData.musicRecord" })
@@ -64,7 +64,7 @@ const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     if (rid && !await createSession(rid, 4)) return H.deny
     const account = rid == undefined ? undefined : await DB.FindOne<Rb4PlayerAccount>(rid, { collection: "rb.rb4.player.account" })
-    const result = new Rb4PlayerStart(account?.playerId)
+    const result = new Rb4PlayerStart(account?.sessionId)
     return XF.x(result)
 }
 const readPlayer: H.H<RbPlayerRead> = async data => {
@@ -132,7 +132,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     if (mylist) p.mylist.list = [mylist]
     if (episodes.length > 0) p.episode.info = episodes
     p.quest = quest
-    
+
     await readPlayerPostProcess(result)
     return XF.x(result)
 }

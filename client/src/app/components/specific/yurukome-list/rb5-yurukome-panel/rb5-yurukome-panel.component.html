@@ -31,7 +31,9 @@
             </figure>
             <div class="comment-wrapper">
                 <div class="comment-info">
-                    <div class="comment-title is-size-4">{{ y.info | rbText : "title" }}</div>
+                    <div class="comment-title is-size-4">
+                        <bung-marquee [content]="y.info | rbText : 'title'" [delay]="1500" [spacing]="72" />
+                    </div>
                     @if (y.isRare) {
                         <div class="rare-label is-size-7">
                             <bung-icon icon="star">RARE</bung-icon>

@@ -7,7 +7,7 @@ import { Rb6PlayerReleasedInfo } from "./profile"
 import { Rb6Quest } from "./quest"
 
 export class Rb6PlayerStart {
-    @XD.s32() plyid: number
+    @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
     @XD.u64() startTime = BigInt(Date.now())
     @XD.aw("data", Rb6EventControl) eventCtrl: ArrayWrapper<"data", Rb6EventControl> = {
@@ -17,8 +17,8 @@ export class Rb6PlayerStart {
     @XD.aw("data", Rb6ItemControl) itemCtrl: ArrayWrapper<"data", Rb6ItemControl> = {}
     @XD.aw("data", Rb6Quest) questCtrl: ArrayWrapper<"data", Rb6Quest> = {}
 
-    constructor(playerId: number = -1) {
-        this.plyid = playerId
+    constructor(sessionId: number = -1) {
+        this.sessionId = sessionId
     }
 }
 

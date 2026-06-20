@@ -1,4 +1,4 @@
-import { Component, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, viewChild, ViewEncapsulation } from "@angular/core"
+import { Component, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, signal, viewChild, ViewEncapsulation } from "@angular/core"
 import { BungOptionComponent } from "../option/option.component"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
@@ -44,6 +44,7 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
     readonly changed = output<T | undefined>()
 
     protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
+    protected readonly inheritedDropdownClass = signal("")
     private readonly injector = inject(Injector)
 
     private dropdownTrigger = viewChild("dropdownTrigger", { read: BungDropdownDirective })
@@ -67,6 +68,9 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
     protected getPaletteClass(): string {
         const paletteClasses = ["is-primary", "is-success", "is-info", "is-link", "is-warning", "is-danger"]
         return paletteClasses.find(c => this.hasClass(c)) ?? ""
+    }
+    protected onClick() {
+        this.inheritedDropdownClass.set(`${this.getSizeClass()} ${this.getPaletteClass()} ${this.dropdownClass()}`)
     }
     protected async onChange(value: T | undefined) {
         const event: BungWaitableEvent = {

@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb3Order, Rb3OrderDetails, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbClasscheckResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
@@ -13,7 +13,7 @@ import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
-import { getVerdetDesKriegesAppearances, getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesAppearances, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
+import { getVerdetDesKriegesAppearances, getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
 
 type V = 3
 const version = 3 as const

@@ -72,7 +72,7 @@ const startPlayer: H.H = async data => {
     if (rid && !await createSession(rid, 6)) return H.deny
     const account = rid == undefined ? undefined : await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
     const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
-    const result = new Rb6PlayerStart(account?.playerId)
+    const result = new Rb6PlayerStart(account?.sessionId)
     result.questCtrl.data = await Rb6Quest.createExamples(misc?.rankingQuestIndex ?? 0)
     const today = new Date()
     result.itemCtrl.data = (await rb6UnlockItems).filter(i => {

@@ -27,5 +27,7 @@ bung-icon
             fill: var(--bung-icon-color, var(--invert-text-color)) !important
         svg .icon-stroke-invert
             stroke: var(--bung-icon-color, var(--invert-text-color)) !important
-bung-icon:first-child:not(.not-first-child), bung-icon.is-first-child
+bung-icon:not(.is-reversed):first-child:not(.not-first-child), bung-icon:not(.is-reversed).is-first-child
     margin-left: calc(-0.375em - 1px)
+bung-icon.is-reversed:first-child:not(.not-first-child), bung-icon.is-reversed.is-first-child
+    margin-right: calc(-0.375em - 1px)

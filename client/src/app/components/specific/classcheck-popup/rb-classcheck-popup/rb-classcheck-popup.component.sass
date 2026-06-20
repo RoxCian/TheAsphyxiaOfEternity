@@ -231,8 +231,8 @@
 
 @media screen and (width < 768px)
     .modal-body
-        width: 32em
-        max-width: 36em
+        width: 24em
+        max-width: 28em
     .modal-card-background
         background: linear-gradient(to bottom, transparent 3.75em, var(--card-background) 6.75em)
     .info-container
@@ -241,13 +241,15 @@
     .info-container .classcheck-info
         gap: 0.5em
     .info-container .classcheck-name .main-name, .info-container .classcheck-score-info .classcheck-score-info-heading
-        font-size: 1.25em
+        font-size: 1em
     .info-container .classcheck-name .sub-name
         font-size: 0.75em
     .info-container .classcheck-score-info
-        grid-template: auto 1.25em 1.25em / 5em
+        grid-template: auto auto auto / 5em
     .classcheck-lamp
         margin: 0.5em -0.5em
+    .classcheck-lamp .clear-info .line.middle
+        min-width: 2em
     .stage-log-info-wrapper
         // margin-bottom: -2.5em
         gap: 0.5em
@@ -255,6 +257,9 @@
         padding: 0.5em
     .stage-log-info-wrapper rb-music-title
         font-size: 1em
+    .defeated-part2
+        display: none
+
 .classcheck-info-in
     transform: translateY(-2em)
     opacity: 0

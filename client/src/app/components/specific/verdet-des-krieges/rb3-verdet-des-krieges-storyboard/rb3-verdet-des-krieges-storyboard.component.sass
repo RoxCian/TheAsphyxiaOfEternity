@@ -7,6 +7,9 @@
     display: grid
     grid-template: auto auto auto / 1fr max(15%, 8em)
     min-width: 100%
+.progress-divider
+    display: none
+    margin: 1em 0
 h2
     grid-area: 1 / span 2
     display: flex
@@ -263,7 +266,15 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         inset: 0
         background: #000
         user-select: none
-
+@media screen and (width < 768px) 
+    .chapter-domain
+        display: flex
+        flex-direction: column
+    .progress-divider
+        display: flex
+    .progress-lamps
+        padding: 0 2em
+        gap: 1em
 @media (prefers-color-scheme: dark)
     .storyboard-content span.has-emphasis span
         animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards

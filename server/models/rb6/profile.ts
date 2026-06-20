@@ -11,7 +11,7 @@ import { Rb6Mylist } from "./mylist"
 export class Rb6PlayerAccount implements ICollection<"rb.rb6.player.account"> {
     readonly collection = "rb.rb6.player.account"
     @XD.s32("usrid") userId: number
-    @XD.ToO.s32("plyid") playerId = 0
+    @XD.ToO.s32("plyid") sessionId = 0
     @XD.s32("dpc") playCountToday = 0
     @XD.s32("tpc") playCount = 0
     @XD.s32() crd = 1

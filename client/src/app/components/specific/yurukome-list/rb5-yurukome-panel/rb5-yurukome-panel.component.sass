@@ -42,6 +42,8 @@
         margin-bottom: 0
         padding: 1.25em
         gap: 1.25em
+        max-height: 100%
+        overflow: clip
 
         .jacket
             flex: 0
@@ -55,26 +57,32 @@
             user-select: none
         .comment-wrapper
             flex: 1
+            display: grid
+            grid-template: auto minmax(0, 1fr) / minmax(0, 1fr)
+            align-self: stretch
+            overflow-y: scroll
         .comment-info
             display: flex
             flex-direction: row
             align-items: center
             overflow: clip
+            gap: 1em
         .comment-title
             flex: 1
             font-weight: bold
             margin-bottom: 0
+            min-width: 0
         p:not(:last-child)
             margin-bottom: 0 // asphyxia fix
         .rare-label
-            padding: 0.25em 0.5em
+            padding: 0.1em 0.5em
             border-radius: 4px
             color: #7d6f46
             $g: #fceab3, #eadda4
             background: conic-gradient($g, $g, $g, $g, $g, $g, #fceab3)
 @media screen and (width < 768px)
     :host .card.comment-box, :host .placeholder
-        margin-bottom: 0.5em
+        // margin-bottom: 0.5em
 
         .yurukome-content
             padding: 0.5em
@@ -86,6 +94,6 @@
                 min-width: 4em
                 min-height: 4em
             .comment-info .comment-title
-                font-size: 1.25em !important
+                font-size: 1em !important
     .yurukome-id span
         font-size: 2.5em

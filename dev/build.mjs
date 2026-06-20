@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, statSync, lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs"
+import { copyFileSync, existsSync, statSync, lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync, renameSync } from "node:fs"
 import "node:process"
 import { execSync as run, spawn } from "node:child_process"
 import { relative } from "node:path"
@@ -70,6 +70,54 @@ function cloneClient() {
     const distDir = `./dist/${pluginNameProd}/webui`
     // clone builded client directory
     cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /dev-.+/])
+    // remove hash
+    const hashMatching = /-[^-\.]{8}\.js(?=$|")/g
+    const fileRenameList = []
+    let chunkId = 0
+    let workerId = 0
+    let files = readdirSync(distDir, { withFileTypes: true })
+    for (const file of files) {
+        if (!file.name.endsWith(".js") || !file.name.match(hashMatching)) continue
+        let targetFileName = file.name.slice(0, file.name.length - 12)
+        if (file.name.startsWith("chunk-")) {
+            if (chunkId > 0) targetFileName += chunkId
+            chunkId++
+        }
+        if (file.name.startsWith("worker-")) {
+            if (workerId > 0) targetFileName += workerId
+            workerId++
+        }
+        targetFileName += ".js"
+        fileRenameList.push({ from: file.name, to: targetFileName })
+        renameSync(`${distDir}/${file.name}`, `${distDir}/${targetFileName}`)
+    }
+    if (chunkId > 1) {
+        for (let i = 0; i < fileRenameList.length; i++) {
+            if (fileRenameList[i].to === "chunk.js") {
+                fileRenameList[i].to = "chunk_0.js"
+                renameSync(`${distDir}/chunk.js`, `${distDir}/chunk0.js`)
+                break
+            }
+        }
+    }
+    if (workerId > 1) {
+        for (let i = 0; i < fileRenameList.length; i++) {
+            if (fileRenameList[i].to === "worker.js") {
+                fileRenameList[i].to = "worker_0.js"
+                renameSync(`${distDir}/worker.js`, `${distDir}/worker0.js`)
+                break
+            }
+        }
+    }
+    files = readdirSync(distDir, { withFileTypes: true })
+    for (const file of files) {
+        if (!file.name.endsWith(".js")) continue
+        let scriptText = readFileSync(`${file.parentPath}/${file.name}`, "utf8")
+        for (const el of fileRenameList) {
+            scriptText = scriptText.replaceAll(el.from, el.to)
+        }
+        writeFileSync(`${file.parentPath}/${file.name}`, scriptText, "utf8")
+    }
     // copy pug file
     copyFileSync(`./client/pug/template.pug`, `${distDir}/profile_detail.pug`) // underscore please
     copyFileSync(`./client/pug/template.pug`, `${distDir}/ingame_comments.pug`)

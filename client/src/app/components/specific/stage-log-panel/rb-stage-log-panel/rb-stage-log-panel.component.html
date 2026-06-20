@@ -28,7 +28,8 @@
 <div class="stage-log" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave">
     <div class="card stage-log-content you-{{ matchingResult() }} rb-panel">
         <div class="play-data your-play-data" [rbColor]="color">
-            <rb-player [version]="stageLog().version" [color]="color" [matchingGrade]="stageLog().matchingGrade" player="You" />
+            <rb-player class="your-name-tag" [version]="stageLog().version" [color]="color" [matchingGrade]="stageLog().matchingGrade" />
+            <rb-player class="you-tag" [version]="stageLog().version" [color]="color" [matchingGrade]="stageLog().matchingGrade" name="You" />
             <span class="score is-size-4">
                 @if (matchingResult() === "win") {
                 <bung-icon icon="crown">{{ stageLog().score }}</bung-icon>

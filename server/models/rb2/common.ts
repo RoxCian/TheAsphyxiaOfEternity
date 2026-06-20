@@ -3,7 +3,7 @@ import { XD } from "../../utils/x"
 import { Rb2EventControl } from "./event"
 
 export class Rb2PlayerStart {
-    @XD.s32() plyid = 0
+    @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
     @XD.bool() isSuc = true
     @XD.u64() startTime = BigInt(Math.trunc(Date.now() / 1000))
@@ -11,4 +11,8 @@ export class Rb2PlayerStart {
         data: Rb2EventControl.examples
     }
     @XD.obj({}) itemLockCtrl = {}
+    
+    constructor(sessionId: number = 0) {
+        this.sessionId = sessionId
+    }
 }

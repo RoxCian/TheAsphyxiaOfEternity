@@ -47,6 +47,10 @@ export class RbSettingsService {
 
     constructor() {
         effect(() => {
+            if (this.versionService.version()) {
+                this.submittedInternal.set(false)
+                this.submissionErrorInternal.set(undefined)
+            }
             if (this.settingsForm().dirty()) {
                 this.submittedInternal.set(false)
                 this.submissionErrorInternal.set(undefined)

@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import "node:process"
 import * as rl from "node:readline"
-import { execSync as run, spawn } from "node:child_process"
+import { execSync as run, exec, spawn } from "node:child_process"
 import { relative, resolve } from "node:path"
 
 const log = console.log
@@ -25,9 +25,9 @@ if (!envConfig) {
 const asphyxiaRegex =
     isWindows ?
         process.arch === "x64" ? /^asphyxia-core(-(win-)?x64)?.exe$/ : /^asphyxia-core(-(win-)?x86)?.exe$/ :
-    process.arch === "arm" ? /^asphyxia-core-armv7$/ :
-    process.arch === "arm64" ? /^asphyxia-core-arm64$/ :
-    /^asphyxia-core$/
+        process.arch === "arm" ? /^asphyxia-core-armv7$/ :
+            process.arch === "arm64" ? /^asphyxia-core-arm64$/ :
+                /^asphyxia-core$/
 const asphyxia = readdirSync(envConfig.asphyxiaDirectory, { withFileTypes: true }).find(f => f.name.match(asphyxiaRegex))
 if (!asphyxia) {
     log("😟 Cannot find the Asphyxia CORE program.")
@@ -35,6 +35,13 @@ if (!asphyxia) {
 }
 let serverProcess = undefined
 const serverPromise = debugServerDaemon()
+const extraTaskProcesses = []
+if (envConfig.extraTasks) {
+    log(`🔵 Starting extra task.`)
+    for (const task of (typeof envConfig.extraTasks === "string" ? [envConfig.extraTasks] : envConfig.extraTasks)) {
+        extraTaskProcesses.push(startExtraTask(typeof task === "string" ? { task } : task))
+    }
+}
 log(`🔵 Starting webui debugger.`)
 cd("./client")
 const webuiProcess = spawn("ng serve", {
@@ -64,8 +71,10 @@ function close() {
     debugging = false
     if (isWindows) {
         if (serverProcess) spawn("taskkill", ["/f", "/t", "/pid", serverProcess.pid], { detached: true })
+        for (const process of extraTaskProcesses) spawn("taskkill", ["/f", "/t", "/pid", process.pid], { detached: true })
     } else {
         if (serverProcess) process.kill(serverProcess.pid)
+        for (const process of extraTaskProcesses) process.kill(process.pid)
     }
     log("🔵 Debug aborted.")
 }
@@ -99,6 +108,20 @@ async function debugServerDaemon() {
         if (serverHasError) process.exit()
     }
     return serverDaemonCycle()
+}
+async function startExtraTask(task) {
+    const taskProcess = spawn(task.task, {
+        cwd: task.cwd ?? "./",
+        shell: true,
+        detached: true,
+        windowsHide: false,
+    })
+    taskProcess.on("close", () => log(`🔵 Task terminated: "${task}"`))
+    taskProcess.on("exit", () => log(`🔵 Task terminated: "${task}"`))
+    taskProcess.on("error", (err) => {
+        log(`🔵 Task error: "${task}"`)
+    })
+    return taskProcess
 }
 function cloneServer() {
     const files = readdirSync("./server", { withFileTypes: true, recursive: true })

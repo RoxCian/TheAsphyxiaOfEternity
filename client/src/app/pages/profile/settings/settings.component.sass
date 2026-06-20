@@ -13,8 +13,10 @@ input.input
 .byword-left, .byword-right
     display: flex
     flex: 1
-::ng-deep bung-select.byword-select, ::ng-deep .byword-select-dropdown
+::ng-deep bung-select.byword-select
     min-width: 9.75em
+::ng-deep .byword-select-dropdown
+    min-width: max(9.75em, var(--dropdown-width, 0))
 
 .byword-select:focus, .byword-select:has(.dropdown-trigger.is-active), .byword-auto-wear-button:focus
     z-index: 1
@@ -52,7 +54,7 @@ input.input
 
     bung-icon
         transform: scaleX(-1)
-.ranking-quest-option-insertion
+.ranking-quest-option-insertion:not(.is-mobile)
     position: relative
     padding-top: 0.5em
     padding-bottom: 0.5em
@@ -60,10 +62,16 @@ input.input
     display: flex
     gap: 1em
     align-items: center
+    min-width: 0
 
-    .group-label
+    .group-label.is-transpose
         writing-mode: vertical-lr
         transform: rotate(180deg)
+    .group-marquee
+        max-width: 100%
+.ranking-quest-option-content.is-mobile
+    display: grid
+    grid-template: 1fr / auto minmax(0, 1fr)
 .ranking-quest-option-insertion .search-opt
     position: absolute
     inset: 0
@@ -73,6 +81,29 @@ input.input
     background-color: color-mix(in srgb, var(--card-background), transparent 30%)
 ::ng-deep .ranking-quest-select-dropdown .dropdown-container
     min-height: 40vh
+    max-width: calc(100vw - 8em)
+.ranking-quest-option-music-names
+    display: flex
+    max-width: 100%
+    min-width: 0
+    gap: 0.5em
+
+    .music-name
+        background: color-mix(in srgb, transparent 70%, var(--invert-card-background))
+        padding: 0 0.5em
+        border-radius: 4px
+
+    .label-7, .label-777
+        display: inline-block
+        position: relative
+        
+        .star
+            position: absolute
+            top: -0.4em
+            left: -0.2em
+            transform: scale(0.5)
+        .t-7
+            transform: scaleY(0.8) translateY(0.15em)
 .pastel-kun
     display: flex
     gap: 1em
@@ -211,6 +242,17 @@ rb-level-display-switch.enter
 rb-level-display-switch.leave
     animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
 
+@media screen and (width < 768px)
+    .byword-left-select-tag
+        flex-direction: row
+    .byword-right-select-tag
+        flex-direction: row-reverse
+    .pastel-kun
+        overflow-x: auto
+    .pastel-kun-body
+        margin-top: -10px
+    .pastel-kun-selects
+        margin-top: 34px
 @keyframes rb-mylist-icon-leave-animation
     from
         transform: none

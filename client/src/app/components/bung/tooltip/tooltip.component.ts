@@ -1,4 +1,4 @@
-import { Component, ElementRef, model, signal, ViewEncapsulation } from "@angular/core"
+import { Component, effect, ElementRef, model, signal, ViewEncapsulation } from "@angular/core"
 import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "auto"
@@ -26,6 +26,24 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
     protected readonly tooltipInitTop = signal("")
 
     private readonly offset = 8
+
+    #observer?: MutationObserver
+    #lastObserved?: HTMLElement
+
+    constructor() {
+        super()
+        effect(() => {
+            if (this.state() !== "show") return
+            const el = this.element.nativeElement
+            if (el === this.#lastObserved) return
+            if (this.#lastObserved) this.#observer?.disconnect()
+            if (el) {
+                this.#observer = new MutationObserver(() => this.updatePosition())
+                this.#observer.observe(el, { childList: true, subtree: true, characterData: true })
+            }
+            this.#lastObserved = el
+        })
+    }
 
     override open() {
         this.updatePosition()

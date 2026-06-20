@@ -1,5 +1,5 @@
 @let eq = equalFn();
-<bung-menu-def #optionsDropdownDef class="{{ getSizeClass() }} {{ getPaletteClass() }} {{ dropdownClass() }}">
+<bung-menu-def #optionsDropdownDef class="{{ inheritedDropdownClass() }}">
     @if (options().length === 0 && noOptionsPlaceholder()) {
         <bung-menu-item isStatic [content]="noOptionsPlaceholder()" [context]="noOptionsPlaceholderContext()" />
     } @else {
@@ -12,6 +12,7 @@
     }
 </bung-menu-def>
 <div class="dropdown-trigger bung-input-content" [class.has-clear-button]="hasClearButton()"
+    (click)="onClick()"
     [bungDropdown]="optionsDropdownDef"
     [disabled]="disabled() || isLoading() || readonly()"
     [triggerMethod]="triggerMethod() === 'click' ? 'click' : 'mouseenter'"

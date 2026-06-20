@@ -1,6 +1,4 @@
 import { RbVersion } from "rbweb"
-import { RbProfileService } from "../../../../services/specified/rb-profile.service"
-import { Signal } from "@angular/core"
 
 export type RbPlayerEntry = {
     name: string

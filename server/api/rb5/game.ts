@@ -46,7 +46,7 @@ const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     if (rid && !await createSession(rid, 5)) return H.deny
     const account = rid == undefined ? undefined : await DBH.findOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
-    const result = new Rb5PlayerStart(account?.playerId)
+    const result = new Rb5PlayerStart(account?.sessionId)
     return XF.x(result)
 }
 
@@ -243,7 +243,7 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
                 } else if (player.pdata.base.class >= Rb5ClasscheckIndex.class13 && baseSaved.class < Rb5ClasscheckIndex.class13) {
                     player.pdata.base.class = baseSaved.class
                 }
-            }              
+            }
         } else {
             if (player.pdata.base.comment === "Welcome to REFLEC BEAT VOLZZA!") player.pdata.base.comment = ""
         }
@@ -279,7 +279,7 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
     if (player.pdata.derby) t.upsert(rid, { collection: "rb.rb5.player.derby" }, player.pdata.derby)
     if (player.pdata.battleRoyale) t.upsert(rid, { collection: "rb.rb5.playData.battleRoyale", battleId: player.pdata.battleRoyale.battleId }, player.pdata.battleRoyale)
     if (hasAny(player.pdata.yurukomeList?.yurukome)) for (const y of player.pdata.yurukomeList.yurukome) if (!await t.findOne<Rb5Yurukome>(rid, { collection: "rb.rb5.event.yurukome", yurukomeId: y.yurukomeId })) t.insert(rid, y)
-    
+
     await t.commit()
 }
 async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb5PlayerStageLog, t: DBH.T): Promise<void> {

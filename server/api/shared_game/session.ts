@@ -1,47 +1,47 @@
 import { RbVersion } from "../../models/shared/rb_types"
-import { RbSession } from "../../models/shared/session"
+import { RbSessionStorage } from "../../models/shared/session"
 import { DBH } from "../../utils/db/dbh"
-import { utcNow } from "../../utils/utility_functions"
+
+const sessionTimeout = 30 * 60 * 1000 // ms
 
 export async function createSession(rid: string, version: RbVersion): Promise<boolean> {
-    const oldSession = await DBH.findOne<RbSession>(rid, { collection: "rb.session", version })
+    const oldSession = await DBH.findOne<RbSessionStorage>(rid, { collection: "rb.session", version })
     if (oldSession) {
-        const time = utcNow()
-        // if (time - oldSession.time < 1000 * 60 * 30 && oldSession.read) return false // TODO: rethink of game processing
+        const time = Date.now()
+        if (time - oldSession.time < sessionTimeout && oldSession.read) return false // TODO: rethink of game processing
     }
-    const newSession = new RbSession(version)
+    const newSession = new RbSessionStorage(version)
     await DBH.upsert(rid, { collection: "rb.session", version }, newSession)
     return true
 }
 export async function markSessionRead(rid: string, version: RbVersion): Promise<boolean> {
-    const session = await DBH.findOne<RbSession>(rid, { collection: "rb.session", version })
+    const session = await DBH.findOne<RbSessionStorage>(rid, { collection: "rb.session", version })
     if (!session) return false
     session.read = true
-    DBH.update<RbSession>(rid, { collection: "rb.session" }, session)
+    DBH.update<RbSessionStorage>(rid, { collection: "rb.session" }, session)
     return true
 }
-export async function getSession(rid: string, version: RbVersion): Promise<RbSession | undefined> {
-    const session = await DBH.findOne<RbSession>(rid, { collection: "rb.session", version })
+export async function getSession(rid: string, version: RbVersion): Promise<RbSessionStorage | undefined> {
+    const session = await DBH.findOne<RbSessionStorage>(rid, { collection: "rb.session", version })
     if (!session) return undefined
-    const time = utcNow()
-    if (time - session.time > 1000 * 60 * 30) {
-        DBH.remove<RbSession>(rid, { collection: "rb.session", version }) // no await
+    const time = Date.now()
+    if (time - session.time > sessionTimeout) {
+        DBH.remove<RbSessionStorage>(rid, { collection: "rb.session", version }) // no await
         return undefined
     }
     return session
 }
 export async function removeSession(rid: string, version: RbVersion): Promise<boolean> {
     if (!await getSession(rid, version)) return false
-    await DBH.remove<RbSession>(rid, { collection: "rb.session", version })
+    await DBH.remove<RbSessionStorage>(rid, { collection: "rb.session", version })
     return true
 }
 export async function removeAllSessions() {
-    // const time = utcNow()
-    // const t = new DBH.T()
-    // for (const session of await t.find<RbSession>(undefined, { collection: "rb.session" })) {
-    //     // if (time - session.time <= 1000 * 60 * 30) continue
-    //     t.remove<RbSession>((session as any).__rid, { _id: session._id })
-    // }
-    // await t.commit()
-    await DBH.remove<RbSession>(undefined, { collection: "rb.session" })
+    const time = Date.now()
+    const t = new DBH.T()
+    for (const session of await t.find<RbSessionStorage>(undefined, { collection: "rb.session" })) {
+        if (time - session.time <= sessionTimeout) continue
+        t.remove<RbSessionStorage>((session as any).__rid, { _id: session._id })
+    }
+    await t.commit()
 }

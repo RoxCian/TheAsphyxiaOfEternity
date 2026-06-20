@@ -11,13 +11,17 @@ export class Rb3ItemLockCtrl {
 }
 
 export class Rb3PlayerStart {
-    @XD.s32("plyid") sessionId = 0
+    @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
     @XD.u64() startTime = BigInt(Math.trunc(Date.now() / 1000))
     @XD.aw("data", Rb3EventControl) eventCtrl: ArrayWrapper<"data", Rb3EventControl> = {
         data: Rb3EventControl.examples
     }
     @XD.aw("item", Rb3ItemLockCtrl) itemLockCtrl: ArrayWrapper<"item", Rb3ItemLockCtrl> = {}
+
+    constructor(sessionId: number = 0) {
+        this.sessionId = sessionId
+    }
 }
 
 export class Rb3PlayerSucceed {

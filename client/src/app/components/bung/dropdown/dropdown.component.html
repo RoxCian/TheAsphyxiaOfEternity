@@ -1,9 +1,9 @@
 <div class="dropdown-container">
-    @for (item of items(); track item) {
+    @for (item of items(); let i = $index; track item) {
         @if (item.isDivider()) {
             <hr class="dropdown-divider">
         } @else if (item.isStatic()) {
-            <div class="dropdown-item {{ item.element.nativeElement.classList.toString() }}"
+            <div class="dropdown-item {{ itemsClass()[i] }}"
                 (click)="onClick(item, $event)"
                 (focus)="onFocus(item)"
                 (blur)="onBlur(item)"
@@ -22,7 +22,7 @@
                 }
             </div>
         } @else {
-            <a class="dropdown-item {{ item.element.nativeElement.classList.toString() }}" [class.is-active]="item.isActive()" [class.is-disabled]="item.disabled()"
+            <a class="dropdown-item {{ itemsClass()[i] }}" [class.is-active]="item.isActive()" [class.is-disabled]="item.disabled()"
                 (click)="onClick(item, $event)"
                 (focus)="onFocus(item)"
                 (blur)="onBlur(item)"

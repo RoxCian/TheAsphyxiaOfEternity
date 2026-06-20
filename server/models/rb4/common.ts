@@ -5,7 +5,7 @@ import { Rb4MusicRecord } from "./music_record"
 import { Rb4PlayerReleasedInfo } from "./profile"
 
 export class Rb4PlayerStart {
-    @XD.s32() plyid: number
+    @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
     @XD.u64() startTime = BigInt(0)
     @XD.aw("data", Rb4EventControl) eventCtrl: ArrayWrapper<"data", Rb4EventControl> = {
@@ -13,8 +13,8 @@ export class Rb4PlayerStart {
     }
     @XD.obj({}) itemLockCtrl = {}
 
-    constructor(playerId: number = 0) {
-        this.plyid = playerId
+    constructor(sessionId: number = 0) {
+        this.sessionId = sessionId
     }
 }
 

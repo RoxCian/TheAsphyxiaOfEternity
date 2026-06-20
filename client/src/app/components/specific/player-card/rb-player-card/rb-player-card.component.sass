@@ -6,7 +6,7 @@
     padding-bottom: 16vh
     overflow: clip
 .large-card
-    min-height: 33.33vh
+    min-height: max(33.33vh, 20rem)
     position: relative
 
 .bg-container
@@ -79,6 +79,8 @@
     opacity: 0.7
 .name
     grid-area: 2 / 1
+    display: grid
+    grid-template: 1fr / 1fr
     font-weight: bold
 
     &.rb3-player-event-level1
@@ -91,6 +93,25 @@
         color: #EE5E00B2
     &.rb3-player-event-level5
         color: #00009EB2
+
+    > *
+        grid-area: 1 / 1
+
+    span
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+    .claudia
+        opacity: 0
+        transition: color var(--animation-duration-lv3) var(--ease-in)
+        animation: claudia-enter-animation var(--animation-duration-lv3) var(--ease-in) forwards
+    .claudia.leave
+        animation: claudia-leave-animation var(--animation-duration-lv3) var(--ease-in) forwards
+
+    &.claudia-abnormal
+        span
+            opacity: 0
+            user-select: none
+            pointer-events: none
 rb-byword-tag
     grid-area: 2 / 2
     opacity: 0.7
@@ -99,7 +120,7 @@ rb-byword-tag
     grid-area: 3 / span 2
 bung-divider
     flex: 0
-.class-and-mg
+.player-badges
     grid-area: 3 / span 2
     display: flex
     justify-content: start
@@ -107,23 +128,92 @@ bung-divider
     gap: 1em
     opacity: 0.9
 
-    > *
-        display: grid
-        grid-template: auto 1fr / 1fr
-        padding: 0.5em
-        width: 4em
-        background: color-mix(in srgb, var(--card-background) 40%, transparent 60%)
-        white-space: nowrap
-        .heading
-            grid-area: 1 / 1
-        .title
-            grid-area: 2 / 1
-            align-self: center
     .class .has-character-count-2
         font-size: 1.5rem
     .class .has-character-count-3, .class .has-character-count-4
         font-size: 1rem
         white-space: normal
+.player-badge
+    display: grid
+    grid-template: auto 1fr / 1fr
+    padding: 0.5em
+    width: 4em
+    background: color-mix(in srgb, var(--card-background) 40%, transparent 60%)
+    white-space: nowrap
+    .heading
+        grid-area: 1 / 1
+    .title
+        grid-area: 2 / 1
+        align-self: center
+
+.session
+    display: grid
+    grid-template: 1fr / 1fr
+    position: relative
+    height: 4em
+    align-self: center
+    align-content: center
+    justify-items: center
+    border-radius: 9999px
+    cursor: pointer
+
+    &::after
+        content: ""
+        position: absolute
+        inset: 0
+        border-radius: 9999px
+        background: #7773
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+    .title
+        grid-area: 1 / 1
+        margin: 0
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+        > *
+            grid-area: 1
+        
+        &.show
+            opacity: 1
+
+        &.session-on
+            animation: session-icon-animation var(--animation-duration-lv1) var(--ease-in) alternate infinite
+    .delete
+        position: absolute
+        right: 0
+        top: 0
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--animation-duration-lv3) var(--ease-in)
+        z-index: 2
+
+        &[disabled]
+            user-select: none
+            pointer-events: none
+    
+    .loader
+        grid-area: 1 / 1
+        align-self: center
+        font-size: 1.5em
+        opacity: 0
+
+    &:hover::after
+        opacity: 1
+
+    &:hover .delete:not([disabled])
+        opacity: 1
+    
+    &.is-killing
+        .title
+            opacity: 0
+        .loader
+            opacity: 1
+.session-icon-tooltip
+    max-width: 20em
+.session-icon-killed-tooltip
+    max-width: 12em
+
 rb-matching-grade
     display: flex
     justify-content: center
@@ -138,6 +228,7 @@ rb-matching-grade
     display: flex
     margin-top: -2em
     padding: 2em
+    align-items: center
     flex-wrap: wrap
     gap: 2em
     z-index: 1
@@ -180,9 +271,9 @@ rb-matching-grade
         padding: 1em
         gap: 0.5em
     .large-card
-        min-height: 25vh
+        min-height: max(25vh, 16rem)
         padding: 0.5em 1em
-        > *
+        .player-card-container > :not(.rb-nav)
             font-size: 0.75em
 
         .name
@@ -192,7 +283,7 @@ rb-matching-grade
             font-size: 0.75em
     .name-grid
         grid-auto-flow: row
-    .class-and-mg
+    .player-badges
         grid-area: 4 / 1
         align-items: stretch
         gap: 0.5em
@@ -229,3 +320,13 @@ rb-matching-grade
     to
         opacity: 0
         transform: translateX(-4rem)
+@keyframes claudia-enter-animation
+    from
+        opacity: 0
+    to
+        opacity: 1
+@keyframes session-icon-animation
+    from
+        transform: translateY(0.03em)
+    to
+        transform: translateY(-0.12em)

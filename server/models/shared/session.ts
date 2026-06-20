@@ -1,11 +1,11 @@
 import { ICollection } from "../../utils/db/db_types"
-import { utcNow } from "../../utils/utility_functions"
-import { RbVersion } from "./rb_types"
+import { RbVersion, RbSession } from "./rb_types"
 
-export class RbSession implements ICollection<"rb.session"> {
+export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
     readonly collection = "rb.session"
     version: RbVersion
     time: number
+    sessionId: number
     unlockSettings: {
         unlockAllSongs: boolean
         unlockAllItems: boolean
@@ -14,10 +14,15 @@ export class RbSession implements ICollection<"rb.session"> {
 
     constructor(version: RbVersion) {
         this.version = version
-        this.time = utcNow()
+        this.time = Date.now()
+        this.sessionId = Math.round(Math.random() * 99999999)
         this.unlockSettings = {
             unlockAllSongs: U.GetConfig("unlock_all_songs"),
             unlockAllItems: U.GetConfig("unlock_all_items")
         }
+    }
+
+    regenerateSessionId() {
+        this.sessionId = Math.round(Math.random() * 99999999)
     }
 }

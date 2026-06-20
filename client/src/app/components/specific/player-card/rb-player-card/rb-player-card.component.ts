@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, input, OnInit, signal, viewChildren } from "@angular/core"
+import { Component, computed, inject, input, OnInit, signal } from "@angular/core"
 import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
@@ -7,6 +7,8 @@ import { RbSettingsSubpage } from "../../../../pages/profile/settings/settings.c
 import { RbSaveDataSubpage } from "../../../../pages/profile/save-data/save-data.component"
 import { RbProgressSubpage } from "../../../../pages/profile/progress/progress.component"
 import { toggleTransform } from "../../../../signals/transforms"
+import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
+import { RbSessionService } from "../../../../services/specified/rb-session.service"
 
 const profileSubpages = {
     playData: RbPlayDataSubpage,
@@ -71,7 +73,8 @@ export class RbPlayerCardComponent implements OnInit {
     protected readonly pageVisible = signal(false)
     protected readonly isImageLoaded = signal(false)
     protected readonly breakpointService = inject(BungBreakpointService)
-    private readonly forceAnimateElements = viewChildren<ElementRef<HTMLElement>>("forceAnimate")
+    protected readonly verdetService = inject(Rb3VerdetDesKriegesService)
+    protected readonly sessionService = inject(RbSessionService)
 
     private readonly subpageService = inject(RbSubpageService)
     protected readonly subpageIndex = computed(() => {

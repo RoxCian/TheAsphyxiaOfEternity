@@ -140,6 +140,7 @@
                         }
                     </div>
                 }
+                <bung-divider class="progress-divider" prompt="Progress" />
                 <div class="progress-lamps">
                     @for (i of 5 | range; track i) {
                         <div class="progress-card card is-size-7 lamps-enter" animate.leave="lamps-leave" [class.--timeout]="`${i * 0.2}s`">
@@ -148,7 +149,11 @@
                                 <span class="empty"></span>
                                 <div class="progress-label" [class.is-loading]="service.isLoading() || !service.isActivated()">
                                     <div class="loader"></div>
-                                    <span>{{ ((data?.progress?.[i] ?? 0) / 0.60).toFixed(0) + "%" }}</span>
+                                    @if (i === 4 && (data?.page ?? 0) < 4) {
+                                        <span><i class="mdi mdi-lock"></i></span>
+                                    } @else {
+                                        <span>{{ ((data?.progress?.[i] ?? 0) / 0.60).toFixed(0) + "%" }}</span>
+                                    }
                                 </div>
                             </div>
                             <div class="progress-base">

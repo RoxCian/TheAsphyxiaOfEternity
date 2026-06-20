@@ -4,6 +4,7 @@ import { registerJacketController } from "./jackets"
 import { registerMusicsController } from "./musics"
 import { registerPlayerIconController } from "./player_icon"
 import { registerSaveDataController } from "./save_data"
+import { registerSessionController } from "./session"
 import { registerWebAppConfigController } from "./web_app_config"
 
 export function registerSharedControllers() {
@@ -14,4 +15,5 @@ export function registerSharedControllers() {
     registerMusicsController()
     registerSaveDataController()
     registerCommentsController()
+    registerSessionController()
 }

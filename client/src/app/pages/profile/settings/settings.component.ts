@@ -4,6 +4,7 @@ import { RbVersionService } from "../../../services/specified/rb-version.service
 import { Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6EquipmentPart, RbByword, RbColor, RbItemResponse, RbMusicResponse, RbVersion } from "rbweb"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
 import { BungModalDirective } from "../../../directives/bung/modal.directive"
+import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb-settings",
@@ -14,6 +15,7 @@ import { BungModalDirective } from "../../../directives/bung/modal.directive"
 export class RbSettingsSubpage<TVersion extends RbVersion> {
     protected readonly settingsService = inject(RbSettingsService)
     protected readonly versionService = inject(RbVersionService)
+    protected readonly breakpointService = inject(BungBreakpointService)
     private static readonly formatter1 = new Intl.NumberFormat("en-US", {
         style: "decimal",
         minimumFractionDigits: 1,
@@ -57,9 +59,6 @@ export class RbSettingsSubpage<TVersion extends RbVersion> {
     protected isCharacterCardAvailable(charaCard: Rb6CharacterCardInfo): boolean {
         return this.settingsService.availableItems.hasValue() && this.settingsService.availableItems.value().some(ai => ai.typeId === 6 && ai.value === charaCard.id)
     }
-    protected notify() {
-        alert("Toggle changed")
-    }
     protected findMusic(musicId: number): RbMusicResponse<TVersion> | undefined {
         if (!this.settingsService.musics.hasValue()) return undefined
         return this.settingsService.musics.value().find(m => m.musicId === musicId && m.version === this.versionService.version()) as RbMusicResponse<TVersion>
@@ -91,9 +90,5 @@ export class RbSettingsSubpage<TVersion extends RbVersion> {
         const parts: [number, number, number, number] = [...partsField.value()]
         parts[part] = value
         partsField.controlValue.set(parts)
-    }
-    protected log(v: any) {
-        console.log(v)
-        return true
     }
 }

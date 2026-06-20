@@ -12,7 +12,7 @@ import { hasAny, isToday } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
-import { toBigInt } from "../../utils/db/db_types"
+import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { Rb1ChartType, Rb1ClearType, Rb3ClearType } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
@@ -176,6 +176,8 @@ async function writePlayerCore(player: Rb3Player) {
     const accountQuery: Query<Rb3PlayerAccount> = { collection: "rb.rb3.player.account" }
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
 
+    const session = await getSession(player.pdata.account.rid, 3)!
+
     if (!accountSaved) { // save the new player
         const rbPlayer = await findPlayerFromOtherVersion(rid, 3)
         if (rbPlayer) player.pdata.account.userId = rbPlayer.userId
@@ -184,15 +186,17 @@ async function writePlayerCore(player: Rb3Player) {
         const isPlayed = hasAny(player.pdata.stageLogs?.log)
         player.pdata.account.playCount = isPlayed ? 1 : 0
         player.pdata.account.playCountToday = isPlayed ? 1 : 0
+        player.pdata.account.st = DBBigInt(session!.time)
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
         accountSaved.playCount++
-        if (!isToday(toBigInt(accountSaved.st))) {
+        const sessionTime = new Date(session!.time)
+        if (!isToday(toBigInt(session!.time))) {
             accountSaved.dayCount++
             accountSaved.playCountToday = 0
         }
-        accountSaved.st = player.pdata.account.st
+        accountSaved.st = BigInt(session!.time)
         accountSaved.playCountToday++
 
         t.update(rid, accountQuery, accountSaved)
