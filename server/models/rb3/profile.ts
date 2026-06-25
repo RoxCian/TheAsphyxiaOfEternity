@@ -18,7 +18,7 @@ export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     @XD.ToO.str() lid = "ea"
     @XD.ToX.s32() intrvld = 0
     @XD.ToX.bool() succeed = true
-    @XD.u64() pst: bigint | DBBigInt = BigInt(0)
+    @XD.u64() pst: bigint | DBBigInt = DBBigInt(0)
     @XD.ToO.u8() wmode = 1
     @XD.ToO.u8() gmode = 0
     @XD.s16("ver") version = 0
@@ -28,7 +28,7 @@ export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     @XD.bool("firstfree") isFirstFree = false
     @XD.ToO.s16() pay = 0
     @XD.ToO.s16() payPc = 0
-    @XD.u64() st: bigint | DBBigInt = BigInt(Date.now() + "000")
+    @XD.u64() st: bigint | DBBigInt = DBBigInt(Date.now() + "000")
     @XD.s32() opc = 0
     @XD.s32() lpc = 0
     @XD.s32() cpc = 0
@@ -53,6 +53,29 @@ export class Rb3PlayerBase implements ICollection<"rb.rb3.player.base"> {
     @XD.s32("ap") abilityPointTimes100 = 0
     @XD.s32("exp") onigiriTimes10 = 0
     @XD.s32("lv") level = 0
+    // hiddenParam is stored some of event progress,
+    // here are what I found about it:
+    // - Pastel Fishing
+    // Silver lure count is stored at hiddenParam[13]
+    // Golden lure count is stored at hiddenParam[14]
+    // - Pastel Harvest
+    // Magical clock count is stored at hiddenParam[18]
+    // - Pastel Wonder Traveller
+    // Boss status are stored at hiddenParam[22 to 26], they are
+    // Heart, Dia, Club, Spade, Joker in order.
+    // The top 2 bytes of param are hp remained of the boss.
+    // For the bottom 2 bytes:
+    //   0x16~0x19: boss level (after all cleared)
+    //   0x1A: music unlocked?
+    //   0x1B: challenged flag
+    //   0x1C: boss down flag
+    //   0x1D: you have a gem or not. You'll get a gem when you cleared a boss.
+    //         If you fought with Joker but not beat it down, gems will return to their bosses.
+    //   0x1E: you have a plate or not. If this bit is 1, it means you have cleared
+    //         a seasonal Pastel Adventure event.
+    //   0x1F: show or not
+    //
+    // - hiddenParam[27]: player name color
     @XD.s32() hiddenParam = new Array(50).fill(0)
     @XD.bool("is_tut") isTutorialEnabled = true
     @XD.s32() uattr = 0
@@ -79,8 +102,8 @@ export class Rb3PlayerConfig implements ICollection<"rb.rb3.player.config"> {
     @XD.s16() lastMusicId = 0
     @XD.u8("last_note_grade") lastChartType = Rb1ChartType.basic
     @XD.u8() sortType = 0
-    @XD.u64() randomEntryWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 99999999))
-    @XD.u64() customFolderWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 9999999999999))
+    @XD.u64() randomEntryWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 99999999))
+    @XD.u64() customFolderWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 9999999999999))
     @XD.u8("folder_lamp_type") folderType = 0
     @XD.bool() isTweet = false
     @XD.bool("is_link_twitter") isTwitterLinked = false
@@ -132,7 +155,7 @@ export class Rb3PlayerStageLog implements ICollection<"rb.rb3.playData.stageLog"
     @XD.s16("jt_ms") missCount = 0
     @XD.s16("jt_jr") justReflecCount = 0
     @XD.s32("r_uid") rivalUserId = 0
-    @XD.s32("r_plyid") rivalPlayerId = 0
+    @XD.s32("r_plyid") rivalSessionId = 0
     @XD.s8("r_stg") rivalStageIndex = 0
     @XD.s8("r_ct") rivalClearType = Rb3ClearType.none
     @XD.s16("r_sc") rivalScore = 0
@@ -154,7 +177,12 @@ export class Rb3Equip implements ICollection<"rb.rb3.player.equip"> {
     readonly collection = "rb.rb3.player.equip"
     @XD.s16("id") index = 0
     @XD.s32("exp") experience = 0
-    @XD.s16() stype?: number // season
+    @XD.s16() stype = 0
+    constructor(season: number = 0, index: number = 0, experience: number = 0) {
+        this.stype = season
+        this.index = index
+        this.experience = experience
+    }
 }
 
 export class Rb3SeedPod implements ICollection<"rb.rb3.player.event.seedPod"> {
@@ -164,12 +192,21 @@ export class Rb3SeedPod implements ICollection<"rb.rb3.player.event.seedPod"> {
 }
 
 export class Rb3OrderDetails {
-    @XD.s16("order") index = 0
-    @XD.s16("slt") slot = 0
+    @XD.s16("order") index: number
+    @XD.s16("slt") slot = -1
     @XD.s32("ccnt") clearedCount = 0
     @XD.s32("fcnt") fragmentsCount0 = 0
     @XD.s32("fcnt1") fragmentsCount1 = 0
-    @XD.s32("prm") param = 0 // can control unlock state, useful in Verdet des Krieges
+    @XD.s32("prm") param = Rb3OrderDetailsParamFlag.none // can control unlock state, useful in Verdet des Krieges
+
+    constructor(index: number = 0) {
+        this.index = index
+    }
+}
+export enum Rb3OrderDetailsParamFlag {
+    none = 0,
+    unlocked = 1,
+    lockedToSlot = 2
 }
 export class Rb3Order implements ICollection<"rb.rb3.player.order"> {
     readonly collection = "rb.rb3.player.order"
@@ -189,8 +226,8 @@ export class Rb3Stamp implements ICollection<"rb.rb3.player.stamp"> {
     readonly collection = "rb.rb3.player.stamp"
     @XD.s32("stmpcnt") stampCount = [0, 0, 0, 0, 0]
     @XD.s32("tcktcnt") ticketCount = [0, 0, 0, 0, 0]
-    @XD.s64() area: bigint | DBBigInt = BigInt(7)
-    @XD.s64("prfvst") magic: bigint | DBBigInt = BigInt(0) // is this some kind of time?
+    @XD.s64() area: bigint | DBBigInt = DBBigInt(7)
+    @XD.s64("prfvst") magic: bigint | DBBigInt = DBBigInt(0) // is this some kind of time?
     @XD.s32() reserve = 0
 }
 

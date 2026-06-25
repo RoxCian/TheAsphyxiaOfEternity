@@ -1,8 +1,14 @@
 :host
     display: flex
-    align-items: center
-    justify-content: center
+    overflow: auto
     pointer-events: none !important
-
+    margin: -0.5em 0
+    padding: 0.5em 0
     > *
+        margin-left: auto
+        margin-right: auto
         pointer-events: all
+@media screen and (width < 768px)
+    :host
+        padding-left: 0.5em
+        padding-right: 0.5em

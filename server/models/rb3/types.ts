@@ -1,26 +1,43 @@
-export type Rb3OrderShopInfo = {
+export type Rb3OrderInfo = {
     id: number
     orderShopId: number
     orderName: string
-    appearCondition: string
-    fragmentName: string
-    hint: string
-    clearRewardName: string
     orderNameOrig: string
-    appearConditionOrig: string
-    fragmentNameOrig: string
+    hint: string
     hintOrig: string
-    clearRewardNameOrig: string
-    stars: number
+    fragmentName: string
+    fragmentNameOrig: string
     fragmentColor: Rb3OrderFragmentColor
     fragmentCount: number
+    clearRewardName: string
+    clearRewardNameOrig: string
     firstClearRewardAmount: number
     clearRewardAmount: number
+    stars: number
+    unlockCondition: {
+        allOrdersCleared?: number[]
+        anyOrdersCleared?: number[]
+        anyOrdersClearedCount?: number
+        equipCondition?: {
+            index: number
+            season: number
+            experiences: number
+        }
+        orderExperience?: number
+        anyMusicsUnlocked?: number[]
+        hasOrder?: true
+    }
     reacceptable: boolean
 }
 
 export enum Rb3OrderFragmentColor {
     green, orange, blue, violet, red
+}
+
+export type Rb3OrderShopLevel = {
+    level: number
+    experiences: number
+    experiencesToNextLevel: number
 }
 
 export type Rb3VerdetDesKriegesPhrasePart = {

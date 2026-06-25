@@ -3,6 +3,7 @@ import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidt
 // player.pdata.released.info.type == 0 -> song
 // player.pdata.released.info.type == 6 -> character card
 // player.pdata.released.info.type == 7 -> byword
+// player.pdata.released.info.type == 10 -> pastel garden seeds
 
 export async function readPlayerPostProcess(player: Rb3Player) {
     toFullWidthPlayerName(player)

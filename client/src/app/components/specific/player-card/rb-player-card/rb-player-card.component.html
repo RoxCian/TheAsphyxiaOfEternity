@@ -17,8 +17,8 @@
                             <rb-byword-tag [leftByword]="p.bywords!.left" [rightByword]="p.bywords!.right" />
                         }
                         @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel($safeNavigationMigration(p.extraValues?.[1])) : 0;
-                        <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}" [class.claudia-abnormal]="p.version === 3 && verdetService.claudiaAbnormal() !== 2">
-                            @if (p.version === 3 && verdetService.claudiaAbnormal() !== 2) {
+                        <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}" [class.claudia-abnormal]="p.version === 3 && verdetService.claudiaAbnormal() === 2">
+                            @if (p.version === 3 && verdetService.claudiaAbnormal() === 2) {
                                 <a class="claudia" (click)="verdetService.clickClaudia()" animate.leave="leave">ℂ𝕃𝔸𝕌𝔻𝕀𝔸</a>
                             }
                             <span>{{ p.name }}</span>
@@ -53,8 +53,8 @@
                             <ng-template #sessionIconTooltip>
                                 <div class="session-icon-tooltip content">
                                     <p class="is-size-6"><b>This icon means you just swiped your card and maybe playing now.</b></p>
-                                    <p>PS: It is not forbidden to swipe your card on two different cabinets running same title game, but we only accept save data sent by the last one you loged into.</p>
-                                    <p>Swipe your card on two cabinets running different title is totally fine.</p>
+                                    <p>PS: It is not forbidden to swipe your card on two different cabinets running same game title, but we only accept save data sent by the last one you logged into.</p>
+                                    <p>Swipe your card on two cabinets running different titles is totally fine.</p>
                                     <!-- <p>If you terminated your game or Asphyxia CORE by accident, and you failed log into the game now, please click the close button on the top right corner of the icon.</p>
                                     <p>Note that if you are really playing now and you clicked the close button, your session in the game won't be terminated. However any play data sent from this session will not able to be saved.</p> -->
                                 </div>
@@ -67,7 +67,7 @@
                             <div class="session card player-badge has-text-centered" [class.is-killing]="sessionService.sessionKilling()" [bungTooltip]="sessionService.sessionKilled() ? sessionKilledIconTooltip : sessionIconTooltip" ]>
                                 <!-- <button class="delete" [disabled]="sessionService.sessionKilling() || sessionService.sessionKilled()" (click)="sessionService.killSession()"></button> -->
                                 <div class="title session-on" [class.show]="!sessionService.sessionKilled()">
-                                    <i class="mdi mdi-controller {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-24px' : 'mdi-36px' }}"></i>
+                                    <i class="mdi mdi-gamepad-variant {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-24px' : 'mdi-36px' }}"></i>
                                 </div>
                                 <div class="title session-off" [class.show]="sessionService.sessionKilled()">
                                     <i class="mdi mdi-controller-off {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-24px' : 'mdi-36px' }}"></i>

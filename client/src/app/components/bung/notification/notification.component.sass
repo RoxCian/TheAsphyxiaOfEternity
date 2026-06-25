@@ -9,11 +9,11 @@ bung-notification
         padding-right: 2em
 
     > delete
-        right: 0.5rem
+        right: 0.5em
         position: absolute
-        top: 0.5rem
+        top: 0.5em
 
-    .content
+    .notify-content:not(:last-child)
         margin-bottom: 0.5em
 
     &.is-primary, &.is-info, &.is-link, &.is-success, &.is-warning, &.is-danger
@@ -34,7 +34,7 @@ bung-notification
         display: flex
         align-items: center
 
-        .content
+        .notify-content
             overflow: clip
             display: flex
             flex-grow: 1

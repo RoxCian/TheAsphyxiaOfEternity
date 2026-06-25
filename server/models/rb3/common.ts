@@ -3,6 +3,7 @@ import { ArrayWrapper } from "../../utils/types"
 import { Rb3EventControl } from "./event"
 import { Rb3MusicRecord } from "./music_record"
 import { Rb3PlayerReleasedInfo } from "./profile"
+import { DBBigInt } from "../../utils/db/db_types"
 
 export class Rb3ItemLockCtrl {
     @XD.u8() type = 0
@@ -13,7 +14,7 @@ export class Rb3ItemLockCtrl {
 export class Rb3PlayerStart {
     @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
-    @XD.u64() startTime = BigInt(Math.trunc(Date.now() / 1000))
+    @XD.u64() startTime: bigint | DBBigInt = DBBigInt(Math.trunc(Date.now() / 1000))
     @XD.aw("data", Rb3EventControl) eventCtrl: ArrayWrapper<"data", Rb3EventControl> = {
         data: Rb3EventControl.examples
     }

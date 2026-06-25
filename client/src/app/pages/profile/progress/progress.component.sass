@@ -9,7 +9,7 @@ p.verdet-header
     margin-bottom: 0 // asphyxia fix
 p.verdet-header-orig
     text-align: center
-.verdet-bg
+.static-bg
     position: fixed
     inset: 0
     background: var(--bg-url)
@@ -17,22 +17,22 @@ p.verdet-header-orig
     background-size: cover
     background-position: center bottom
     opacity: 0
-    animation: verdet-bg-enter-animation 0.8s 0.8s var(--ease-in) forwards
+    animation: static-bg-enter-animation 0.8s 0.8s var(--ease-in) forwards
     z-index: -1
 
     &.leave
-        animation: verdet-bg-leave-animation 0.8s var(--ease-in) forwards
+        animation: static-bg-leave-animation 0.8s var(--ease-in) forwards
 @media (prefers-color-scheme: dark)
-    .verdet-bg
+    .static-bg
         background-image: var(--bg-url-dark)
-@keyframes verdet-bg-enter-animation
+@keyframes static-bg-enter-animation
     from
         opacity: 0
         transform: translateY(4em)
     to
         opacity: 0.3
         transform: none
-@keyframes verdet-bg-leave-animation
+@keyframes static-bg-leave-animation
     from
         opacity: 0.3
         transform: none

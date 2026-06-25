@@ -1,6 +1,7 @@
 import { ICollection } from "./db_types"
 import { GetType, isType, Type } from "../types"
 import { getPropertyDescriptor, instantiate } from "../utility_functions"
+import { isDeepStrictEqual } from "util"
 
 export namespace DBH {
     // DB operation serialization
@@ -319,14 +320,14 @@ export namespace DBH {
         update<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Update<T>): void
         update<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Update<T>, dataDoc?: Update<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
-            for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
+            for (const s of this.submissions) if (((s.refid && refid) ? (s.refid === refid) : true) && Transaction.isMatch(s.doc, query)) s.operation = "skip"
             this.submissions.push({ refid: refid, query: query, operation: "update", doc: data, isPublicDoc })
         }
         upsert<T extends ICollection<any>>(query: Query<T>, data: Update<T>): void
         upsert<T extends ICollection<any>>(refid: string | undefined, query: Query<T>, data: Update<T>): void
         upsert<T extends ICollection<any>>(refidOrQuery: string | undefined | Query<T>, queryOrData: Query<T> | Update<T>, dataDoc?: Update<T>): void {
             const { refid, query, data, isPublicDoc } = reorderWriteParams(refidOrQuery, queryOrData, dataDoc)
-            for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
+            for (const s of this.submissions) if (((s.refid && refid) ? (s.refid === refid) : true) && s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
             this.submissions.push({ refid: refid, query: query, operation: "upsert", doc: data, isPublicDoc })
         }
         insert<T extends ICollection<any>>(data: Doc<T>): void
@@ -343,7 +344,7 @@ export namespace DBH {
             const isPublicDoc = !!refidOrQuery && typeof refidOrQuery !== "string"
             const refid = !isPublicDoc ? refidOrQuery as string : undefined
             query ??= refidOrQuery as Query<T>
-            for (const s of this.submissions) if (s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
+            for (const s of this.submissions) if (((s.refid && refid) ? (s.refid === refid) : true) && s.doc && Transaction.isMatch(s.doc, query)) s.operation = "skip"
             this.submissions.push({ refid: refid, query: query, operation: "remove", doc: undefined, isPublicDoc })
         }
         async findOne<T extends ICollection<any>>(query: Query<T>): Promise<(T & Doc<T>) | undefined>
@@ -414,10 +415,10 @@ export namespace DBH {
                             if (q.$lte) if (value > q.$lte) return false
                             if (q.$gt) if (value <= q.$gt) return false
                             if (q.$gte) if (value < q.$gte) return false
-                            if (q.$in) if (!value.toString().includes(q.$in)) return false
-                            if (q.$nin) if (value.toString().includes(q.$nin)) return false
+                            if (q.$in) if (!Array.isArray(q.$in) || !q.$in.includes(value)) return false
+                            if (q.$nin) if (!Array.isArray(q.$nin) || q.$nin.includes(value)) return false
                             if (q.$ne) if (value === q.$ne) return false
-                            if (q.$regex) if (value.toString().match(q.$regex)?.length === 0) return false
+                            if (q.$regex) if ((value.toString().match(q.$regex)?.length ?? 0) === 0) return false
                             continue
                         } else if (typeof value === "object") {
                             if (!this.isMatch(value, q)) return false
@@ -426,7 +427,7 @@ export namespace DBH {
                     }
                 }
             }
-            return !!$orResult
+            return $orResult == undefined || $orResult
         }
 
         checkpoint(checkpointName?: string) {

@@ -1,0 +1,11 @@
+<div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
+    <div class="stat-item has-text-centered">
+        <div class="heading">Hi-score</div>
+        <div class="title">{{ reftis.value()?.sc ?? 0 }}</div>
+    </div>
+    <div class="stat-item has-text-centered">
+        <div class="heading">Play Count</div>
+        <div class="title">{{ (reftis.value()?.playCount ?? 0) === 0 ? (reftis.value()?.sc ?? 0) > 0 ? 1 : 0 : reftis.value()!.playCount }}</div>
+    </div>
+</div>
+<bung-divider prompt="End of REFTIS Play Data" />

@@ -14,8 +14,8 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createReadLobbyHandler, createDeleteLobbyHandler, createAddLobbyHandler } from "../shared_game/lobby"
 import { Rb5PlayerStart } from "../../models/rb5/common"
-import { Rb4ChartType, Rb5ClasscheckIndex, RbClasscheckClearType } from "../../models/shared/rb_types"
-import { toBigInt } from "../../utils/db/db_types"
+import { Rb4ChartType, Rb5ClasscheckIndex, RbClasscheckClearType, RbSession } from "../../models/shared/rb_types"
+import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { isArrayWrapper } from "../../utils/types"
@@ -44,15 +44,17 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    if (rid && !await createSession(rid, 5)) return H.deny
-    const account = rid == undefined ? undefined : await DBH.findOne<Rb5PlayerAccount>(rid, { collection: "rb.rb5.player.account" })
-    const result = new Rb5PlayerStart(account?.sessionId)
+    const session = await createSession(rid, 5)
+    if (!session) return H.deny
+    const result = new Rb5PlayerStart(session.sessionId)
     return XF.x(result)
 }
 
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb5Player(read.rid)
+    const session = await getSession(read.rid, 5)
+    if (!session) return H.deny
     const account = await DBH.findOne(read.rid, Rb5PlayerAccount, { collection: "rb.rb5.player.account" })
     if (!account) {
         const player = await findPlayerFromOtherVersion(read.rid, 5)
@@ -75,10 +77,12 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const myCourse = await DBH.findOne(read.rid, Rb5MyCourseLog, { collection: "rb.rb5.playData.myCourse" }, true)
     const yurukome = await DBH.find(read.rid, Rb5Yurukome, { collection: "rb.rb5.event.yurukome" })
 
+    account.sessionId = session.sessionId
+
     account.intrvld ??= 0
     account.succeed ??= true
-    account.pst ??= BigInt(0)
-    account.st ??= BigInt(0)
+    account.pst ??= DBBigInt(0)
+    account.st ??= DBBigInt(0)
     account.opc ??= 0
     account.dayCount ??= 0
     account.playCountToday ??= 0
@@ -136,17 +140,19 @@ const deletePlayer: H.H = async data => {
 
 const writePlayer: H.H<Rb5Player> = async data => {
     const player = XF.o(data, Rb5Player)
-    if (!await getSession(player.pdata.account.rid, 5)) return H.deny
+    const session = await getSession(player.pdata.account.rid, 5)
+    if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
     await writePlayerPreProcess(player)
-    await writePlayerCore(player, false)
+    await writePlayerCore(player, false, session)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
 const writePlayer2: H.H<Rb5Player> = async data => {
     const player = XF.o(data, Rb5Player)
-    if (!await getSession(player.pdata.account.rid, 5)) return H.deny
+    const session = await getSession(player.pdata.account.rid, 5)
+    if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
     writePlayerPreProcess(player)
-    await writePlayerCore(player, true)
+    await writePlayerCore(player, true, session)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
@@ -198,7 +204,7 @@ const readPlayerScoreOldVersion: H.H = async data => {
     return XF.x(result)
 }
 
-async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
+async function writePlayerCore(player: Rb5Player, isVolzza2: boolean, session: RbSession) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
 
@@ -214,15 +220,16 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
         const isPlayed = hasAny(player.pdata.stageLogs?.log)
         player.pdata.account.playCount = isPlayed ? 1 : 0
         player.pdata.account.playCountToday = isPlayed ? 1 : 0
+        player.pdata.account.st = DBBigInt(session.time)
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
         accountSaved.playCount++
-        if (!isToday(toBigInt(accountSaved.st))) {
+        if (!isToday(BigInt(session.time))) {
             accountSaved.dayCount++
             accountSaved.playCountToday = 0
         }
-        accountSaved.st = player.pdata.account.st
+        accountSaved.st = DBBigInt(session.time)
         accountSaved.playCountToday++
 
         t.update(rid, accountQuery, accountSaved)
@@ -274,7 +281,16 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean) {
     if (hasAny(player.pdata.released?.info)) for (const i of player.pdata.released.info) t.upsert(rid, { collection: "rb.rb5.player.releasedInfo", type: i.type, id: i.id }, i)
     if (hasAny(player.pdata.playerParam?.item)) for (const i of player.pdata.playerParam.item) t.upsert(rid, { collection: "rb.rb5.player.parameters", type: i.type, bank: i.bank }, i)
     if (player.pdata.mylist?.list?.[0]) t.upsert(rid, { collection: "rb.rb5.player.mylist", index: player.pdata.mylist.list[0].index }, player.pdata.mylist.list[0])
-    if (player.pdata.minigame) t.upsert(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
+    if (player.pdata.minigame) {
+        const minigameQuery: Query<Rb5Minigame> = { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }
+        const minigameSaved = await t.findOne(rid, minigameQuery)
+        if (!minigameSaved) t.upsert(rid, minigameQuery, player.pdata.minigame)
+        else {
+            if (player.pdata.minigame.sc > minigameSaved.sc) minigameSaved.sc = player.pdata.minigame.sc
+            minigameSaved.playCount++
+            t.update(rid, minigameQuery, minigameSaved)
+        }
+    }
     if (player.pdata.myCourse?.courseId >= 0) t.upsert(rid, { collection: "rb.rb5.playData.myCourse", courseId: player.pdata.myCourse.courseId }, player.pdata.myCourse)
     if (player.pdata.derby) t.upsert(rid, { collection: "rb.rb5.player.derby" }, player.pdata.derby)
     if (player.pdata.battleRoyale) t.upsert(rid, { collection: "rb.rb5.playData.battleRoyale", battleId: player.pdata.battleRoyale.battleId }, player.pdata.battleRoyale)

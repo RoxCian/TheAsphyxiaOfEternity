@@ -15,9 +15,9 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
 import { Rb6PlayerStart, Rb6PlayerSucceed } from "../../models/rb6/common"
 import { rb6UnlockItems } from "../../data/tables/rb6_unlock_items"
-import { toBigInt } from "../../utils/db/db_types"
+import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
-import { Rb6ChartType, Rb6ClasscheckIndex, RbColor } from "../../models/shared/rb_types"
+import { Rb6ChartType, Rb6ClasscheckIndex, RbColor, RbSession } from "../../models/shared/rb_types"
 import { Rb6JustCollection, Rb6ReadJustCollection, Rb6ReadJustCollectionParameters } from "../../models/rb6/just_collection"
 import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghost"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
@@ -69,10 +69,10 @@ const playerSucceeded: H.H = async data => {
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    if (rid && !await createSession(rid, 6)) return H.deny
-    const account = rid == undefined ? undefined : await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
+    const session = await createSession(rid, 6)
+    if (!session) return H.deny
     const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
-    const result = new Rb6PlayerStart(account?.sessionId)
+    const result = new Rb6PlayerStart(session.sessionId)
     result.questCtrl.data = await Rb6Quest.createExamples(misc?.rankingQuestIndex ?? 0)
     const today = new Date()
     result.itemCtrl.data = (await rb6UnlockItems).filter(i => {
@@ -90,7 +90,8 @@ const startPlayer: H.H = async data => {
 
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
-
+    const session = await getSession(read.rid, 6)
+    if (!session) return H.deny
     const account = await DBH.findOne(read.rid, Rb6PlayerAccount, { collection: "rb.rb6.player.account" })
     const result = new Rb6Player(read.rid)
     if (!account) {
@@ -118,10 +119,12 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         ]
     })
 
+    account.sessionId = session.sessionId
+
     account.intrvld ??= 0
     account.succeed ??= true
-    account.pst ??= BigInt(0)
-    account.st ??= BigInt(0)
+    account.pst ??= DBBigInt(0)
+    account.st ??= DBBigInt(0)
     account.opc ??= 0
     account.dayCount ??= 0
     account.playCountToday ??= 0
@@ -181,9 +184,10 @@ const deletePlayer: H.H = async data => {
 
 const writePlayer: H.H<Rb6Player> = async data => {
     const player = XF.o(data, Rb6Player)
-    if (!await getSession(player.pdata.account.rid, 6)) return H.deny
+    const session = await getSession(player.pdata.account.rid, 6)
+    if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
     await writePlayerPreProcess(player)
-    await writePlayerCore(player)
+    await writePlayerCore(player, session)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 
@@ -234,7 +238,7 @@ const readGhost: H.H<Rb6ReadGhostParam> = async data => {
     return XF.x(result)
 }
 
-async function writePlayerCore(player: Rb6Player) {
+async function writePlayerCore(player: Rb6Player, session: RbSession) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
 
@@ -250,15 +254,16 @@ async function writePlayerCore(player: Rb6Player) {
         const isPlayed = hasAny(player.pdata.stageLogs?.log)
         player.pdata.account.playCount = isPlayed ? 1 : 0
         player.pdata.account.playCountToday = isPlayed ? 1 : 0
+        player.pdata.account.st = DBBigInt(session.time)
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
         accountSaved.playCount++
-        if (!isToday(toBigInt(accountSaved.st))) {
+        if (!isToday(BigInt(session.time))) {
             accountSaved.dayCount++
             accountSaved.playCountToday = 0
         }
-        accountSaved.st = player.pdata.account.st
+        accountSaved.st = DBBigInt(session.time)
         accountSaved.playCountToday++
 
         t.update(rid, accountQuery, accountSaved)

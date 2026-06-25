@@ -169,8 +169,8 @@ export class Rb2PlayerData {
 export class Rb2Player {
     @XD.str() rid: string
     @XD.str() lid = "ea"
-    @XD.u64() beginTime: bigint | DBBigInt = BigInt(614498759023)
-    @XD.u64() endTime: bigint | DBBigInt = BigInt(9614498759023)
+    @XD.u64() beginTime: bigint | DBBigInt = DBBigInt(614498759023)
+    @XD.u64() endTime: bigint | DBBigInt = DBBigInt(9614498759023)
     @XD.u8() mode = 0
     @XD.type(Rb2PlayerData) pdata: Rb2PlayerData
 

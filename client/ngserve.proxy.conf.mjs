@@ -1,9 +1,11 @@
 import { createReadStream, existsSync, readdirSync, readFileSync } from "node:fs"
 import * as rl from "node:readline"
+import { inspect } from "node:util"
 
 const env = JSON.parse(readFileSync("../dev/config/env.conf.json"))
 const ngConf = JSON.parse(readFileSync("./angular.json"))
 const version = readFileSync("../dev/version")
+let bind = "localhost"
 let port = 8083
 const ngPort = ngConf.projects[Object.keys(ngConf.projects)[0]].architect.serve.configurations.development.port
 const asphyxiaConfigPath = `${env.asphyxiaDirectory}/config.ini`
@@ -18,7 +20,11 @@ if (existsSync(asphyxiaConfigPath)) {
         const kv = line.split("=")
         if (kv[0].toLowerCase() === "port") {
             port = parseInt(kv[1])
-            break
+            continue
+        }
+        if (kv[0].toLowerCase() === "bind") {
+            bind = kv[1].trim()
+            continue
         }
     }
 }
@@ -34,7 +40,8 @@ export default [
     {
         // intercept the jackets API since webui may not existed in dev plugin folder
         context: ["/emit/rbGetJackets"],
-        target: `http://localhost:${port}`,
+        target: `http://${bind}:${port}`,
+        changeOrigin: bind !== "localhost" && bind !== "127.0.0.1",
         secure: false,
         logLevel: "debug",
         bypass: (req, res, options) => {
@@ -44,14 +51,14 @@ export default [
         }
     },
     {
-        context: ["/emit/"],
-        target: `http://localhost:${port}`,
+        context: ["/emit/**"],
+        target: `http://${bind}:${port}`,
         secure: false,
         logLevel: "debug",
-        changeOrigin: true,
+        changeOrigin: bind !== "localhost" && bind !== "127.0.0.1",
         configure: proxy => {
             proxy.on("proxyReq", req => {
-                req.setHeader("referer", `/plugin/${env.pluginNameDev}/`)
+                req.setHeader("referer", `http://${bind}:${port}/plugin/${env.pluginNameDev}/`)
             })
         }
     },

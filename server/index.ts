@@ -11,7 +11,6 @@ import { registerRb3Handlers } from "./api/rb3/game"
 import { registerRb4Handlers } from "./api/rb4/game"
 import { registerRb5Handlers } from "./api/rb5/game"
 import { registerRb6Handlers } from "./api/rb6/game"
-import { inspect } from "util"
 
 export function register() {
     R.GameCode("KBR")

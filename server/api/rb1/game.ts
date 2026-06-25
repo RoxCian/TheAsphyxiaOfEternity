@@ -26,8 +26,9 @@ export function registerRb1Handlers() {
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    if (!await createSession(rid, 1)) return H.deny
-    return XF.x(new Rb1PlayerStart())
+    const session = await createSession(rid, 1)
+    if (!session) return H.deny
+    return XF.x(new Rb1PlayerStart(session.sessionId))
 }
 
 const readPlayer: H.H<RbPlayerRead> = async data => {

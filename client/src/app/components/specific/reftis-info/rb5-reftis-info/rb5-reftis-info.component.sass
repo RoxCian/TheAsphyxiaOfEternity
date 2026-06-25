@@ -1,0 +1,15 @@
+.stat-grid
+    display: grid
+    grid-template: 1fr / repeat(auto-fill, minmax(10em, var(--max-item-width)))
+    grid-auto-flow: row
+    gap: 1em
+    justify-content: center
+    align-items: center
+bung-divider
+    margin-top: 2em
+
+@media (width < 768px)
+    bung-divider
+        margin-top: 0.5em
+    .stat-grid
+        grid-template: 1fr / repeat(auto-fill, minmax(8em, var(--max-item-width)))

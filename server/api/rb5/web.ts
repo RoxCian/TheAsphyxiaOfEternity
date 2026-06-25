@@ -2,8 +2,8 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfo, findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse } from "../../models/shared/web"
+import { Rb5Minigame, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse, Rb5MinigameType } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
@@ -24,6 +24,7 @@ export function registerRb5Controllers() {
     C.route("rb5ReadRecords", readRecords)
     C.route("rb5ReadClasschecks", readClasschecks)
     C.route("rb5ReadStageLogs", readStageLogs)
+    C.route("rb5ReadReftis", readReftis)
     C.route("rb5ReadYurukome", readYurukome)
     C.route("rb5ReadAvailableItems", readAvailableItems)
     C.route("rb5ReadSettings", readSettings)
@@ -124,6 +125,7 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
+const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: -1 })
 const readYurukome: C.C<RbRequest, Rb5YurukomeResponse[]> = async data => {
     const yurukome = await DBH.find<Rb5Yurukome>(data.rid, { collection: "rb.rb5.event.yurukome" })
     return (await rb5Yurukome).map(i => ({
@@ -214,7 +216,7 @@ async function toStageLogResponse(l: Rb5PlayerStageLog): Promise<RbStageLogRespo
         rivalStageIndex: l.stageIndex,
         rivalCpuId: l.rivalCpuId,
         rivalUserId: l.rivalUserId,
-        rivalPlayerId: l.rivalPlayerId,
+        rivalPlayerId: l.rivalSessionId,
         rivalUserName: l.rivalUserId.toString(),
         rivalMatchingGrade: l.rivalMatchingGrade,
         rivalClearType: toLiteralClearType(version, l.rivalClearType, "RIVAL", l.rivalAchievementRateTimes100),

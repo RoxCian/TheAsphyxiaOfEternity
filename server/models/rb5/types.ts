@@ -1,3 +1,8 @@
+export type Rb5MinigameType = {
+    minigameId: number
+    sc: number
+    playCount: number
+}
 export type Rb5YurukomeInfo = {
     id: number
     title: string

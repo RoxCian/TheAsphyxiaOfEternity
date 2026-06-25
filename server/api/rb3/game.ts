@@ -1,24 +1,25 @@
 import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
-import { Rb3MusicRecord, Rb3ReadPlayerMusicRecord } from "../../models/rb3/music_record"
+import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { Rb3Mylist } from "../../models/rb3/mylist"
-import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
+import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3OrderDetailsParamFlag, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { convertToRb3ClearType, findAllBestMusicRecord } from "../shared_game/find_music_record"
 import { Rb2LincleLink } from "../../models/rb2/profile"
-import { hasAny, isToday } from "../../utils/utility_functions"
+import { hasAny, hasFlag, isToday } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
-import { Rb1ChartType, Rb1ClearType, Rb3ClearType } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType, RbSession } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
+import { inspect } from "util"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -42,9 +43,9 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    if (!await createSession(rid, 3)) return H.deny
-    const result = new Rb3PlayerStart()
-    result.sessionId = 5501
+    const session = await createSession(rid, 3)
+    if (!session) return H.deny
+    const result = new Rb3PlayerStart(session.sessionId)
     return XF.x(result)
 }
 
@@ -69,10 +70,13 @@ const succeedPlayer: H.H = async data => {
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb3Player(read.rid)
+    const session = await getSession(read.rid, 3)
+    if (!session) return H.deny
     const account = await DBH.findOne(read.rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" }) ?? new Rb3PlayerAccount()
     if (!account) {
         const player = await findPlayerFromOtherVersion(read.rid, 3)
         if (!player) return H.deny
+        result.pdata.account.sessionId = session.sessionId
         result.pdata.account.isFirstFree = true
         result.pdata.account.userId = player.userId
         result.pdata.base.name = player.name
@@ -90,9 +94,15 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const seedPod = await DBH.find(read.rid, Rb3SeedPod, { collection: "rb.rb3.player.event.seedPod" })
     const order = await DBH.findOne(read.rid, Rb3Order, { collection: "rb.rb3.player.order" }, true)
     const stamp = await DBH.findOne(read.rid, Rb3Stamp, { collection: "rb.rb3.player.stamp" }, true)
+    
+    account.sessionId = session.sessionId
 
     if (!isToday(toBigInt(account.st))) account.playCountToday = 1
     else account.playCountToday = (account.playCountToday ?? 0) + 1
+    account.intrvld ??= 0
+    account.succeed ??= true
+    account.pst ??= DBBigInt(0)
+    account.st ??= DBBigInt(0)
 
     if (!base.comment) base.comment = "Welcome to REFLEC BEAT colette!"
     base.abilityPointTimes100 ??= base["averagePrecisionTimes100"] // For compatibility
@@ -121,8 +131,8 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         o.time = b.comboUpdateTime ?? 0
         oldRecords.push(o)
     }
-    config.randomEntryWork ??= BigInt(Math.trunc(Math.random() * 99999999))
-    config.customFolderWork ??= BigInt(Math.trunc(Math.random() * 9999999999999))
+    config.randomEntryWork ??= DBBigInt(Math.trunc(Math.random() * 99999999))
+    config.customFolderWork ??= DBBigInt(Math.trunc(Math.random() * 9999999999999))
 
     const p = result.pdata
 
@@ -146,10 +156,14 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     return XF.x(result)
 }
 const writePlayer: H.H<Rb3Player> = async data => {
+    console.log(inspect((data as any).pdata.base.hidden_param))
     const player = XF.o(data, Rb3Player)
-    if (!await getSession(player.pdata.account.rid, 3)) return H.deny
+    console.log(inspect(player.pdata.base.hiddenParam))
+
+    const session = await getSession(player.pdata.account.rid, 3)
+    if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
     await writePlayerPreProcess(player)
-    await writePlayerCore(player)
+    await writePlayerCore(player, session)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 const endPlayer: H.H = async data => {
@@ -168,15 +182,13 @@ const deletePlayer: H.H = async data => {
     }
 }
 
-async function writePlayerCore(player: Rb3Player) {
+async function writePlayerCore(player: Rb3Player, session: RbSession) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
 
     const t = new DBH.T()
     const accountQuery: Query<Rb3PlayerAccount> = { collection: "rb.rb3.player.account" }
     const accountSaved = await t.findOne(player.pdata.account.rid, accountQuery)
-
-    const session = await getSession(player.pdata.account.rid, 3)!
 
     if (!accountSaved) { // save the new player
         const rbPlayer = await findPlayerFromOtherVersion(rid, 3)
@@ -186,17 +198,16 @@ async function writePlayerCore(player: Rb3Player) {
         const isPlayed = hasAny(player.pdata.stageLogs?.log)
         player.pdata.account.playCount = isPlayed ? 1 : 0
         player.pdata.account.playCountToday = isPlayed ? 1 : 0
-        player.pdata.account.st = DBBigInt(session!.time)
+        player.pdata.account.st = DBBigInt(session.time)
         t.upsert(rid, accountQuery, player.pdata.account)
     } else {
         accountSaved.isFirstFree = false
         accountSaved.playCount++
-        const sessionTime = new Date(session!.time)
-        if (!isToday(toBigInt(session!.time))) {
+        if (!isToday(BigInt(session.time))) {
             accountSaved.dayCount++
             accountSaved.playCountToday = 0
         }
-        accountSaved.st = BigInt(session!.time)
+        accountSaved.st = DBBigInt(session.time)
         accountSaved.playCountToday++
 
         t.update(rid, accountQuery, accountSaved)
@@ -443,18 +454,19 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
     const equips = await t.find<Rb3Equip>(rid, { collection: "rb.rb3.player.equip" })
     const changedEquips: Rb3Equip[] = []
     const newReleases: Rb3PlayerReleasedInfo[] = []
-    if (!playerBase || !stamp || !ordersSaved) {
+    console.log(inspect(order))
+    if (!playerBase || !stamp) {
         console.warn("Data not found when update order.")
         return
     }
-    if (!ordersSaved || !ordersSaved.details) t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
+    if (!ordersSaved) t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
     else {
         ordersSaved.experience = order.experience
 
         function isCleared(orderIndex: number): boolean {
             return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
         }
-        function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: number = 1): void {
+        function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: Rb3OrderDetailsParamFlag = Rb3OrderDetailsParamFlag.unlocked): void {
             let order = ordersSaved!.details?.find(o => o.index == orderIndex)
             if (!order) {
                 order = {
@@ -472,7 +484,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                 order.fragmentsCount0 += fragmentsCount
                 order.fragmentsCount1 += fragmentsCount1
                 order.slot = slot
-                order.param = 1
+                order.param = param
             }
         }
         function setEquipExp(index: number, season: number, experience: number): void {
@@ -495,29 +507,29 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                     case 2:
                         if (!isCleared(o.index)) {
                             stamp.ticketCount[currentVersion - 1] += 3
-                            addClearedCount(o.index, 1, 1)
-                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                            addClearedCount(o.index, 1, 1, 0, -1)
+                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, -1)
                         // the first matching order cannot be accepted again
                         break
                     case 34:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 5
                         else stamp.ticketCount[currentVersion - 1] += 2
-                        addClearedCount(o.index, 1, 12)
+                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot: -1, o.param)
                         break
                     case 35:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 6
                         else stamp.ticketCount[currentVersion - 1] += 3
-                        addClearedCount(o.index, 1, 12)
+                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
                         break
                     case 36:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 7
                         else stamp.ticketCount[currentVersion - 1] += 4
-                        addClearedCount(o.index, 1, 14)
+                        addClearedCount(o.index, 1, 14, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
                         break
                     case 135: case 136: case 137: case 138: case 139: case 140: case 141:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 3
                         else stamp.ticketCount[currentVersion - 1] += 2
-                        addClearedCount(o.index, 1, 15)
+                        addClearedCount(o.index, 1, 15, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
                         break
                     case 174: // 二人の英雄
                         if (isCleared(o.index)) break
@@ -676,7 +688,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         break
                     // end of seasonal equips / inventories
                     default:
-                        addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                        addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot, o.param)
                         ordersSaved.experience -= 2788
                         break
                 }

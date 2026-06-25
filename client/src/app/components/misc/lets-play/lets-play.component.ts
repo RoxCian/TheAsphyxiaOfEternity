@@ -12,4 +12,5 @@ import { Component, input } from "@angular/core"
 })
 export class LetsPlayComponent {
     readonly text = input<string | string[]>("Nothing's here yet. Let's play!")
+    readonly icon = input<string>("emoticon-happy")
 }

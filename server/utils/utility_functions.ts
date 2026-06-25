@@ -409,3 +409,6 @@ export function hasAny<TE>(array: TE[] | undefined): array is Exclude<TE[], { le
 export function sumBy<TE>(array: TE[] | undefined, valueFn: (el: TE) => number | undefined, initValue: number = 0) {
     return array ? array.reduce((prev, curr) => prev + (valueFn(curr) ?? 0), initValue) : initValue
 }
+export function hasFlag<T extends number>(value: T, flag: T): boolean {
+    return (value & flag) === flag
+}

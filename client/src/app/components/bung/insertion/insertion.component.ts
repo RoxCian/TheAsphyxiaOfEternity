@@ -12,7 +12,7 @@ import { BungIntersectionService } from "../../../services/bung/intersection.ser
 })
 export class BungInsertionComponent implements AfterViewInit, AfterContentInit, OnDestroy {
     readonly content = model<BungInsertionContent>()
-    readonly textContentTag = model<"div" | "p" | "span">("p")
+    readonly textContentTag = model<"div" | "p" | "span">("span")
     readonly context = model<any>()
     readonly isEmpty = computed(() => this.content() == undefined)
     readonly isVirtualized = input(false, { transform: toggleTransform })

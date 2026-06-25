@@ -57,7 +57,7 @@ export class Rb3VerdetDesKriegesService {
     })
     readonly claudiaAbnormal = computed(() => {
         const data = this.verdetDesKrieges.value()
-        return (data?.chapter === 2 && data?.progress?.[0] !== 60) || this.claudiaAbnormalClicked() ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
+        return (data?.chapter === 2 && data?.progress?.[0] !== 60) && !this.claudiaAbnormalClicked() ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
     })
     readonly isShowPastel = computed(() => {
         const data = this.verdetDesKrieges.value()
@@ -140,6 +140,10 @@ export class Rb3VerdetDesKriegesService {
             }
             this.isLoadingInternal.set(true)
         }
+        if (type === Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2) {
+            this.notificationService.notify("You investigated Claudia, but found nothing worthy.", "warning")
+        }
+
         const modified = await rbEmitJSON<{ modified: boolean }>("rb3UnlockVerdetDesKrieges", { rid: this.profileService.rid(), type })
         if (!modified.modified) {
             return undefined
@@ -147,9 +151,6 @@ export class Rb3VerdetDesKriegesService {
         if (type < Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) {
             this.verdetDesKrieges.reload()
             return undefined
-        }
-        if (type === Rb3VerdetDesKriegesUnlockRequestType.hiddenLink2) {
-            this.notificationService.notify("You investigated Claudia, but found nothing worthy.", "warning")
         }
         const music = await rbEmitJSON<RbMusicResponse<3>>("rbGetMusic", { version: 3, musicId: type })
         this.isLoadingInternal.set(false)

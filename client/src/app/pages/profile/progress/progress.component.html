@@ -2,69 +2,69 @@
 @if (v < 2) {
     <lets-play text="Event progress feature is not implemented in this version." />
 } @else {
-        @if (v === 2) {
-            <bung-tabs>
-                <bung-tab index="order-shop" header="Lime Glasses">
-                
-                </bung-tab>
-            </bung-tabs>
-        } @if (v === 3) {
-            <ng-template #verdetDesKriegesTabHeader>
-                <p class="verdet-header">Verdet des Krieges</p>
-                <p class="verdet-header-orig" lang="jp">戦乱のVerdet</p>
-            </ng-template>
-            <bung-tabs #rb3Tabs>
-                <bung-tab index="order-shop" header="Order Shop" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="pastel-adventure" header="Pastel Adventure" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="pastel-wonder-traveller" header="Pastel Wonder Traveller" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="verdet-des-krieges" [header]="verdetDesKriegesTabHeader" (activated)="onActivate('rb3Verdet', $event)">
-                    <rb3-verdet-des-krieges-storyboard />
-                </bung-tab>
-            </bung-tabs>
-        } @else if (v === 4) {
-            <bung-tabs>
-                <bung-tab index="trophies" header="Trophies" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="pastel-wonder-quest" header="Pastel Wonder Quest" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="mystical-strike" header="Mystical Strike" (activated)="onActivate()">
-                
-                </bung-tab>
-            </bung-tabs>
-        } @else if (v === 5) {
-            <bung-tabs>
-                <bung-tab index="reftis" header="REFTIS" (activated)="onActivate()">
-                    
-                </bung-tab>
-                <bung-tab index="yurukome" header="Pastel-kun's Casual Comments" (activated)="onActivate('rb5Yurukome', $event)">
-                    <rb5-yurukome-list />
-                </bung-tab>
-            </bung-tabs>
-        } @else if (v === 6) {
-            <bung-tabs>
-                <bung-tab index="reflesia-story" header="Reflesia - Story" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="reflesia-hunting" header="Reflesia - Hunting Quests" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="reflesia-challenge" header="Reflesia - Challenge Quests" (activated)="onActivate()">
-                
-                </bung-tab>
-                <bung-tab index="reflesia-ranking" header="Reflesia - Ranking Quests" (activated)="onActivate()">
-                
-                </bung-tab>
-            </bung-tabs>
-        }
+    @if (v === 2) {
+        <bung-tabs>
+            <bung-tab index="order-shop" header="Lime Glasses">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+        </bung-tabs>
+    } @if (v === 3) {
+        <ng-template #verdetDesKriegesTabHeader>
+            <p class="verdet-header">Verdet des Krieges</p>
+            <p class="verdet-header-orig" lang="jp">戦乱のVerdet</p>
+        </ng-template>
+        <bung-tabs #rb3Tabs>
+            <bung-tab index="order-shop" header="Order Shop" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="pastel-adventure" header="Pastel Adventure" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="pastel-wonder-traveller" header="Pastel Wonder Traveller" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="verdet-des-krieges" [header]="verdetDesKriegesTabHeader" (activated)="onActivate('rb3Verdet', $event)">
+                <rb3-verdet-des-krieges-storyboard />
+            </bung-tab>
+        </bung-tabs>
+    } @else if (v === 4) {
+        <bung-tabs>
+            <bung-tab index="trophies" header="Trophies" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="pastel-wonder-quest" header="Pastel Wonder Quest" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="mystical-strike" header="Mystical Strike" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+        </bung-tabs>
+    } @else if (v === 5) {
+        <bung-tabs>
+            <bung-tab index="reftis" header="REFTIS" (activated)="onActivate()">
+                <rb5-reftis-info />
+            </bung-tab>
+            <bung-tab index="yurukome" header="Pastel-kun's Casual Comments" (activated)="onActivate('rb5Yurukome', $event)">
+                <rb5-yurukome-list />
+            </bung-tab>
+        </bung-tabs>
+    } @else if (v === 6) {
+        <bung-tabs>
+            <bung-tab index="reflesia-story" header="Reflesia - Story" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="reflesia-hunting" header="Reflesia - Hunting Quests" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="reflesia-challenge" header="Reflesia - Challenge Quests" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+            <bung-tab index="reflesia-ranking" header="Reflesia - Ranking Quests" (activated)="onActivate()">
+                <lets-play icon="hard-hat" text="Under Construction..." />
+            </bung-tab>
+        </bung-tabs>
+    }
 }
 @if (rb3Tabs()?.activated() === "verdet-des-krieges") {
-    <div class="verdet-bg" animate.leave="leave" [style.--bg-url]="'url(static/assets/images/rb3-verdet-bg.webp)'" [style.--bg-url-dark]="'url(static/assets/images/rb3-verdet-bg-dark.webp)'"></div>
+    <div class="static-bg" animate.leave="leave" [style.--bg-url]="'url(static/assets/images/rb3-verdet-bg.webp)'" [style.--bg-url-dark]="'url(static/assets/images/rb3-verdet-bg-dark.webp)'"></div>
 }

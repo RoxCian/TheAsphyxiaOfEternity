@@ -79,6 +79,8 @@ input.input
     opacity: 0
 ::ng-deep rb-music-icon.ranking-quest-option .music
     background-color: color-mix(in srgb, var(--card-background), transparent 30%)
+::ng-deep .ranking-quest-select-dropdown
+    min-width: min(calc(100vw - 8em), max(12em, var(--dropdown-width)))
 ::ng-deep .ranking-quest-select-dropdown .dropdown-container
     min-height: 40vh
     max-width: calc(100vw - 8em)
@@ -89,7 +91,7 @@ input.input
     gap: 0.5em
 
     .music-name
-        background: color-mix(in srgb, transparent 70%, var(--invert-card-background))
+        background: color-mix(in srgb, transparent 90%, var(--invert-card-background))
         padding: 0 0.5em
         border-radius: 4px
 

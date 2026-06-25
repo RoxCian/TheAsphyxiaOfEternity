@@ -445,7 +445,7 @@ async function toStageLogResponse(l: Rb6PlayerStageLog): Promise<RbStageLogRespo
         rivalStageIndex: l.stageIndex,
         rivalCpuId: l.rivalCpuId,
         rivalUserId: l.rivalUserId,
-        rivalPlayerId: l.rivalPlayerId,
+        rivalPlayerId: l.rivalSessionId,
         rivalUserName: l.rivalUserId.toString(),
         rivalMatchingGrade: l.rivalMatchingGrade,
         rivalClearType: toLiteralClearType(version, l.rivalClearType, "RIVAL", l.rivalAchievementRateTimes100),

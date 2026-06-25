@@ -109,7 +109,7 @@
                     </bung-select>
                 </bung-field>
             }
-            <bung-field label="Hit sound" [formField]="form.shotSound" [help]="version === 5 ? 'If you select DJ TOTTO, please do not try to open customize page 2 or game will shutdown itself.' : undefined">
+            <bung-field label="Hit sound" [formField]="form.shotSound" [help]="version === 5 ? 'Do not try to open customization page 2 in game when you select DJ TOTTO.' : undefined">
                 <bung-select [formField]="form.shotSound" noOptionsPlaceholder="No options" [equalFn]="selectOptionEq">
                     @for (item of filterItems(settingsService.items.value(), "shotSound"); track item.value) {
                         <bung-option [value]="item.value" [isHidden]="!isItemAvailable(item)">{{ item | rbText : "name" }}</bung-option>

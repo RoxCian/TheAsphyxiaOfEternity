@@ -1,3 +1,4 @@
+import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
 import { XD } from "../../utils/x"
 import { Rb4EventControl } from "./event"
@@ -7,7 +8,7 @@ import { Rb4PlayerReleasedInfo } from "./profile"
 export class Rb4PlayerStart {
     @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
-    @XD.u64() startTime = BigInt(0)
+    @XD.u64() startTime: bigint | DBBigInt = DBBigInt(0)
     @XD.aw("data", Rb4EventControl) eventCtrl: ArrayWrapper<"data", Rb4EventControl> = {
         data: Rb4EventControl.examples
     }

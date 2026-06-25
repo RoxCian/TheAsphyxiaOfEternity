@@ -18,7 +18,7 @@ export class Rb4PlayerAccount implements ICollection<"rb.rb4.player.account"> {
     @XD.ToO.str() lid = "ea"
     @XD.ToX.s32() intrvld = 0
     @XD.ToX.bool() succeed = true
-    @XD.u64() pst: bigint | DBBigInt = BigInt(0)
+    @XD.u64() pst: bigint | DBBigInt = DBBigInt(0)
     @XD.ToO.u8() wmode = 1
     @XD.ToO.u8() gmode = 0
     @XD.s16("ver") version = 0
@@ -28,7 +28,7 @@ export class Rb4PlayerAccount implements ICollection<"rb.rb4.player.account"> {
     @XD.bool("firstfree") isFirstFree = false
     @XD.ToO.s16() pay = 0
     @XD.ToO.s16() payPc = 0
-    @XD.u64() st: bigint | DBBigInt = BigInt(0)
+    @XD.u64() st: bigint | DBBigInt = DBBigInt(0)
     @XD.s32() opc = 0
     @XD.s32() lpc = 0
     @XD.s32() cpc = 0
@@ -85,8 +85,8 @@ export class Rb4PlayerConfig implements ICollection<"rb.rb4.player.config"> {
     @XD.s16() lastMusicId = 0
     @XD.u8("last_note_grade") lastChartType = Rb4ChartType.basic
     @XD.u8() sortType = 0
-    @XD.u64() randomEntryWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 99999999))
-    @XD.u64() customFolderWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 9999999999999))
+    @XD.u64() randomEntryWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 99999999))
+    @XD.u64() customFolderWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 9999999999999))
     @XD.u8() folderType = 0
     @XD.bool() isTweet = false
     @XD.bool("is_link_twitter") isTwitterLinked = false
@@ -147,7 +147,7 @@ export class Rb4PlayerStageLog implements ICollection<"rb.rb4.playData.stageLog"
     @XD.s16("jt_ms") missCount = 0
     @XD.s16("jt_jr") justReflecCount = 0
     @XD.s32("r_uid") rivalUserId = 0
-    @XD.s32("r_plyid") rivalPlayerId = 0
+    @XD.s32("r_plyid") rivalSessionId = 0
     @XD.s8("r_stg") rivalStageIndex = 0
     @XD.s8("r_ct") rivalClearType = Rb4ClearType.none
     @XD.s16("r_sc") rivalScore = 0
@@ -195,8 +195,8 @@ export class Rb4Quest implements ICollection<"rb.rb4.player.quest"> {
 export class Rb4Stamp implements ICollection<"rb.rb4.player.stamp"> {
     readonly collection = "rb.rb4.player.stamp"
     @XD.s32("stmpcnt") stampCount = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    @XD.s64() area: bigint | DBBigInt = BigInt(7)
-    @XD.s64("prfvst") magic: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 99999999))
+    @XD.s64() area: bigint | DBBigInt = DBBigInt(7)
+    @XD.s64("prfvst") magic: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 99999999))
     // @XD.s32() reserve = 0 // TODO: check
 }
 
@@ -230,7 +230,7 @@ class Rb4PlayerData {
     @XD.type(Rb4PlayerBase) base = new Rb4PlayerBase()
     @XD.type(Rb4PlayerConfig) config = new Rb4PlayerConfig()
     @XD.type(Rb4PlayerCustom) custom = new Rb4PlayerCustom()
-    @XD.obj({}) rival = {} // TODO
+    @XD.obj({}) rival = {}
     @XD.type(Rb4Stamp) stamp = new Rb4Stamp()
     @XD.obj({}) pickupRival = {}
     @XD.ToO.aw("stglog", "log", Rb4PlayerStageLog) stageLogs?: ArrayWrapper<"log", Rb4PlayerStageLog>

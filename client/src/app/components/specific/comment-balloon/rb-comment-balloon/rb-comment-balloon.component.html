@@ -1,8 +1,14 @@
 <figure class="figure">
-    <img src="./static/assets/characards/characard_{{ comment().iconId ?? comment().characterId ?? 0 }}.webp" >
+    @if (comment().characterId != undefined) {
+        <img src="./static/assets/characards/characard_{{ comment().iconId ?? comment().characterId ?? 0 }}.webp" >
+    } @else if (comment().icon != undefined) {
+        <img src="./static/assets/player_icons/{{ comment().icon!.assetId.toString().padStart(3, '0') + (comment().icon!.isDifferent ? '_' + comment().version : '') }}.webp">
+    } @else {
+        <img src="./static/assets/player_icons/100_{{ comment().version }}.webp">
+    }
 </figure>
 <div class="info">
-    <b class="is-size-5">{{ playerName() }}</b>
+    <b class="">{{ playerName() }}</b>
     <span class="is-size-7 user-id">RB-{{ `${comment().userId}`.padStart(8, "0").substring(0, 4) }}-{{ `${comment().userId}`.padStart(8, "0").substring(4, 8) }}</span>
     <span class="is-size-7 time">{{ commentTime() | relativeTime }}</span>
     <span class="blank"></span>

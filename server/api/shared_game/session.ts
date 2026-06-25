@@ -4,15 +4,19 @@ import { DBH } from "../../utils/db/dbh"
 
 const sessionTimeout = 30 * 60 * 1000 // ms
 
-export async function createSession(rid: string, version: RbVersion): Promise<boolean> {
-    const oldSession = await DBH.findOne<RbSessionStorage>(rid, { collection: "rb.session", version })
+export async function createSession(rid: string, version: RbVersion): Promise<RbSessionStorage> {
+    const oldSession = await DBH.findOne<RbSessionStorage>(rid, RbSessionStorage, { collection: "rb.session", version })
     if (oldSession) {
         const time = Date.now()
-        if (time - oldSession.time < sessionTimeout && oldSession.read) return false // TODO: rethink of game processing
+        if (time - oldSession.time < sessionTimeout && oldSession.read) {
+            oldSession.regenerateSessionId()
+            await DBH.update(rid, { collection: "rb.session", version }, oldSession)
+            return oldSession
+        }
     }
     const newSession = new RbSessionStorage(version)
     await DBH.upsert(rid, { collection: "rb.session", version }, newSession)
-    return true
+    return newSession
 }
 export async function markSessionRead(rid: string, version: RbVersion): Promise<boolean> {
     const session = await DBH.findOne<RbSessionStorage>(rid, { collection: "rb.session", version })

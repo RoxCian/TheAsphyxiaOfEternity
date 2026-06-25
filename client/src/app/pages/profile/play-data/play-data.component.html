@@ -126,7 +126,7 @@
                 </auto-load-panel>
             }
             @if (musicRecordPaginated.isFinished() && !musicRecordService.data.isLoading()) {
-                <bung-divider prompt="End of music records" />
+                <bung-divider class="music-records-divider" prompt="End of music records" />
             }
         </bung-tab>
         @if (versionService.version() >= 4) {

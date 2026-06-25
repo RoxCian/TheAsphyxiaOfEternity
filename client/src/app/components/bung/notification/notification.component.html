@@ -1,5 +1,5 @@
 <ng-template #contentTemplate>
-    <bung-insertion class="content" [content]="content()" [context]="context()" />
+    <bung-insertion class="notify-content" [content]="content()" [context]="context()" />
 </ng-template>
 <ng-template let-data #buttonReturnTemplate>
     <button class="button {{ data?.elementClass }} is-small" [bungReturn]="$safeNavigationMigration(data?.value)">
@@ -26,12 +26,14 @@
 }
 @if (isSingleLine()) {
     <div class="singleline-wrapper">
-        <div class="content">
+        <div class="notify-content">
             <ng-container *ngTemplateOutlet="contentTemplate" />
         </div>
-        <div class="returns">
-            <ng-container *ngTemplateOutlet="returnContextsTemplate" />
-        </div>
+        @if (returnContext()) {
+            <div class="returns">
+                <ng-container *ngTemplateOutlet="returnContextsTemplate" />
+            </div>
+        }
     </div>
 } @else {
     <ng-container *ngTemplateOutlet="contentTemplate" />

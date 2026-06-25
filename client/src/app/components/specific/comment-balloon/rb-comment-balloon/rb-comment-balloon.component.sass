@@ -1,20 +1,20 @@
 :host
     display: grid
     grid-template: 1fr auto / auto 1fr
-    gap: 0.5em 2em
+    gap: 0.5em 1em
 :host .figure
     grid-area: span 2 / 1
-    width: 6.25em
-    height: 6.25em
-    margin: 0 // bulma fix fix
+    width: 3em
+    height: 3em
+    margin: 0 // bulma fix
 
     img
-        width: 6.25em
-        height: 6.25em
+        width: 3em
+        height: 3em
         aspect-ratio: 1 / 1
         object-fit: cover
         object-position: top center
-        border-radius: 8px
+        border-radius: 9999px
 .info
     grid-area: 1 / 2
     display: flex
@@ -63,7 +63,7 @@
             left: -1.5em
             top: -0.5em
             bottom: -0.5em
-
+            mask-size: 100% 100%
 
 .balloon-svg
     position: absolute

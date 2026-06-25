@@ -116,8 +116,7 @@ async function startExtraTask(task) {
         detached: true,
         windowsHide: false,
     })
-    taskProcess.on("close", () => log(`🔵 Task terminated: "${task}"`))
-    taskProcess.on("exit", () => log(`🔵 Task terminated: "${task}"`))
+    taskProcess.on("exit", () => log(`🔵 Task terminated: "${task.task}"`))
     taskProcess.on("error", (err) => {
         log(`🔵 Task error: "${task}"`)
     })

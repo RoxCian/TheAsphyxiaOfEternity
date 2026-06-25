@@ -1,4 +1,4 @@
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -252,6 +252,20 @@ export type Rb3VerdetDesKriegesUnlockRequest = {
 export enum Rb3VerdetDesKriegesUnlockRequestType {
     start, hiddenLink1, hiddenLink2, chapterFinish1 = 385, chapterFinish2 = 386, chapterFinish3 = 387
 }
+export type Rb3OrderShopResponse = {
+    experiences: number
+    level: number
+    levelExperiences: number
+    experiencesToNextLevel: number
+    orders: Rb3OrderResponse[]
+}
+export type Rb3OrderResponse = {
+    info: Rb3OrderInfo
+    slot: number
+    clearedCount: number
+    fragmentsCount: number
+    param: number
+}
 
 export type Rb6UploadAsphyxiaDataRequest = {
     sessionId: string
@@ -286,5 +300,6 @@ export type RbUpdateSettingsResponse = {
 
 export type RbCommentResponse<TVersion extends RbVersion> = RbComment<TVersion> & {
     iconId?: number
+    icon?: RbPlayerIcon
     characterId?: number
 }

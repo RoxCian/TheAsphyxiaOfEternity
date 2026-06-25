@@ -36,8 +36,9 @@ const readInfo: H.H = () => H.success
 
 const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    if (!await createSession(rid, 2)) return H.deny
-    return XF.x(new Rb2PlayerStart())
+    const session = await createSession(rid, 2)
+    if (!session) return H.deny
+    return XF.x(new Rb2PlayerStart(session.sessionId))
 }
 
 const readPlayer: H.H<RbPlayerRead> = async data => {

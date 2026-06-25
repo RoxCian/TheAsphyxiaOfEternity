@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb3Order, Rb3OrderDetails, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance, Rb3OrderResponse, Rb3OrderShopResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
@@ -14,6 +14,7 @@ import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, write
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
 import { getVerdetDesKriegesAppearances, getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
+import { getOrderShopLevel, rb3OrdersInfo } from "../../data/tables/rb3_orders"
 
 type V = 3
 const version = 3 as const
@@ -30,6 +31,7 @@ export function registerRb3Controllers() {
     C.route("rb3ReadVerdetDesKriegesAppearances", readVerdetDesKriegesAppearances)
     C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges)
     C.route("rb3DebugResetVerdetDesKrieges", debugResetVerdetDesKrieges)
+    C.route("rb3ReadOrderShop", readOrderShop)
     C.route("rb3ReadAvailableItems", readAvailableItems)
     C.route("rb3ReadSettings", readSettings)
     C.route("rb3WriteSettings", writeSettings)
@@ -230,6 +232,46 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
 }
 const debugResetVerdetDesKrieges: C.C<RbRequest> = data => DBH.remove<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 
+const readOrderShop: C.C<RbRequest, Rb3OrderShopResponse> = async data => {
+    const allOrders = await rb3OrdersInfo
+    const releasedMusics = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo", type: 0 })
+    const orderShop = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
+    const level = await getOrderShopLevel(orderShop?.experience ?? 0)
+    const result = {
+        experiences: orderShop?.experience,
+        level: level.level,
+        levelExperiences: level.experiences,
+        experiencesToNextLevel: level.experiencesToNextLevel
+    } as Rb3OrderShopResponse
+    result.orders = allOrders.filter(i => {
+        const cond = i.unlockCondition
+        if (cond.orderExperience && (orderShop?.experience ?? 0) < cond.orderExperience) return false
+        if (cond.allOrdersCleared && !cond.allOrdersCleared.every(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0)) return false
+        if (cond.anyOrdersCleared && cond.anyOrdersCleared.filter(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0).length < (cond.anyOrdersClearedCount ?? 1)) return false
+        if (cond.hasOrder && (orderShop?.details?.find(d => d.index === i.id)?.param ?? 0) < 1) return false
+        if (cond.anyMusicsUnlocked && !cond.anyMusicsUnlocked.some(el => releasedMusics.find(r => r.id === el))) return false
+        return true
+    }).map(i => {
+        const ord: Rb3OrderResponse = {
+            info: i,
+            slot: -1,
+            clearedCount: 0,
+            fragmentsCount: 0,
+            param: 0
+        }
+        const details = orderShop?.details?.find(d => d.index === i.id)
+        if (details) {
+            ord.slot = details.slot
+            ord.clearedCount = details.clearedCount
+            ord.fragmentsCount = details.fragmentsCount0
+            ord.param = details.param
+        }
+        return ord
+    })
+
+    return result
+}
+
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo" })
     return await readAvailableItemsShared(version, released, [{ type: 6, id: [0, 1, 2] }, { type: 7, id: [0] }, { type: 8, id: [0] }]) // icon, bywordLeft, bywordRight
@@ -308,7 +350,7 @@ async function toStageLogResponse(l: Rb3PlayerStageLog): Promise<RbStageLogRespo
         rivalStageIndex: l.stageIndex,
         rivalCpuId: l.rivalCpuId,
         rivalUserId: l.rivalUserId,
-        rivalPlayerId: l.rivalPlayerId,
+        rivalPlayerId: l.rivalSessionId,
         rivalUserName: l.rivalUserId.toString(),
         rivalMatchingGrade: l.rivalMatchingGrade,
         rivalClearType: toLiteralClearType(version, l.rivalClearType, "RIVAL", l.rivalAchievementRateTimes100),

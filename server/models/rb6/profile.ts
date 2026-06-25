@@ -21,7 +21,7 @@ export class Rb6PlayerAccount implements ICollection<"rb.rb6.player.account"> {
     @XD.ToO.str() lid = "ea"
     @XD.ToX.s32() intrvld = 0
     @XD.ToX.bool() succeed = true
-    @XD.u64() pst: bigint | DBBigInt = BigInt(0)
+    @XD.u64() pst: bigint | DBBigInt = DBBigInt(0)
     @XD.ToO.u8() wmode = 1
     @XD.ToO.u8() gmode = 0
     @XD.s16("ver") version = 0
@@ -31,7 +31,7 @@ export class Rb6PlayerAccount implements ICollection<"rb.rb6.player.account"> {
     @XD.bool("firstfree") isFirstFree = false
     @XD.ToO.s16() pay = 0
     @XD.ToO.s16() payPc = 0
-    @XD.u64() st: bigint | DBBigInt = BigInt(Date.now())
+    @XD.u64() st: bigint | DBBigInt = DBBigInt(Date.now())
     @XD.s32() opc = 0
     @XD.s32() lpc = 0
     @XD.s32() cpc = 0
@@ -79,12 +79,12 @@ export class Rb6PlayerConfig implements ICollection<"rb.rb6.player.config"> {
     @XD.u8("card_disp") cardDisplay = 0
     @XD.u8("score_tab_disp") scoreTabDisplay = 0
     @XD.s16() lastMusicId = 0
-    @XD.u8("last_note_grade") lastNoteGrade = Rb6ChartType.basic // TODO: lastChartType
+    @XD.u8("last_note_grade") lastChartType = Rb6ChartType.basic
     @XD.s16() defaultMusicId = 0
-    @XD.u8("default_note_grade") defaultNoteGrade = Rb6ChartType.basic // TODO: defaultChartType
+    @XD.u8("default_note_grade") defaultChartType = Rb6ChartType.basic
     @XD.u8() sortType = 0
-    @XD.u64() randomEntryWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 99999999))
-    @XD.u64() customFolderWork: bigint | DBBigInt = BigInt(Math.trunc(Math.random() * 9999999999999))
+    @XD.u64() randomEntryWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 99999999))
+    @XD.u64() customFolderWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 9999999999999))
     @XD.u8() folderType = 0
     @XD.bool() isTweet = false
     @XD.bool("is_link_twitter") isTwitterLinked = false
@@ -145,7 +145,7 @@ export class Rb6PlayerStageLog implements ICollection<"rb.rb6.playData.stageLog"
     @XD.s16("jt_jr") justReflecCount = 0
     @XD.s16("justcoll") justCollectionRateTimes100 = 0
     @XD.s32("r_uid") rivalUserId = 0
-    @XD.s32("r_plyid") rivalPlayerId = 0
+    @XD.s32("r_plyid") rivalSessionId = 0
     @XD.s8("r_stg") rivalStageIndex = 0
     @XD.s8("r_ct") rivalClearType = Rb6ClearType.none
     @XD.s16("r_sc") rivalScore = 0

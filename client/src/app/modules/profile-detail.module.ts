@@ -70,7 +70,8 @@ import { RbProgressSubpage } from '../pages/profile/progress/progress.component'
 import { Rb3VerdetDesKriegesNoteComponent } from '../components/specific/verdet-des-krieges/rb3-verdet-des-krieges-note/rb3-verdet-des-krieges-note.component'
 import { RbTextPipe } from "../pipes/specific/rb-text.pipe";
 import { Rb5YurukomeListComponent } from '../components/specific/yurukome-list/rb5-yurukome-list/rb5-yurukome-list.component';
-import { Rb5YurukomePanelComponent } from '../components/specific/yurukome-list/rb5-yurukome-panel/rb5-yurukome-panel.component'
+import { Rb5YurukomePanelComponent } from '../components/specific/yurukome-list/rb5-yurukome-panel/rb5-yurukome-panel.component';
+import { Rb5ReftisInfoComponent } from '../components/specific/reftis-info/rb5-reftis-info/rb5-reftis-info.component'
 
 @NgModule({
     declarations: [
@@ -140,7 +141,8 @@ import { Rb5YurukomePanelComponent } from '../components/specific/yurukome-list/
         Rb3VerdetDesKriegesNoteComponent,
         RbTextPipe,
         Rb5YurukomeListComponent,
-        Rb5YurukomePanelComponent
+        Rb5YurukomePanelComponent,
+        Rb5ReftisInfoComponent
     ],
     imports: [
         CommonModule,
