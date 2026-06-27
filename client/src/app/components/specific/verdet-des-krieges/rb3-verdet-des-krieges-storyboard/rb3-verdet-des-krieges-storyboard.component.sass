@@ -63,7 +63,8 @@ h2.contents-header
             z-index: 1
         
         span
-            animation: emphasis-text-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
+            color: var(--emphasis-color)
+            // animation: emphasis-text-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
     span.has-note
         text-decoration: solid underline 2px
         cursor: pointer
@@ -84,7 +85,7 @@ h2.contents-header
     span.h
         opacity: 0
         color: white
-        animation: show-highlight-character 0.1s var(--timeout) step-end forwards
+        animation: show-highlight-character 0.1s var(--timeout) step-start forwards // "step-end" can cause render problems
     p.h, .highlight-bg
         position: fixed
         inset: 0
@@ -92,8 +93,10 @@ h2.contents-header
         animation: show-highlight 0.8s var(--timeout) var(--ease-in) forwards, hide-highlight 0.8s var(--leave-timeout) var(--ease-in) forwards
     p.h
         text-align: center
+        margin: 2em
+        white-space: pre-line
         opacity: 0
-        z-index: 4
+        z-index: 6
     .highlight-complex
         display: grid
         grid-template: 1fr / 1fr
@@ -253,7 +256,7 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
     inset: 0
     align-items: center
     justify-content: center
-    animation: show-highlight 0.8s 1.6s var(--ease-in) forwards
+    animation: show-highlight 0.8s 0.8s var(--ease-in) forwards
     opacity: 0
     z-index: 3
 
@@ -278,7 +281,8 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         gap: 1em
 @media (prefers-color-scheme: dark)
     .storyboard-content span.has-emphasis span
-        animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards
+        color: var(--emphasis-color-dark)
+        // animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards
     .storyboard-content span.has-emphasis::before
         background: linear-gradient(90deg, transparent 0%, var(--emphasis-background-dark) 1em, var(--emphasis-background-dark) calc(100% - 1em), transparent 100%)
 .no-animation *
@@ -335,23 +339,29 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         opacity: 1
 @keyframes show-highlight
     from
-        display: none
+        user-select: none
+        pointer-events: none
         opacity: 0
     0%
-        display: block
+        user-select: auto
+        pointer-events: all
         opacity: 0
     to
-        display: block
+        user-select: auto
+        pointer-events: all
         opacity: 1
 @keyframes hide-highlight
     from
-        display: block
+        user-select: auto
+        pointer-events: all
         opacity: 1
-    100%
-        display: block
-        opacity: 0
+    0%
+        user-select: none
+        pointer-events: none
+        opacity: 1
     to
-        display: none
+        user-select: none
+        pointer-events: none
         opacity: 0
 @keyframes page-enter-animation
     from

@@ -2,7 +2,7 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb3Order, Rb3OrderDetails, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
+import { Rb3Order, Rb3OrderDetails, Rb3OrderDetailsParamFlag, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
 import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance, Rb3OrderResponse, Rb3OrderShopResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
@@ -140,11 +140,34 @@ const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, 
     if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(401, "Page number overflow")
     if (data.chapter === event.chapter) {
         if (data.page === 4 && event.page === 3) {
-            if (!event.progress.slice(0, 4).every(p => p < 60)) return C.error(401, "Progress not reached")
+            if (!event.progress.slice(0, 4).every(p => p === 60)) return C.error(401, "Progress not reached")
             event.page = 4
         } else if (data.page > event.page + 1) return C.error(401, "Progress not reached")
         else if (data.page === event.page + 1) {
             event.page = data.page
+        }
+    }
+    if (data.page >= 4 && data.chapter > 0 && data.chapter <= 3 && data.chapter === event.chapter) {
+        // unlock special orders
+        const order = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" }) ?? new Rb3Order()
+        let orderIndex = 0
+        switch (data.chapter) {
+            case 1:
+                orderIndex = 174 // 二人の英雄
+                break
+            case 2:
+                orderIndex = 175 // 白の力
+                break
+            case 3:
+                orderIndex = 176 // 朱雀の姿
+                break
+        }
+        if (!order?.details?.find(d => d.index === orderIndex)) {
+            const orderDetails = new Rb3OrderDetails(orderIndex)
+            orderDetails.param = Rb3OrderDetailsParamFlag.unlocked
+            order.details ??= []
+            order.details.push(orderDetails)
+            await DBH.update(data.rid, { collection: "rb.rb3.player.order" }, order)
         }
     }
     event.lastReadChapter = data.chapter
@@ -175,10 +198,8 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
                     const order = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
                     if (!order) throw new Error("Order is unlockable, but order container is not found.")
                     order.details ??= []
-                    const orderDetails = new Rb3OrderDetails()
-                    orderDetails.index = 174 // 二人の英雄
+                    const orderDetails = new Rb3OrderDetails(174) // 二人の英雄
                     orderDetails.param = 1
-                    orderDetails.slot = -1
                     order.details.push(orderDetails)
                     t.update(data.rid, { collection: "rb.rb3.player.order" }, order)
                 }
@@ -193,10 +214,8 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
                     const order = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
                     if (!order) throw new Error("Order is unlockable, but order container is not found.")
                     order.details ??= []
-                    const orderDetails = new Rb3OrderDetails()
-                    orderDetails.index = 175 // 白の力
+                    const orderDetails = new Rb3OrderDetails(175) // 白の力
                     orderDetails.param = 1
-                    orderDetails.slot = -1
                     order.details.push(orderDetails)
                     t.update(data.rid, { collection: "rb.rb3.player.order" }, order)
                 }
@@ -205,6 +224,7 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1:
             if (event.chapter === 1 && event.progress.every(l => l === 60)) {
                 event.chapter = 2
+                event.page = 0
                 event.progress.fill(0)
                 await addMusicUnlockInfo(t, data.rid, Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) // 385: 双璧のVANESSA
                 result.modified = true
@@ -213,6 +233,7 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
         case Rb3VerdetDesKriegesUnlockRequestType.chapterFinish2:
             if (event.chapter === 2 && event.progress.every(l => l === 60)) {
                 event.chapter = 3
+                event.page = 0
                 event.progress.fill(0)
                 await addMusicUnlockInfo(t, data.rid, Rb3VerdetDesKriegesUnlockRequestType.chapterFinish2) // 386: Vanity shadow
                 result.modified = true

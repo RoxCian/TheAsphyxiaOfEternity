@@ -45,11 +45,14 @@ export class RbSettingsService {
     readonly equips = rbData<Rb6EquipmentInfo[], {}>(computed(() => this.versionService.version() === 6 ? "rb6ReadEquips" : undefined), {})
     readonly characterCards = rbData<Rb6CharacterCardInfo[], {}>(computed(() => this.versionService.version() === 6 ? "rb6ReadCharacterCards" : undefined), {})
 
+    #versionBackup?: RbVersion
+
     constructor() {
         effect(() => {
-            if (this.versionService.version()) {
+            if (this.versionService.version() !== this.#versionBackup) {
                 this.submittedInternal.set(false)
                 this.submissionErrorInternal.set(undefined)
+                this.#versionBackup = this.versionService.version()
             }
             if (this.settingsForm().dirty()) {
                 this.submittedInternal.set(false)

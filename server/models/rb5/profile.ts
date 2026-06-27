@@ -78,9 +78,9 @@ export class Rb5PlayerConfig implements ICollection<"rb.rb5.player.config"> {
     @XD.u8("card_disp") cardDisplay = 0
     @XD.u8("score_tab_disp") scoreTabDisplay = 0
     @XD.s16() lastMusicId = 0
-    @XD.u8() lastChartType = Rb4ChartType.basic
+    @XD.u8("last_note_grade") lastChartType = Rb4ChartType.basic
     @XD.s16() defaultMusicId = 0
-    @XD.u8() defaultChartType = Rb4ChartType.basic
+    @XD.u8("default_note_grade") defaultChartType = Rb4ChartType.basic
     @XD.u8() sortType = 0
     @XD.u64() randomEntryWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 99999999))
     @XD.u64() customFolderWork: bigint | DBBigInt = DBBigInt(Math.trunc(Math.random() * 9999999999999))

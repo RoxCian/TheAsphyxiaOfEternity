@@ -92,14 +92,14 @@
             </div>
         </div>
     </section>
-} @else if (viewState() === "page" || viewState() === "transit-page" || viewState() === "transit-chapter") {
-    <section class="storyboard" [class.no-animation]="showUnlockScreen()" animate.leave="non-page-leave">
+} @else if ((viewState() === "page" || viewState() === "transit-page" || viewState() === "transit-chapter") && (!service.canUnlockMusic() || notUnlockNow())) {
+    <section class="storyboard" [class.no-animation]="showUnlockScreen() || isUnlocked()" animate.leave="non-page-leave">
         @if (viewState() === "page" || viewState() === "transit-page") {
             <div class="chapter-domain" animate.enter="page-enter" animate.leave="page-leave">
                 <h2 [style.--timeout]="'0.8s'">
                     <button class="button back-button" [disabled]="service.isLoading()" (click)="onGotoContents()"><i class="mdi mdi-chevron-left"></i></button>
                     <span>
-                        @switch (data?.chapter) {
+                        @switch (service.chapter()) {
                             @case (1) { Chapter 1 }
                             @case (2) { Chapter 2 }
                             @case (3) { Chapter Final }
@@ -155,7 +155,9 @@
                                 <span class="empty"></span>
                                 <div class="progress-label" [class.is-loading]="service.isLoading() || !service.isActivated()">
                                     <div class="loader"></div>
-                                    @if (i === 4 && (data?.page ?? 0) < 4) {
+                                    @if (service.chapter() < (data?.chapter ?? 0)) {
+                                        <span><i class="mdi mdi-check"></i></span>
+                                    } @else if (i === 4 && (data?.page ?? 0) < 4) {
                                         <span><i class="mdi mdi-lock"></i></span>
                                     } @else {
                                         <span>{{ ((data?.progress?.[i] ?? 0) / 0.60).toFixed(0) + "%" }}</span>
@@ -163,7 +165,7 @@
                                 </div>
                             </div>
                             <div class="progress-base">
-                                <div class="progress-body" [style.--progress-body-left]="`${100 - (data?.progress?.[i] ?? 0) / 0.60}%`" [style.background]="service.appearances.value()?.[i]?.themeColor"></div>
+                                <div class="progress-body" [style.--progress-body-left]="`${service.chapter() < (data?.chapter ?? 0) ? 0 : (100 - (data?.progress?.[i] ?? 0) / 0.60)}%`" [style.background]="service.appearances.value()?.[i]?.themeColor"></div>
                             </div>
                         </div>
                     }
@@ -176,7 +178,7 @@
                     <ul class="pagination-list">
                         @for (i of (service.pageCount.value()?.pageCount ?? 0 | range); track i) {
                             <li>
-                                <button class="button pagination-link" [class.is-info]="i === service.page()" [disabled]="i > (data?.page ?? 0) || service.isLoading()" (click)="i === service.page() ? undefined : onNavigateToPage(i)">{{ i + 1 }}</button>
+                                <button class="button pagination-link" [class.is-info]="i === service.page()" [disabled]="(service.chapter() >= (data?.chapter ?? 0) && i > (data?.page ?? 0)) || service.isLoading()" (click)="i === service.page() ? undefined : onNavigateToPage(i)">{{ i + 1 }}</button>
                             </li>
                         }
                     </ul>
@@ -187,16 +189,18 @@
                         <button class="button pagination-next" animate.enter="page-enter" animate.leave="page-leave"
                             [class.is-loading]="service.isLoading()"
                             [style.--timeout]="`${timeoutBase + timeoutOffset}s`"
-                            [disabled]="(!service.canNavigateToNextPage() && !service.canNavigateToNextChapter()) || service.isLoading()"
+                            [disabled]="data?.completed || (!service.canNavigateToNextPage() && !service.canNavigateToNextChapter() && !service.canUnlockMusic()) || service.isLoading()"
                             [bungTooltip]="`Increase progress to unlock ${service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1 ? 'new music' : 'next page'}`"
-                            [bungTooltip.disabled]="service.canNavigateToNextPage() || service.canNavigateToNextChapter()"
+                            [bungTooltip.disabled]="service.canNavigateToNextPage() || service.canNavigateToNextChapter() || service.canUnlockMusic()"
                             (click)="onNavigateToNext()">
                             @if (data?.completed) {
                                 The end
-                            } @else if (service.canNavigateToNextChapter()) {
-                                Next chapter...
                             } @else if (service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
-                                Unlock music
+                                @if (service.chapter() === data?.chapter && service.canUnlockMusic()) {
+                                    Unlock...
+                                } @else {
+                                    Next chapter...
+                                }
                             } @else {
                                 Next page
                             }

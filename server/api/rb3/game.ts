@@ -238,7 +238,7 @@ async function writePlayerCore(player: Rb3Player, session: RbSession) {
         t.upsert(rid, equipQuery, e)
     }
     if (hasAny(player.pdata.seedPod?.data)) for (const s of player.pdata.seedPod.data) t.upsert(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
-    await updateVerdetDesKrieges(rid, player.pdata.order, player.pdata.stageLogs?.log, t)
+    await updateVerdetDesKrieges(rid, player.pdata.order, player.pdata.stageLogs?.log, session, t)
     if (player.pdata.order) await updateOrder(rid, player.pdata.order, player.pdata.account.version, player.pdata.stageLogs?.log, t)
     if (player.pdata.stamp) t.upsert(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
@@ -288,7 +288,7 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb3PlayerSta
     t.insert(rid, stageLog)
 }
 
-async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: Rb3PlayerStageLog[] | undefined, t: DBH.T) {
+async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: Rb3PlayerStageLog[] | undefined, session: RbSession, t: DBH.T) {
     const data = await t.findOne<Rb3VerdetDesKrieges>(rid, { collection: "rb.rb3.event.verdetDesKrieges" })
     if (!data) return
     let modified = false
@@ -300,7 +300,6 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
         modified = true
         if (data) data.progress[clueId] = Math.min(60, data.progress[clueId] + count)
     }
-    const canUnlockClue5 = data.progress.slice(0, 4).every(p => p === 60)
     if (data.chapter === 1) {
         // clue 1
         if (canModify(0)) {
@@ -312,8 +311,8 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
         // clue 2
         if (canModify(1)) {
             if (stageLogs && stageLogs.length > 0) {
-                const timeCheck = new Date(stageLogs[stageLogs.length - 1].time * 1000).getHours() * 100 + new Date(stageLogs[stageLogs.length - 1].time * 1000).getMinutes()
-                if (timeCheck >= 700 && timeCheck < 1200) {
+                const time = new Date(session.time)
+                if (time.getHours() >= 7 && time.getHours() < 12) {
                     increaseProgress(1, 20)
                 }
             }
@@ -328,24 +327,29 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
                 }
             }
         }
-        // clue 5 unlock
-        if (canUnlockClue5) {
-            modified = true
-            data.page = 4
-            order.details ??= []
-            const orderDetails = new Rb3OrderDetails()
-            orderDetails.index = 174 // 二人の英雄
-            orderDetails.param = 1
-            orderDetails.slot = -1
-            order.details.push(orderDetails)
-        }
         // clue 5
         if (canModify(4)) {
-            const orderHeroOfTwo = order.details?.find(o => o.index === 174)
-            if (orderHeroOfTwo) {
-                const count = countPhonix(orderHeroOfTwo, stageLogs)
+            const orderHeroesOfTwo = order.details?.find(o => o.index === 174)
+            if (orderHeroesOfTwo) {
+                const count = countHeroesOfTwo(orderHeroesOfTwo, stageLogs)
+                console.log("heroes of two count:", count)
                 if (count > 0) {
                     increaseProgress(4, count * 3)
+                }
+            } else {
+                const orderSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
+                const orderHeroesOfTwoSaved = orderSaved?.details?.find(o => o.index === 174)
+                if (orderHeroesOfTwoSaved && orderHeroesOfTwoSaved.slot >= 0) {
+                    const count = countHeroesOfTwo(undefined, stageLogs)
+                    if (count > 0) {
+                        increaseProgress(4, count * 3)
+                        // if order state has not changed, it completely won't appear in the write method. Let's manually create one
+                        order.details ??= []
+                        const details = new Rb3OrderDetails(174)
+                        details.param = orderHeroesOfTwoSaved.param
+                        details.slot = orderHeroesOfTwoSaved.slot
+                        order.details.push(details)
+                    }
                 }
             }
         }
@@ -371,17 +375,6 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
             if (orderA && orderA.clearedCount > 0) {
                 increaseProgress(3, 60)
             }
-        }
-        // clue 5 unlock
-        if (canUnlockClue5) {
-            modified = true
-            data.page = 4
-            order.details ??= []
-            const orderDetails = new Rb3OrderDetails()
-            orderDetails.index = 175 // 白の力
-            orderDetails.param = 1
-            orderDetails.slot = -1
-            order.details.push(orderDetails)
         }
         // clue 5
         if (canModify(4)) {
@@ -421,17 +414,6 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
                 increaseProgress(3, 60)
             }
         }
-        // clue 5 unlock
-        if (canUnlockClue5) {
-            modified = true
-            data.page = 4
-            order.details ??= []
-            const orderDetails = new Rb3OrderDetails()
-            orderDetails.index = 176 // 朱雀の姿
-            orderDetails.param = 1
-            orderDetails.slot = -1
-            order.details.push(orderDetails)
-        }
         // clue 5
         if (canModify(4)) {
             const orderPhonix = order.details?.find(o => o.index === 176)
@@ -439,6 +421,21 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
                 const count = countPhonix(orderPhonix, stageLogs)
                 if (count > 0) {
                     increaseProgress(4, count * 3)
+                }
+            } else {
+                const orderSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
+                const orderPhonixSaved = orderSaved?.details?.find(o => o.index === 174)
+                if (orderPhonixSaved && orderPhonixSaved.slot >= 0) {
+                    const count = countPhonix(undefined, stageLogs)
+                    if (count > 0) {
+                        increaseProgress(4, count * 3)
+                        // if order state has not changed, it completely won't appear in the write method. Let's manually create one
+                        order.details ??= []
+                        const details = new Rb3OrderDetails(176)
+                        details.param = orderPhonixSaved.param
+                        details.slot = orderPhonixSaved.slot
+                        order.details.push(details)
+                    }
                 }
             }
         }
@@ -534,7 +531,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                     case 174: // 二人の英雄
                         if (isCleared(o.index)) break
                         if (o.slot >= 0) {
-                            const fragsBase = countHeroOfTwo(o, stageLogs)
+                            const fragsBase = countHeroesOfTwo(o, stageLogs)
                             let orderSaved = ordersSaved!.details?.find(os => os.index == o.index)
                             if (!orderSaved) {
                                 if (fragsBase >= 20) stamp.ticketCount[currentVersion - 1] += 4
@@ -553,9 +550,12 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                 if (frags >= 20) {
                                     orderSaved.clearedCount = 1
                                     orderSaved.slot = -1
+                                    orderSaved.fragmentsCount0 = 0
                                     stamp.ticketCount[currentVersion - 1] += 4
+                                } else {
+                                    orderSaved.slot = o.slot
+                                    orderSaved.fragmentsCount0 = frags
                                 }
-                                orderSaved.fragmentsCount0 = frags
                             }
                         } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
                         break
@@ -586,6 +586,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                 if (frags >= 20) {
                                     orderSaved.clearedCount = 1
                                     orderSaved.slot = -1
+                                    orderSaved.fragmentsCount0 = 0
                                     newReleases.push({
                                         collection: "rb.rb3.player.releasedInfo",
                                         type: 7,
@@ -593,8 +594,10 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                         param: 0,
                                         // insertTime: Date.now()
                                     })
+                                } else {
+                                    orderSaved.slot = o.slot
+                                    orderSaved.fragmentsCount0 = frags
                                 }
-                                orderSaved.fragmentsCount0 = frags
                             }
                         } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
                         break
@@ -702,13 +705,13 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
     }
 }
 
-function countHeroOfTwo(order: Rb3OrderDetails, stageLogs: Rb3PlayerStageLog[] | undefined): number {
-    return (order.index === 174 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => log.rivalCpuId == 0)?.length ?? 0)
+function countHeroesOfTwo(order: Rb3OrderDetails | undefined, stageLogs: Rb3PlayerStageLog[] | undefined): number {
+    return (order && order.index === 174 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => log.rivalCpuId > 0)?.length ?? 0)
 }
 
-function countPhonix(order: Rb3OrderDetails, stageLogs: Rb3PlayerStageLog[] | undefined): number {
+function countPhonix(order: Rb3OrderDetails | undefined, stageLogs: Rb3PlayerStageLog[] | undefined): number { // Phonix, not Phoenix
     const phonixMusics = [54, 73, 110, 156, 171, 200, 208, 262, 274, 303, 325, 382, 387]
-    return (order.index === 176 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => phonixMusics.includes(log.musicId) && log.rivalCpuId == 0)?.length ?? 0)
+    return (order && order.index === 176 && (order.slot >= 0 || order.clearedCount > 0 || order.fragmentsCount0 > 0) ? order.fragmentsCount0 : 0) + (stageLogs?.filter(log => phonixMusics.includes(log.musicId) && log.rivalCpuId > 0)?.length ?? 0)
 }
 
 async function updateEventProgress(rid: string, e: Rb3EventProgress, t: DBH.T) {

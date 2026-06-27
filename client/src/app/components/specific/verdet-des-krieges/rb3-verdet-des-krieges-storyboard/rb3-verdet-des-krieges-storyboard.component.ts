@@ -1,6 +1,6 @@
 import { AnimationCallbackEvent, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked } from "@angular/core"
 import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
-import { Rb3VerdetDesKriegesPhrasePart, Rb3VerdetDesKriegesUnlockRequestType, RbChartsInfo, RbMusicInfo, RbMusicResponse } from "rbweb"
+import { Rb3VerdetDesKriegesPhrasePart, Rb3VerdetDesKriegesUnlockRequestType } from "rbweb"
 import { timeout } from "../../../../utils/functions"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
@@ -13,24 +13,26 @@ import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb
 })
 export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     protected readonly service = inject(Rb3VerdetDesKriegesService)
-    protected readonly viewState = signal<"cover" | "contents" | "page" | "transit-page" | "transit-chapter" | "transit-non-page">("cover")
+    protected readonly viewState = signal<"init" | "cover" | "contents" | "page" | "transit-page" | "transit-chapter" | "transit-non-page">("init")
     protected readonly showPastel = linkedSignal(computed(() => this.service.chapter() === 1 && ((this.service.verdetDesKrieges.value()?.chapter ?? 0) > 1 || (this.service.verdetDesKrieges.value()?.page ?? 0) >= 3)))
     protected readonly pastelProperty = {
-        pastelId: Math.random() > 0.8 ? Math.round(Math.random() * 4) : -1, // 20% probability
+        pastelId: Math.random() > 0.5 ? Math.round(Math.random() * 4) : -1, // 50% probability
         side: (["left", "right", "top", "bottom"] as const)[Math.round(Math.random() * 3)],
         position: Math.random()
     }
     protected readonly notUnlockNow = signal(false)
     protected readonly isUnlocking = signal(false)
+    protected readonly isShowUnlockMusicModal = signal(false)
     protected readonly isUnlocked = signal(false)
-    protected readonly showUnlockScreen = computed(() => this.service.isActivated() && !this.notUnlockNow() && ((this.service.verdetDesKrieges.value()?.progress.every(p => p === 60) && this.service.chapter() === this.service.verdetDesKrieges.value()?.chapter) || this.isUnlocked()))
-    
+    protected readonly showUnlockScreen = computed(() => this.service.isActivated() && !this.notUnlockNow() && ((this.service.canUnlockMusic() && this.service.chapter() === this.service.verdetDesKrieges.value()?.chapter) || this.isShowUnlockMusicModal() || this.isUnlocking()))
+
     private readonly popupService = inject(BungPopupService)
     private viewStateBackup?: "cover" | "contents" | "page"
 
     constructor() {
         effect(() => {
             if (this.service.isLoading() || !this.service.isActivated()) return
+            this.isUnlocked.set(false)
             const state = untracked(() => this.viewState())
             if (!this.service.verdetDesKrieges.value() || this.service.chapter() === 0) {
                 if (state === "transit-page" || state === "transit-non-page") this.viewStateBackup = "cover"
@@ -52,6 +54,9 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     }
     protected async onContentTransitionEnd(e: AnimationCallbackEvent) {
         await timeout(400)
+        if (this.viewState() === "transit-non-page" || this.viewState() === "transit-chapter") {
+            this.notUnlockNow.set(false)
+        }
         if (this.viewStateBackup) this.viewState.set(this.viewStateBackup)
         else if (this.viewState() === "contents") return e.animationComplete()
         else if (!this.service.verdetDesKrieges.value() || this.service.chapter() === 0) this.viewState.set("cover")
@@ -87,8 +92,12 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     }
     protected onNavigateToNext() {
         if (this.service.page() === (this.service.pageCount.value()?.pageCount ?? 0) - 1) {
-            this.viewState.set("transit-chapter")
-            this.service.navigateTo(this.service.chapter() + 1, 0)
+            if (this.service.chapter() === this.service.verdetDesKrieges.value()?.chapter && this.service.canUnlockMusic()) {
+                this.notUnlockNow.set(false)
+            } else {
+                this.viewState.set("transit-chapter")
+                this.service.navigateTo(this.service.chapter() + 1, 0)
+            }
         } else {
             this.viewState.set("transit-page")
             this.service.navigateTo(this.service.chapter(), this.service.page() + 1)
@@ -115,7 +124,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
         }
         let unlockFlag: Rb3VerdetDesKriegesUnlockRequestType
         switch (data.chapter) {
-            case 1: 
+            case 1:
                 unlockFlag = Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1
                 break
             case 2:
@@ -133,18 +142,19 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
             this.isUnlocking.set(false)
             return
         }
-        this.isUnlocked.set(true)
+        this.isShowUnlockMusicModal.set(true)
         this.isUnlocking.set(false)
+        this.isUnlocked.set(true)
         const popup = this.popupService.popup(undefined, undefined, RbMusicUnlockPopupComponent, {
             duration: Infinity,
+            layer: "rb-music-score",
             bindings: {
                 version: 3,
                 music
             }
         })
-        const closeHandle = popup.closed.subscribe(() => {
-            this.isUnlocked.set(false)
-            if (data.chapter !== 3) this.service.navigateTo(data.chapter + 1, 0)
+        const closeHandle = popup.closing.subscribe(() => {
+            this.isShowUnlockMusicModal.set(false)
             closeHandle.unsubscribe()
         })
     }

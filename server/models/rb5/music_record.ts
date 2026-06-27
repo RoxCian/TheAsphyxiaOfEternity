@@ -13,10 +13,10 @@ export class Rb5MusicOldRecord {
     @XD.s16() combo = 0
     @XD.s16("ms") missCount = -1
     @XD.s16() param = 0
-    @XD.s32("bscrt") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bart") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bctt") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bmst") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bst") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bct") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bat") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bmt") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.u16("ver") version?: number
 
     constructor(musicId: number, chartType: Rb4ChartType) {
@@ -28,25 +28,18 @@ export class Rb5MusicRecord extends Rb5MusicOldRecord implements ICollection<"rb
     readonly collection = "rb.rb5.playData.musicRecord"
     @XD.s32() time = Math.trunc(Date.now() / 1000)
     @XD.s32() kFlag = 0
-    @XD.bool("ghostr") isHasGhostRed = false
-    @XD.bool("ghostb") isHasGhostBlue = false
-}
-export class Rb5MusicRecord2 extends Rb5MusicOldRecord implements ICollection<"rb.rb5.playData.musicRecord"> {
-    readonly collection = "rb.rb5.playData.musicRecord"
-    @XD.s32() time = Math.trunc(Date.now() / 1000)
-    @XD.s32("bst") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bct") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bat") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32("bmt") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
-    @XD.s32() kFlag = 0
+    @XD.s32("bscrt") bestScoreUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bart") bestAchievementRateUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bctt") bestComboUpdateTime = Math.trunc(Date.now() / 1000)
+    @XD.s32("bmst") bestMissCountUpdateTime = Math.trunc(Date.now() / 1000)
     @XD.bool("ghostr") isHasGhostRed = false
     @XD.bool("ghostb") isHasGhostBlue = false
 }
 
 class Rb5MusicRecordsData {
-    @XD.aw("rec", Rb5MusicRecord) record?: ArrayWrapper<"rec", Rb5MusicRecord> = {}
-    @XD.aw("rec", "rec", Rb5MusicRecord2) record2?: ArrayWrapper<"rec", Rb5MusicRecord2> = {}
-    @XD.aw("rec", Rb5MusicOldRecord) recordOld?: ArrayWrapper<"rec", Rb5MusicOldRecord> = {}
+    @XD.aw("rec", Rb5MusicRecord) record?: ArrayWrapper<"rec", Rb5MusicRecord>
+    // @XD.aw("rec", "rec", Rb5MusicRecord) record2?: ArrayWrapper<"rec", Rb5MusicRecord>
+    @XD.aw("rec", Rb5MusicOldRecord) recordOld?: ArrayWrapper<"rec", Rb5MusicOldRecord>
 }
 export class Rb5MusicRecords {
     @XD.type(Rb5MusicRecordsData) pdata = new Rb5MusicRecordsData()

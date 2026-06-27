@@ -43,21 +43,23 @@ export class Rb3VerdetDesKriegesService {
         if (chapter > data.chapter) return false
         if (page < data.page) return true
         if (page > data.page) return false
-        if (page >= 3) return data.progress[0] === 60 && data.progress[1] === 60 && data.progress[2] === 60 && data.progress[3] === 60 && data.lastReadPage < pageCount
+        if (page >= 3) return data.progress[0] === 60 && data.progress[1] === 60 && data.progress[2] === 60 && data.progress[3] === 60 && page < pageCount - 1
         return true
     })
     readonly canNavigateToNextChapter = computed(() => {
+        if (this.verdetDesKrieges.isLoading()) return false
         const data = this.verdetDesKrieges.value()
         if (!data) return true
-        return this.chapter() < data.chapter || (this.chapter() === data.chapter && data.chapter < 3 && data.progress.every(p => p === 60))
+        return this.chapter() < data.chapter
     })
     readonly canUnlockMusic = computed(() => {
+        if (this.verdetDesKrieges.isLoading()) return false
         const data = this.verdetDesKrieges.value()
-        return data?.progress.every(p => p === 60)
+        return data?.progress.every(p => p === 60) && !data.completed
     })
     readonly claudiaAbnormal = computed(() => {
         const data = this.verdetDesKrieges.value()
-        return (data?.chapter === 2 && data?.progress?.[0] !== 60) && !this.claudiaAbnormalClicked() ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
+        return (data && data.chapter === 2 && data.page >= 1 && data.progress[0] !== 60) && !this.claudiaAbnormalClicked() ? Rb3VerdetDesKriegesService.claudiaAbnormalType : ClaudiaAbnormalType.none
     })
     readonly isShowPastel = computed(() => {
         const data = this.verdetDesKrieges.value()
@@ -65,7 +67,9 @@ export class Rb3VerdetDesKriegesService {
     })
     private readonly claudiaAbnormalClicked = signal(false)
     private readonly isLoadingInternal = signal(false)
-    readonly isLoading = computed(() => this.verdetDesKrieges.isLoading() || this.pageCount.isLoading() || this.appearances.isLoading() || this.isLoadingInternal())
+    private readonly isPageLoadingInternal = signal(false)
+    readonly isLoading = computed(() => this.verdetDesKrieges.isLoading() || this.pageCount.isLoading() || this.appearances.isLoading() || this.isLoadingInternal() || this.isPageLoadingInternal())
+    readonly isPageLoading = this.isPageLoadingInternal.asReadonly()
 
     private static readonly claudiaAbnormalType: ClaudiaAbnormalType = Math.random() > (2 / 3) ? 1 + Math.round(Math.random() * 3) : ClaudiaAbnormalType.none
 
@@ -105,16 +109,17 @@ export class Rb3VerdetDesKriegesService {
                 return
             }
             // local check end
-            this.isLoadingInternal.set(true)
+            this.isPageLoadingInternal.set(true)
             this.chapterInternal.set(chapter)
             this.pageInternal.set(page)
             const pageData = await rbEmitJSON<Rb3VerdetDesKriegesContent[]>("rb3ReadVerdetDesKriegesPage", { rid: this.profileService.rid(), chapter, page })
             this.verdetDesKrieges.reload()
             this.pageContentInternal.set(pageData)
-            this.isLoadingInternal.set(false)
+            this.isPageLoadingInternal.set(false)
         } catch (ex) {
             this.chapterInternal.set(chapterBackup)
             this.pageInternal.set(pageBackup)
+            this.isPageLoadingInternal.set(false)
             this.notificationService.notify((ex as Error).message, "danger")
         }
     }
@@ -148,11 +153,9 @@ export class Rb3VerdetDesKriegesService {
         if (!modified.modified) {
             return undefined
         }
-        if (type < Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) {
-            this.verdetDesKrieges.reload()
-            return undefined
-        }
-        const music = await rbEmitJSON<RbMusicResponse<3>>("rbGetMusic", { version: 3, musicId: type })
+        this.verdetDesKrieges.reload()
+        if (type < Rb3VerdetDesKriegesUnlockRequestType.chapterFinish1) return undefined
+        const music = await rbEmitJSON<RbMusicResponse<3>>("rbReadMusic", { version: 3, musicId: type })
         this.isLoadingInternal.set(false)
         // if (this.verdetDesKrieges.value()?.chapter === 3) this.verdetDesKrieges.reload()
         // else await this.navigateTo(this.verdetDesKrieges.value()!.chapter + 1, 0)

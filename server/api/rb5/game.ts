@@ -2,7 +2,7 @@ import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
-import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecord2, Rb5MusicRecords } from "../../models/rb5/music_record"
+import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecords } from "../../models/rb5/music_record"
 import { Rb5Mylist } from "../../models/rb5/mylist"
 import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
 import { Rb5ShopInfo } from "../../models/rb5/shop_info"
@@ -29,7 +29,7 @@ export function registerRb5Handlers() {
     H.route("player.rb5_player_write_5", writePlayer2) // VOLZZA 2
     H.route("player.rb5_player_end", endPlayer)
     H.route("player.rb5_player_read_score", readPlayerScore)
-    H.route("player.rb5_player_read_score_5", readPlayerScore2) // VOLZZA 2
+    H.route("player.rb5_player_read_score_5", readPlayerScore) // VOLZZA 2
     H.route("player.rb5_player_read_score_old_5", readPlayerScoreOldVersion) // VOLZZA 2
     H.route("lobby.rb5_lobby_entry", createAddLobbyHandler(5))
     H.route("lobby.rb5_lobby_read", createReadLobbyHandler(5))
@@ -169,13 +169,6 @@ const readPlayerScore: H.H = async data => {
     result.pdata.record = records.length > 0 ? { rec: records } : {}
     return XF.x(result)
 }
-const readPlayerScore2: H.H = async data => {
-    const rid = $(data).str("rid")
-    const result = new Rb5MusicRecords()
-    const records = await DBH.find(rid, Rb5MusicRecord2, { collection: "rb.rb5.playData.musicRecord" })
-    result.pdata.record2 = records.length > 0 ? { rec: records } : {}
-    return XF.x(result)
-}
 
 const readPlayerScoreOldVersion: H.H = async data => {
     const rid = $(data).str("rid")
@@ -240,7 +233,8 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean, session: R
         if (baseSaved) {
             if (baseSaved.name) player.pdata.base.name = baseSaved.name
             player.pdata.base.comment = baseSaved.comment
-            player.pdata.base.skillPointTimes10 = baseSaved.skillPointTimes10 // VOLZZA 2
+            // VOLZZA 1 didn't have skill point feature, make sure it won't erase skill point saved by VOLZZA 2 when save VOLZZA 1 data.
+            if (!player.pdata.base.skillPointTimes10) player.pdata.base.skillPointTimes10 = baseSaved.skillPointTimes10
             // special process for VOLZZA classcheck
             if (!isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck.class > Rb5ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
                 if (player.pdata.classcheck.clearType > RbClasscheckClearType.failed) {

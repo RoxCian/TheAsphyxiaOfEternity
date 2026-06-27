@@ -19,7 +19,7 @@ export class Rb6EventControl {
     static init() {
         if (this.initialized) return
         this.initialized = true
-        const limit = [0, 100, 100, 31]
+        const limit = [0, 100, 100, 31] // classcheck unlocking included at type 1
         for (let i = 0; i < limit.length; i++) {
             for (let j = 0; j < limit[i]; j++) {
                 const e = new Rb6EventControl(i, j)

@@ -14,7 +14,7 @@ import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { Rb4PlayerStart, Rb4PlayerSucceed } from "../../models/rb4/common"
 import { isArrayWrapper } from "../../utils/types"
 import { Rb4Classcheck } from "../../models/rb4/classcheck"
-import { Rb4ChartType, Rb4ClearType, Rb4DojoIndex, RbSession } from "../../models/shared/rb_types"
+import { Rb4ChartType, Rb4ClearType, Rb4DojoIndex, RbClasscheckClearType, RbSession } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createDeleteLobbyHandler, createReadLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
@@ -273,9 +273,19 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
         isNeedUpdate = true
         isInitial = true
     }
-    if (isInitial || (log.clearType > classRecord.clearType)) {
+
+    const clearTypeCurrent = (stageLogs[stageLogs.length - 1]?.clearType ?? Rb4ClearType.failed) >= Rb4ClearType.clear ?
+        RbClasscheckClearType.clear :
+        RbClasscheckClearType.failed
+    const clearTypeSaved = !classRecord?.stageLogs || !classRecord.stageLogs.length ?
+        classRecord.clearType :
+        (classRecord.stageLogs[classRecord.stageLogs.length - 1].clearType ?? Rb4ClearType.failed) >= Rb4ClearType.clear ?
+            RbClasscheckClearType.clear :
+            RbClasscheckClearType.failed
+    if (isInitial || (clearTypeCurrent > clearTypeSaved && log.class < Rb4DojoIndex.examination)) {
         isNeedUpdate = true
         classRecord.clearType = log.clearType
+        classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
     if (isInitial || (log.rank > classRecord.rank)) {
         isNeedUpdate = true
@@ -284,7 +294,7 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
     if (isInitial || !classRecord.totalScore || (log.totalScore > classRecord.totalScore)) {
         isNeedUpdate = true
         classRecord.totalScore = log.totalScore
-        classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
+        if (clearTypeCurrent >= clearTypeSaved || log.class >= Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
     if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true
