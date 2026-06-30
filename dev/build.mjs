@@ -71,7 +71,7 @@ function cloneClient() {
     // clone builded client directory
     cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /dev-.+/])
     // remove hash
-    const hashMatching = /-[^-\.]{8}\.js(?=$|")/g
+    const hashMatching = /-[^\.]{8}\.js(?=$|")/g
     const fileRenameList = []
     let chunkId = 0
     let workerId = 0

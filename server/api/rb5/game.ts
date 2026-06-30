@@ -278,10 +278,10 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean, session: R
     if (player.pdata.minigame) {
         const minigameQuery: Query<Rb5Minigame> = { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }
         const minigameSaved = await t.findOne(rid, minigameQuery)
-        if (!minigameSaved) t.upsert(rid, minigameQuery, player.pdata.minigame)
+        if (!minigameSaved) t.upsert(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
         else {
             if (player.pdata.minigame.sc > minigameSaved.sc) minigameSaved.sc = player.pdata.minigame.sc
-            minigameSaved.playCount++
+            minigameSaved.playCount += player.pdata.minigame.playCount
             t.update(rid, minigameQuery, minigameSaved)
         }
     }

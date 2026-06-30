@@ -31,3 +31,36 @@ input
         background: black
     .control input
         background: black
+
+// shared styles
+.rb-panel-enter
+    animation: rb-panel-enter-animation var(--animation-duration-lv2) var(--ease-in) forwards
+.rb-panel-leave
+    animation: rb-panel-leave-animation var(--animation-duration-lv2) var(--ease-in) forwards
+.has-tooltip
+    position: relative
+    &::before
+        content: ""
+        position: absolute
+        inset: 0
+        background: color-mix(in srgb, transparent 90%, var(--invert-card-background))
+        opacity: 0
+        border-radius: 4px
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        pointer-events: none
+    &:hover::before
+        opacity: 1
+@keyframes rb-panel-enter-animation
+    from
+        opacity: 0
+        transform: translateX(2em)
+    to
+        opacity: 1
+        transform: none
+@keyframes rb-panel-leave-animation
+    from
+        opacity: 1
+        transform: none
+    to
+        opacity: 0
+        transform: translateX(-2em)

@@ -1,7 +1,7 @@
 <ng-template #placeholder>
     <div class="rb-panel"></div>
 </ng-template>
-@if (profileService.hasProfiles()) {
+@if (profileService.hasProfiles() || profileService.isReloading()) {
     <rb-player-card animate.enter="enter" animate.leave="leave" [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" [profileDeleted]="profileService.lastDeletedProfile() === versionService.version()" />
     @if (profileService.rbProfiles()[versionService.version()]) {
         <div class="page-container" animate.enter="enter" animate.leave="leave">

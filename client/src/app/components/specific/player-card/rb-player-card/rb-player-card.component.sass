@@ -247,9 +247,14 @@ rb-matching-grade
     margin: 0
     transition: background var(--animation-duration-lv3) var(--ease-in), color var(--animation-duration-lv3) var(--ease-in), border-color var(--animation-duration-lv3) var(--ease-in), box-shadow var(--animation-duration-lv3) var(--ease-in)
 
+    ::ng-deep bung-icon .icon-svg svg .icon-fill
+        transition: fill var(--animation-duration-lv3) var(--ease-in)
     &.is-selected
         background: color-mix(in srgb, var(--accent-color), transparent 40%)
         color: var(--accent-text-color)
+
+        ::ng-deep bung-icon .icon-svg svg .icon-fill
+            fill: var(--accent-text-color) !important
         
 @media (prefers-color-scheme: dark)
     .name-and-byword .name
@@ -263,6 +268,8 @@ rb-matching-grade
             color: #de7e3fb2
         &.rb3-player-event-level5
             color: #6868deb2
+    .rb-nav-item ::ng-deep bung-icon .icon-svg svg .icon-fill
+        fill: var(--title-white-text) !important
 @media screen and (width < 768px)
     :host
         margin-bottom: calc(-16vh + 0.5em)

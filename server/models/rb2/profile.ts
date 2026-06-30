@@ -101,14 +101,18 @@ export class Rb2StageLog extends RbStageLog<"rb.rb2.playData.stageLog"> {
 
 export class Rb2Glass implements ICollection<"rb.rb2.player.glass"> {
     readonly collection = "rb.rb2.player.glass"
-    @XD.s32() id = 0
+    @XD.s32() id: number
     @XD.s32("exp") experience = 0
+    constructor(id: number = 0) {
+        this.id = id
+    }
 }
 
 export class Rb2LincleLink implements ICollection<"rb.rb2.player.lincleLink"> {
     readonly collection = "rb.rb2.player.lincleLink"
-    @XD.u32("qpro_add") qproParam = 0
-    @XD.u32("glass_add") glassParam = 0
+    @XD.ToX.u32("qpro") @XD.ToO.u32("qpro_add") qproParam = 0
+    @XD.ToX.u32("glass") @XD.ToO.u32("glass_add") glassParam = 0
+    @XD.ToX.u32() treasure = 0
     @XD.bool("for_iidx_0_0") iidxParam0Sub0 = false
     @XD.bool("for_iidx_0_1") iidxParam0Sub1 = false
     @XD.bool("for_iidx_0_2") iidxParam0Sub2 = false
@@ -133,6 +137,9 @@ export class Rb2LincleLink implements ICollection<"rb.rb2.player.lincleLink"> {
     @XD.bool("for_rb_2") rbParam2 = false
     @XD.bool("for_rb_3") rbParam3 = false
     @XD.bool("for_rb_4") rbParam4 = false
+    @XD.ToX.bool("qproflg") qproFlag = false
+    @XD.ToX.bool("glassflg") glassFlag = false
+    @XD.ToX.bool() complete = false
 }
 export class Rb2MylistElement {
     @XD.u8() slotId = 0
@@ -160,7 +167,7 @@ export class Rb2PlayerData {
     @XD.obj({}) rival = {}
     @XD.aw("g", Rb2Glass) glass: ArrayWrapper<"g", Rb2Glass> = {}
     @XD.type("fav_music_slot", Rb2Mylist) mylist = new Rb2Mylist()
-    @XD.type(Rb2LincleLink) lincleLink = new Rb2LincleLink()
+    @XD.ToO.type("lincle_link_4", Rb2LincleLink) lincleLink?: Rb2LincleLink
 
     constructor(userId: number = 0) {
         this.base = new Rb2PlayerBase(userId)

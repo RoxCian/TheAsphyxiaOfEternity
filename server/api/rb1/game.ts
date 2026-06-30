@@ -115,11 +115,21 @@ async function writePlayerCore(player: Rb1Player) {
 async function updateMusicRecord(rid: string, newRecord: Rb1MusicRecord, t: DBH.T) {
     const query: Query<Rb1MusicRecord> = { collection: "rb.rb1.playData.musicRecord", musicId: newRecord.musicId, chartType: newRecord.chartType }
     const oldRecord = await t.findOne(rid, query) ?? new Rb1MusicRecord(newRecord.musicId, newRecord.chartType)
-    oldRecord.clearType = newRecord.clearType
-    oldRecord.achievementRateTimes10 = newRecord.achievementRateTimes10
-    oldRecord.score = newRecord.score
-    oldRecord.combo = newRecord.combo
-    oldRecord.missCount = newRecord.missCount
+    if (oldRecord.clearType < newRecord.clearType) {
+        oldRecord.clearType = newRecord.clearType
+    }
+    if (oldRecord.achievementRateTimes10 < newRecord.achievementRateTimes10) {
+        oldRecord.achievementRateTimes10 = newRecord.achievementRateTimes10
+    }
+    if (oldRecord.score < newRecord.score) {
+        oldRecord.score = newRecord.score
+    }
+    if (oldRecord.combo < newRecord.combo) {
+        oldRecord.combo = newRecord.combo
+    }
+    if ((oldRecord.missCount < 0 && newRecord.missCount >= 0) || (newRecord.missCount >= 0 && oldRecord.missCount > newRecord.missCount)) {
+        oldRecord.missCount = newRecord.missCount
+    }
     oldRecord.winCount = newRecord.winCount
     oldRecord.drawCount = newRecord.drawCount
     oldRecord.loseCount = newRecord.loseCount

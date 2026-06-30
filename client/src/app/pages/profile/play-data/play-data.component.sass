@@ -106,10 +106,6 @@ p.dojo
     line-height: 1.1em
     text-align: center
     margin-bottom: 0 // asphyxia fix
-.rb-panel-enter
-    animation: rb-panel-enter-animation var(--animation-duration-lv2) var(--ease-in) forwards
-.rb-panel-leave
-    animation: rb-panel-leave-animation var(--animation-duration-lv2) var(--ease-in) forwards
 .rb-background-test
     background: var(--rb-background)
     width: 12em
@@ -124,20 +120,6 @@ rb-level-display-switch.enter
 rb-level-display-switch.leave
     animation: rb-floated-level-display-switch-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
 
-@keyframes rb-panel-enter-animation
-    from
-        opacity: 0
-        transform: translateX(2em)
-    to
-        opacity: 1
-        transform: none
-@keyframes rb-panel-leave-animation
-    from
-        opacity: 1
-        transform: none
-    to
-        opacity: 0
-        transform: translateX(-2em)
 
 @keyframes rb-floated-level-display-switch-enter-animation
     from

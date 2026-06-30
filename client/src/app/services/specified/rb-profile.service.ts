@@ -1,4 +1,4 @@
-import { computed, inject, Service, signal } from "@angular/core"
+import { computed, effect, inject, Service, signal } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbPlayerResponse, RbRequest, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
@@ -31,6 +31,8 @@ export class RbProfileService {
         (!this.rb5Profile.isLoading() && this.rb5Profile.value()) ||
         (!this.rb6Profile.isLoading() && this.rb6Profile.value())
     )
+    private readonly isReloadingInternal = signal(false)
+    readonly isReloading = this.isReloadingInternal.asReadonly()
     readonly isLoading = computed(() => {
         return !this.rid() ||
             this.rb1Profile.isLoading() ||
@@ -69,9 +71,13 @@ export class RbProfileService {
         }
         this.router.events.subscribe(updateRid)
         updateRid()
+        effect(() => {
+            if (!this.isLoading()) this.isReloadingInternal.set(false)
+        })
     }
 
     reload(version: RbVersion) {
+        this.isReloadingInternal.set(true)
         this.rbProfilesArray[version].reload()
     }
     async delete(version: RbVersion): Promise<string | undefined> {

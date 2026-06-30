@@ -25,12 +25,12 @@
                         </div>
                         <bung-divider />
                         <div class="stage-log-score-grid">
-                            <bung-icon class="not-first-child" icon="counter" isNoWrap bungTooltip="Score">{{ stageLog.score }}</bung-icon>
-                            <bung-icon icon="percent" isNoWrap bungTooltip="Achievement rate">{{ stageLog.achievementRate + "%" }}</bung-icon>
+                            <bung-icon class="has-tooltip" icon="counter" isNoWrap bungTooltip="Score">{{ stageLog.score }}</bung-icon>
+                            <bung-icon class="has-tooltip" icon="percent" isNoWrap bungTooltip="Achievement rate">{{ stageLog.achievementRate + "%" }}</bung-icon>
                             @if (v === 6) {
-                                <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ stageLog.combo }}</bung-icon>
+                                <bung-icon class="has-tooltip" iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ stageLog.combo }}</bung-icon>
                             }
-                            <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ stageLog.missCount | rbMissCount }}</bung-icon>
+                            <bung-icon class="has-tooltip" icon="close" isNoWrap bungTooltip="Miss count">{{ stageLog.missCount | rbMissCount }}</bung-icon>
                         </div>
                     </div>
                 } @else {

@@ -14,58 +14,54 @@
                         <div class="score-info-container">
                             <div class="score-details">
                                 <div class="score-data">
-                                    <bung-icon icon="counter" isNoWrap bungTooltip="Score">{{ record().scores[ct]?.score ?? "-" }}</bung-icon>
-                                    <bung-icon icon="percent" isNoWrap bungTooltip="Achievement rate">{{ record().scores[ct] ? record().scores[ct]!.achievementRate + "%" : "-" }}</bung-icon>
+                                    <bung-icon class="has-tooltip" icon="counter" isNoWrap bungTooltip="Score">{{ record().scores[ct]?.score ?? "-" }}</bung-icon>
+                                    <bung-icon class="has-tooltip" icon="percent" isNoWrap bungTooltip="Achievement rate">{{ record().scores[ct] ? record().scores[ct]!.achievementRate + "%" : "-" }}</bung-icon>
                                     @if (v !== 4 && v !== 5) {
-                                    <bung-icon iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ record().scores[ct]?.combo ?? "-" }}</bung-icon>
+                                        <bung-icon class="has-tooltip" iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ record().scores[ct]?.combo ?? "-" }}</bung-icon>
                                     }
-                                    <bung-icon icon="close" isNoWrap bungTooltip="Miss count">{{ $safeNavigationMigration(record().scores[ct]?.miss) | rbMissCount }}</bung-icon>
+                                    <bung-icon class="has-tooltip" icon="close" isNoWrap bungTooltip="Miss count">{{ $safeNavigationMigration(record().scores[ct]?.miss) | rbMissCount }}</bung-icon>
                                 </div>
                                 @if (v === 6 && !isMobile()) {
                                 <div class="just-collection">
-                                    <bung-icon iconUrl="static/assets/icons/just-collect.svg" isNoWrap bungTooltip="Just collect">
+                                    <bung-icon class="has-tooltip" iconUrl="static/assets/icons/just-collect.svg" isNoWrap bungTooltip="Just collect">
                                         @if (record().scores[ct]) {
-                                        <rb6-just-collect [red]="record().scores[ct]?.justCollectRate?.red ?? 0" [blue]="record().scores[ct]?.justCollectRate?.blue ?? 0" />
-                                        } @else {
-                                        -
-                                        }
+                                            <rb6-just-collect [red]="record().scores[ct]?.justCollectRate?.red ?? 0" [blue]="record().scores[ct]?.justCollectRate?.blue ?? 0" />
+                                        } @else { - }
                                     </bung-icon>
                                 </div>
                                 }
                                 @if (v === 1 || v === 2) {
                                 <div class="battle-stat">
-                                    <bung-icon icon="sword-cross" isNoWrap bungTooltip="Battle statistics">
+                                    <bung-icon class="has-tooltip" icon="sword-cross" isNoWrap bungTooltip="Battle statistics">
                                         @if (record().scores[ct]) {
-                                        <rb-battle-stat [win]="record().scores[ct]?.battleStat?.win ?? 0" [lose]="record().scores[ct]?.battleStat?.lose ?? 0" [draw]="record().scores[ct]?.battleStat?.draw ?? 0" />
-                                        } @else {
-                                        -
-                                        }
+                                            <rb-battle-stat [win]="record().scores[ct]?.battleStat?.win ?? 0" [lose]="record().scores[ct]?.battleStat?.lose ?? 0" [draw]="record().scores[ct]?.battleStat?.draw ?? 0" />
+                                        } @else { - }
                                     </bung-icon>
                                 </div>
                                 }
                                 @if (v !== 1 && v !== 2) {
-                                <div class="play-time">
-                                    <bung-icon icon="update" isNoWrap bungTooltip="Score update time">{{ ($safeNavigationMigration(record().scores[ct]?.update) | relativeTime) || "-" }}</bung-icon>
-                                    <bung-icon icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ ($safeNavigationMigration(record().scores[ct]?.lastPlay) | relativeTime) || "-" }}</bung-icon>
-                                </div>
+                                    <div class="play-time">
+                                        <bung-icon class="has-tooltip" icon="update" isNoWrap bungTooltip="Score update time">{{ ($safeNavigationMigration(record().scores[ct]?.update) | relativeTime) || "-" }}</bung-icon>
+                                        <bung-icon class="has-tooltip" icon="clock-time-nine-outline" isNoWrap bungTooltip="Last play time">{{ ($safeNavigationMigration(record().scores[ct]?.lastPlay) | relativeTime) || "-" }}</bung-icon>
+                                    </div>
                                 }
                             </div>
                         </div>
                     </div>
                     @if (!record().scores[ct]) {
-                    <div class="not-played-box is-size-7">
-                        <p>
-                            <span class="icon">
-                                <i class="mdi mdi-emoticon-confused mdi-{{ isMobile() ? 24 : 36 }}px"></i>
-                            </span>
-                        </p>
-                        <p>Unplayed chart</p>
-                    </div>
+                        <div class="not-played-box is-size-7">
+                            <p>
+                                <span class="icon">
+                                    <i class="mdi mdi-emoticon-confused mdi-{{ isMobile() ? 24 : 36 }}px"></i>
+                                </span>
+                            </p>
+                            <p>Unplayed chart</p>
+                        </div>
                     }
                     @if (record().scores[ct]) {
-                    <div class="rank">
-                        <rb-rank [achievementRate]="$safeNavigationMigration(record().scores[ct]?.achievementRate)!" [version]="v" hasDecoration hasAnimation #rankBadge />
-                    </div>
+                        <div class="rank">
+                            <rb-rank [achievementRate]="$safeNavigationMigration(record().scores[ct]?.achievementRate)!" [version]="v" hasDecoration hasAnimation #rankBadge />
+                        </div>
                     }
                 </div>
             </div>

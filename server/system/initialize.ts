@@ -11,6 +11,7 @@ let initialized = false
 export async function initialize() {
     if (initialized) return
     initialized = true
+    console.log("🔵 悠久のアスフィクシア -The Asphyxia of Eternity-")
     const version = await DBH.findOne<IPluginVersion>({ collection: "rb.pluginVersion" })
     if (!version || isHigherVersion(version.version, pluginVersion)) {
         initializeBatch()
@@ -19,4 +20,5 @@ export async function initialize() {
     }
     await removeAllLobbies()
     await removeAllSessions()
+    console.log(`🔵 RB Plugin initialized at ${new Date().toLocaleString()}`)
 }

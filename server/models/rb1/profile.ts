@@ -56,7 +56,7 @@ export class Rb1MusicRecord implements ICollection<"rb.rb1.playData.musicRecord"
     @XD.s16("ar") achievementRateTimes10 = 0
     @XD.s16("bs") score = 0
     @XD.s16("mc") combo = 0
-    @XD.s16("bmc") missCount = 0
+    @XD.s16("bmc") missCount = -1
     playCount = 0
 
     constructor(musicId: number = 0, chartType: Rb1ChartType = Rb1ChartType.basic) {

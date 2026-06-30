@@ -22,7 +22,7 @@ export class Rb2EventControl {
     static init() {
         if (this.initialized) return
         this.initialized = true
-        const ctrl = [100, 100, 100, 100, 100]
+        const ctrl = [0, 100, 100, 100, 100]
         for (let i = 0; i < ctrl.length; i++) {
             for (let j = 0; j < ctrl[i]; j++) {
                 const el = new Rb2EventControl(i, j)

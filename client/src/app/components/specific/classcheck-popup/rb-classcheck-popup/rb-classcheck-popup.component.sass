@@ -208,19 +208,8 @@
     .chart, .artist, .stage-log-score-grid
         font-size: 0.75em
     bung-icon
-        position: relative
-    bung-icon::before
-        content: ""
-        position: absolute
-        inset: 0
-        background: #7773
-        opacity: 0
-        pointer-events: none
-        border-radius: 4px
-        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        padding: 0 0.5em
 
-    bung-icon:hover::before
-        opacity: 1
     rb-chart-lamp
         margin-top: -8px
     ::ng-deep rb-chart-lamp .chart-lamp-container
@@ -259,6 +248,8 @@
         font-size: 1em
     .defeated-part2
         display: none
+    bung-divider
+        font-size: 0.75em
 
 .classcheck-info-in
     transform: translateY(-2em)

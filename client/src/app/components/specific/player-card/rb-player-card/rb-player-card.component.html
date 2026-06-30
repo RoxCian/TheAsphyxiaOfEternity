@@ -102,14 +102,14 @@
         <div class="rb-nav">
             <div class="rb-nav-container">
                 @if (p) {
-                    @if (breakpointService.breakpointsToggled.mobile()) {
+                    @if (breakpointService.breakpointsToggled.tablet()) {
                         <div class="buttons has-addons rb-nav-buttons" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
                             <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')">
                                 <i class="mdi mdi-account-circle"></i>
                             </button>
                             @if ((this.profile()?.version ?? 0) >= 2) {
                                 <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'progress'" (click)="onNavToSubpage('progress')">
-                                    <i class="mdi mdi-trophy"></i>
+                                    <bung-icon class="not-first-child" iconUrl="static/assets/icons/pastel-trophy.svg" />
                                 </button>
                             }
                             <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')">
@@ -121,18 +121,18 @@
                         </div>
                     } @else {
                         <div class="buttons has-addons rb-nav-buttons" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
-                            <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')">
+                            <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'playData'" (click)="onNavToSubpage('playData')">
                                 <bung-icon icon="account-circle">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Play Data" }}</bung-icon>
                             </button>
                             @if ((this.profile()?.version ?? 0) >= 2) {
-                            <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'progress'" (click)="onNavToSubpage('progress')">
-                                <bung-icon icon="trophy">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Progress" }}</bung-icon>
-                            </button>
+                                <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'progress'" (click)="onNavToSubpage('progress')">
+                                    <bung-icon iconUrl="static/assets/icons/pastel-trophy.svg">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Progress" }}</bung-icon>
+                                </button>
                             }
-                            <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')">
+                            <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')">
                                 <bung-icon icon="cog">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Settings" }}</bung-icon>
                             </button>
-                            <button class="button rb-nav-item" [class.is-selected]="subpageIndex() === 'saveData'" (click)="onNavToSubpage('saveData')">
+                            <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'saveData'" (click)="onNavToSubpage('saveData')">
                                 <bung-icon icon="database">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Save Data" }}</bung-icon>
                             </button>
                         </div>

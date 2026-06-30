@@ -1,13 +1,16 @@
 bung-icon
     display: flex
     align-items: center
+    gap: 0.375em
+    &:has(.icon-content:empty)
+        gap: 0
     &.no-wrap
         flex-wrap: nowrap
     &.is-reversed
         flex-flow: row-reverse
     .icon-element
         display: inline-flex
-        width: 1.5rem
+        // width: 1.5rem
         align-items: center
         justify-content: center
     span, i
@@ -27,7 +30,7 @@ bung-icon
             fill: var(--bung-icon-color, var(--invert-text-color)) !important
         svg .icon-stroke-invert
             stroke: var(--bung-icon-color, var(--invert-text-color)) !important
-bung-icon:not(.is-reversed):first-child:not(.not-first-child), bung-icon:not(.is-reversed).is-first-child
-    margin-left: calc(-0.375em - 1px)
-bung-icon.is-reversed:first-child:not(.not-first-child), bung-icon.is-reversed.is-first-child
-    margin-right: calc(-0.375em - 1px)
+// bung-icon:not(.is-reversed):first-child:not(.not-first-child), bung-icon:not(.is-reversed).is-first-child
+//     margin-left: calc(-0.375em - 1px)
+// bung-icon.is-reversed:first-child:not(.not-first-child), bung-icon.is-reversed.is-first-child
+//     margin-right: calc(-0.375em - 1px)

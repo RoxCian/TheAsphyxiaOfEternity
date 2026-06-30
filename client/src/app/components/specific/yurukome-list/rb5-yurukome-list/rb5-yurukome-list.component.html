@@ -5,7 +5,7 @@
     <div class="rb-list">
         @for (yurukome of service.data.value(); track yurukome.id) {
             <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                <rb5-yurukome-panel [yurukome]="yurukome" />
+                <rb5-yurukome-panel [yurukome]="yurukome" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
             </bung-insertion>
         }
     </div>    

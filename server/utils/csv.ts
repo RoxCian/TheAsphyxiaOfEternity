@@ -13,7 +13,7 @@ export type CsvField = {
     name: string
     type: CsvFieldType
     nullable: boolean
-    length: number
+    length: number | undefined
     enumDefinition?: Record<string, number | string>
 }
 enum CsvFieldType {
@@ -27,7 +27,7 @@ export type CsvTable = {
 }
 
 function parseCsvField(name: string, csvField: string): CsvField {
-    const match = csvField.trim().toLowerCase().match(/^((?<type>number|num|n|integer|int|i|bool|boolean|bin)(?<length>[(\[]\d+[)\]])?|(?<noLengthType>str|string|str|string|range|date|datetime|t|time|json))(?<nullable>\??)$/)
+    const match = csvField.trim().toLowerCase().match(/^((?<type>number|num|n|integer|int|i|bool|boolean|bin)(?<length>(\[\d*\]|\(\d*\))?)|(?<noLengthType>str|string|str|string|range|date|datetime|t|time|json))(?<nullable>\??)$/)
     if (!match || !match.groups) {
         if (csvField.includes("|")) {
             const isFlags = csvField.startsWith("<") && csvField.endsWith(">")
@@ -57,9 +57,9 @@ function parseCsvField(name: string, csvField: string): CsvField {
         throw new Error(`cannot parse field "${csvField}"`)
     }
     let type = match.groups.type
-    let length = (match.groups.length ? parseInt(match.groups.length) : 0)
+    const lengthStr = match.groups.length && match.groups.length.length >= 2 ? match.groups.length.slice(1, match.groups.length.length - 1).trim() : undefined
+    let length = lengthStr == undefined ? undefined : lengthStr.length === 0 ? -1 : parseInt(lengthStr)
     const nullable = match.groups.nullable === "?"
-    if (isNaN(length) || length <= 0) length = -1
     if (type) switch (type) {
         case "integer": case "int": case "i": return { name, type: CsvFieldType.integer, nullable, length }
         case "number": case "num": case "n": return { name, type: CsvFieldType.number, nullable, length }
@@ -80,7 +80,7 @@ function parseCsvValue(value: string, field: CsvField): any {
     if (field.nullable && (value === "" || !value)) return undefined
     switch (field.type) {
         case CsvFieldType.bin:
-            const buf = Buffer.alloc(field.length < 0 ? 1 : field.length, 0)
+            const buf = Buffer.alloc(field.length == undefined || field.length < 0 ? 1 : field.length, 0)
             if (value.startsWith("0x")) { // hex
                 let o = 3
                 if ((value.length & 1) === 1) {
@@ -96,18 +96,32 @@ function parseCsvValue(value: string, field: CsvField): any {
                 for (let o = 0; o < a.length; o++) buf.writeUInt8(a.charCodeAt(o))
             }
             return buf
-        case CsvFieldType.boolean:
-            return value !== "0" && value !== "" && value.toLowerCase() !== "false"
+        case CsvFieldType.boolean: {
+            if (field.length == undefined) return value !== "0" && value !== "" && value.toLowerCase() !== "false"
+            const trimmed = value.trim()
+            if (field.length < 0 && trimmed.length === 0) return []
+            const parts = trimmed.length === 0 ? [] : value.split(",")
+            if (field.length < 0) return parts.map(v => v !== "0" && v !== "" && v.toLowerCase() !== "false")
+            const array = new Array(field.length)
+            for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parts[i] !== "0" && parts[i] !== "" && parts[i].toLowerCase() !== "false" : false
+            return array
+        }
         case CsvFieldType.integer: {
-            if (field.length < 0) return parseInt(value)
-            const parts = value.split(",")
-            const array = new Array(field.length < 0 ? 1 : field.length)
+            if (field.length == undefined) return parseInt(value)
+            const trimmed = value.trim()
+            if (field.length < 0 && trimmed.length === 0) return []
+            const parts = trimmed.length === 0 ? [] : value.split(",")
+            if (field.length < 0) return parts.map(parseInt)
+            const array = new Array(field.length)
             for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseInt(parts[i]) : 0
             return array
         }
         case CsvFieldType.number: {
-            if (field.length < 0) return parseFloat(value)
-            const parts = value.split(",")
+            if (field.length == undefined) return parseFloat(value)
+            const trimmed = value.trim()
+            if (field.length < 0 && trimmed.length === 0) return []
+            const parts = trimmed.length === 0 ? [] : value.split(",")
+            if (field.length < 0) return parts.map(parseFloat)
             const array = new Array(field.length < 0 ? 1 : field.length)
             for (let i = 0; i < array.length; i++) array[i] = parts.length > i ? parseFloat(parts[i]) : 0
             return array
