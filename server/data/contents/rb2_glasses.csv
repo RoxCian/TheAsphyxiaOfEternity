@@ -1,31 +1,31 @@
-id,name,nameOrig,experiences,relatedMusicsId,unlockCondition
+id,category,name,categoryOrig,nameOrig,experiences,relatedMusicsId,unlockCondition,imageId,layer,palette
 ,,,,,
-int,string,string?,int,int,json
-0,limelight 1,,350,"114,147,118",{}
-1,limelight 2-1,,700,"127,150",{"glassesCompleted":[0]}
-2,limelight 2-2,,700,"139,140",{"glassesCompleted":[0]}
-3,limelight 3-1,,1200,"146,116","{""glassesCompleted"":[1,2]}"
-4,limelight 3-2,,1200,"142,117","{""glassesCompleted"":[1,2]}"
-5,limelight 3-3,,1200,"144,115","{""glassesCompleted"":[1,2]}"
-6,limelight 4-1,,2000,"143,126","{""glassesCompleted"":[3,4,5]}"
-7,limelight 4-2,,2000,"149,131","{""glassesCompleted"":[3,4,5]}"
-8,limelight 4-3,,2000,"141,124","{""glassesCompleted"":[3,4,5]}"
-9,limelight 5,,2500,123,"{""glassesCompleted"":[6,7,8]}"
-10,limelight 6,,2200,112,{"glassesCompleted":[9]}
-11,limelight 7-1,,3500,138,{"glassesCompleted":[10]}
-12,limelight 7-2,,3500,136,{"glassesCompleted":[10]}
-13,limelight 7-3,,3500,128,{"glassesCompleted":[10]}
-14,limelight 8-1,,4500,135,"{""glassesCompleted"":[11,12,13]}"
-15,limelight 8-2,,4500,111,"{""glassesCompleted"":[11,12,13]}"
-16,limelight 9,,6000,120,"{""glassesCompleted"":[14,15]}"
-17,limelight 10,,8000,129,{"glassesCompleted":[16]}
-18,REFLECT BEAT 1-1,,1200,"34,37,45,35,46,50,30,38,39",{}
-19,REFLECT BEAT 1-2,,1500,"36,51,32,40,31,52,41,44,49",{"glassesCompleted":[19]}
-20,REFLECT BEAT 1-3,,2500,"48,33,43,21,42,47,54,55",{"glassesCompleted":[20]}
-21,jubeat 1,,2500,"157,158,159",{"anyMusicsPlayed":[164]}
-22,jubeat 2,,6000,"161,163","{""anyMusicsPlayed"":[157,158,159],""glassCompleted"":[21]}"
-23,jubeat 3,,10000,"160,162","{""anyMusicsPlayed"":[161,163],""glassCompleted"":[22]}"
-24,Customizable Items (OTHERS),カスタマイズ （OTHERS）,1300,,{}
-25,Customizable Items (Pastel-kun),カスタマイズ （パステルくん）,2500,,{}
-26,Customizable Items (CLASSIC),カスタマイズ （CLASSIC）,14000,,{"glassesCompleted":[25]}
-27,limelight EX,,4000,186,{"glassesCompleted":[17]}
+int,string,string,string?,string?,int,int,json,string,number,number
+0,limelight,1,,,350,"114,147,118",{},ll1,1,0
+1,limelight,2-1,,,700,"127,150",{"glassesCompleted":[0]},ll2,1,0
+2,limelight,2-2,,,700,"139,140",{"glassesCompleted":[0]},ll2,2,1
+3,limelight,3-1,,,1200,"146,116","{""glassesCompleted"":[1,2]}",ll3,1,0
+4,limelight,3-2,,,1200,"142,117","{""glassesCompleted"":[1,2]}",ll3,2,1
+5,limelight,3-3,,,1200,"144,115","{""glassesCompleted"":[1,2]}",ll3,3,2
+6,limelight,4-1,,,2000,"143,126","{""glassesCompleted"":[3,4,5]}",ll4,1,0
+7,limelight,4-2,,,2000,"149,131","{""glassesCompleted"":[3,4,5]}",ll4,2,1
+8,limelight,4-3,,,2000,"141,124","{""glassesCompleted"":[3,4,5]}",ll4,3,2
+9,limelight,5,,,2500,123,"{""glassesCompleted"":[6,7,8]}",ll5,1,4
+10,limelight,6,,,2200,112,{"glassesCompleted":[9]},ll6,1,0
+11,limelight,7-1,,,3500,138,{"glassesCompleted":[10]},ll7-1,1,2
+12,limelight,7-2,,,3500,136,{"glassesCompleted":[10]},ll7-2,1,3
+13,limelight,7-3,,,3500,128,{"glassesCompleted":[10]},ll7-3,1,1
+14,limelight,8-1,,,4500,135,"{""glassesCompleted"":[11,12,13]}",ll8-1,1,4
+15,limelight,8-2,,,4500,111,"{""glassesCompleted"":[11,12,13]}",ll8-2,1,1
+16,limelight,9,,,6000,120,"{""glassesCompleted"":[14,15]}",ll9,1,5
+17,limelight,10,,,8000,129,{"glassesCompleted":[16]},ll10,1,5
+18,REFLECT BEAT,1-1,,,1200,"34,37,45,35,46,50,30,38,39",{},rb,1,0
+19,REFLECT BEAT,1-2,,,1500,"36,51,32,40,31,52,41,44,49",{"glassesCompleted":[19]},rb,2,1
+20,REFLECT BEAT,1-3,,,2500,"48,33,43,21,42,47,54,55",{"glassesCompleted":[20]},rb,3,2
+21,jubeat,1,,,2500,"157,158,159",{"anyMusicsPlayed":[164]},ub,1,1
+22,jubeat,2,,,6000,"161,163","{""anyMusicsPlayed"":[157,158,159],""glassCompleted"":[21]}",ub,2,6
+23,jubeat,3,,,10000,"160,162","{""anyMusicsPlayed"":[161,163],""glassCompleted"":[22]}",ub,3,7
+24,Customizable Items,(OTHERS),カスタマイズ,（OTHERS）,1300,,{},ci,1,0
+25,Customizable Items,(Pastel-kun),カスタマイズ,（パステルくん）,2500,,{},ci,2,1
+26,Customizable Items,(CLASSIC),カスタマイズ,（CLASSIC）,14000,,{"glassesCompleted":[25]},ci,3,2
+27,limelight,EX,,,4000,186,{"glassesCompleted":[17]},ex,1,3

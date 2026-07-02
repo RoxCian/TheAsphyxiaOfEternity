@@ -4,8 +4,9 @@
 } @else {
     @if (v === 2) {
         <bung-tabs>
-            <bung-tab index="order-shop" header="Lime Glasses">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="order-shop" header="Lime Glasses" (activated)="onActivate('rb2Glasses', $event)">
+
+                <rb2-glass-list />
             </bung-tab>
         </bung-tabs>
     } @if (v === 3) {

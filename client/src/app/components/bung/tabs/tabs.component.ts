@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, inject, input, linkedSignal, output, signal, viewChild, viewChildren } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, inject, input, linkedSignal, output, signal, viewChild, viewChildren } from "@angular/core"
 import { BungTabComponent } from "../tab/tab.component"
 import { BungInsertionComponent } from "../insertion/insertion.component"
 import { isUnloaded } from "../../../utils/functions"
@@ -43,9 +43,28 @@ export class BungTabsComponent implements AfterViewInit, OnDestroy {
     #previousContentInsertion?: BungInsertionComponent
     #currentAnimation?: Animation
 
-    ngAfterViewInit(): void {
+    async ngAfterViewInit(): Promise<void> {
         this.checkStyle()
         this.checkObserver()
+
+        const activateEvent: BungWaitableEvent = {
+            canceled: false
+        }
+        const index = this.activated()
+        const toTab = this.tabs().find(t => t.index() === index)
+        toTab?.activated.emit(activateEvent)
+        if (activateEvent.canceled) return
+        else if (activateEvent.promise || activateEvent.resource) {
+            try {
+                const promises = [activateEvent.promise, activateEvent.resource ? asPromise(activateEvent.resource, this.injector) : undefined]
+                this.loadingTabIndex.set(index)
+                await Promise.all(promises)
+            } catch {
+                return
+            } finally {
+                this.loadingTabIndex.set(undefined)
+            }
+        }
     }
     ngOnDestroy(): void {
         if (this.#previousContentInsertion) this.contentObserver.unobserve(this.#previousContentInsertion.element.nativeElement)

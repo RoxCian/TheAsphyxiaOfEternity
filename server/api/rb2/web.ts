@@ -2,14 +2,15 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb2MusicRecord, Rb2Mylist, Rb2MylistElement, Rb2PlayerBase, Rb2PlayerCustom, Rb2PlayerReleasedInfo, Rb2StageLog } from "../../models/rb2/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbColor, Rb1ChartType, RbPlayerPerformanceResponse, RbAvailableItemResponse, Rb2SettingsResponse, RbWriteSettingsResponse } from "../../models/shared/web"
+import { Rb2Glass, Rb2MusicRecord, Rb2Mylist, Rb2MylistElement, Rb2PlayerBase, Rb2PlayerCustom, Rb2PlayerReleasedInfo, Rb2StageLog } from "../../models/rb2/profile"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, RbColor, Rb1ChartType, RbPlayerPerformanceResponse, RbAvailableItemResponse, Rb2SettingsResponse, RbWriteSettingsResponse, Rb2GlassResponse, Rb2GlassSettings } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { getRbByword } from "../../data/tables/rb_bywords"
 import { hasLeapDay } from "../../utils/utility_functions"
 import { RbLobbySettings } from "../../models/shared/lobby"
 import { RbSettingsFactory, contextQueryElement, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
+import { rb2Glasses } from "../../data/tables/rb2_glasses"
 
 type V = 2
 const version = 2 as const
@@ -19,6 +20,9 @@ export function registerRb2Controllers() {
     C.route("rb2ReadPlayerPerformance", readPlayerPerformance)
     C.route("rb2ReadRecords", readRecords)
     C.route("rb2ReadStageLogs", readStageLogs)
+    C.route("rb2ReadGlasses", readGlasses)
+    C.route("rb2ReadGlassSettings", readGlassSettings)
+    C.route("rb2WriteGlassSettings", writeGlassSettings)
     C.route("rb2ReadAvailableItems", readAvailableItems)
     C.route("rb2ReadSettings", readSettings)
     C.route("rb2WriteSettings", writeSettings)
@@ -93,6 +97,34 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = async data => await Promise.all((await DBH.find<Rb2StageLog>(data.rid, { collection: "rb.rb2.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
+
+const readGlasses: C.C<RbRequest, Rb2GlassResponse[]> = async data => {
+    const records = await DBH.find<Rb2Glass>(data.rid, { collection: "rb.rb2.player.glass" })
+    const glasses = await rb2Glasses
+    return glasses.map(g => {
+        const rec = records.find(r => r.id === g.id)
+        return {
+            id: g.id,
+            category: g.category,
+            experiences: rec?.experience ?? 0,
+            glass: (rec || Object.keys(g.unlockCondition).length === 0) ? g : undefined
+        } as Rb2GlassResponse
+    })
+}
+const readGlassSettings: C.C<RbRequest, Rb2GlassSettings> = async data => {
+    return {
+        selected: (await DBH.findOne<Rb2PlayerCustom>(data.rid, { collection: "rb.rb2.player.custom" }))?.selectedGlass ?? 0
+    }
+}
+const writeGlassSettings: C.C<RbRequest & Rb2GlassSettings, { modified: boolean }> = async data => {
+    if (data.selected < 0 || data.selected > 27) return C.error(404, "Glass not found")
+    const custom = await DBH.findOne<Rb2PlayerCustom>(data.rid, { collection: "rb.rb2.player.custom" })
+    if (!custom) return C.error(400, "Player not registered")
+    if (custom.selectedGlass === data.selected) return { modified: false }
+    custom.selectedGlass = data.selected
+    await DBH.update(data.rid, { collection: "rb.rb2.player.custom" }, custom)
+    return { modified: true }
+}
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {
     const released = await DBH.find<Rb2PlayerReleasedInfo>(data.rid, { collection: "rb.rb2.player.releasedInfo" })

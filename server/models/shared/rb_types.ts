@@ -1,3 +1,4 @@
+export * from "../rb2/types"
 export * from "../rb3/types"
 export * from "../rb4/types"
 export * from "../rb5/types"

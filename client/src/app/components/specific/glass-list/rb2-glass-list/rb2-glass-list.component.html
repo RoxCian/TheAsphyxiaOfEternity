@@ -1,0 +1,11 @@
+@if (service.isActivated()) {
+    @for (key of service.grouped() | key; track key) {
+        <bung-divider prompt="Glasses - {{ key }}" />
+        <div class="rb-list">
+            @for (glass of service.grouped()[key]; track glass.id) {
+                <rb2-glass [glass]="glass" />
+            }
+        </div>
+    }
+    <bung-divider prompt="End of Lime Glasses" />
+}

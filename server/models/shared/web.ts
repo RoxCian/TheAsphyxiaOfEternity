@@ -1,4 +1,4 @@
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo, Rb2GlassInfo } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -241,6 +241,23 @@ export type RbWriteSettingsResponse = {
     reason?: string[]
 }
 
+export type Rb6UploadAsphyxiaDataRequest = {
+    sessionId: string
+    type: "profile" | "scores"
+    isFinished: boolean
+}
+
+// events
+export type Rb2GlassResponse = {
+    id: number
+    category: string
+    glass?: Rb2GlassInfo
+    experiences: number
+}
+export type Rb2GlassSettings = {
+    selected: number
+}
+
 export type Rb3VerdetDesKriegesPageRequest = {
     chapter: number
     page: number
@@ -267,11 +284,6 @@ export type Rb3OrderResponse = {
     param: number
 }
 
-export type Rb6UploadAsphyxiaDataRequest = {
-    sessionId: string
-    type: "profile" | "scores"
-    isFinished: boolean
-}
 type Rb6RankingQuestChart = {
     musicId: number
     chartType: Rb6ChartType | -1
@@ -298,6 +310,7 @@ export type RbUpdateSettingsResponse = {
     sessionId?: string
 }
 
+// in-game comments
 export type RbCommentResponse<TVersion extends RbVersion> = RbComment<TVersion> & {
     iconId?: number
     icon?: RbPlayerIcon

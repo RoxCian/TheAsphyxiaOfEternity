@@ -6,6 +6,7 @@ import { Rb3VerdetDesKriegesService } from "../../../services/specified/rb3-verd
 import { Rb5YurukomeService } from "../../../services/specified/rb5-yurukome.service"
 import { RbPlayDataServiceBase } from "../../../services/specified/rb-play-data.service"
 import { BungWaitableEvent } from "../../../utils/bung"
+import { Rb2GlassesService } from "../../../services/specified/rb2-glasses.service"
 
 @Component({
     selector: "rb-progress",
@@ -18,6 +19,7 @@ export class RbProgressSubpage {
     protected readonly profileService = inject(RbProfileService)
     protected readonly rb3Tabs = viewChild("rb3Tabs", { read: BungTabsComponent })
     readonly services = {
+        rb2Glasses: inject(Rb2GlassesService),
         rb3Verdet: inject(Rb3VerdetDesKriegesService),
         rb5Yurukome: inject(Rb5YurukomeService)
     }

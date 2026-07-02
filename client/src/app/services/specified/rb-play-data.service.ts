@@ -7,7 +7,7 @@ import { HttpResourceRef } from "@angular/common/http"
 
 export abstract class RbPlayDataServiceBase<T> {
     private readonly isActivatedInternal = signal(false)
-    private readonly profileService = inject(RbProfileService)
+    protected readonly profileService = inject(RbProfileService)
     private readonly versionService = inject(RbVersionService)
     private readonly dataVersionInternal = signal<RbVersion | undefined>(undefined)
 

@@ -1,0 +1,38 @@
+@let g = glass().glass;
+@let selected = service.settings.value()?.selected === g?.id;
+@if (g) {
+    <div class="card rb-panel palette{{ g.palette }}" [class.is-selected]="selected">
+        <figure class="glass-image {{ layer() == undefined ? '' : `layer${layer()}` }}" [class.completed]="progress() >= 0.99999" [style.--progress]="progress()">
+            <bung-insertion [content]="processSvg(iconElement() | async)" />
+        </figure>
+        <div class="glass-info">
+            <bung-marquee class="glass-name is-size-4" content="{{ g | rbText : 'category' }} {{ g | rbText : 'name' }}" [spacing]="72" [delay]="1500" />
+            <bung-divider class="progress-divider" prompt="Progress" promptLayout="start" />
+            <span class="glass-progress">
+                @if (glass().experiences >= g.experiences) {
+                    Completed
+                } @else {
+                    {{ glass().experiences }} / {{ g.experiences }}
+                }
+            </span>
+        </div>    
+    </div>
+    <button class="button select-button palette{{ g.palette }}" [class.is-loading]="service.loadingGlass() === g.id" [disabled]="selected || service.settings.isLoading() || service.loadingGlass() >= 0" (click)="service.select(g.id)">
+        @if (selected) {
+            <bung-icon icon="checkbox-marked-circle" animate.enter="enter" animate.leave="leave">Choosed</bung-icon>
+        } @else {
+            <bung-icon icon="check" animate.enter="enter" animate.leave="leave">Choose</bung-icon>
+        }
+    </button>
+} @else {
+    <div class="card rb-panel error-info">
+        <div class="error-icon">
+            <span class="icon is-large">
+                <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+            </span>
+        </div>
+        <div class="error-text">
+            <p>Play to unlock the glass</p>
+        </div>
+    </div>
+}

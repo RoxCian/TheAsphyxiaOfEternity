@@ -1,0 +1,67 @@
+:host ::ng-deep
+    .palette0
+        --palette-color1: #007000
+        --palette-color2: #82ff00
+        --palette-color3: #fff014
+        --palette-text: var(--black-text)
+    .palette1
+        --palette-color1: #fd7d00
+        --palette-color2: #fef400
+        --palette-color3: #fd6497
+        --palette-text: var(--black-text)
+    .palette2
+        --palette-color1: #2633ff
+        --palette-color2: #2dd1ff
+        --palette-color3: #fdcb00
+        --palette-text: white
+    .palette3
+        --palette-color1: #da3219
+        --palette-color2: #fe02f9
+        --palette-color3: #fdf800
+        --palette-text: white
+    .palette4
+        --palette-color1: #fd2a00
+        --palette-color2: #fea900
+        --palette-color3: #fd4a8f
+        --palette-text: white
+    .palette5
+        --palette-color1: #ff24d9
+        --palette-color2: #d746ff
+        --palette-color3: #ffb82e
+        --palette-text: white
+    .palette6
+        --palette-color1: #28283f
+        --palette-color2: #282a46
+        --palette-color3: #4e4966
+        --palette-text: white
+    .palette7
+        --palette-color1: #ff604d
+        --palette-color2: #ff6159
+        --palette-color3: #faff56
+        --palette-text: white
+::ng-deep svg
+    .icon-fill
+        fill: var(--text-color)
+
+    .lime
+        opacity: 0
+        .color1
+            fill: var(--palette-color1)
+        .color2
+            fill: var(--palette-color2)
+        .color3
+            fill: var(--palette-color3)
+    .fluids > *
+        opacity: 0
+.layer1 ::ng-deep svg .fluids .layer1
+    opacity: 1
+.layer2 ::ng-deep svg .fluids .layer2
+    opacity: 1
+.layer3 ::ng-deep svg .fluids .layer3
+    opacity: 1
+.layer1.completed ::ng-deep svg .lime.layer1
+    opacity: 1
+.layer2.completed ::ng-deep svg .lime.layer2
+    opacity: 1
+.layer3.completed ::ng-deep svg .lime.layer3
+    opacity: 1
