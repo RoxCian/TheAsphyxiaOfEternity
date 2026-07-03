@@ -16,27 +16,27 @@
                 <div class="stat">
                     <bung-divider prompt="Performance" />
                     <div class="stat-grid" [style.--max-item-width]="v === 4 || v === 5 || v === 6 ? 'calc(25% - 1.5em)' : 'calc(33.33% - 1.33em)'">
-                        <div class="stat-item has-text-centered" triggerMethod="contextmenu">
+                        <div class="stat-item rb-stat has-text-centered" triggerMethod="contextmenu">
                             <div class="heading">Ability Point</div>
                             <div class="title">{{ p.abilityPoint }}</div>
                         </div>
                         @if (v === 5 || v === 6) {
-                            <div class="stat-item has-text-centered">
+                            <div class="stat-item rb-stat has-text-centered">
                                 <div class="heading">Skill Point</div>
                                 <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
                             </div>
                         }
-                        <div class="stat-item has-text-centered" triggerMethod="contextmenu">
+                        <div class="stat-item rb-stat has-text-centered" triggerMethod="contextmenu">
                             <div class="heading">Play Count</div>
                             <div class="title">{{ p.playCount }}</div>
                         </div>
                         @if (v === 4) {
-                        <div class="stat-item has-text-centered">
+                        <div class="stat-item rb-stat has-text-centered">
                             <div class="heading">Pastel Level</div>
                             <div class="title">{{ p.level }}</div>
                         </div>
                         }
-                        <div class="stat-item has-text-centered">
+                        <div class="stat-item rb-stat has-text-centered">
                             @switch (v) {
                                 @case (6) {
                                     <div class="heading">Pastel Level</div>
@@ -74,26 +74,26 @@
                         </div>
                     </div>
                     <div class="stat-grid" [style.--max-item-width]="'100%'">
-                        <div class="stat-item has-text-centered">
+                        <div class="stat-item rb-stat has-text-centered">
                             <div class="heading">Total Score</div>
                             <div class="title">{{ playerPerformanceService.playerPerformance.value()?.totalScore ?? "-" }}</div>
                         </div>
                     </div>
                     <div class="stat-grid" [style.--max-item-width]="v === 4 || v === 5 || v === 6 ? 'calc(25% - 1.5em)' : 'calc(33.33% - 1.33em)'">
-                        <div class="stat-item rb-chart has-text-centered">
+                        <div class="stat-item rb-stat rb-chart has-text-centered">
                             <div class="heading is-basic-chart rb">Basic Score</div>
                             <div class="title is-basic-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[0] ?? "-" }}</div>
                         </div>
-                        <div class="stat-item rb-chart has-text-centered">
+                        <div class="stat-item rb-stat rb-chart has-text-centered">
                             <div class="heading is-medium-chart rb">Medium Score</div>
                             <div class="title is-medium-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[1] ?? "-" }}</div>
                         </div>
-                        <div class="stat-item rb-chart has-text-centered">
+                        <div class="stat-item rb-stat rb-chart has-text-centered">
                             <div class="heading is-hard-chart rb">Hard Score</div>
                             <div class="title is-hard-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[2] ?? "-" }}</div>
                         </div>
                         @if (v === 6 || v === 5 || v === 4) {
-                            <div class="stat-item rb-chart has-text-centered">
+                            <div class="stat-item rb-stat rb-chart has-text-centered">
                                 <div class="heading is-{{ v === 6 ? 'whitehard' : 'special' }}-chart rb">{{ v === 6 ? "WhiteHard Score" : "Special Score" }}</div>
                                 <div class="title is-{{ v === 6 ? 'whitehard' : 'special' }}-chart">{{ playerPerformanceService.playerPerformance.value()?.totalScoreSeparated?.[3] ?? "-" }}</div>
                             </div>
@@ -233,11 +233,11 @@
             <bung-tab header="Skill Point" index="skillpoint" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)">
                 <bung-divider prompt="Total Skill Point" />
                 <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
-                    <div class="stat-item has-text-centered" bungTooltip="Songs not unlocked are also included">
+                    <div class="stat-item rb-stat has-text-centered" bungTooltip="Songs not unlocked are also included">
                         <div class="heading">Computed Skill Point</div>
                         <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ skillPointService.entries().total.toFixed(1) }}</div>
                     </div>
-                    <div class="stat-item has-text-centered">
+                    <div class="stat-item rb-stat has-text-centered">
                         <div class="heading">Skill Point In Profile</div>
                         <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
                     </div>

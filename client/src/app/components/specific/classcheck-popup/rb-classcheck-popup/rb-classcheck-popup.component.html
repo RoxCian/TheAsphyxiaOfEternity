@@ -71,7 +71,7 @@
                 </div>
                 <bung-divider isVertical />
                 <div class="classcheck-score-info">
-                    <div class="classcheck-score-info-heading">
+                    <div class="classcheck-score-info-heading has-tooltip" [bungTooltip]="isV4 && classcheck().class > 16 ? 'Total score' : 'Average achievement rate'">
                         @if (isV4 && classcheck().class > 16) {
                             {{ classcheck().totalScore }}
                         } @else {
@@ -79,13 +79,13 @@
                         }
                     </div>
                     @if (isV4 && classcheck().class > 16) {
-                        <bung-icon class="classcheck-ar is-first-child" icon="percent">{{ classcheck().averageAchievementRate }}%</bung-icon>
+                        <bung-icon class="classcheck-ar has-tooltip" icon="percent" bungTooltip="Average achievement rate">{{ classcheck().averageAchievementRate }}%</bung-icon>
                     } @else {
-                        <bung-icon class="classcheck-score is-first-child" icon="counter">{{ classcheck().totalScore }}</bung-icon>
+                        <bung-icon class="classcheck-score has-tooltip" icon="counter" bungTooltip="Total score">{{ classcheck().totalScore }}</bung-icon>
                     }
-                    @if (!isMobile) { <bung-icon class="classcheck-play-count" icon="restart">{{ classcheck().playCount }}</bung-icon> }
-                    <bung-icon class="classcheck-update is-first-child" icon="update">{{ classcheck().update | relativeTime }}</bung-icon>
-                    @if (!isMobile) { <bung-icon class="classcheck-last-play" icon="clock-time-nine-outline">{{ classcheck().lastPlay | relativeTime }}</bung-icon> }
+                    @if (!isMobile) { <bung-icon class="classcheck-play-count has-tooltip" icon="restart" bungTooltip="Play count">{{ classcheck().playCount }}</bung-icon> }
+                    <bung-icon class="classcheck-update has-tooltip" icon="update" bungTooltip="Update time">{{ classcheck().update | relativeTime }}</bung-icon>
+                    @if (!isMobile) { <bung-icon class="classcheck-last-play has-tooltip" icon="clock-time-nine-outline" bungTooltip="Last play">{{ classcheck().lastPlay | relativeTime }}</bung-icon> }
                 </div>
             </div>
         </div>
