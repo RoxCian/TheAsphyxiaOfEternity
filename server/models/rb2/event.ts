@@ -45,7 +45,7 @@ export class Rb2EventStatus implements ICollection<"rb.rb2.player.event.status#u
     @XD.s32("exp") experience = 0
     @XD.s32() customize = 0
     @XD.s32("tid") teamId = -1
-    @XD.s32("t_name") teamName = "ASPHYXIA"
+    @XD.str("t_name") teamName = "ASPHYXIA"
     @XD.str("lid") lobbyId = "ea"
     @XD.str("s_name") shopName = ""
     @XD.s8("pref") prefecture = 53
