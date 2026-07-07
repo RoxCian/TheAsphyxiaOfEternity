@@ -1,9 +1,10 @@
 import { XD } from "../../utils/x"
 import { ArrayWrapper } from "../../utils/types"
-import { Rb3EventControl } from "./event"
+import { Rb3EventControl, Rb3JubeatCollaboration } from "./event"
 import { Rb3MusicRecord } from "./music_record"
-import { Rb3PlayerReleasedInfo } from "./profile"
+import { Rb3PlayerReleasedInfo, Rb3TricolettePark } from "./profile"
 import { DBBigInt } from "../../utils/db/db_types"
+import { Rb2LincleLink } from "../rb2/profile"
 
 export class Rb3ItemLockCtrl {
     @XD.u8() type = 0
@@ -19,6 +20,9 @@ export class Rb3PlayerStart {
         data: Rb3EventControl.examples
     }
     @XD.aw("item", Rb3ItemLockCtrl) itemLockCtrl: ArrayWrapper<"item", Rb3ItemLockCtrl> = {}
+    @XD.type("lincle_link_4", Rb2LincleLink) lincleLink = new Rb2LincleLink()
+    @XD.type("jbrbcollabo", Rb3JubeatCollaboration) jubeatCollaboration = new Rb3JubeatCollaboration()
+    @XD.type("tricolettepark", Rb3TricolettePark) tricolettePark = new Rb3TricolettePark()
 
     constructor(sessionId: number = 0) {
         this.sessionId = sessionId

@@ -3,13 +3,6 @@
 bung-tabs.has-error.leave
     opacity: 0
     transition: opacity var(--animation-duration-lv3) var(--ease-in)
-bung-divider
-    margin: 2em 0
-
-    &:first-child
-        margin-top: 0
-    &:last-child
-        margin-bottom: 0
 .performance-two-columns
     margin-top: 2em
     display: flex
@@ -41,12 +34,6 @@ bung-divider
         gap: 2em
 
 .stat-grid
-    display: grid
-    grid-template: 1fr / repeat(auto-fill, minmax(10em, var(--max-item-width)))
-    grid-auto-flow: row
-    gap: 1em
-    justify-content: center
-    align-items: center
     margin-bottom: 1.5em
 
 .stat-item > *
@@ -130,7 +117,6 @@ rb-level-display-switch.leave
     bung-divider:not(.music-records-divider)
         margin: 0.5em 0
     .stat-grid
-        grid-template: 1fr / repeat(auto-fill, minmax(8em, var(--max-item-width)))
         margin-bottom: 0.5em
 
     .rb-list:not(.is-mobile), .rb-classcheck-list, .rb-classcheck-list-two-columns, .rb-classcheck-list-two-columns .rb-dojo

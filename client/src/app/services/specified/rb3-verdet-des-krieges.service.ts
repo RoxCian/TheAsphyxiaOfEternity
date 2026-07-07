@@ -6,15 +6,14 @@ import { Rb3VerdetDesKriegesAppearance, Rb3VerdetDesKriegesContent, Rb3VerdetDes
 import { BungNotificationService } from "../bung/notification.service"
 import { rbEmitJSON } from "../../utils/rb-functions"
 import { HttpResourceRef } from "@angular/common/http"
+import { RbActivatableServiceBase } from "./rb.service"
 
 enum ClaudiaAbnormalType {
     none, playerIcon, playerName, musicRecords, stageLogs
 }
 
 @Service()
-export class Rb3VerdetDesKriegesService {
-    private readonly versionService = inject(RbVersionService)
-    private readonly profileService = inject(RbProfileService)
+export class Rb3VerdetDesKriegesService extends RbActivatableServiceBase<Rb3VerdetDesKriegesResponse> {
     private readonly notificationService = inject(BungNotificationService)
     readonly verdetDesKrieges = rbData<Rb3VerdetDesKriegesResponse>(() => this.versionService.version() === 3 ? "rb3ReadVerdetDesKrieges" : undefined, this.profileService.ridRequest)
     readonly pageCount = rbData<{ pageCount: number }>(() => this.isActivated() ? "rb3ReadVerdetDesKriegesPageCount" : undefined, computed(() => ({
@@ -24,9 +23,6 @@ export class Rb3VerdetDesKriegesService {
     private readonly pageInternal = signal(-1)
     private readonly chapterInternal = signal(-1)
     private readonly pageContentInternal = signal<Rb3VerdetDesKriegesContent[]>([])
-    private readonly isActivatedInternal = signal(false)
-
-    readonly isActivated = computed(() => this.versionService.version() === 3 && this.isActivatedInternal())
 
     readonly page = this.pageInternal.asReadonly()
     readonly chapter = this.chapterInternal.asReadonly()
@@ -74,6 +70,7 @@ export class Rb3VerdetDesKriegesService {
     private static readonly claudiaAbnormalType: ClaudiaAbnormalType = Math.random() > (2 / 3) ? 1 + Math.round(Math.random() * 3) : ClaudiaAbnormalType.none
 
     constructor() {
+        super()
         effect(() => {
             if (this.verdetDesKrieges.isLoading() || !this.isActivated()) return
             const data = this.verdetDesKrieges.value()
@@ -81,12 +78,8 @@ export class Rb3VerdetDesKriegesService {
             else if (data && (data.lastReadChapter !== this.chapterInternal() || data.lastReadPage !== this.pageInternal())) this.navigateTo(data.lastReadChapter, data.lastReadPage)
         })
     }
-    activate(): HttpResourceRef<Rb3VerdetDesKriegesResponse | undefined> {
-        this.isActivatedInternal.set(true)
+    onActivate(): HttpResourceRef<Rb3VerdetDesKriegesResponse | undefined> {
         return this.verdetDesKrieges
-    }
-    deactivate() {
-        this.isActivatedInternal.set(false)
     }
 
     async navigateTo(chapter: number, page: number) {

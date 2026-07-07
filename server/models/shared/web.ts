@@ -1,4 +1,4 @@
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo, Rb2GlassInfo } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo, Rb2GlassInfo, Rb3OrderDetailsParamFlag } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -274,14 +274,19 @@ export type Rb3OrderShopResponse = {
     level: number
     levelExperiences: number
     experiencesToNextLevel: number
-    orders: Rb3OrderResponse[]
+    details: Rb3OrderResponse[]
 }
 export type Rb3OrderResponse = {
     info: Rb3OrderInfo
     slot: number
     clearedCount: number
-    fragmentsCount: number
-    param: number
+    fragmentCount: number
+    param: Rb3OrderDetailsParamFlag
+}
+export type Rb3OrderSlot = {
+    index: number
+    slot: number
+    isLocked: boolean
 }
 
 type Rb6RankingQuestChart = {

@@ -1,7 +1,7 @@
 import { DBH } from "../utils/db/dbh"
 import { Batch } from "./batch"
 import { Rb6JustCollection } from "../models/rb6/just_collection"
-import { Rb3Equip, Rb3Order, Rb3OrderDetails, Rb3OrderDetailsParamFlag, Rb3PlayerAccount } from "../models/rb3/profile"
+import { Rb3Equip, Rb3Order, Rb3OrderDetails, Rb3PlayerAccount } from "../models/rb3/profile"
 import { Rb6Ghost } from "../models/rb6/ghost"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerStageLog } from "../models/rb6/profile"
 import { Rb6MusicRecord } from "../models/rb6/music_record"
@@ -10,8 +10,9 @@ import { Rb5Classcheck } from "../models/rb5/classcheck"
 import { Rb6Classcheck } from "../models/rb6/classcheck"
 import { Rb4PlayerStageLog } from "../models/rb4/profile"
 import { Rb5PlayerConfig, Rb5PlayerStageLog } from "../models/rb5/profile"
-import { Rb4DojoIndex, RbVersionWithClasscheck } from "../models/shared/rb_types"
+import { Rb3OrderDetailsParamFlag, Rb4DojoIndex, RbVersionWithClasscheck } from "../models/shared/rb_types"
 import { rb3OrdersInfo } from "../data/tables/rb3_orders"
+import { ICollection } from "../utils/db/db_types"
 
 export function initializeBatch() {
     Batch.register("batch#0.11.11.part2", "2.0.0", async () => {
@@ -66,13 +67,7 @@ export function initializeBatch() {
         for (const r of modifiedRecords) await DBH.update((r as any).__refid, { _id: r._id }, r)
 
         // typo fix: classAchievrementRateTimes100 -> classAchievementRateTimes100
-        const base = await DBH.find<Rb6PlayerBase>({ collection: "rb.rb6.player.base" })
-        for (const b of base) {
-            if (b.classAchievementRateTimes100 != undefined) continue
-            b.classAchievementRateTimes100 ??= (b as any)["classAchievrementRateTimes100"]
-            delete (b as any)["classAchievrementRateTimes100"]
-            await DBH.update((b as any).__refid, { collection: "rb.rb6.player.base" }, b)
-        }
+        await renameField<Rb6PlayerBase>("classAchievementRateTimes100", "classAchievrementRateTimes100", { collection: "rb.rb6.player.base" }, true)
     })
     Batch.register("batch#2.0.0.part2", "2.0.0", async () => {
         // append stage log into classcheck records
@@ -231,4 +226,26 @@ export function initializeBatch() {
         }
         await t.commit()
     })
+}
+
+async function renameField<T extends ICollection<any>>(key: keyof T | (keyof T)[], oldKey: string | string[], query: Query<T>, hasRid: boolean, saveQueryCreator?: (data: T) => Query<T>) {
+    const t = new DBH.T()
+    const values = await t.find(undefined, query)
+    for (const value of values) {
+        if (typeof key === "string") {
+            if (value[key] == undefined) value[key] = (value as any)[typeof oldKey === "string" ? oldKey : oldKey[0]]
+            delete (value as any)[typeof oldKey === "string" ? oldKey : oldKey[0]]
+            const saveQuery = saveQueryCreator?.(value) ?? query
+            t.update(hasRid ? (value as any).__refid : undefined, saveQuery)
+        } else if (Array.isArray(key)) {
+            for (let i = 0; i < key.length; i++) {
+                const k = key[i]
+                if (value[k] == undefined) value[k] = (value as any)[typeof oldKey === "string" ? oldKey : oldKey[i]]
+                delete (value as any)[typeof oldKey === "string" ? oldKey : oldKey[i]]
+            }
+            const saveQuery = saveQueryCreator?.(value) ?? query
+            t.update(hasRid ? (value as any).__refid : undefined, saveQuery)
+        }
+    }
+    await t.commit()
 }

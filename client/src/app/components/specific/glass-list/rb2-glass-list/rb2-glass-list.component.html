@@ -1,11 +1,16 @@
+<ng-template #placeholder>
+    <div class="rb-panel"></div>
+</ng-template>
 @if (service.isActivated()) {
     @for (key of service.grouped() | key; track key) {
-        <bung-divider prompt="Glasses - {{ key }}" />
+        <bung-divider class="section-divider" prompt="Glasses - {{ key }}" />
         <div class="rb-list">
             @for (glass of service.grouped()[key]; track glass.id) {
-                <rb2-glass [glass]="glass" />
+                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                    <rb2-glass [glass]="glass" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                </bung-insertion>
             }
         </div>
     }
-    <bung-divider prompt="End of Lime Glasses" />
+    <bung-divider class="section-divider" prompt="End of Lime Glasses" />
 }

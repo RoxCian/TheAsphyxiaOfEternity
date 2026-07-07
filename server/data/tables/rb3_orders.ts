@@ -10,7 +10,7 @@ export async function getOrderShopLevel(experiences: number): Promise<Rb3OrderSh
         if (experiences >= l.experiences && experiences < l.experiences + l.experiencesToNextLevel) return l
     }
     return {
-        level: 101,
+        level: 201,
         experiences: -1,
         experiencesToNextLevel: -1
     }

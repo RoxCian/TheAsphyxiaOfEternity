@@ -60,7 +60,7 @@
         background: color-mix(in srgb, var(--palette-color2) 80%, var(--card-background))
     &.is-focused, &:focus
         border-color: color-mix(in srgb, var(--palette-color2) 85%, white)
-    &.is-focused:not(:active):not([disabled]), &:focus:not(:active):not([disabled])
+    &:not(:active):not([disabled]).is-focused, &:not(:active):not([disabled]):focus
         box-shadow: 0 0 0 0.125em color-mix(in srgb, transparent 75%, var(--palette-color2))
     &.is-loading::after
         left: calc(50% - 1em)

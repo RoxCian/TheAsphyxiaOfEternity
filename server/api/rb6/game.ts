@@ -34,7 +34,7 @@ export function registerRb6Handlers() {
     H.route("player.rb6_player_delete", deletePlayer)
     H.route("player.rb6_player_read_score", readPlayerScore)
     H.route("player.rb6_player_read_jc", readPlayerJustCollections)
-    H.route("player.rb6_player_succeed", playerSucceeded)
+    H.route("player.rb6_player_succeed", succeedPlayer)
     H.route("player.rb6_player_read_gs", readGhost)
     H.route("player.rb6_player_read_rank", readRank)
     H.route("lobby.rb6_lobby_entry", createAddLobbyHandler(6))
@@ -48,7 +48,7 @@ const bootPcb: H.H = () => XF.x(new Rb6ShopInfo())
 
 const readHitChartInfo: H.H = () => ({ ver: {} })
 
-const playerSucceeded: H.H = async data => {
+const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     const result = new Rb6PlayerSucceed()
     const account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })

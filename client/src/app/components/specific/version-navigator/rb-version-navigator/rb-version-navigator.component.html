@@ -1,26 +1,63 @@
-<!-- <div class="badge-collection" style="display: flex; border-radius: 8px; overflow: hidden;">
-    <div>
-        <rb rb [class.disabled]="!versionService.validVersions()[1]" (click)="versionService.validVersions()[1] ? versionService.changeVersion(1) : undefined" [isActive]="versionService.version() === 1"></rb>
+<ng-template let-hide #rb>
+    <rb- class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[1]" [isActive]="versionService.validVersions()[1] && versionService.version() === 1" />
+</ng-template>
+<ng-template let-hide #ll>
+    <rb-limelight class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[2]" [isActive]="versionService.validVersions()[2] && versionService.version() === 2" />
+</ng-template>
+<ng-template let-hide #col>
+    <rb-colette class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[3]" [isActive]="versionService.validVersions()[3] && versionService.version() === 3" />
+</ng-template>
+<ng-template let-hide #gr>
+    <rb-groovin class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[4]" [isActive]="versionService.validVersions()[4] && versionService.version() === 4" />
+</ng-template>
+<ng-template let-hide #vol>
+    <rb-volzza class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[5]" [isActive]="versionService.validVersions()[5] && versionService.version() === 5" />
+</ng-template>
+<ng-template let-hide #ref>
+    <rb-reflesia class="badge" [class.hide]="hide" [class.disabled]="!versionService.validVersions()[6]" [isActive]="versionService.validVersions()[6] && versionService.version() === 6" />
+</ng-template>
+<bung-menu-def #optionsDropdownDef [class]="breakpointService.breakpointsToggled.mobile() ? 'is-small' : ''">
+    @if (versionService.validVersions()[1]) { <bung-menu-item [content]="rb" (click)="versionService.changeVersion(1)" /> }
+    @if (versionService.validVersions()[2]) { <bung-menu-item [content]="ll" (click)="versionService.changeVersion(2)" /> }
+    @if (versionService.validVersions()[3]) { <bung-menu-item [content]="col" (click)="versionService.changeVersion(3)" /> }
+    @if (versionService.validVersions()[4]) { <bung-menu-item [content]="gr" (click)="versionService.changeVersion(4)" /> }
+    @if (versionService.validVersions()[5]) { <bung-menu-item [content]="vol" (click)="versionService.changeVersion(5)" /> }
+    @if (versionService.validVersions()[6]) { <bung-menu-item [content]="ref" (click)="versionService.changeVersion(6)" /> }
+</bung-menu-def>
+<div class="dropdown-trigger bung-input-content"
+    [class.normal-style]="!versionService.validVersions()[versionService.version()]"
+    (click)="onClick()"
+    [bungDropdown]="optionsDropdownDef"
+    [disabled]="isLoadingComputed()"
+    activeClass="is-active"
+    [options]="{ backdropOptions: { hasBackdrop: triggerMethod() === 'click', backdropOpacity: 0 }}" #dropdownTrigger>
+    <div class="dropdown-trigger-content">
+        <ng-container *ngTemplateOutlet="rb; context: (versionService.version() !== 1) | implicit" />
+        <ng-container *ngTemplateOutlet="ll; context: (versionService.version() !== 2) | implicit" />
+        <ng-container *ngTemplateOutlet="col; context: (versionService.version() !== 3) | implicit" />
+        <ng-container *ngTemplateOutlet="gr; context: (versionService.version() !== 4) | implicit" />
+        <ng-container *ngTemplateOutlet="vol; context: (versionService.version() !== 5) | implicit" />
+        <ng-container *ngTemplateOutlet="ref; context: (versionService.version() !== 6) | implicit" />
     </div>
-    <div>
-        <rb limelight [class.disabled]="!versionService.validVersions()[2]" (click)="versionService.validVersions()[2] ? versionService.changeVersion(2) : undefined" [isActive]="versionService.version() === 2"></rb>
+    <div class="tail-icon-grid">
+        <i class="loading-icon mdi mdi-loading"></i>
+        <i class="dropdown-item-chevron mdi mdi-chevron-down color{{ versionService.version() }}"></i>
     </div>
-    <div>
-        <rb colette [class.disabled]="!versionService.validVersions()[3]" (click)="versionService.validVersions()[3] ? versionService.changeVersion(3) : undefined" [isActive]="versionService.version() === 3"></rb>
+</div>
+<div class="dropdown-trigger bung-input-content background-border">
+    <div class="dropdown-trigger-content">
+        <ng-container *ngTemplateOutlet="rb; context: (versionService.version() !== 1) | implicit" />
+        <ng-container *ngTemplateOutlet="ll; context: (versionService.version() !== 2) | implicit" />
+        <ng-container *ngTemplateOutlet="col; context: (versionService.version() !== 3) | implicit" />
+        <ng-container *ngTemplateOutlet="gr; context: (versionService.version() !== 4) | implicit" />
+        <ng-container *ngTemplateOutlet="vol; context: (versionService.version() !== 5) | implicit" />
+        <ng-container *ngTemplateOutlet="ref; context: (versionService.version() !== 6) | implicit" />
     </div>
-    <div>
-        <rb groovin [class.disabled]="!versionService.validVersions()[4]" (click)="versionService.validVersions()[4] ? versionService.changeVersion(4) : undefined" [isActive]="versionService.version() === 4"></rb>
-    </div>
-    <div>
-        <rb volzza [class.disabled]="!versionService.validVersions()[5]" (click)="versionService.validVersions()[5] ? versionService.changeVersion(5) : undefined" [isActive]="versionService.version() === 5"></rb>
-    </div>
-    <div>
-        <rb reflesia [class.disabled]="!versionService.validVersions()[6]" (click)="versionService.validVersions()[6] ? versionService.changeVersion(6) : undefined" [isActive]="versionService.version() === 6"></rb>
-    </div>
-</div> -->
-<bung-select [value]="versionService.version()" (valueChange)="versionService.changeVersion(asNumber($event))" class="is-rounded" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [isLoading]="profileService.isLoading()">
+</div>
+
+<!-- <bung-select [value]="versionService.version()" (valueChange)="versionService.changeVersion(asNumber($event))" class="is-rounded" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [isLoading]="profileService.isLoading()">
     <bung-option [value]="1" [isHidden]="!versionService.validVersions()[1]" [disabled]="!versionService.validVersions()[1]">
-        <rb- class="badge" [class.disabled]="!versionService.validVersions()[2]" [isActive]="versionService.validVersions()[1] && versionService.version() === 1" />
+        <rb- class="badge" [class.disabled]="!versionService.validVersions()[1]" [isActive]="versionService.validVersions()[1] && versionService.version() === 1" />
     </bung-option>
     <bung-option [value]="2" [isHidden]="!versionService.validVersions()[2]" [disabled]="!versionService.validVersions()[2]">
         <rb-limelight class="badge" [class.disabled]="!versionService.validVersions()[2]" [isActive]="versionService.validVersions()[2] && versionService.version() === 2" />
@@ -37,4 +74,4 @@
     <bung-option [value]="6" [isHidden]="!versionService.validVersions()[6]" [disabled]="!versionService.validVersions()[6]">
         <rb-reflesia class="badge" [class.disabled]="!versionService.validVersions()[6]" [isActive]="versionService.validVersions()[6] && versionService.version() === 6" />
     </bung-option>
-</bung-select>
+</bung-select> -->

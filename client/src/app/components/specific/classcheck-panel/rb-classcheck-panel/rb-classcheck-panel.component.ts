@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from "@angular/core"
+import { Component, computed, ElementRef, inject, input } from "@angular/core"
 import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbClasscheckPopupComponent } from "../../classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component"
@@ -135,10 +135,12 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
             return "Failed"
         }
     })
+    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
     private readonly popupService = inject(BungPopupService)
 
     protected onShowPopup() {
         if (!this.classcheck().stageLogs) return
+        setTimeout(() => this.element.nativeElement.blur(), 500)
         this.popupService.popup(undefined, undefined, RbClasscheckPopupComponent, {
             layer: "rb-classcheck",
             duration: Infinity,

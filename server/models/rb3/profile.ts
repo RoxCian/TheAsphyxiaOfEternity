@@ -4,7 +4,7 @@ import { Rb3Mylist } from "./mylist"
 import { Rb3MusicOldRecord, Rb3MusicRecord } from "./music_record"
 import { Rb2LincleLink } from "../rb2/profile"
 import { ArrayWrapper } from "../../utils/types"
-import { Rb1ChartType, Rb3ClearType, RbColor } from "../shared/rb_types"
+import { Rb1ChartType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbColor } from "../shared/rb_types"
 
 export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     readonly collection = "rb.rb3.player.account"
@@ -203,11 +203,6 @@ export class Rb3OrderDetails {
         this.index = index
     }
 }
-export enum Rb3OrderDetailsParamFlag {
-    none = 0,
-    unlocked = 1,
-    lockedToSlot = 2
-}
 export class Rb3Order implements ICollection<"rb.rb3.player.order"> {
     readonly collection = "rb.rb3.player.order"
     @XD.s32("exp") experience = 0
@@ -244,7 +239,9 @@ export class Rb3TricolettePark implements ICollection<"rb.rb3.player.tricoletteP
     @XD.s32() boss3Stun = 0
     @XD.s32() magicGauge = 0
     @XD.s32("today_party") todaysParty = 0
-    @XD.bool("use_union_magic") isUseUnionMagic = false
+    @XD.ToX.bool("union_magic") @XD.ToO.bool("use_union_magic") unionMagic = false
+    @XD.ToX.bool() isComplete = false
+    @XD.ToX.float() baseAttackRate = 1
 }
 
 class Rb3PlayerData {

@@ -3,17 +3,17 @@ import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { Rb3Mylist } from "../../models/rb3/mylist"
-import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3OrderDetailsParamFlag, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
+import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { convertToRb3ClearType, findAllBestMusicRecord } from "../shared_game/find_music_record"
 import { Rb2LincleLink } from "../../models/rb2/profile"
 import { hasAny, hasFlag, isToday } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
-import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
+import { Rb3ItemLockCtrl, Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
-import { Rb1ChartType, Rb1ClearType, Rb3ClearType, RbSession } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbSession } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
@@ -46,6 +46,14 @@ const startPlayer: H.H = async data => {
     const session = await createSession(rid, 3)
     if (!session) return H.deny
     const result = new Rb3PlayerStart(session.sessionId)
+    const lincleLink = await DBH.findOne(rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" }, true)
+    result.lincleLink = lincleLink
+    result.itemLockCtrl.item = []
+    const music = new Rb3ItemLockCtrl()
+    music.type = 0
+    music.id = 386
+    music.param = 2
+    result.itemLockCtrl.item.push(music)
     return XF.x(result)
 }
 
@@ -458,12 +466,18 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
     }
     if (!ordersSaved) t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
     else {
-        ordersSaved.experience = order.experience
+        ordersSaved.experience = Math.min(order.experience, 120_000_000) // max exp is 1.2e8 (lv 999), don't think anyone can achieve that
 
         function isCleared(orderIndex: number): boolean {
             return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
         }
         function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: Rb3OrderDetailsParamFlag = Rb3OrderDetailsParamFlag.unlocked): void {
+            if (slot >= 0) {
+                for (const o of ordersSaved!.details ?? []) if (o.slot === slot) {
+                    o.slot = -1
+                    break
+                }
+            }
             let order = ordersSaved!.details?.find(o => o.index == orderIndex)
             if (!order) {
                 order = {
@@ -505,7 +519,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                         if (!isCleared(o.index)) {
                             stamp.ticketCount[currentVersion - 1] += 3
                             addClearedCount(o.index, 1, 1, 0, -1)
-                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, -1)
+                        }
                         // the first matching order cannot be accepted again
                         break
                     case 34:
@@ -535,6 +549,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                             let orderSaved = ordersSaved!.details?.find(os => os.index == o.index)
                             if (!orderSaved) {
                                 if (fragsBase >= 20) stamp.ticketCount[currentVersion - 1] += 4
+                                else ordersSaved.experience -= 2788
                                 orderSaved = {
                                     index: o.index,
                                     clearedCount: fragsBase >= 20 ? 1 : 0,
@@ -555,6 +570,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                 } else {
                                     orderSaved.slot = o.slot
                                     orderSaved.fragmentsCount0 = frags
+                                    ordersSaved.experience -= 2788
                                 }
                             }
                         } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
@@ -565,12 +581,14 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                             const fragsBase = countPhonix(o, stageLogs)
                             let orderSaved = ordersSaved!.details?.find(os => os.index === o.index)
                             if (!orderSaved) {
-                                if (fragsBase >= 20) newReleases.push({
-                                    collection: "rb.rb3.player.releasedInfo",
-                                    type: 7,
-                                    id: 82, // left byword "Red"
-                                    param: 0,
-                                })
+                                if (fragsBase >= 20) {
+                                    newReleases.push({
+                                        collection: "rb.rb3.player.releasedInfo",
+                                        type: 7,
+                                        id: 82, // left byword "Red"
+                                        param: 0,
+                                    })
+                                }
                                 orderSaved = {
                                     index: o.index,
                                     clearedCount: fragsBase >= 20 ? 1 : 0,
@@ -597,6 +615,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                                 } else {
                                     orderSaved.slot = o.slot
                                     orderSaved.fragmentsCount0 = frags
+                                    ordersSaved.experience -= 2788
                                 }
                             }
                         } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)

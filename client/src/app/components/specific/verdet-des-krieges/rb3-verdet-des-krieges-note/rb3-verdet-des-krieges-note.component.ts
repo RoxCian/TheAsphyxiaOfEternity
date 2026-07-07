@@ -11,6 +11,4 @@ export class Rb3VerdetDesKriegesNoteComponent {
     protected readonly service = inject(Rb3VerdetDesKriegesService)
     readonly annotationId = input.required<number>()
     protected readonly annotation = computed(() => this.service.notes.value()?.find(n => n.id === this.annotationId()))
-    protected readonly annotationTitle = computed(() => this.annotation()?.nameOrig)
-    protected readonly annotationContent = computed(() => this.annotation()?.noteOrig?.split("\n"))
 }

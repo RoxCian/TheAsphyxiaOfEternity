@@ -73,7 +73,9 @@ import { Rb5YurukomeListComponent } from '../components/specific/yurukome-list/r
 import { Rb5YurukomePanelComponent } from '../components/specific/yurukome-list/rb5-yurukome-panel/rb5-yurukome-panel.component';
 import { Rb5ReftisInfoComponent } from '../components/specific/reftis-info/rb5-reftis-info/rb5-reftis-info.component';
 import { Rb2GlassListComponent } from '../components/specific/glass-list/rb2-glass-list/rb2-glass-list.component';
-import { Rb2GlassComponent } from '../components/specific/glass-list/rb2-glass/rb2-glass.component'
+import { Rb2GlassComponent } from '../components/specific/glass-list/rb2-glass/rb2-glass.component';
+import { Rb3OrderShopComponent } from '../components/specific/order-shop/rb3-order-shop/rb3-order-shop.component';
+import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/rb3-order.component'
 
 @NgModule({
     declarations: [
@@ -146,7 +148,9 @@ import { Rb2GlassComponent } from '../components/specific/glass-list/rb2-glass/r
         Rb5YurukomePanelComponent,
         Rb5ReftisInfoComponent,
         Rb2GlassListComponent,
-        Rb2GlassComponent
+        Rb2GlassComponent,
+        Rb3OrderShopComponent,
+        Rb3OrderComponent
     ],
     imports: [
         CommonModule,

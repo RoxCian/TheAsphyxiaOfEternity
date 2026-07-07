@@ -1,6 +1,6 @@
 import { computed, Service } from "@angular/core"
 import { RbChartType, RbStageLogResponse, RbVersion } from "rbweb"
-import { RbPlayDataServiceBase } from "./rb-play-data.service"
+import { RbPlayDataServiceBase } from "./rb.service"
 
 @Service()
 export class RbStageLogService extends RbPlayDataServiceBase<RbStageLogResponse<RbVersion, RbChartType<RbVersion>>> {

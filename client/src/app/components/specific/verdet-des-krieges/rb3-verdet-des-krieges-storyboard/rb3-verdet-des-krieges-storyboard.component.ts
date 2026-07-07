@@ -9,7 +9,7 @@ import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb
     selector: "rb3-verdet-des-krieges-storyboard",
     standalone: false,
     templateUrl: "./rb3-verdet-des-krieges-storyboard.component.html",
-    styleUrl: "./rb3-verdet-des-krieges-storyboard.component.sass",
+    styleUrls: ["./rb3-verdet-des-krieges-storyboard.component.sass", "./rb3-verdet-des-krieges-storyboard.animation.sass"],
 })
 export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     protected readonly service = inject(Rb3VerdetDesKriegesService)
@@ -32,7 +32,6 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     constructor() {
         effect(() => {
             if (this.service.isLoading() || !this.service.isActivated()) return
-            this.isUnlocked.set(false)
             const state = untracked(() => this.viewState())
             if (!this.service.verdetDesKrieges.value() || this.service.chapter() === 0) {
                 if (state === "transit-page" || state === "transit-non-page") this.viewStateBackup = "cover"
@@ -71,17 +70,21 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
         else this.service.navigateTo(data?.chapter ?? 1, data?.page ?? 0)
     }
     protected onGotoCover() {
+        this.isUnlocked.set(false)
         this.viewState.set("transit-non-page")
         this.service.navigateTo(0, 0)
     }
     protected onGotoContents() {
+        this.isUnlocked.set(false)
         this.viewState.set("contents")
     }
     protected onNavigateToPage(page: number) {
+        this.isUnlocked.set(false)
         this.viewState.set("transit-page")
         this.service.navigateTo(this.service.chapter(), page)
     }
     protected onNavigateToPrevious() {
+        this.isUnlocked.set(false)
         if (this.service.page() === 0) {
             this.viewState.set("transit-chapter")
             this.service.navigateTo(this.service.chapter() - 1, 4)
@@ -91,6 +94,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
         }
     }
     protected onNavigateToNext() {
+        this.isUnlocked.set(false)
         if (this.service.page() === (this.service.pageCount.value()?.pageCount ?? 0) - 1) {
             if (this.service.chapter() === this.service.verdetDesKrieges.value()?.chapter && this.service.canUnlockMusic()) {
                 this.notUnlockNow.set(false)
@@ -104,6 +108,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
         }
     }
     protected onNavigateToChapter(chapter: number) {
+        this.isUnlocked.set(false)
         if (this.service.chapter() === chapter && this.service.page() === 0) this.viewState.set("page")
         else {
             this.viewState.set("transit-non-page")

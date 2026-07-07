@@ -1,0 +1,227 @@
+:host
+    display: flex
+    position: relative
+    min-width: 300px
+.order-box.is-rare
+    box-shadow: 0 2px 3px #eadda4, 0 0 0 1px #eadda4
+.slot-id
+    position: absolute
+    display: flex
+    inset: 0
+    align-items: end
+    justify-content: end
+    overflow: clip
+    opacity: 0.1
+    user-select: none
+    pointer-events: none
+
+    span
+        font-size: 4em
+        font-weight: bold
+        margin-right: -0.15em
+        margin-bottom: -0.55em
+.order-box
+    flex: 1
+    overflow-x: clip
+    min-width: 0 // firefox compatibility
+    background: var(--background)
+    z-index: 10
+    
+.color0
+    --background: #f0fff4
+    --accent-color: #23d160
+    --accent-text-color: white
+.color1
+    --background: #ffffea
+    --accent-color: #ffdd57
+    --accent-text-color: var(--black-text)
+.color2
+    --background: #f2ffff
+    --accent-color: #209cee
+    --accent-text-color: white
+.color3
+    --background: #fff9ff
+    --accent-color: #c36fcb
+    --accent-text-color: white
+.color4
+    --background: #fffafa
+    --accent-color: #e5676a
+    --accent-text-color: white
+
+.order-content
+    position: relative
+    display: flex
+    justify-content: start
+    align-items: center
+    margin-bottom: 0
+    padding: 1.25em
+    gap: 1.25em
+    height: 100%
+    border-radius: 8px
+    overflow: clip
+
+    .order-wrapper
+        flex: 1
+        display: grid
+        grid-template: auto minmax(0, 1fr) / minmax(0, 1fr)
+        align-self: stretch
+        overflow-y: auto
+    .order-info, .reward-info
+        display: flex
+        flex-direction: row
+        align-items: center
+        overflow: clip
+        gap: 1em
+    .order-name
+        flex: 1
+        font-weight: bold
+        margin-bottom: 0
+        min-width: 0
+    p:not(:last-child)
+        margin-bottom: 0 // asphyxia fix
+    .lock-button
+        width: 2em
+        height: 2em
+    .lock-button.is-selected
+        color: var(--accent-text-color)
+        background: var(--accent-color)
+    .stars i:not(:last-child)
+        margin-right: -0.25em
+    bung-icon
+        padding: 0 0.5em
+.leading-tag
+    width: 5em
+
+.order-progress
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    height: 0.25em
+
+    .progress-base
+        position: absolute
+        inset: 0
+        background: var(--invert-card-background)
+        opacity: 0.1
+    .progress-body
+        position: absolute
+        inset: 0
+        right: calc(100% - var(--progress))
+        background: var(--accent-color)
+        opacity: 0.7
+.order-clear-badge
+    position: absolute
+    display: flex
+    bottom: 1.25em
+    right: 1.25em
+    width: 3em
+    height: 1.5em
+    align-items: center
+    justify-content: center
+    color: var(--accent-text-color)
+    background: var(--accent-color)
+    border-radius: 9999px
+    box-shadow: 0 2px 3px color-mix(in srgb, var(--accent-color) 80%, var(--invert-card-background)), 0 0 0 1px color-mix(in srgb, color-mix(in srgb, var(--accent-color) 80%, var(--invert-card-background)), transparent 70%)
+
+    &::before
+        border-radius: 9999px
+.select-button
+    display: grid
+    grid-template: 1fr / 1fr
+    width: 4em
+    height: auto
+    margin-left: -1em
+    padding-left: 0
+    padding-right: 1em
+    justify-items: center
+    border-radius: 8px
+    transform: rotate(180deg)
+    transition: background var(--animation-duration-lv3), color var(--animation-duration-lv3), border var(--animation-duration-lv3), opacity var(--animation-duration-lv3), box-shadow var(--animation-duration-lv3), width var(--animation-duration-lv2) var(--ease-in)
+    writing-mode: vertical-lr
+
+    &:not([disabled]):hover
+        width: 5em
+    &:not([disabled]):active, &:not([disabled]).is-active
+        width: 5em
+    &.is-loading::after
+        left: calc(50% - 1em)
+        border-color: transparent transparent var(--accent-text-color) var(--accent-text-color)
+    bung-icon
+        grid-area: 1 / 1
+
+        &.enter
+            animation: button-content-enter-animation var(--animation-duration-lv3) var(--ease-in)
+        &.leave
+            animation: button-content-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse forwards
+
+    ::ng-deep .icon-element
+        rotate: 90deg
+.select-button, .lock-button.is-selected
+    &:not(.no-color)
+        background: var(--accent-color)
+        color: var(--accent-text-color)
+    &:not([disabled]):not(.no-color):hover
+        background: color-mix(in srgb, var(--accent-color) 90%, var(--card-background))
+    &:not([disabled]):not(.no-color):active, &:not([disabled]):not(.no-color).is-active
+        background: color-mix(in srgb, var(--accent-color) 80%, var(--card-background))
+    &:not(:active):not([disabled]):not(.no-color).is-focused, &:not(:active):not([disabled]):not(.no-color):focus
+        box-shadow: 0 0 0 0.125em color-mix(in srgb, transparent 75%, var(--accent-color))
+    &:not(.no-color).is-loading::after
+        border-color: transparent transparent var(--accent-text-color) var(--accent-text-color)
+.select-button, .lock-button
+    &:not(.no-color).is-focused, &:not(.no-color):focus
+        border-color: color-mix(in srgb, var(--accent-color) 85%, white)
+
+.error-info
+    display: flex
+    align-items: center
+    justify-content: center
+    opacity: 0.3
+
+    .order-content
+        width: 100%
+        justify-content: center
+@media screen and (width < 768px)
+    // :host .card.order-box, :host .placeholder
+    //     margin-bottom: 0.5em
+
+    .order-content
+        padding: 0.5em
+        gap: 0.5em
+
+        .order-info .order-name
+            font-size: 1em !important
+    .slot-id span
+        font-size: 2.5em
+
+    .order-hint
+        line-height: 1.2
+    .order-progress
+        height: 0.1875em
+    .order-clear-badge
+        bottom: 0.5em
+        right: 0.5em
+        width: 1.5em
+    .select-button
+        font-size: 0.75em
+        width: 3em
+
+        &:not([disabled]):hover, &:not([disabled]):active, &:not([disabled]).is-active
+            width: 4em
+@media (prefers-color-scheme: dark)
+    .color0
+        --background: #001100
+        --accent-color: #1ca64c
+    .color1
+        --background: #110900
+        --accent-color: #ffd324
+    .color2
+        --background: #000925
+        --accent-color: #0f81cc
+    .color3
+        --background: #1a001d
+        --accent-color: #a559ac
+    .color4
+        --background: #1a0909
+        --accent-color: #c35155

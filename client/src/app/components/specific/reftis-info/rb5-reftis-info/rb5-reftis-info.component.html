@@ -1,3 +1,4 @@
+<bung-divider class="section-divider" prompt="REFTIS Play Data" />
 <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
     <div class="stat-item rb-stat has-text-centered">
         <div class="heading">Hi-score</div>
@@ -8,4 +9,4 @@
         <div class="title">{{ (reftis.value()?.playCount ?? 0) === 0 ? (reftis.value()?.sc ?? 0) > 0 ? 1 : 0 : reftis.value()!.playCount }}</div>
     </div>
 </div>
-<bung-divider prompt="End of REFTIS Play Data" />
+<bung-divider class="section-divider" prompt="End of REFTIS Play Data" />

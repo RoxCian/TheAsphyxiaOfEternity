@@ -1,6 +1,6 @@
 import { computed, Service } from "@angular/core"
 import { Rb5YurukomeResponse } from "rbweb"
-import { RbPlayDataServiceBase } from "./rb-play-data.service"
+import { RbPlayDataServiceBase } from "./rb.service"
 
 @Service()
 export class Rb5YurukomeService extends RbPlayDataServiceBase<Rb5YurukomeResponse> {

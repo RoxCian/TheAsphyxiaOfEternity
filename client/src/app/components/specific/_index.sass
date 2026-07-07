@@ -41,12 +41,40 @@
 
 .rb-panel
     height: 7.5em
+.stat-grid
+    display: grid
+    grid-template: 1fr / repeat(auto-fill, minmax(10em, var(--max-item-width)))
+    grid-auto-flow: row
+    gap: 1em
+    justify-content: center
+    align-items: center
+.rb-stat .heading
+    white-space: nowrap
+.search-opt
+    width: 0
+    height: 0
+    opacity: 0
+    overflow: clip
 
+bung-divider.section-divider
+    margin: 2em 0
+
+    &:first-child
+        margin-top: 0
+    &:last-child
+        margin-bottom: 0
 @media screen and (width < 768px)
     .rb-panel
         height: 5em
     .rb-stat .title
         font-size: 1.25rem
+    .stat-grid
+        grid-template: 1fr / repeat(auto-fill, minmax(8em, var(--max-item-width)))
+        gap: 0.5em
+
+    bung-divider.section-divider
+        margin: 0.5em 0
+
 @media (prefers-color-scheme: dark)
     .is-basic-chart
         --rb-chart-color: #57ac7a

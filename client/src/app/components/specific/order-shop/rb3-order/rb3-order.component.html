@@ -1,0 +1,109 @@
+@let o = order();
+@let color = `color${o?.info?.fragmentColor}`;
+@if (o) {
+    <div class="card order-box rb-panel {{ color }}" [class.is-slot]="isSlot()" [class.is-premium-slot]="isPremiumSlot()" [class.error-info]="!o">
+        <div class="order-content" #contentElement>
+            @if (isSlot()) {
+                <div class="slot-id">
+                    @if (isPremiumSlot()) {
+                        <span>VALUE PACK SLOT</span>
+                    } @else {
+                        <span>SLOT {{ slotId() + 1 }}</span>
+                    }
+                </div>
+            }
+            <div class="order-wrapper">
+                <div class="order-info">
+                    <div class="no tag leading-tag">
+                        No. {{ o.info.orderShopId.toString().padStart(3, "0") }}
+                    </div>
+                    <div class="order-name is-size-4">
+                        <bung-marquee [content]="o.info | rbText : 'orderName'" [delay]="1500" [spacing]="72" />
+                    </div>
+                    <div class="stars tag" [class.is-success]="o.info.stars <= 3" [class.is-warning]="o.info.stars <= 6 && o.info.stars > 3" [class.is-danger]="o.info.stars >= 7">
+                        @if (breakpointService.breakpointsToggled.mobile()) {
+                            <i class="mdi mdi-star"></i>{{ o.info.stars }}
+                        } @else {
+                            @for (i of o.info.stars | range; track i) {
+                                <i class="mdi mdi-star"></i>
+                            }
+                        }
+                    </div>
+                    @if (isSlot() && o.clearedCount > 0 && o.info.reacceptable) {
+                        <button class="button lock-button is-small" [class.is-selected]="isLocked()" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.toggleOrderLock(slotId())">
+                            <i class="mdi {{ isLocked() ? 'mdi-lock' : 'mdi-lock-off' }}"></i>
+                        </button>
+                    }
+                </div>
+                <div class="order-hint is-size-7">
+                    <p>{{ o.info | rbText : "hint" }}</p>
+                    <div class="reward-info">
+                        <span class="tag leading-tag">Reward</span>
+                        <span class="is-size-7">{{ o.info | rbText : "clearRewardName" }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- <bung-divider isVertical /> -->
+            <!-- <div class="play-info" [class.is-size-7]="breakpointService.breakpointsToggled.mobile()">
+                <bung-icon class="is-size-7 has-tooltip" icon="refresh" bungTooltip="Cleared count">{{ o.clearedCount }}</bung-icon>
+                <bung-icon class="is-size-7 has-tooltip" icon="puzzle" bungTooltip="Fragments count">{{ o.fragmentCount % o.info.fragmentCount }} / {{ o.info.fragmentCount }}</bung-icon>
+            </div> -->
+            @if (o.clearedCount === 0 || o.info.reacceptable) {
+                <div class="order-progress">
+                    <div class="progress-base"></div>
+                    <div class="progress-body" [style.--progress]="(o.fragmentCount % o.info.fragmentCount) / o.info.fragmentCount * 100 + '%'"></div>
+                </div>
+            }
+            @if (o.clearedCount > 0) {
+                <div class="order-clear-badge has-tooltip" bungTooltip="Order cleared">
+                    <i class="mdi mdi-hand-okay"></i>
+                </div>
+            }
+        </div>
+    </div>
+    @if (isSlot()) {
+        <button class="button select-button {{ color }} no-color is-danger" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.removeOrder(o.info.id)">
+            <bung-icon icon="delete" animate.enter="enter" animate.leave="leave">Cancel</bung-icon>
+        </button>
+    } @else if (o.clearedCount === 0 || o.info.reacceptable) {
+        @if (o.slot < 0 && service.firstEmptySlot() >= 0) {
+            <button class="button select-button {{ color }}" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.acceptOrder(o.info.id)">
+                <bung-icon icon="plus" animate.enter="enter" animate.leave="leave">Accept</bung-icon>
+            </button>
+        } @else if (o.slot < 0 && service.firstEmptySlot() < 0) {
+            <button class="button select-button {{ color }} no-color" [class.is-loading]="service.loadingOrder() === o.info.id" disabled>
+                <bung-icon icon="cancel" animate.enter="enter" animate.leave="leave">No slot</bung-icon>
+            </button>
+        } @else if (o.slot >= 0) {
+            <button class="button select-button {{ color }} no-color is-danger" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.removeOrder(o.info.id)">
+                <bung-icon icon="delete" animate.enter="enter" animate.leave="leave">Cancel</bung-icon>
+            </button>
+        }
+    } @else {
+        <button class="button select-button {{ color }}" [class.is-loading]="service.loadingOrder() === o.info.id" disabled>
+            <bung-icon icon="check" animate.enter="enter" animate.leave="leave">Cleared</bung-icon>
+        </button>
+    }
+} @else {
+    <div class="card order-box rb-panel" [class.is-slot]="isSlot()" [class.is-premium-slot]="isPremiumSlot()" [class.error-info]="!o">
+        <div class="order-content" #contentElement>
+            @if (isSlot()) {
+                <div class="slot-id">
+                    @if (isPremiumSlot()) {
+                        <span>VALUE PACK SLOT</span>
+                    } @else {
+                        <span>SLOT {{ slotId() + 1 }}</span>
+                    }
+                </div>
+            }
+            <div class="error-icon">
+                <span class="icon is-large">
+                    <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+                </span>
+            </div>
+            <div class="error-text">
+                <p>No order accepted</p>
+            </div>
+        </div>
+    </div>
+}

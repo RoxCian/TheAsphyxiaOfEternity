@@ -1,6 +1,6 @@
 import { computed, inject, Service, signal } from "@angular/core"
 import { Rb2GlassResponse, Rb2GlassSettings } from "rbweb"
-import { RbPlayDataServiceBase } from "./rb-play-data.service"
+import { RbPlayDataServiceBase } from "./rb.service"
 import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
 import { BungNotificationService } from "../bung/notification.service"
@@ -17,7 +17,7 @@ export class Rb2GlassesService extends RbPlayDataServiceBase<Rb2GlassResponse> {
     readonly loadingGlass = computed(() => this.settings.isLoading() ? this.loadingGlassInternal() : -1)
 
     private readonly notificationService = inject(BungNotificationService)
-    
+
     constructor() {
         super(computed(() => this.dataVersion() === 2 ? `rb2ReadGlasses` : undefined))
     }
@@ -25,7 +25,7 @@ export class Rb2GlassesService extends RbPlayDataServiceBase<Rb2GlassResponse> {
         if (!this.isActivated()) return
         try {
             this.loadingGlassInternal.set(selected)
-            const result = await rbEmitJSON<{ modified: boolean }>("rb2WriteGlassSettings", { 
+            const result = await rbEmitJSON<{ modified: boolean }>("rb2WriteGlassSettings", {
                 rid: this.profileService.rid(),
                 selected
             })

@@ -1,6 +1,6 @@
-id,title,titleOrig,relatedMusicUid,relatedMusicId,comment,commentOrig,isRare
+id,titleOrig,title,relatedMusicUid,relatedMusicId,comment,commentOrig,isRare
 ,,,,,,,
-int,string,string?,string,int,string,string,boolean
+int,string,string?,string,int,string?,string,boolean
 0,CODE:1,,5k01,707,,"スライドオブジェクトが特徴的でカッコイイ楽曲だよね～！
 HEXAさんって一体何者！？",FALSE
 1,Ghost Hunters,,5k02,708,,"うんててっててっー、ててっ！ギターの音がやっぱりいいよね！

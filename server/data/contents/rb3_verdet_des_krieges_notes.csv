@@ -1,6 +1,6 @@
 id,name,nameOrig,note,noteOrig
 ,,,,
-int,string,string,string,string
+int,string,string,string?,string
 0,Count Vanessa de Verdet,ヴァネッサ・ド・ヴェルデ伯爵,,"とある領国を治める伯爵家に生まれ、壮年期に先代が没すると爵位を継承した。
 ほどなく領内に銀鉱山が発見され、採掘権を巡る争いが長く続き領国は荒廃。
 しかしある時、信じがたい力を発揮し、自ら戦って紛争を終結させ、平和が訪れた領国を繁栄に導く。
@@ -9,11 +9,14 @@ int,string,string,string,string
 爵位が低いので自分の領国は持っておらず、そのため紛争が終わった後も伯爵領で執政の補佐を務めていたのだが、
 あまりにも美しいクラウディアに道ならぬ恋慕を抱いてしまう。
 彼の想いが行き着く先は……？"
-2,Feuerrote Phonix,朱雀,,"伝説の神獣。
+2,Feuerrote Phönix,朱雀,,"伝説の神獣。
 契約によって“時代を動かす力”を人間に与えるのだが、それは人の世を善くするためではなく、ただ単に人間の本性を観察するためである。
 神獣ゆえに、人間はその真の姿を見ることはできない。
 ただひとつの例外を除いて……"
-3,Claudia,クラウディア,,"正確な時期は不明だが紛争終結の前後、突如として伯爵領に現れた若く美しい女性。
+3,Claudia,クラウディア,"A young gorgeous girl shown at earldom in sudden of uncertain time before or after the end of the conflict.
+She is rumored to be either a survivor of a fallen noble family or the illegitimate child of royalty, but neither has been confirmed.
+She fell in love with and married the then-bachelor Count Verdet, becoming the Countess.
+After the marriage, she rarely left the castle, and the people of the domain had no way of knowing her situation.","正確な時期は不明だが紛争終結の前後、突如として伯爵領に現れた若く美しい女性。
 没落貴族の生き残りとも王族の隠し子とも噂されるが、いずれも定かではない。
 独身だったヴェルデ伯爵と恋に落ち結婚、伯爵夫人となる。
 結婚後はほとんど城から出ず、領民はその様子を知る由も無い。"

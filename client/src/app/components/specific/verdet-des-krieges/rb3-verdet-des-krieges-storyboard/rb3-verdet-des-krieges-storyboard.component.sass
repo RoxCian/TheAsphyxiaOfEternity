@@ -270,7 +270,9 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         inset: 0
         background: #000
         user-select: none
-@media screen and (width < 768px) 
+@media screen and (width < 768px)
+    h2
+        font-size: 1.25em
     .chapter-domain
         display: flex
         flex-direction: column
@@ -285,21 +287,6 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         // animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards
     .storyboard-content span.has-emphasis::before
         background: linear-gradient(90deg, transparent 0%, var(--emphasis-background-dark) 1em, var(--emphasis-background-dark) calc(100% - 1em), transparent 100%)
-.no-animation *
-    animation-duration: 0s !important
-    animation-delay: 0s !important
-.page-enter
-    animation: page-enter-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
-.page-leave
-    animation: page-leave-animation 0.4s var(--ease-in) forwards
-.lamps-enter
-    animation: lamps-enter-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
-.lamps-leave
-    animation: lamps-leave-animation 0.4s var(--ease-in) forwards
-.non-page-enter
-    animation: non-page-leave-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
-.non-page-leave
-    animation: non-page-leave-animation 0.4s var(--ease-in) forwards
 @keyframes normal-phrase-animation
     from
         user-select: none
@@ -363,99 +350,3 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         user-select: none
         pointer-events: none
         opacity: 0
-@keyframes page-enter-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: translateX(-2em)
-    to
-        user-select: auto
-        pointer-events: all
-        opacity: var(--opacity, 1)
-        transform: none
-@keyframes page-leave-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: var(--opacity, 1)
-        transform: none
-    to
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: translateX(-2em)
-@keyframes lamps-enter-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: translateX(2em)
-    to
-        user-select: none
-        pointer-events: none
-        opacity: var(--opacity, 1)
-        transform: none
-@keyframes lamps-leave-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: var(--opacity, 1)
-        transform: none
-    to
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: translateX(2em)
-@keyframes non-page-enter-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: scale(80%)
-        filter: blur(8px)
-    to
-        user-select: none
-        pointer-events: none
-        opacity: var(--opacity, 1)
-        transform: none
-        filter: none
-@keyframes non-page-leave-animation
-    from
-        user-select: none
-        pointer-events: none
-        opacity: var(--opacity, 1)
-        transform: none
-        filter: none
-    to
-        user-select: none
-        pointer-events: none
-        opacity: 0
-        transform: scale(80%)
-        filter: blur(8px)
-@keyframes pastel-kun-enter-animation
-    from
-        display: block
-        left: var(--from-left)
-        top: var(--from-top)
-        opacity: 1
-        pointer-events: all
-    to
-        display: block
-        left: var(--to-left)
-        top: var(--to-top)
-        opacity: 1
-        pointer-events: all
-@keyframes pastel-kun-leave-animation
-    from
-        display: block
-        left: var(--to-left)
-        top: var(--to-top)
-        opacity: 1
-        pointer-events: all
-    to
-        display: none
-        left: var(--from-left)
-        top: var(--from-top)
-        opacity: 1
-        pointer-events: all

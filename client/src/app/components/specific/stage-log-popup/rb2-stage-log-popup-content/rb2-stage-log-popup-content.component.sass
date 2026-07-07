@@ -89,30 +89,32 @@
 
 .your-result.card
     display: grid
-    grid-template: 1.5em 1.5em / 4em auto auto 1fr auto auto 1fr auto
+    grid-template: 1.5em 1.5em / 4em auto 1fr auto auto 1fr auto auto
     margin-bottom: 1.25em
     padding: 1.25em
     justify-content: start
-    align-items: center
+    align-items: baseline
     gap: 0 1em
 
     .you-label
         grid-area: 1 / 1
         color: var(--rb-color)
         border-radius: 9999px
+        align-self: center
         text-align: center
     .score-label
-        grid-area: 1 / 2
+        grid-area: 1 / 1 / 2 / 1
+        text-align: center
     .score-value
-        grid-area: span 2 / 3
+        grid-area: span 2 / 2
         position: relative
         font-size: 2em
         font-weight: bold
         color: var(--rb-color)
     .ar-label
-        grid-area: 1 / 5
+        grid-area: span 2 / 4
     .ar-value
-        grid-area: span 2 / 6
+        grid-area: span 2 / 5
         display: flex
         align-items: baseline
         font-weight: bold
@@ -122,19 +124,21 @@
             font-size: 2em
         .ar-decimal
             font-size: 1.5em
-    .rank
+    // .rank
+    //     grid-area: span 2 / 8
+    //     display: flex
+    //     flex-direction: column
+    //     align-items: center
+
+    .rank-label
+        grid-area: span 2 / 7
+        // font-size: 0.75em
+        // letter-spacing: 0.083em
+
+    rb-rank
         grid-area: span 2 / 8
-        display: flex
-        flex-direction: column
-        align-items: center
-
-        .rank-label
-            font-size: 0.75em
-            letter-spacing: 0.083em
-
-        rb-rank
-            font-size: 2.25em
-            font-weight: bold
+        font-size: 2.25em
+        font-weight: bold
 
 .rival-result.card
     display: grid
@@ -142,13 +146,14 @@
     margin-bottom: 1.25em
     padding: 1.25em
     justify-content: start
-    align-items: center
+    align-items: baseline
     gap: 0 1em
 
     .rival-label
         grid-area: 1 / 1
         color: var(--rb-color)
         border-radius: 9999px
+        align-self: center
         text-align: center
     .score-label
         grid-area: 1 / 3
@@ -178,6 +183,8 @@
     .winner-icon
         font-size: 0.75rem
     .your-result.card
-        grid-template: 1.5em 1.5em / 3m auto auto 1fr auto auto 1fr auto
+        gap: 0.25em
+        grid-template: 1.5em 1.5em / 3em auto 1fr auto auto 1fr auto auto
     .rival-result.card
+        gap: 0.25em
         grid-template: 1.5em 1.5em / 3em 1fr auto auto

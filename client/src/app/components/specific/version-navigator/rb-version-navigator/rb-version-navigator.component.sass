@@ -1,3 +1,127 @@
+:host.bung-input
+    display: inline-grid
+    grid-template: auto / auto
+    position: relative
+    width: auto
+    vertical-align: top
+    cursor: pointer
+
+.dropdown-trigger
+    grid-area: 1 / 1
+    gap: 0.625em
+    width: 100%
+    border-radius: 9999px
+    padding-left: 1em
+    z-index: 1
+
+    &.background-border
+        // margin: -0.125em
+        // width: calc(100% + 0.25em)
+        // height: calc(100% + 0.25em)
+        filter: blur(0.15em) contrast(200%) brightness(70%)
+        transform: scale(0.98)
+        opacity: 0
+        transition: transform var(--animation-duration-lv3) var(--ease-in), opacity var(--animation-duration-lv3) var(--ease-in)
+        border-width: 0
+        z-index: 0
+        pointer-events: none
+        user-select: none
+    
+
+    :host:not(.is-loading) &:not(.normal-style):focus, :host:not(.is-loading) &:not(.normal-style).is-active
+        border-color: #fff7
+        box-shadow: none
+        
+        & + .background-border
+            opacity: 1
+            transform: none
+
+    &:focus:not(.is-loading):not(.is-disabled) .dropdown-trigger, &:not(.is-loading):not(.is-disabled) .dropdown-trigger.is-active
+        .tail-icon-grid i.dropdown-item-chevron
+            transform: rotate(3.14rad)
+.dropdown-trigger-content
+    flex: 1 
+    display: grid
+
+    > *
+        grid-area: 1 / 1
+        &.enter
+            animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-in) forwards
+        &.leave
+            animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-out) reverse forwards
+bung-icon .icon-element
+    margin-right: 0.5em
+
+.tail-icon-grid
+    display: grid
+    grid-template: 1fr / auto auto
+    height: 1.5em
+    justify-content: center
+    align-content: center
+    align-items: center
+    pointer-events: none
+    z-index: 2
+.tail-icon-grid button.delete
+    grid-area: 1 / 1
+    background: transparent
+    transition: background var(--animation-duration-lv3) var(--ease-in)
+    &::before, &::after
+        background: var(--text-color)
+    &:hover
+        background: #7772
+    &:active
+        background: #7774
+    &.enter
+        animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-in)
+    &.leave
+        animation: bung-select-element-animation var(--animation-duration-lv3) var(--ease-out) reverse
+.tail-icon-grid i
+    grid-area: 1 / 2
+    transition: background var(--animation-duration-lv3) var(--ease-in), opacity var(--animation-duration-lv3) var(--ease-in)
+.tail-icon-grid i::before
+    font-size: 1.5em
+.tail-icon-grid i.dropdown-item-chevron
+    color: var(--black-text)
+    transition: transform var(--animation-duration-lv3) var(--ease-in), color var(--animation-duration-lv3) var(--ease-in), background var(--animation-duration-lv3) var(--ease-in), filter var(--animation-duration-lv3) var(--ease-in)
+.tail-icon-grid i.loading-icon
+    opacity: 0
+
+.dropdown-trigger:not(.normal-style) .tail-icon-grid i.dropdown-item-chevron
+    &.color1
+        background: linear-gradient(to bottom, #E9E5E4 0%, #F6F3F3 43%, #B79075 57%, #EFEDE1 69%)
+        -webkit-background-clip: text
+        color: transparent
+        background-clip: text
+        -webkit-text-fill-color: transparent
+        // transition: background var(--animation-duration-lv3) var(--ease-in), opacity var(--animation-duration-lv3) var(--ease-in), --rb1-gradient-stop-1 var(--animation-duration-lv3) var(--ease-in), --rb1-gradient-stop-2 var(--animation-duration-lv3) var(--ease-in), --rb1-gradient-stop-3 var(--animation-duration-lv3) var(--ease-in), --rb1-gradient-stop-4 var(--animation-duration-lv3) var(--ease-in)
+    &.color2
+        color: #46503B
+    &.color3
+        color: #70a476
+    &.color4
+        color: #d8058c
+    &.color5
+        color: #d2ebfc
+    &.color6
+        background: linear-gradient(to bottom, #4175ff 33%, #681ddb 52%, #21bcff 71%)
+        -webkit-background-clip: text
+        color: transparent
+        background-clip: text
+        -webkit-text-fill-color: transparent
+.dropdown-trigger:not(.normal-style):hover:not(:active):not(:has(.dropdown-trigger.is-active)) .tail-icon-grid i.dropdown-item-chevron
+    &.color1
+        filter: brightness(120%)
+    &.color2
+        color: #749452
+    &.color3
+        filter: brightness(125%) saturate(80%)
+        opacity: 0.9
+    &.color4
+        filter: brightness(200%) saturate(90%)
+    &.color5
+        color: white
+    &.color6
+        filter: brightness(150%) saturate(90%)
 .badge-collection > *
     display: block
     position: relative
@@ -7,7 +131,27 @@
 
 .badge
     max-width: 8em
+    transition: opacity var(--animation-duration-lv3) var(--ease-in)
+    z-index: 1
+.badge.hide
+    opacity: 0
+    user-select: none
+    pointer-events: none
+    z-index: 0
 
+:host.is-loading
+    cursor: wait
+    .tail-icon-grid i.loading-icon
+        opacity: 1
+        animation: bung-select-loading-icon-animation 1s infinite
+    .tail-icon-grid i.dropdown-item-chevron
+        opacity: 0
+@media screen and (width < 768px)
+    :host
+        font-size: 0.75rem
+@media (prefers-color-scheme: dark)
+    .dropdown-trigger.background-border
+        filter: blur(0.15em) contrast(180%) brightness(120%)
 // rb::before
 //     content: ""
 //     position: absolute

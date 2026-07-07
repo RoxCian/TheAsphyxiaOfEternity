@@ -1,0 +1,39 @@
+<ng-template let-detail #placeholder>
+    <div class="rb-panel">
+        <span class="search-opt">{{ detail.info | rbText : "orderName" }}</span>
+    </div>
+</ng-template>
+@let orderShop = service.orderShop.value();
+@if (service.isActivated() && orderShop) {
+    <bung-divider class="section-divider" prompt="Order shop data" />
+    <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
+        <div class="stat-item rb-stat has-text-centered">
+            <div class="heading">Level</div>
+            <div class="title">
+                {{ orderShop.level > 200 ? "200+" : orderShop.level }}
+                @if (orderShop.level <= 200) {
+                    <span class="is-size-7">({{ ((orderShop.experiences - orderShop.levelExperiences) / orderShop.experiencesToNextLevel * 100).toFixed(2) }}%)</span>
+                }
+            </div>
+        </div>
+        <div class="stat-item rb-stat has-text-centered">
+            <div class="heading">Cleared Orders</div>
+            <div class="title">{{ service.clearedOrderCount() }}</div>
+        </div>
+    </div>
+    <bung-divider class="section-divider" prompt="Accepted orders" />
+    <div class="rb-list">
+        @for (i of service.maxSlots() | range; track i) {
+            @let slotDetail = orderShop.details.find(o => o.slot === i);
+            <rb3-order [order]="slotDetail" isSlot [slotId]="i" [isPremiumSlot]="orderShop.level < 150 && i === service.maxSlots() - 1" />
+        }
+    </div>
+    <bung-divider class="section-divider" prompt="Orders list" />
+    <div class="rb-list">
+        @for (detail of orderShop.details; track detail.info.id) {
+            <bung-insertion isVirtualized [placeholder]="placeholder" [placeholderContext]="detail | implicit" sharedIntersectionGroup="rb-panel">
+                <rb3-order [order]="detail" [slotId]="detail.slot" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+            </bung-insertion>
+        }
+    </div>
+}

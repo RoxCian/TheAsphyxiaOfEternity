@@ -1,11 +1,10 @@
 @let v = versionService.version();
 @if (v < 2) {
-    <lets-play text="Event progress feature is not implemented in this version." />
+    <lets-play text="No event for now." />
 } @else {
     @if (v === 2) {
         <bung-tabs>
             <bung-tab index="order-shop" header="Lime Glasses" (activated)="onActivate('rb2Glasses', $event)">
-
                 <rb2-glass-list />
             </bung-tab>
         </bung-tabs>
@@ -15,8 +14,8 @@
             <p class="verdet-header-orig" lang="jp">戦乱のVerdet</p>
         </ng-template>
         <bung-tabs #rb3Tabs>
-            <bung-tab index="order-shop" header="Order Shop" (activated)="onActivate()">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="order-shop" header="Order Shop" (activated)="onActivate('rb3OrderShop', $event)">
+                <rb3-order-shop />
             </bung-tab>
             <bung-tab index="pastel-adventure" header="Pastel Adventure" (activated)="onActivate()">
                 <lets-play icon="hard-hat" text="Under Construction..." />

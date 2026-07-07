@@ -2,8 +2,8 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb3Order, Rb3OrderDetails, Rb3OrderDetailsParamFlag, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance, Rb3OrderResponse, Rb3OrderShopResponse } from "../../models/shared/web"
+import { Rb3Order, Rb3OrderDetails, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog } from "../../models/rb3/profile"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, RbPlayerPerformanceResponse, Rb3SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesUnlockRequest, Rb3VerdetDesKriegesUnlockRequestType, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesAppearance, Rb3OrderResponse, Rb3OrderShopResponse, Rb3OrderSlot, Rb3OrderDetailsParamFlag } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { getRbByword } from "../../data/tables/rb_bywords"
@@ -32,6 +32,7 @@ export function registerRb3Controllers() {
     C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges)
     C.route("rb3DebugResetVerdetDesKrieges", debugResetVerdetDesKrieges)
     C.route("rb3ReadOrderShop", readOrderShop)
+    C.route("rb3WriteOrderSlot", writeOrderSlot)
     C.route("rb3ReadAvailableItems", readAvailableItems)
     C.route("rb3ReadSettings", readSettings)
     C.route("rb3WriteSettings", writeSettings)
@@ -125,6 +126,7 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
 const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = async data => await Promise.all((await DBH.find<Rb3PlayerStageLog>(data.rid, { collection: "rb.rb3.playData.stageLog" }))
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
+
 
 const readVerdetDesKrieges: C.C<RbRequest, Rb3VerdetDesKriegesResponse> = async data => await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 const readVerdetDesKriegesPageCount: C.C<{ chapter: number }, { pageCount: number }> = async data => {
@@ -254,43 +256,65 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
 const debugResetVerdetDesKrieges: C.C<RbRequest> = data => DBH.remove<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 
 const readOrderShop: C.C<RbRequest, Rb3OrderShopResponse> = async data => {
-    const allOrders = await rb3OrdersInfo
-    const releasedMusics = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo", type: 0 })
     const orderShop = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
     const level = await getOrderShopLevel(orderShop?.experience ?? 0)
-    const result = {
-        experiences: orderShop?.experience,
+    const allOrders = await rb3OrdersInfo
+    const releasedMusics = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo", type: 0 })
+    return {
+        experiences: orderShop?.experience ?? 0,
         level: level.level,
         levelExperiences: level.experiences,
-        experiencesToNextLevel: level.experiencesToNextLevel
-    } as Rb3OrderShopResponse
-    result.orders = allOrders.filter(i => {
-        const cond = i.unlockCondition
-        if (cond.orderExperience && (orderShop?.experience ?? 0) < cond.orderExperience) return false
-        if (cond.allOrdersCleared && !cond.allOrdersCleared.every(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0)) return false
-        if (cond.anyOrdersCleared && cond.anyOrdersCleared.filter(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0).length < (cond.anyOrdersClearedCount ?? 1)) return false
-        if (cond.hasOrder && (orderShop?.details?.find(d => d.index === i.id)?.param ?? 0) < 1) return false
-        if (cond.anyMusicsUnlocked && !cond.anyMusicsUnlocked.some(el => releasedMusics.find(r => r.id === el))) return false
-        return true
-    }).map(i => {
-        const ord: Rb3OrderResponse = {
-            info: i,
-            slot: -1,
-            clearedCount: 0,
-            fragmentsCount: 0,
-            param: 0
-        }
-        const details = orderShop?.details?.find(d => d.index === i.id)
-        if (details) {
-            ord.slot = details.slot
-            ord.clearedCount = details.clearedCount
-            ord.fragmentsCount = details.fragmentsCount0
-            ord.param = details.param
-        }
-        return ord
-    })
+        experiencesToNextLevel: level.experiencesToNextLevel,
+        details: allOrders.filter(i => {
+            const cond = i.unlockCondition
+            if (cond.orderExperience && (orderShop?.experience ?? 0) < cond.orderExperience) return false
+            if (cond.allOrdersCleared && !cond.allOrdersCleared.every(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0)) return false
+            if (cond.anyOrdersCleared && cond.anyOrdersCleared.filter(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0).length < (cond.anyOrdersClearedCount ?? 1)) return false
+            if (cond.hasOrder && (orderShop?.details?.find(d => d.index === i.id)?.param ?? 0) < 1) return false
+            if (cond.anyMusicsUnlocked && !cond.anyMusicsUnlocked.some(el => releasedMusics.find(r => r.id === el))) return false
+            return true
+        }).map(i => {
+            const ord: Rb3OrderResponse = {
+                info: i,
+                slot: -1,
+                clearedCount: 0,
+                fragmentCount: 0,
+                param: 0
+            }
+            const details = orderShop?.details?.find(d => d.index === i.id)
+            if (details) {
+                ord.slot = details.slot
+                ord.clearedCount = details.clearedCount
+                ord.fragmentCount = details.fragmentsCount0
+                ord.param = details.param
+            }
+            return ord
+        }).sort((l, r) => l.info.orderShopId - r.info.orderShopId)
+    }
+}
 
-    return result
+const writeOrderSlot: C.C<RbRequest & Rb3OrderSlot> = async data => {
+    const orderShop = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
+    if (!orderShop) return C.error(404, "Orders record not found")
+    let detail = orderShop.details?.find(o => o.index === data.index)
+    if (!detail) {
+        detail = new Rb3OrderDetails(data.index)
+        orderShop.details ??= []
+        orderShop.details.push(detail)
+    }
+    const info = (await rb3OrdersInfo).find(i => i.id === data.index)
+    if (!info) return C.error(404, "Cannot find order info")
+    const level = await getOrderShopLevel(orderShop.experience)
+    const maxSlots = level.level >= 100 ? 5 : level.level >= 30 ? 4 : 3
+    if (data.slot >= 0 && detail.clearedCount > 0 && !info.reacceptable) return C.error(404, "Order cannot reaccept")
+    if (data.slot >= maxSlots) return C.error(401, "Order slots overflow")
+    if (data.slot >= 0) for (const d of orderShop.details ?? []) if (d.index === data.index && d.slot === data.slot) d.slot = -1
+    detail.slot = data.slot
+    detail.param |= Rb3OrderDetailsParamFlag.unlocked
+    if (data.isLocked && info.reacceptable) detail.param |= Rb3OrderDetailsParamFlag.lockedToSlot
+    else if (!data.isLocked && info.reacceptable) detail.param &= Rb3OrderDetailsParamFlag.unlocked
+    await DBH.update(data.rid, { collection: "rb.rb3.player.order" }, orderShop)
+    return { modified: true }
 }
 
 const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data => {

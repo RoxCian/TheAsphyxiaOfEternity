@@ -40,6 +40,12 @@ export type Rb3OrderShopLevel = {
     experiencesToNextLevel: number
 }
 
+export enum Rb3OrderDetailsParamFlag {
+    none = 0,
+    unlocked = 1,
+    lockedToSlot = 2
+}
+
 export type Rb3VerdetDesKriegesPhrasePart = {
     text: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
     clueId?: number

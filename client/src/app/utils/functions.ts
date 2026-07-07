@@ -129,3 +129,7 @@ export function isInShiftJISCharset(s: string): boolean {
 export function isType(value: unknown): value is Type<unknown> {
     return typeof value === "function" && value.toString().startsWith("class")
 }
+
+export function hasFlag<T extends number>(value: T, flag: T): boolean {
+    return (value & flag) === flag
+}

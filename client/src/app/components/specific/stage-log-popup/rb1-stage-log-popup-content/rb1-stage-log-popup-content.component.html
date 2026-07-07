@@ -6,7 +6,7 @@
     <div class="round-label">ROUND</div>
 </div>
 <div class="card music-card">
-    <div class="score-label">Score</div>
+    <div class="score-label">SCORE</div>
     <figure class="jacket">
         <img [src]="(music.musicUid | rbJacket : chart.chartType)()">
     </figure>
@@ -47,7 +47,7 @@
                 <span>{{ stageLog().rivalScore }}</span>
             </div>
             <div class="result-value">
-                {{ stageLog().score > stageLog().rivalScore ? "You Win" : stageLog().score === stageLog().rivalScore ? "Draw" : "You Lose" }}
+                {{ stageLog().score > stageLog().rivalScore ? "YOU WIN!!" : stageLog().score === stageLog().rivalScore ? "DRAW" : "YOU LOSE" }}
             </div>
         </div>
     </div>
