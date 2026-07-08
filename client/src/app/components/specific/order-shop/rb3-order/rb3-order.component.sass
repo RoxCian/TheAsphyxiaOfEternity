@@ -1,9 +1,27 @@
 :host
-    display: flex
+    display: grid
+    grid-template: 1fr / 1fr
+    margin: -6px
+    padding: 6px
+    overflow: clip
+
+.order-box
+    grid-area: 1 / 1
+    display: grid
+    grid-template: 1fr / 1fr auto
     position: relative
     min-width: 300px
-.order-box.is-rare
-    box-shadow: 0 2px 3px #eadda4, 0 0 0 1px #eadda4
+    z-index: 1
+
+    &.is-slot.enter
+        animation: rb3-order-order-enter-animation var(--animation-duration-lv2) var(--ease-in)
+    &.is-slot.leave
+        animation: rb3-order-order-enter-animation var(--animation-duration-lv2) var(--ease-out) reverse forwards
+    &.is-slot.fixed
+        animation: rb3-order-order-fixed-animation var(--animation-duration-lv2)
+    &.is-slot.empty
+        z-index: 0
+
 .slot-id
     position: absolute
     display: flex
@@ -20,12 +38,14 @@
         font-weight: bold
         margin-right: -0.15em
         margin-bottom: -0.55em
-.order-box
-    flex: 1
+.order-card
+    grid-area: 1 / 1
     overflow-x: clip
     min-width: 0 // firefox compatibility
     background: var(--background)
     z-index: 10
+.order-card.is-premium-slot
+    box-shadow: 0 2px 3px #eadda4, 0 0 0 1px #eadda4
     
 .color0
     --background: #f0fff4
@@ -127,6 +147,7 @@
     &::before
         border-radius: 9999px
 .select-button
+    grid-area: 1 / 2
     display: grid
     grid-template: 1fr / 1fr
     width: 4em
@@ -150,11 +171,6 @@
     bung-icon
         grid-area: 1 / 1
 
-        &.enter
-            animation: button-content-enter-animation var(--animation-duration-lv3) var(--ease-in)
-        &.leave
-            animation: button-content-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse forwards
-
     ::ng-deep .icon-element
         rotate: 90deg
 .select-button, .lock-button.is-selected
@@ -169,6 +185,9 @@
         box-shadow: 0 0 0 0.125em color-mix(in srgb, transparent 75%, var(--accent-color))
     &:not(.no-color).is-loading::after
         border-color: transparent transparent var(--accent-text-color) var(--accent-text-color)
+    &[disabled]
+        --opacity: 0.5
+    
 .select-button, .lock-button
     &:not(.no-color).is-focused, &:not(.no-color):focus
         border-color: color-mix(in srgb, var(--accent-color) 85%, white)
@@ -183,7 +202,7 @@
         width: 100%
         justify-content: center
 @media screen and (width < 768px)
-    // :host .card.order-box, :host .placeholder
+    // :host .card.order-card, :host .placeholder
     //     margin-bottom: 0.5em
 
     .order-content
@@ -225,3 +244,27 @@
     .color4
         --background: #1a0909
         --accent-color: #c35155
+    .order-card.is-premium-slot
+        box-shadow: 0 2px 3px #726945, 0 0 0 1px #726945
+.order-box:not(.enter) .select-button.enter
+    animation: rb3-order-select-button-enter-animation var(--animation-duration-lv3) var(--ease-in)
+.order-box:not(.leave) .select-button.leave
+    animation: rb3-order-select-button-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+
+@keyframes rb3-order-select-button-enter-animation
+    from
+        opacity: 0
+    to
+        opacity: var(--opacity, 1)
+@keyframes rb3-order-order-enter-animation
+    from
+        transform: translateY(calc(100% + 6px))
+    to
+        transform: none
+@keyframes rb3-order-order-fixed-animation
+    from
+        opacity: 1
+    100%
+        opacity: 1
+    to
+        opacity: 0

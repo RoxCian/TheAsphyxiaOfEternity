@@ -56,7 +56,7 @@ export class RbActivityGridComponent {
     }
     protected getActivityLevel(playCount: number): number {
         if (this.maxPlayCount() === 0 || playCount === 0) return 0
-        return Math.round(playCount / this.maxPlayCount() * 4)
+        return Math.round(playCount / this.maxPlayCount() * 3) + 1
     }
     protected getDate(dateInGrid: number) {
         return new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate() - dateInGrid)

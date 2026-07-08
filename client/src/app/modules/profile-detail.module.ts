@@ -14,7 +14,6 @@ import { RbMatchingGradeComponent } from "../components/specific/matching-grade/
 import { RbMusicTitleComponent } from "../components/specific/music-title/rb-music-title/rb-music-title.component"
 import { RbPlayerTagComponent } from "../components/specific/player-tag/rb-player-tag/rb-player-tag.component"
 import { RbRankBadgeComponent } from "../components/specific/rank-badge/rb-rank-badge/rb-rank-badge.component"
-import { RbRankLabelComponent } from "../components/specific/rank-label/rb-rank-label/rb-rank-label.component"
 import { RbRecordPanelComponent } from "../components/specific/record-panel/rb-record-panel/rb-record-panel.component"
 import { RbRecordPopupContentAllChartComponent } from "../components/specific/record-popup/rb-record-popup-content-all-chart/rb-record-popup-content-all-chart.component"
 import { RbRecordPopupContentSingleChartComponent } from "../components/specific/record-popup/rb-record-popup-content-single-chart/rb-record-popup-content-single-chart.component"
@@ -93,7 +92,6 @@ import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/r
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
         FriendlyFileSizePipe,
-        RbRankLabelComponent,
         RbBattleStatComponent,
         RbRankBadgeComponent,
         RbJacketPipe,
@@ -175,7 +173,6 @@ import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/r
         RbChartTypeDirective,
         Rb6JustCollectRateComponent,
         FriendlyFileSizePipe,
-        RbRankLabelComponent,
         RbBattleStatComponent,
         RbRankBadgeComponent,
         RbJacketPipe,

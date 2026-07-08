@@ -33,7 +33,7 @@ h2.contents-header
 .storyboard-content
     grid-area: 2 / 1
     min-height: 50vh
-    margin: 0 2em
+    padding: 0 2em
     justify-content: center
 
     &.is-centered
@@ -273,14 +273,18 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
 @media screen and (width < 768px)
     h2
         font-size: 1.25em
+    .storyboard-content
+        padding: 0
     .chapter-domain
         display: flex
         flex-direction: column
     .progress-divider
         display: flex
     .progress-lamps
-        padding: 0 2em
+        padding: 0
         gap: 1em
+    nav
+        padding: 1em 0
 @media (prefers-color-scheme: dark)
     .storyboard-content span.has-emphasis span
         color: var(--emphasis-color-dark)
