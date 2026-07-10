@@ -154,8 +154,4 @@ export class Rb3VerdetDesKriegesService extends RbActivatableServiceBase<Rb3Verd
         // else await this.navigateTo(this.verdetDesKrieges.value()!.chapter + 1, 0)
         return music
     }
-    async reset() {
-        await rbEmitJSON("rb3DebugResetVerdetDesKrieges", this.profileService.ridRequest)
-        location.reload()
-    }
 }

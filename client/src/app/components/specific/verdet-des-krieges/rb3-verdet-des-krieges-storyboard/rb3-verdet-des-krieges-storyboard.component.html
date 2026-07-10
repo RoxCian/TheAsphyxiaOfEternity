@@ -74,7 +74,6 @@
             <div class="cover-buttons">
                 <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 2) * 0.8}s`" [class.is-loading]="service.isLoading()" [disabled]="service.isLoading()" (click)="onEnter()">{{ data ? "Continue reading" : "Step into the castle" }}</button>
                 @if (data) { <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 3) * 0.8}s`" [disabled]="service.isLoading()" (click)="onGotoContents()">Contents</button> }
-                @if (data) { <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 4) * 0.8}s`" [disabled]="service.isLoading()" (click)="onReset()">Reset</button> }
             </div>
         </div>
     </section>

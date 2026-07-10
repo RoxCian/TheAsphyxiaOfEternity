@@ -1,3 +1,4 @@
+import { RbRequest } from "../models/shared/web"
 import { initialize } from "../system/initialize"
 import { PJ } from "./pj"
 
@@ -47,11 +48,13 @@ export namespace C {
         const type = (value as ControllerResult)?.type
         return type && (type === "text" || type === "json" || type === "file" || type === "buffer" || type === "redirect" || type === "error")
     }
-
-    export function route<T>(method: string, c: Controller<T>) {
+    export function route<T>(method: string, c: Controller<T>): void
+    export function route<T extends RbRequest>(method: string, c: Controller<T>, checkRid: true): void
+    export function route<T>(method: string, c: Controller<T>, checkRid?: boolean): void {
         const cb: WebUIEventHandler = async (data: T, send?: WebUISend) => {
             await initialize()
             if (!send) throw new Error("'send' is empty")
+            if (checkRid && (typeof (data as RbRequest).rid !== "string" || !(data as RbRequest).rid.match(/^[a-fA-F0-9]{16}$/))) return send.error(401, "REFID not provided")
             console.log("Controller method:", method)
             const res = await c(PJ.convertFromPJ(data))
             if (!res) send.text("")

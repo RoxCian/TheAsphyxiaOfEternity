@@ -18,12 +18,12 @@ export class Rb4EventControl {
     static init() {
         if (this.initialized) return
         this.initialized = true
-        const limit = [100, 100, 100, 30, 30]
+        const limit = [100, 100, 100, 50, 50, 100, 100, 100, 100, 100]
         for (let i = 0; i < limit.length; i++) {
             for (let j = 0; j < limit[i]; j++) {
                 const e = new Rb4EventControl(i, j)
-                e.value = 255
-                e.value2 = 255
+                e.value = 3
+                e.value2 = 3
                 e.startTime = 1533749833
                 e.endTime = 2147483647
                 this.examples.push(e)

@@ -74,7 +74,9 @@ import { Rb5ReftisInfoComponent } from '../components/specific/reftis-info/rb5-r
 import { Rb2GlassListComponent } from '../components/specific/glass-list/rb2-glass-list/rb2-glass-list.component';
 import { Rb2GlassComponent } from '../components/specific/glass-list/rb2-glass/rb2-glass.component';
 import { Rb3OrderShopComponent } from '../components/specific/order-shop/rb3-order-shop/rb3-order-shop.component';
-import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/rb3-order.component'
+import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/rb3-order.component';
+import { Rb6ReflesiaQuestListComponent } from '../components/specific/reflesia-quest/rb6-reflesia-quest-list/rb6-reflesia-quest-list.component';
+import { Rb6ReflesiaQuestComponent } from '../components/specific/reflesia-quest/rb6-reflesia-quest/rb6-reflesia-quest.component'
 
 @NgModule({
     declarations: [
@@ -148,7 +150,9 @@ import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/r
         Rb2GlassListComponent,
         Rb2GlassComponent,
         Rb3OrderShopComponent,
-        Rb3OrderComponent
+        Rb3OrderComponent,
+        Rb6ReflesiaQuestListComponent,
+        Rb6ReflesiaQuestComponent
     ],
     imports: [
         CommonModule,

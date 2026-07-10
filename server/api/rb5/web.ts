@@ -19,16 +19,16 @@ type V = 5
 const version = 5 as const
 
 export function registerRb5Controllers() {
-    C.route("rb5ReadPlayer", readPlayer)
-    C.route("rb5ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb5ReadRecords", readRecords)
-    C.route("rb5ReadClasschecks", readClasschecks)
-    C.route("rb5ReadStageLogs", readStageLogs)
-    C.route("rb5ReadReftis", readReftis)
-    C.route("rb5ReadYurukome", readYurukome)
-    C.route("rb5ReadAvailableItems", readAvailableItems)
-    C.route("rb5ReadSettings", readSettings)
-    C.route("rb5WriteSettings", writeSettings)
+    C.route("rb5ReadPlayer", readPlayer, true)
+    C.route("rb5ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb5ReadRecords", readRecords, true)
+    C.route("rb5ReadClasschecks", readClasschecks, true)
+    C.route("rb5ReadStageLogs", readStageLogs, true)
+    C.route("rb5ReadReftis", readReftis, true)
+    C.route("rb5ReadYurukome", readYurukome, true)
+    C.route("rb5ReadAvailableItems", readAvailableItems, true)
+    C.route("rb5ReadSettings", readSettings, true)
+    C.route("rb5WriteSettings", writeSettings, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {

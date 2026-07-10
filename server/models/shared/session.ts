@@ -10,6 +10,7 @@ export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
         unlockAllSongs: boolean
         unlockAllItems: boolean
     }
+    rb6RankingQuestIndex: number
     read = false
 
     constructor(version: RbVersion) {
@@ -20,6 +21,7 @@ export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
             unlockAllSongs: U.GetConfig("unlock_all_songs"),
             unlockAllItems: U.GetConfig("unlock_all_items")
         }
+        this.rb6RankingQuestIndex = 0
     }
 
     regenerateSessionId() {

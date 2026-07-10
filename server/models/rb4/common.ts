@@ -8,7 +8,7 @@ import { Rb4PlayerReleasedInfo } from "./profile"
 export class Rb4PlayerStart {
     @XD.s32("plyid") sessionId: number
     @XD.s32() nm = 0
-    @XD.u64() startTime: bigint | DBBigInt = DBBigInt(0)
+    @XD.u64() startTime: bigint | DBBigInt = DBBigInt(Math.trunc(Date.now() / 1000))
     @XD.aw("data", Rb4EventControl) eventCtrl: ArrayWrapper<"data", Rb4EventControl> = {
         data: Rb4EventControl.examples
     }

@@ -111,6 +111,8 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     if (mylist && mylist.index < 0) mylist.index = 0
 
+    base.upperPoints = 1000000
+
     const scores = await DBH.find<Rb4MusicRecord>(read.rid, { collection: "rb.rb4.playData.musicRecord" })
 
     base.totalBestScore = 0

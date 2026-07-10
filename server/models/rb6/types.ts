@@ -21,6 +21,24 @@ export enum Rb6EquipmentPart {
     head, body, under, arm
 }
 
+export type Rb6QuestInfo = {
+    questId: number
+    questName: string
+    questNameOrig?: string
+    element: Rb6CharacterCardElement
+}
+export type Rb6DungeonInfo = {
+    dungeonId: number
+    dungeonName: string
+    dungeonNameOrig: string
+    element: Rb6CharacterCardElement
+    dungeonsIdToUnlock: number[]
+    buffs: Rb6DungeonBuffFlag
+}
+export enum Rb6QuestType {
+    none, story, hunting, challenge
+}
+
 export type Rb6PastelLevel = {
     level: number
     experiences: number
@@ -28,6 +46,7 @@ export type Rb6PastelLevel = {
     health: number
     attack: number
 }
+
 export enum Rb6DungeonBuffFlag {
     masterJudge = 1 << 0,
     jrInfMode = 1 << 1,

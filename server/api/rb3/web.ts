@@ -20,22 +20,21 @@ type V = 3
 const version = 3 as const
 
 export function registerRb3Controllers() {
-    C.route("rb3ReadPlayer", readPlayer)
-    C.route("rb3ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb3ReadRecords", readRecords)
-    C.route("rb3ReadStageLogs", readStageLogs)
-    C.route("rb3ReadVerdetDesKrieges", readVerdetDesKrieges)
+    C.route("rb3ReadPlayer", readPlayer, true)
+    C.route("rb3ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb3ReadRecords", readRecords, true)
+    C.route("rb3ReadStageLogs", readStageLogs, true)
+    C.route("rb3ReadVerdetDesKrieges", readVerdetDesKrieges, true)
     C.route("rb3ReadVerdetDesKriegesPageCount", readVerdetDesKriegesPageCount)
-    C.route("rb3ReadVerdetDesKriegesPage", readVerdetDesKriegesPage)
+    C.route("rb3ReadVerdetDesKriegesPage", readVerdetDesKriegesPage, true)
     C.route("rb3ReadVerdetDesKriegesNotes", readVerdetDesKriegesNotes)
     C.route("rb3ReadVerdetDesKriegesAppearances", readVerdetDesKriegesAppearances)
-    C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges)
-    C.route("rb3DebugResetVerdetDesKrieges", debugResetVerdetDesKrieges)
-    C.route("rb3ReadOrderShop", readOrderShop)
-    C.route("rb3WriteOrderSlot", writeOrderSlot)
-    C.route("rb3ReadAvailableItems", readAvailableItems)
-    C.route("rb3ReadSettings", readSettings)
-    C.route("rb3WriteSettings", writeSettings)
+    C.route("rb3UnlockVerdetDesKrieges", unlockVerdetDesKrieges, true)
+    C.route("rb3ReadOrderShop", readOrderShop, true)
+    C.route("rb3WriteOrderSlot", writeOrderSlot, true)
+    C.route("rb3ReadAvailableItems", readAvailableItems, true)
+    C.route("rb3ReadSettings", readSettings, true)
+    C.route("rb3WriteSettings", writeSettings, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -136,15 +135,15 @@ const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, 
     const event = await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
     if (!event) {
         if (data.chapter === 0 && data.page === 0) return await getVerdetDesKriegesPage(0, 0)
-        else return C.error(401, "Progress not reached")
+        else return C.error(403, "Progress not reached")
     }
-    if (data.chapter > event.chapter) return C.error(401, "Progress not reached")
-    if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(401, "Page number overflow")
+    if (data.chapter > event.chapter) return C.error(403, "Progress not reached")
+    if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(403, "Page number overflow")
     if (data.chapter === event.chapter) {
         if (data.page === 4 && event.page === 3) {
-            if (!event.progress.slice(0, 4).every(p => p === 60)) return C.error(401, "Progress not reached")
+            if (!event.progress.slice(0, 4).every(p => p === 60)) return C.error(403, "Progress not reached")
             event.page = 4
-        } else if (data.page > event.page + 1) return C.error(401, "Progress not reached")
+        } else if (data.page > event.page + 1) return C.error(403, "Progress not reached")
         else if (data.page === event.page + 1) {
             event.page = data.page
         }
@@ -177,7 +176,7 @@ const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, 
     await DBH.update(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" }, event)
     return await getVerdetDesKriegesPage(data.chapter, data.page)
 }
-const readVerdetDesKriegesNotes: C.C<{}, Rb3VerdetDesKriegesNote[]> = () => rb3VerdetDesKriegesNotes
+const readVerdetDesKriegesNotes: C.C<undefined, Rb3VerdetDesKriegesNote[]> = () => rb3VerdetDesKriegesNotes
 const readVerdetDesKriegesAppearances: C.C<{ chapter: number }, Rb3VerdetDesKriegesAppearance[]> = data => getVerdetDesKriegesAppearances(data.chapter)
 const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, { modified: boolean }> = async data => {
     const t = new DBH.T()
@@ -253,7 +252,6 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
     await t.commit()
     return result
 }
-const debugResetVerdetDesKrieges: C.C<RbRequest> = data => DBH.remove<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 
 const readOrderShop: C.C<RbRequest, Rb3OrderShopResponse> = async data => {
     const orderShop = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
@@ -266,6 +264,8 @@ const readOrderShop: C.C<RbRequest, Rb3OrderShopResponse> = async data => {
         levelExperiences: level.experiences,
         experiencesToNextLevel: level.experiencesToNextLevel,
         details: allOrders.filter(i => {
+            const details = orderShop?.details?.find(d => d.index === i.id)
+            if (details && details.slot >= 0) return true
             const cond = i.unlockCondition
             if (cond.orderExperience && (orderShop?.experience ?? 0) < cond.orderExperience) return false
             if (cond.allOrdersCleared && !cond.allOrdersCleared.every(el => (orderShop?.details?.find(d => d.index === el)?.clearedCount ?? 0) > 0)) return false
@@ -307,7 +307,7 @@ const writeOrderSlot: C.C<RbRequest & Rb3OrderSlot> = async data => {
     const level = await getOrderShopLevel(orderShop.experience)
     const maxSlots = level.level >= 100 ? 5 : level.level >= 30 ? 4 : 3
     if (data.slot >= 0 && detail.clearedCount > 0 && !info.reacceptable) return C.error(404, "Order cannot reaccept")
-    if (data.slot >= maxSlots) return C.error(401, "Order slots overflow")
+    if (data.slot >= maxSlots) return C.error(403, "Order slots overflow")
     if (data.slot >= 0) for (const d of orderShop.details ?? []) if (d.index === data.index && d.slot === data.slot) d.slot = -1
     detail.slot = data.slot
     detail.param |= Rb3OrderDetailsParamFlag.unlocked

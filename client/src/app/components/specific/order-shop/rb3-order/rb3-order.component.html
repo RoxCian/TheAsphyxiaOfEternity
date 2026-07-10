@@ -1,5 +1,5 @@
 @let o = order();
-@let color = `color${o?.info?.fragmentColor}`;
+@let color = `color${o?.info?.orderType}`;
 @if (o) {
     <div class="order-box" [class.is-slot]="isSlot()" animate.enter="enter" animate.leave="leave">
         <div class="card order-card rb-panel {{ color }}" [class.is-premium-slot]="isPremiumSlot()" [class.error-info]="!o">
@@ -19,7 +19,12 @@
                             No. {{ o.info.orderShopId.toString().padStart(3, "0") }}
                         </div>
                         <div class="order-name is-size-4">
-                            <bung-marquee [content]="o.info | rbText : 'orderName'" [delay]="1500" [spacing]="72" />
+                            <ng-template #orderName>
+                                @for (el of (o.info | rbText : "orderName").split("|"); let i = $index; track el) {
+                                    <span [class.sub]="i > 0">{{ el }}</span>
+                                }
+                            </ng-template>
+                            <bung-marquee [content]="orderName" [delay]="1500" [spacing]="72" />
                         </div>
                         <div class="stars tag" [class.is-success]="o.info.stars <= 3" [class.is-warning]="o.info.stars <= 6 && o.info.stars > 3" [class.is-danger]="o.info.stars >= 7">
                             @if (breakpointService.breakpointsToggled.mobile()) {

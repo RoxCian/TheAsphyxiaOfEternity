@@ -19,14 +19,14 @@ type V = 4
 const version = 4 as const
 
 export function registerRb4Controllers() {
-    C.route("rb4ReadPlayer", readPlayer)
-    C.route("rb4ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb4ReadRecords", readRecords)
-    C.route("rb4ReadClasschecks", readClasschecks)
-    C.route("rb4ReadStageLogs", readStageLogs)
-    C.route("rb4ReadAvailableItems", readAvailableItems)
-    C.route("rb4ReadSettings", readSettings)
-    C.route("rb4WriteSettings", writeSettings)
+    C.route("rb4ReadPlayer", readPlayer, true)
+    C.route("rb4ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb4ReadRecords", readRecords, true)
+    C.route("rb4ReadClasschecks", readClasschecks, true)
+    C.route("rb4ReadStageLogs", readStageLogs, true)
+    C.route("rb4ReadAvailableItems", readAvailableItems, true)
+    C.route("rb4ReadSettings", readSettings, true)
+    C.route("rb4WriteSettings", writeSettings, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {

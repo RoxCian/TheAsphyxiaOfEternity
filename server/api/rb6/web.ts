@@ -24,21 +24,21 @@ type V = 6
 const version = 6 as const
 
 export function registerRb6Controllers() {
-    C.route("rb6ReadPlayer", readPlayer)
-    C.route("rb6ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb6ReadRecords", readRecords)
-    C.route("rb6ReadClasschecks", readClasschecks)
-    C.route("rb6ReadStageLogs", readStageLogs)
-    C.route("rb6ReadAvailableItems", readAvailableItems)
-    C.route("rb6ReadRankingQuests", readRankingQuests)
-    C.route("rb6ReadEquips", readEquips)
-    C.route("rb6ReadCharacterCards", readCharacterCards)
-    C.route("rb6ReadSettings", readSettings)
-    C.route("rb6WriteSettings", writeSettings)
-    C.route("rb6RequestAsphyxia", requestAsphyxia)
-    C.route("rb6UploadAsphyxia", uploadAsphyxia)
-    C.route("rb6ImportAsphyxia", importAsphyxia)
-    C.route("rb6AbortAsphyxia", abortAsphyxia)
+    C.route("rb6ReadPlayer", readPlayer, true)
+    C.route("rb6ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb6ReadRecords", readRecords, true)
+    C.route("rb6ReadClasschecks", readClasschecks, true)
+    C.route("rb6ReadStageLogs", readStageLogs, true)
+    C.route("rb6ReadAvailableItems", readAvailableItems, true)
+    C.route("rb6ReadRankingQuests", readRankingQuests, true)
+    C.route("rb6ReadEquips", readEquips, true)
+    C.route("rb6ReadCharacterCards", readCharacterCards, true)
+    C.route("rb6ReadSettings", readSettings, true)
+    C.route("rb6WriteSettings", writeSettings, true)
+    C.route("rb6RequestAsphyxia", requestAsphyxia, true)
+    C.route("rb6UploadAsphyxia", uploadAsphyxia, true)
+    C.route("rb6ImportAsphyxia", importAsphyxia, true)
+    C.route("rb6AbortAsphyxia", abortAsphyxia, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
@@ -178,11 +178,11 @@ const requestAsphyxia: C.C<RbRequest & { profileSize: number, scoresSize: number
 }
 const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", chunk: string }> = async data => {
     const sessionContent = asphyxiaUploadSessionsContent[data.rid]
-    if (!sessionContent) return { type: "error", code: 401, message: "Asphyxia upload session is not requested." }
+    if (!sessionContent) return { type: "error", code: 403, message: "Asphyxia upload session is not requested." }
     const bin = Buffer.from(data.chunk, "base64")
     const sessionData = data.file === "profile" ? sessionContent.profileData : sessionContent.scoresData
     let sessionProgress = data.file === "profile" ? sessionContent.profileProgress : sessionContent.scoresProgress
-    if (bin.length + sessionProgress > sessionData.length) return { type: "error", code: 401, message: "Insufficient file size." }
+    if (bin.length + sessionProgress > sessionData.length) return { type: "error", code: 403, message: "Insufficient file size." }
     if (sessionData.length === sessionProgress) return {}
     bin.copy(sessionData, sessionProgress)
     sessionProgress += bin.length

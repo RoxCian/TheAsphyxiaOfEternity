@@ -183,6 +183,7 @@ export class Rb6QuestRecord implements ICollection<"rb.rb6.playData.quest"> {
     score = 0
     lastPlayTime = 0
     updateTime = 0
+    stageLogs?: Rb6PlayerStageLog[] = []
 }
 
 class Rb6PlayerData {

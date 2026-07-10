@@ -14,13 +14,13 @@ type V = 1
 const version = 1 as const
 
 export function registerRb1Controllers() {
-    C.route("rb1ReadPlayer", readPlayer)
-    C.route("rb1ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb1ReadRecords", readRecords)
-    C.route("rb1ReadStageLogs", readStageLogs)
-    C.route("rb1ReadAvailableItems", readAvailableItems)
-    C.route("rb1ReadSettings", readSettings)
-    C.route("rb1WriteSettings", writeSettings)
+    C.route("rb1ReadPlayer", readPlayer, true)
+    C.route("rb1ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb1ReadRecords", readRecords, true)
+    C.route("rb1ReadStageLogs", readStageLogs, true)
+    C.route("rb1ReadAvailableItems", readAvailableItems, true)
+    C.route("rb1ReadSettings", readSettings, true)
+    C.route("rb1WriteSettings", writeSettings, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {

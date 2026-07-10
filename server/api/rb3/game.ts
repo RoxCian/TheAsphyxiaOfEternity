@@ -13,13 +13,14 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3ItemLockCtrl, Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
-import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbSession } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, Rb3OrderType, RbSession } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
 import { inspect } from "util"
+import { rb3OrdersInfo } from "../../data/tables/rb3_orders"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -141,6 +142,16 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     }
     config.randomEntryWork ??= DBBigInt(Math.trunc(Math.random() * 99999999))
     config.customFolderWork ??= DBBigInt(Math.trunc(Math.random() * 9999999999999))
+
+    // // challenge orders
+    // const ordersToAppend = (await rb3OrdersInfo).filter(i => i.orderType === Rb3OrderType.challenge && Object.keys(i.unlockCondition).length === 0)
+    // order.details ??= []
+    // for (const o of ordersToAppend) {
+    //     if (order.details.find(d => d.index === o.id)) continue
+    //     const d = new Rb3OrderDetails(o.id)
+    //     d.param = Rb3OrderDetailsParamFlag.unlocked
+    //     order.details.push(d)
+    // }
 
     const p = result.pdata
 

@@ -1,3 +1,4 @@
+import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
 import { RbVersion } from "../../models/shared/rb_types"
 import { RbSessionStorage } from "../../models/shared/session"
 import { DBH } from "../../utils/db/dbh"
@@ -10,11 +11,13 @@ export async function createSession(rid: string, version: RbVersion): Promise<Rb
         const time = Date.now()
         if (time - oldSession.time < sessionTimeout && oldSession.read) {
             oldSession.regenerateSessionId()
+            if (version === 6) oldSession.rb6RankingQuestIndex = (await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" }))?.rankingQuestIndex ?? 0
             await DBH.update(rid, { collection: "rb.session", version }, oldSession)
             return oldSession
         }
     }
     const newSession = new RbSessionStorage(version)
+    if (version === 6) newSession.rb6RankingQuestIndex = (await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" }))?.rankingQuestIndex ?? 0
     await DBH.upsert(rid, { collection: "rb.session", version }, newSession)
     return newSession
 }

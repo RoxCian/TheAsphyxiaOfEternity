@@ -7,7 +7,7 @@ export type Rb3OrderInfo = {
     hintOrig: string
     fragmentName: string
     fragmentNameOrig: string
-    fragmentColor: Rb3OrderFragmentColor
+    orderType: Rb3OrderType
     fragmentCount: number
     clearRewardName: string
     clearRewardNameOrig: string
@@ -30,8 +30,8 @@ export type Rb3OrderInfo = {
     reacceptable: boolean
 }
 
-export enum Rb3OrderFragmentColor {
-    green, orange, blue, violet, red
+export enum Rb3OrderType {
+    starter, ordinary, equip, event, challenge
 }
 
 export type Rb3OrderShopLevel = {

@@ -3,7 +3,7 @@ import { Batch } from "./batch"
 import { Rb6JustCollection } from "../models/rb6/just_collection"
 import { Rb3Equip, Rb3Order, Rb3OrderDetails, Rb3PlayerAccount } from "../models/rb3/profile"
 import { Rb6Ghost } from "../models/rb6/ghost"
-import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerStageLog } from "../models/rb6/profile"
+import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerStageLog, Rb6QuestRecord } from "../models/rb6/profile"
 import { Rb6MusicRecord } from "../models/rb6/music_record"
 import { Rb4Classcheck } from "../models/rb4/classcheck"
 import { Rb5Classcheck } from "../models/rb5/classcheck"
@@ -100,6 +100,26 @@ export function initializeBatch() {
         }
         await t.commit()
     })
+    Batch.register("batch#2.0.0.part2-1", "2.0.0", async () => {
+        // append stage log into dungeon records for RB Reflesia
+        const t = new DBH.T()
+        const quests = await t.find<Rb6QuestRecord>(undefined, { collection: "rb.rb6.playData.quest" })
+        for (const quest of quests) {
+            if (quest.stageLogs) continue
+            const rid: string = (quest as any).__refid
+            if (!rid) continue
+            const time = quest.updateTime ? quest.updateTime : quest.lastPlayTime
+            const stageLogs = await t.find<Rb6PlayerStageLog>(rid, { collection: "rb.rb6.playData.stageLog", time: { $lte: time, $gte: time - 10 * 60 /** 10min offset */ } })
+            stageLogs.sort((l, r) => l.time - r.time)
+            for (let i = stageLogs.length - 1; i >= 0; i--) {
+                if (stageLogs[i].stageIndex !== 0) continue
+                t.update<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: quest.dungeonId, dungeonGrade: quest.dungeonGrade, $and: (quest.dungeonId === 47) ? [{ rankingId: quest.rankingId }] : []  }, { $set: { stageLogs: stageLogs.splice(i) } })
+                break
+            }
+        }
+        await t.commit()
+    })
+
     Batch.register("batch#2.0.0.part3", "2.0.0", async () => {
         // fix order shop / equip experiences for RB colette
         const t = new DBH.T()

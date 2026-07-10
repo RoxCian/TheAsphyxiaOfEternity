@@ -3,8 +3,8 @@ import { RbRequest, RbSession, RbVersion } from "../../models/shared/web"
 import { getSession, removeSession } from "../shared_game/session"
 
 export function registerSessionController() {
-    C.route("rbReadSession", readSession)
-    C.route("rbKillSession", killSession)
+    C.route("rbReadSession", readSession, true)
+    C.route("rbKillSession", killSession, true)
 }
 
 const readSession: C.C<RbRequest & { version: RbVersion }, RbSession> = async data => {

@@ -163,7 +163,4 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
             closeHandle.unsubscribe()
         })
     }
-    protected onReset() {
-        this.service.reset()
-    }
 }

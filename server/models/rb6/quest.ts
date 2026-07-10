@@ -1,12 +1,12 @@
 import { rb6Quests } from "../../data/tables/rb6_quests"
 import { rb6RankingQuests } from "../../data/tables/rb6_ranking_quests"
 import { XD } from "../../utils/x"
-import { Rb6ChartType } from "../shared/rb_types"
+import { Rb6ChartType, Rb6QuestType } from "../shared/rb_types"
 
 export class Rb6Quest {
     @XD.s32() questId = 0
     @XD.s32() dungeonId = 0
-    @XD.s32() questType = 0
+    @XD.s32() questType = Rb6QuestType.none
     @XD.s32() value = 0
     @XD.s32() endTime = 0
     @XD.s32() rankingId = 0

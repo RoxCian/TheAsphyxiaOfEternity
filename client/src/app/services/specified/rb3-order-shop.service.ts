@@ -1,5 +1,5 @@
 import { computed, inject, Service, signal } from "@angular/core"
-import { Rb3OrderDetailsParamFlag, Rb3OrderFragmentColor, Rb3OrderResponse, Rb3OrderShopResponse, Rb3OrderSlot } from "rbweb"
+import { Rb3OrderDetailsParamFlag, Rb3OrderType, Rb3OrderResponse, Rb3OrderShopResponse, Rb3OrderSlot } from "rbweb"
 import { RbActivatableServiceBase } from "./rb.service"
 import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
@@ -16,11 +16,11 @@ export class Rb3OrderShopService extends RbActivatableServiceBase<Rb3OrderShopRe
         if (level < 100) return 4
         return 5
     })
-    readonly grouped = computed<Partial<Record<Rb3OrderFragmentColor, Rb3OrderResponse[]>>>(() => this.orderShop.value()?.details.reduce((prev, next) => {
-        if (!prev[next.info.fragmentColor]) prev[next.info.fragmentColor] = []
-        prev[next.info.fragmentColor].push(next)
+    readonly grouped = computed<Partial<Record<Rb3OrderType, Rb3OrderResponse[]>>>(() => this.orderShop.value()?.details.reduce((prev, next) => {
+        if (!prev[next.info.orderType]) prev[next.info.orderType] = []
+        prev[next.info.orderType].push(next)
         return prev
-    }, {} as Record<Rb3OrderFragmentColor, Rb3OrderResponse[]>) ?? {})
+    }, {} as Record<Rb3OrderType, Rb3OrderResponse[]>) ?? {})
     readonly clearedOrderCount = computed(() => this.orderShop.value()?.details.reduce((prev, next) => next.clearedCount > 0 ? prev + 1 : prev, 0) ?? 0)
     readonly firstEmptySlot = computed(() => {
         const slotVisited = new Array(this.maxSlots).map(() => false)

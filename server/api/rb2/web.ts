@@ -16,16 +16,16 @@ type V = 2
 const version = 2 as const
 
 export function registerRb2Controllers() {
-    C.route("rb2ReadPlayer", readPlayer)
-    C.route("rb2ReadPlayerPerformance", readPlayerPerformance)
-    C.route("rb2ReadRecords", readRecords)
-    C.route("rb2ReadStageLogs", readStageLogs)
-    C.route("rb2ReadGlasses", readGlasses)
-    C.route("rb2ReadGlassSettings", readGlassSettings)
-    C.route("rb2WriteGlassSettings", writeGlassSettings)
-    C.route("rb2ReadAvailableItems", readAvailableItems)
-    C.route("rb2ReadSettings", readSettings)
-    C.route("rb2WriteSettings", writeSettings)
+    C.route("rb2ReadPlayer", readPlayer, true)
+    C.route("rb2ReadPlayerPerformance", readPlayerPerformance, true)
+    C.route("rb2ReadRecords", readRecords, true)
+    C.route("rb2ReadStageLogs", readStageLogs, true)
+    C.route("rb2ReadGlasses", readGlasses, true)
+    C.route("rb2ReadGlassSettings", readGlassSettings, true)
+    C.route("rb2WriteGlassSettings", writeGlassSettings, true)
+    C.route("rb2ReadAvailableItems", readAvailableItems, true)
+    C.route("rb2ReadSettings", readSettings, true)
+    C.route("rb2WriteSettings", writeSettings, true)
 }
 
 const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {

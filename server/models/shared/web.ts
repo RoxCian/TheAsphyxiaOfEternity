@@ -1,4 +1,4 @@
-import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo, Rb2GlassInfo, Rb3OrderDetailsParamFlag } from "./rb_types"
+import { RbByword, Rb1ChartType, Rb4ChartType, Rb6ChartType, RbChartType, RbColor, RbVersion, RbVersionWithClasscheck, RbMusicInfo, RbMusicVariation, RbChartInfo, RbClearTypeLiteral, Rb6ClasscheckIndex, Rb5ClasscheckIndex, Rb4DojoIndex, Rb4ExaminationInfo, RbClasscheckIndex, RbColorSpecification, RbComment, Rb5YurukomeInfo, RbPlayerIcon, Rb3OrderInfo, Rb2GlassInfo, Rb3OrderDetailsParamFlag, Rb6DungeonInfo, Rb6QuestInfo, Rb6QuestType } from "./rb_types"
 export * from "./rb_types"
 
 export interface RbRequest {
@@ -297,6 +297,26 @@ export type Rb6RankingQuestResponse = {
     id: number
     charts: [Rb6RankingQuestChart, Rb6RankingQuestChart, Rb6RankingQuestChart]
 }
+
+export type Rb6QuestRecordElement = {
+    dungeonGrade: number
+    clearCount: number
+    playCount: number
+    isCleared: boolean
+    score: number
+    lastPlayTime: Date
+    updateTime: Date
+    stageLogs?: RbStageLogResponse<6, Rb6ChartType>[]
+}
+export type Rb6QuestResponse = {
+    dungeonId: number
+    rankingId: number
+    questType: Rb6QuestType
+    dungeon: Rb6DungeonInfo
+    quest: Rb6QuestInfo
+    records: (Rb6QuestRecordElement | undefined)[]
+}
+
 export function createRbSettingsResponse<TVersion extends RbVersion>(version: TVersion): RbSettingsResponse<TVersion> {
     switch (version) {
         case 1: return new Rb1SettingsResponse() as RbSettingsResponse<TVersion>

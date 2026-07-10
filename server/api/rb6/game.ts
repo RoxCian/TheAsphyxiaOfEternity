@@ -23,6 +23,7 @@ import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghos
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createSession, getSession, removeSession } from "../shared_game/session"
+import { RbSessionStorage } from "../../models/shared/session"
 
 export function registerRb6Handlers() {
     H.route("info.rb6_info_read_hit_chart", readHitChartInfo)
@@ -71,9 +72,8 @@ const startPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     const session = await createSession(rid, 6)
     if (!session) return H.deny
-    const misc = await DB.FindOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
     const result = new Rb6PlayerStart(session.sessionId)
-    result.questCtrl.data = await Rb6Quest.createExamples(misc?.rankingQuestIndex ?? 0)
+    result.questCtrl.data = await Rb6Quest.createExamples(session.rb6RankingQuestIndex)
     const today = new Date()
     result.itemCtrl.data = (await rb6UnlockItems).filter(i => {
         if (!i.unlockableTimeStart || !i.unlockableTimeEnd) return true
@@ -111,11 +111,10 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const releasedInfos = await DBH.find(read.rid, Rb6PlayerReleasedInfo, { collection: "rb.rb6.player.releasedInfo" })
     const param = await DBH.find(read.rid, Rb6PlayerParameters, { collection: "rb.rb6.player.parameters" })
     const mylist = await DBH.findOne(read.rid, Rb6Mylist, { collection: "rb.rb6.player.mylist" })
-    const misc = await DB.FindOne<Rb6MiscSettings>(read.rid, { collection: "rb.rb6.player.misc" })
     const questRecords = await DBH.find(read.rid, Rb6QuestRecord, {
         collection: "rb.rb6.playData.quest", $or: [
             { dungeonId: { $ne: 47 } },
-            { dungeonId: 47, rankingId: misc?.rankingQuestIndex ?? 0 }
+            { dungeonId: 47, rankingId: session.rb6RankingQuestIndex }
         ]
     })
 
@@ -140,7 +139,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     base.rankQuestScore = [0, 0, 0]
     base.rankQuestRank = [-1, -1, -1]
     if (mylist && mylist.index < 0) mylist.index = 0
-    const rankingId = misc?.rankingQuestIndex ?? 0
+    const rankingId = session.rb6RankingQuestIndex
     const rankQuestRecords = questRecords.filter((q) => (q.dungeonId == 47) && (q.rankingId == rankingId))
     if (rankQuestRecords) for (const r of rankQuestRecords) {
         base.rankQuestScore[r.dungeonGrade] = r.score ?? 0
@@ -238,7 +237,7 @@ const readGhost: H.H<Rb6ReadGhostParam> = async data => {
     return XF.x(result)
 }
 
-async function writePlayerCore(player: Rb6Player, session: RbSession) {
+async function writePlayerCore(player: Rb6Player, session: RbSessionStorage) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
 
@@ -292,14 +291,14 @@ async function writePlayerCore(player: Rb6Player, session: RbSession) {
     }
     if (hasAny(player.pdata.quest?.list) && hasAny(player.pdata.stageLogs?.log)) for (const q of player.pdata.quest.list) {
         const now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
-        if ((q.dungeonId === 47) && player.pdata?.stageLogs?.log) { // Ranking Quest
-            const misc = await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" })
+        if (player.pdata?.stageLogs?.log) {
             const score = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
-            q.rankingId = misc ? misc.rankingQuestIndex || 0 : 0
-            const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: 47, dungeonGrade: q.dungeonGrade, rankingId: q.rankingId })
-            if (!oldRecord || (oldRecord.score ?? 0 < score)) {
+            if (q.dungeonId === 47) q.rankingId = session.rb6RankingQuestIndex // Ranking Quest
+            const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId === 47) ? [{ rankingId: q.rankingId }] : [] })
+            if (!oldRecord || (oldRecord.score ?? 0) < score) {
                 q.updateTime = now
                 q.score = score
+                q.stageLogs = player.pdata.stageLogs.log
             } else q.score = oldRecord.score
         }
         q.lastPlayTime = now
@@ -338,8 +337,8 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb6PlayerSta
         musicRecord.combo = stageLog.combo
         musicRecord.missCount = stageLog.missCount
         musicRecord.param = stageLog.param
-        musicRecord.justCollectionRateTimes100Red = (stageLog.color == 0) ? stageLog.justCollectionRateTimes100 : 0
-        musicRecord.justCollectionRateTimes100Blue = (stageLog.color == 1) ? stageLog.justCollectionRateTimes100 : 0
+        musicRecord.justCollectionRateTimes100Red = (stageLog.color === RbColor.red) ? stageLog.justCollectionRateTimes100 : 0
+        musicRecord.justCollectionRateTimes100Blue = (stageLog.color === RbColor.blue) ? stageLog.justCollectionRateTimes100 : 0
         musicRecord.bestScoreUpdateTime = stageLog.time
         musicRecord.bestMissCountUpdateTime = stageLog.time
         musicRecord.bestAchievementRateUpdateTime = stageLog.time
