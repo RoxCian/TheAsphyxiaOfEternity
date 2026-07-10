@@ -54,7 +54,7 @@ export namespace C {
         const cb: WebUIEventHandler = async (data: T, send?: WebUISend) => {
             await initialize()
             if (!send) throw new Error("'send' is empty")
-            if (checkRid && (typeof (data as RbRequest).rid !== "string" || !(data as RbRequest).rid.match(/^[a-fA-F0-9]{16}$/))) return send.error(401, "REFID not provided")
+            if (checkRid && (typeof (data as unknown as RbRequest).rid !== "string" || !(data as unknown as RbRequest).rid.match(/^[a-fA-F0-9]{16}$/))) return send.error(401, "REFID not provided")
             console.log("Controller method:", method)
             const res = await c(PJ.convertFromPJ(data))
             if (!res) send.text("")

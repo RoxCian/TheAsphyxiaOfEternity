@@ -1,6 +1,6 @@
 dungeonId,dungeonName,dungeonNameOrig,element,dungeonsIdToUnlock,buffs
-int,string,string,fire|aqua|wood|light|dark,int[],<masterJudge|jrInfMode|greatAsGood|onlyJrDamage|rivalJrGreatDamage|noTopColor|lowSpeed|noRecovery>
 ,,,,
+int,string,string,fire|aqua|wood|light|dark,int[],<masterJudge|jrInfMode|greatAsGood|onlyJrDamage|rivalJrGreatDamage|noTopColor|lowSpeed|noRecovery>
 0,Red tower part 1,紅の塔1,fire,[],
 1,Red tower part 2,紅の塔2,fire,[0],
 2,Red tower part 3,紅の塔3,fire,[1],
@@ -66,11 +66,11 @@ int,string,string,fire|aqua|wood|light|dark,int[],<masterJudge|jrInfMode|greatAs
 35,Foriegn church part 3,異国の教会3,fire,[35],
 36,Foriegn church part 4,異国の教会4,fire,[36],
 37,Secret fountain,神秘の泉,wood,[],
-38,Chicken temple part 1,酉の社1,aqua,[],
-39,Chicken temple part 2,酉の社2,aqua,[38],
-40,Chicken temple part 3,酉の社3,aqua,[39],
-41,Chicken temple part 4,酉の社4,aqua,[40],
-42,Chicken temple part 5,酉の社5,aqua,[41],
+38,Temple of Chicken part 1,酉の社1,aqua,[],
+39,Temple of Chicken part 2,酉の社2,aqua,[38],
+40,Temple of Chicken part 3,酉の社3,aqua,[39],
+41,Temple of Chicken part 4,酉の社4,aqua,[40],
+42,Temple of Chicken part 5,酉の社5,aqua,[41],
 43,Group A,グループ A,light,[],masterJudge
 44,Group B,グループ B,light,[],masterJudge
 45,Group C,グループ C,light,[],masterJudge
@@ -89,7 +89,7 @@ int,string,string,fire|aqua|wood|light|dark,int[],<masterJudge|jrInfMode|greatAs
 92,City of glass,ガラスの街,light,[],
 93,Stage under the blazing sun,炎天下のフロア,fire,[],
 102,Path to Zeta,ゼータの小道,light,[],
-103,Music room, a few days ago,過日の音楽室,wood,[],
+103,"Music room, a few days ago",過日の音楽室,wood,[],
 104,Valley of the cursed mist,呪霧の谷,aqua,[],
 105,A record store owner,とあるレコード屋,fire,[],
 106,Monochrome home,灰色の家,aqua,[],

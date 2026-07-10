@@ -278,7 +278,7 @@ function createRow<T extends object>(row: any[], fields: CsvField[], type?: Type
 function createCsvRows<T extends object>(csvTable: CsvTable, type?: Type<T>): Readonly<T>[] {
     const fields: CsvField[] = fieldCache[csvTable.cacheKey] ?? csvTable.data[2].map((f, i) => parseCsvField(csvTable.data[0][i], f))
     fieldCache[csvTable.cacheKey] = fields
-    const data: any[] = dataCache[csvTable.cacheKey] ?? csvTable.data.slice(3).map(r => r.map((c, i) => parseCsvValue(c, fields[i])))
+    const data: any[] = dataCache[csvTable.cacheKey] ?? csvTable.data.slice(3).map(r => r.map((c, i) => fields[i] ? parseCsvValue(c, fields[i]) : undefined))
     dataCache[csvTable.cacheKey] = data
     return data.map(r => createRow(r, fields, type))
 }

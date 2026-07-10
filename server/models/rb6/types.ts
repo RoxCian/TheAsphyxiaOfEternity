@@ -23,6 +23,7 @@ export enum Rb6EquipmentPart {
 
 export type Rb6QuestInfo = {
     questId: number
+    chapter: number
     questName: string
     questNameOrig?: string
     element: Rb6CharacterCardElement

@@ -1,6 +1,6 @@
 import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
-import { findChartInfo, findChartInfoResponse, findCharts, rbChartInfo } from "../../data/tables/rb_chart_info"
+import { findChartInfo, findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb5Minigame, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
 import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse, Rb5MinigameType } from "../../models/shared/web"

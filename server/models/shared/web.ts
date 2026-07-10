@@ -298,7 +298,14 @@ export type Rb6RankingQuestResponse = {
     charts: [Rb6RankingQuestChart, Rb6RankingQuestChart, Rb6RankingQuestChart]
 }
 
-export type Rb6QuestRecordElement = {
+export type Rb6ReflesiaResponse = {
+    storyProgress: Rb6ReflesiaStoryProgress
+    rankingQuestSelected: number
+}
+export enum Rb6ReflesiaStoryProgress {
+    chapter1, chapter2, chapter3, throne, completed
+}
+export type Rb6QuestRecordResponse = {
     dungeonGrade: number
     clearCount: number
     playCount: number
@@ -309,12 +316,12 @@ export type Rb6QuestRecordElement = {
     stageLogs?: RbStageLogResponse<6, Rb6ChartType>[]
 }
 export type Rb6QuestResponse = {
-    dungeonId: number
-    rankingId: number
-    questType: Rb6QuestType
     dungeon: Rb6DungeonInfo
     quest: Rb6QuestInfo
-    records: (Rb6QuestRecordElement | undefined)[]
+    questType: Rb6QuestType
+    rankingId: number
+    charts?: [Rb6RankingQuestChart, Rb6RankingQuestChart, Rb6RankingQuestChart]
+    records: (Rb6QuestRecordResponse | undefined)[]
 }
 
 export function createRbSettingsResponse<TVersion extends RbVersion>(version: TVersion): RbSettingsResponse<TVersion> {
