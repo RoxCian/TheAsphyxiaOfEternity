@@ -38,6 +38,7 @@ export class Rb3OrderShopService extends RbActivatableServiceBase<Rb3OrderShopRe
     protected override onActivate(): HttpResourceRef<Rb3OrderShopResponse | undefined> {
         return this.orderShop
     }
+    protected override onDeactivate() { }
     async acceptOrder(index: number) {
         if (!this.isActivated()) return
         this.isLoadingInternal.set(true)

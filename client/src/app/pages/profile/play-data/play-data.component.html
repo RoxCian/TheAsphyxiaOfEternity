@@ -43,8 +43,7 @@
                                     <div class="title">
                                         @let level = p.level;
                                         @let progress = (p.extraValues?.[0] ?? 0) / (p.extraValues?.[1] ?? 1) * 100;
-                                        {{ level }}
-                                        <span class="is-size-7" bungTooltip="Experiences percentage to next level">({{ level >= 99 ? "MAX" : level >= 42 ? progress.toFixed(1) : progress.toFixed(0) }}%)</span>
+                                        {{ level }}<span class="is-size-7 has-tooltip" bungTooltip="Experiences percentage to next level">({{ level >= 99 ? "MAX" : level >= 42 ? progress.toFixed(1) : progress.toFixed(0) }}%)</span>
                                     </div>
                                 } @case (5) {
                                     <div class="heading">Volzza Keys</div>

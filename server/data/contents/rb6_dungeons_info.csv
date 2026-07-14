@@ -1,115 +1,115 @@
 dungeonId,dungeonName,dungeonNameOrig,element,dungeonsIdToUnlock,buffs
 ,,,,
 int,string,string,fire|aqua|wood|light|dark,int[],<masterJudge|jrInfMode|greatAsGood|onlyJrDamage|rivalJrGreatDamage|noTopColor|lowSpeed|noRecovery>
-0,Red tower part 1,紅の塔1,fire,[],
-1,Red tower part 2,紅の塔2,fire,[0],
-2,Red tower part 3,紅の塔3,fire,[1],
-3,Blue temple part 1,蒼の祠1,aqua,[],
-4,Blue temple part 2,蒼の祠2,aqua,[3],
-5,Blue temple part 3,蒼の祠3,aqua,[4],
-6,Green hill part 1,碧の丘1,wood,[],
-7,Green hill part 2,碧の丘2,wood,[6],
-8,Green hill part 3,碧の丘3,wood,[7],
-9,Collapsing cave,崩れゆく洞窟,fire,"[2,5,8]",
-10,Fiery vale part 1,炎の渓谷1,fire,[9],
-11,Fiery vale part 2,炎の渓谷2,fire,[10],
-12,Fiery vale part 3,炎の渓谷3,fire,[11],
-13,Icey altar part 1,氷の祭壇1,aqua,[9],
-14,Icey altar part 2,氷の祭壇2,aqua,[13],
-15,Icey altar part 3,氷の祭壇3,aqua,[14],
-16,Windy mountains part 1,風の山脈1,wood,[9],
-17,Windy mountains part 2,風の山脈2,wood,[16],
-18,Windy mountains part 3,風の山脈3,wood,[17],
-19,Forgotten ruins,忘れられた遺跡,aqua,"[12,15,18]",
-20,Blaze desert part 1,業火の砂漠1,fire,[19],
-21,Blaze desert part 2,業火の砂漠2,fire,[20],
-22,Blaze desert part 3,業火の砂漠3,fire,[21],
-23,Marine palace part 1,海獣の神殿1,aqua,[19],
-24,Marine palace part 2,海獣の神殿2,aqua,[23],
-25,Marine palace part 3,海獣の神殿3,aqua,[24],
-26,Emerald forest part 1,翡翠の樹海1,wood,[19],
-27,Emerald forest part 2,翡翠の樹海2,wood,[26],
-28,Emerald forest part 3,翡翠の樹海3,wood,[27],
-29,Silent city,静寂の城,wood,"[22,25,28]",
-56,Bustling bar part 1,賑わう酒場1,fire,[],
-57,Bustling bar part 2,賑わう酒場2,fire,[56],
-58,Bustling bar part 3,賑わう酒場3,fire,[57],
-59,Cursed village part 1,呪われた町1,aqua,[58],
-60,Cursed village part 2,呪われた町2,aqua,[59],
-61,Cursed village part 3,呪われた町3,aqua,[60],
-62,Church basement part 1,大聖堂の地下室1,wood,[61],
-63,Church basement part 2,大聖堂の地下室2,wood,[62],
-64,Church basement part 3,大聖堂の地下室3,wood,[63],
-65,Tin room,鉛の部屋,fire,[64],
-66,Trace of ritual part 1,儀式の跡1,fire,[65],
-67,Trace of ritual part 2,儀式の跡2,fire,[66],
-68,Trace of ritual part 3,儀式の跡3,fire,[67],
-69,Snowfield of dark part 1,漆黒の雪原1,aqua,[68],
-70,Snowfield of dark part 2,漆黒の雪原2,aqua,[69],
-71,Snowfield of dark part 3,漆黒の雪原3,aqua,[70],
-72,Foot of mountain part 1,麓1,wood,[71],
-73,Foot of mountain part 2,麓2,wood,[72],
-74,Foot of mountain part 3,麓3,wood,[73],
-75,Double-headed iceberg,双頭の氷山,aqua,[74],
-76,Temenos of red,紅の神域,fire,[75],
-77,Temenos of blue,蒼の神域,aqua,[75],
-78,Temenos of green,碧の神域,wood,[75],
-79,Stairs of light,光の階段,dark,"[76,77,78]",
-94,Evil castle - gate,魔ノ城 - 城門,fire,[79],
-95,Evil castle - atrium,魔ノ城 - 広間,aqua,[94],
-96,Evil castle - throne,魔ノ城 - 玉座,wood,[95],
-30,Tree of promise,約束の樹,fire,[],
-31,House in the forest,森の家,wood,[],
-32,Endless city under the sea,無限の海城,aqua,[],
-33,Foriegn church part 1,異国の教会1,fire,[],
-34,Foriegn church part 2,異国の教会2,fire,[34],
-35,Foriegn church part 3,異国の教会3,fire,[35],
-36,Foriegn church part 4,異国の教会4,fire,[36],
-37,Secret fountain,神秘の泉,wood,[],
-38,Temple of Chicken part 1,酉の社1,aqua,[],
-39,Temple of Chicken part 2,酉の社2,aqua,[38],
-40,Temple of Chicken part 3,酉の社3,aqua,[39],
-41,Temple of Chicken part 4,酉の社4,aqua,[40],
-42,Temple of Chicken part 5,酉の社5,aqua,[41],
-43,Group A,グループ A,light,[],masterJudge
-44,Group B,グループ B,light,[],masterJudge
-45,Group C,グループ C,light,[],masterJudge
-46,Group D,グループ D,light,[],masterJudge
-47,Reflesia Coliseum,リフレシアコロシアム,light,[],masterJudge
-48,Jade river,翠緑の河,fire,[],
-49,Divine space of dark rose,黒薔薇の聖地,dark,[],
-50,No man's country,無人の国,dark,[],masterJudge
-51,Collapsed world,崩壊した世界,aqua,[],
-52,Gate of immoral,背徳の門,dark,[],
-53,Path of conquerer,覇者の参道,aqua,[],
-54,Moutain of legend,伝説の山,aqua,[],
-55,Ephemeral dream,泡沫の夢,aqua,[],
-90,Sea,海,aqua,[],
-91,Unreachable sanctuary,届かぬ聖域,dark,[],
-92,City of glass,ガラスの街,light,[],
-93,Stage under the blazing sun,炎天下のフロア,fire,[],
-102,Path to Zeta,ゼータの小道,light,[],
-103,"Music room, a few days ago",過日の音楽室,wood,[],
-104,Valley of the cursed mist,呪霧の谷,aqua,[],
-105,A record store owner,とあるレコード屋,fire,[],
-106,Monochrome home,灰色の家,aqua,[],
-107,Temple without a name,名もなき祠,wood,[],
-108,Sky arena,天空の競技場,fire,[],
-109,Center of milky way,銀河系の中心,aqua,[],
-110,Castle of the baron,ある男爵の城,fire,[],
-111,Area 60°,エリア60°,wood,[],
-80,1F,1階,dark,[79],jrInfMode|greatAsGood
-81,2F,2階,dark,[80],jrInfMode|onlyJrDamage
-82,3F,3階,dark,[81],jrInfMode|rivarJrGreatDamage
-83,4F,4階,dark,[82],jrInfMode|noTopColor
-84,5F,5階,dark,[83],jrInfMode|lowSpeed
-85,6F,6階,dark,[84],jrInfMode|onlyJrDamage|noRecovery
-86,7F,7階,dark,[85],jrInfMode|greatAsGood|noRecovery
-87,8F,8階,dark,[86],jrInfMode|rivarJrGreatDamage|noRevovery
-88,9F,9階,dark,[87],jrInfMode|noTopColor
-89,10F,10階,dark,[88],jrInfMode|lowSpeed|noRevovery
-97,1F,1階,dark,[89],jrInfMode|rivarJrGreatDamage|greatAsGood
-98,2F,2階,dark,[97],jrInfMode|rivarJrGreatDamage|onlyJrDamage
-99,3F,3階,dark,[98],jrInfMode|rivarJrGreatDamage|noTopColor
-100,4F,4階,dark,[99],jrInfMode|lowSpeed|greatAsGood|noRevovery
-101,5F,5階,dark,[100],jrInfMode|rivarJrGreatDamage|noRevovery
+0,Red tower part 1,紅の塔1,fire,,
+1,Red tower part 2,紅の塔2,fire,0,
+2,Red tower part 3,紅の塔3,fire,1,
+3,Blue temple part 1,蒼の祠1,aqua,,
+4,Blue temple part 2,蒼の祠2,aqua,3,
+5,Blue temple part 3,蒼の祠3,aqua,4,
+6,Green hill part 1,碧の丘1,wood,,
+7,Green hill part 2,碧の丘2,wood,6,
+8,Green hill part 3,碧の丘3,wood,7,
+9,Collapsing cave,崩れゆく洞窟,fire,"2,5,8",
+10,Fiery vale part 1,炎の渓谷1,fire,9,
+11,Fiery vale part 2,炎の渓谷2,fire,10,
+12,Fiery vale part 3,炎の渓谷3,fire,11,
+13,Icey altar part 1,氷の祭壇1,aqua,9,
+14,Icey altar part 2,氷の祭壇2,aqua,13,
+15,Icey altar part 3,氷の祭壇3,aqua,14,
+16,Windy mountains part 1,風の山脈1,wood,9,
+17,Windy mountains part 2,風の山脈2,wood,16,
+18,Windy mountains part 3,風の山脈3,wood,17,
+19,Forgotten ruins,忘れられた遺跡,aqua,"12,15,18",
+20,Blaze desert part 1,業火の砂漠1,fire,19,
+21,Blaze desert part 2,業火の砂漠2,fire,20,
+22,Blaze desert part 3,業火の砂漠3,fire,21,
+23,Marine palace part 1,海獣の神殿1,aqua,19,
+24,Marine palace part 2,海獣の神殿2,aqua,23,
+25,Marine palace part 3,海獣の神殿3,aqua,24,
+26,Emerald forest part 1,翡翠の樹海1,wood,19,
+27,Emerald forest part 2,翡翠の樹海2,wood,26,
+28,Emerald forest part 3,翡翠の樹海3,wood,27,
+29,Silent city,静寂の城,wood,"22,25,28",
+56,Bustling bar part 1,賑わう酒場1,fire,,
+57,Bustling bar part 2,賑わう酒場2,fire,56,
+58,Bustling bar part 3,賑わう酒場3,fire,57,
+59,Cursed village part 1,呪われた町1,aqua,58,
+60,Cursed village part 2,呪われた町2,aqua,59,
+61,Cursed village part 3,呪われた町3,aqua,60,
+62,Church basement part 1,大聖堂の地下室1,wood,61,
+63,Church basement part 2,大聖堂の地下室2,wood,62,
+64,Church basement part 3,大聖堂の地下室3,wood,63,
+65,Tin room,鉛の部屋,fire,64,
+66,Trace of ritual part 1,儀式の跡1,fire,65,
+67,Trace of ritual part 2,儀式の跡2,fire,66,
+68,Trace of ritual part 3,儀式の跡3,fire,67,
+69,Snowfield of dark part 1,漆黒の雪原1,aqua,68,
+70,Snowfield of dark part 2,漆黒の雪原2,aqua,69,
+71,Snowfield of dark part 3,漆黒の雪原3,aqua,70,
+72,Foot of mountain part 1,麓1,wood,71,
+73,Foot of mountain part 2,麓2,wood,72,
+74,Foot of mountain part 3,麓3,wood,73,
+75,Double-headed iceberg,双頭の氷山,aqua,74,
+76,Temenos of red,紅の神域,fire,75,
+77,Temenos of blue,蒼の神域,aqua,75,
+78,Temenos of green,碧の神域,wood,75,
+79,Stairs of light,光の階段,dark,"76,77,78",
+94,Evil castle - gate,魔ノ城 - 城門,fire,79,
+95,Evil castle - atrium,魔ノ城 - 広間,aqua,94,
+96,Evil castle - throne,魔ノ城 - 玉座,wood,95,
+30,Tree of promise,約束の樹,fire,,
+31,House in the forest,森の家,wood,,
+32,Endless city under the sea,無限の海城,aqua,,
+33,Foriegn church part 1,異国の教会1,fire,,
+34,Foriegn church part 2,異国の教会2,fire,34,
+35,Foriegn church part 3,異国の教会3,fire,35,
+36,Foriegn church part 4,異国の教会4,fire,36,
+37,Secret fountain,神秘の泉,wood,,
+38,Temple of Chicken part 1,酉の社1,aqua,,
+39,Temple of Chicken part 2,酉の社2,aqua,38,
+40,Temple of Chicken part 3,酉の社3,aqua,39,
+41,Temple of Chicken part 4,酉の社4,aqua,40,
+42,Temple of Chicken part 5,酉の社5,aqua,41,
+43,Group A,グループ A,light,,masterJudge
+44,Group B,グループ B,light,,masterJudge
+45,Group C,グループ C,light,,masterJudge
+46,Group D,グループ D,light,,masterJudge
+47,Reflesia Coliseum,リフレシアコロシアム,light,,masterJudge
+48,Jade river,翠緑の河,fire,,
+49,Divine space of dark rose,黒薔薇の聖地,dark,,
+50,No man's country,無人の国,dark,,masterJudge
+51,Collapsed world,崩壊した世界,aqua,,
+52,Gate of immoral,背徳の門,dark,,
+53,Path of conquerer,覇者の参道,aqua,,
+54,Moutain of legend,伝説の山,aqua,,
+55,Ephemeral dream,泡沫の夢,aqua,,
+90,Sea,海,aqua,,
+91,Unreachable sanctuary,届かぬ聖域,dark,,
+92,City of glass,ガラスの街,light,,
+93,Stage under the blazing sun,炎天下のフロア,fire,,
+102,Path to Zeta,ゼータの小道,light,,
+103,"Music room, a few days ago",過日の音楽室,wood,,
+104,Valley of the cursed mist,呪霧の谷,aqua,,
+105,A record store owner,とあるレコード屋,fire,,
+106,Monochrome home,灰色の家,aqua,,
+107,Temple without a name,名もなき祠,wood,,
+108,Sky arena,天空の競技場,fire,,
+109,Center of milky way,銀河系の中心,aqua,,
+110,Castle of the baron,ある男爵の城,fire,,
+111,Area 60°,エリア60°,wood,,
+80,1F,1階,dark,79,jrInfMode|greatAsGood
+81,2F,2階,dark,80,jrInfMode|onlyJrDamage
+82,3F,3階,dark,81,jrInfMode|rivalJrGreatDamage
+83,4F,4階,dark,82,jrInfMode|noTopColor
+84,5F,5階,dark,83,jrInfMode|lowSpeed
+85,6F,6階,dark,84,jrInfMode|onlyJrDamage|noRecovery
+86,7F,7階,dark,85,jrInfMode|greatAsGood|noRecovery
+87,8F,8階,dark,86,jrInfMode|rivalJrGreatDamage|noRecovery
+88,9F,9階,dark,87,jrInfMode|noTopColor
+89,10F,10階,dark,88,jrInfMode|lowSpeed|noRecovery
+97,1F,1階,dark,89,jrInfMode|rivalJrGreatDamage|greatAsGood
+98,2F,2階,dark,97,jrInfMode|rivalJrGreatDamage|onlyJrDamage
+99,3F,3階,dark,98,jrInfMode|rivalJrGreatDamage|noTopColor
+100,4F,4階,dark,99,jrInfMode|lowSpeed|greatAsGood|noRecovery
+101,5F,5階,dark,100,jrInfMode|rivalJrGreatDamage|noRecovery

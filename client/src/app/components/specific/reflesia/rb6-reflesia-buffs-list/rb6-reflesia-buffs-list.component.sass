@@ -1,0 +1,23 @@
+:host
+    display: flex
+    gap: 0.5em
+.buff-icon
+    width: 1.25em
+    height: 1.25em
+    justify-items: center
+    background: #f5359f
+    color: white
+    --bung-icon-color: white
+    border-radius: 4px
+    opacity: 0.7
+    transition: opacity var(--animation-duration-lv3) var(--ease-in)
+
+    &:hover
+        opacity: 0.9
+bung-icon
+    height: 100%
+
+@media (prefers-color-scheme: dark)
+    .buff-icon
+        background: #c97aa6
+    

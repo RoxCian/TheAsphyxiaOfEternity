@@ -2,6 +2,7 @@
     display: flex
     position: relative
     min-width: 300px
+    --card-spacing: 1.25em
 .card.is-rare
     box-shadow: 0 2px 3px #eadda4, 0 0 0 1px #eadda4
 .error-info
@@ -36,28 +37,32 @@
     
     .yurukome-content
         position: relative
-        display: flex
+        display: grid
+        grid-template: auto / auto 1fr
         justify-content: start
         align-items: center
         margin-bottom: 0
-        padding: 1.25em
-        gap: 1.25em
-        max-height: 100%
+        gap: 0
+        height: 100%
         overflow: clip
+        border-radius: 8px
 
         .jacket
-            flex: 0
+            grid-area: 1 / 1
             margin: 0
             min-width: 5em
             min-height: 5em
+            margin: var(--card-spacing)
             width: 5em
             height: 5em
             border-radius: 8px
             overflow: clip
             user-select: none
         .comment-wrapper
-            flex: 1
+            grid-area: 1 / 2
             display: grid
+            padding: var(--card-spacing)
+            padding-left: 0
             grid-template: auto minmax(0, 1fr) / minmax(0, 1fr)
             align-self: stretch
             overflow-y: auto
@@ -81,13 +86,12 @@
             $g: #fceab3, #eadda4
             background: conic-gradient($g, $g, $g, $g, $g, $g, #fceab3)
 @media screen and (width < 768px)
+    :host
+        --card-spacing: 0.5em
     :host .card.comment-box, :host .placeholder
         // margin-bottom: 0.5em
 
         .yurukome-content
-            padding: 0.5em
-            gap: 0.5em
-
             .jacket
                 width: 4em
                 height: 4em

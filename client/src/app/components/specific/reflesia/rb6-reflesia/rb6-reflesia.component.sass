@@ -1,0 +1,20 @@
+.progress-text
+    text-align: center
+    font-weight: bold
+.rb-list
+    display: flex
+    flex-direction: column
+    gap: 2em
+.rb-list.ranking-quests
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(min(44em, 100%), 1fr))
+    grid-auto-flow: row
+
+@media screen and (width < 768px)
+    .progress-text
+        font-size: 1.25rem
+    .rb-list
+        gap: 0.5em
+    .rb-list.ranking-quests
+        gap: 2em
+        margin-bottom: 1em

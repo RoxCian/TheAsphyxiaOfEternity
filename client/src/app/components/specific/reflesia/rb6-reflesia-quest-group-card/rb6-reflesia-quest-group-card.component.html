@@ -1,0 +1,11 @@
+<bung-card class="color{{ group().quest.element }}" [isFolded]="!isExpanded()">
+    <div class="card-heading" cardHeaderTitle>
+        <p class="sub-name">{{ groupNameSub() }}</p>
+        <p class="main-name is-size-5">{{ groupNameMain() }}</p>
+    </div>
+    <div class="rb-list">
+        @for (record of group().records; track record.quest.questId) {
+            <rb6-reflesia-quest [quest]="record" />
+        }
+    </div>
+</bung-card>

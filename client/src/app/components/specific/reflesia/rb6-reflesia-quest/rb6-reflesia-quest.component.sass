@@ -1,0 +1,263 @@
+:host
+    display: flex
+    position: relative
+    min-width: 300px
+
+    &:has(.score.wide:not(.not-played):hover)
+        .score.wide:hover
+            flex-basis: 5em
+        .score.wide:not(:hover)
+            flex-basis: 3.5em
+
+    & > *
+        transition: flex-basis var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000)
+    // & > :not(.error-info)
+    //     cursor: pointer
+
+    @for $i from 1 through 6
+        :nth-child(#{$i})
+            z-index: #{6 - $i}
+
+.color0
+    --background: #fffafa
+    --accent-color: #e5676a
+    --accent-text-color: white
+.color1
+    --background: #f2ffff
+    --accent-color: #209cee
+    --accent-text-color: white
+.color2
+    --background: #f0fff4
+    --accent-color: #23d160
+    --accent-text-color: white
+.color3
+    --background: #ffffea
+    --accent-color: #ffdd57
+    --accent-text-color: var(--black-text)
+.color4
+    --background: #fff9ff
+    --accent-color: #c36fcb
+    --accent-text-color: white
+
+.rb-panel
+    flex: 1
+    align-content: center
+
+.auto-height
+    height: auto
+
+.error-info
+    display: flex
+    width: 100%
+    padding: 1em
+    gap: 1em
+    align-items: center
+    justify-content: center
+    opacity: 0.7
+
+.ranking-id
+    position: absolute
+    display: flex
+    inset: 0
+    align-items: end
+    justify-content: end
+    overflow: clip
+    opacity: 0.1
+    user-select: none
+    pointer-events: none
+
+    span
+        font-size: 4em
+        font-weight: bold
+        margin-right: -0.15em
+        margin-bottom: -0.55em
+
+.quest-info
+    flex: 1
+    padding: 1.25em
+    z-index: 10
+    overflow-x: clip
+    min-width: 0 // firefox compatibility
+    
+    .quest-name
+        display: flex
+        flex-direction: column
+        flex-wrap: nowrap
+        overflow: hidden
+
+        .sub-name
+            font-size: 1em
+            opacity: 0.7
+        .main-name
+            font-size: 2em
+            font-weight: bold
+.tracks-container
+    display: flex
+    flex-direction: column
+    gap: 0.5em
+    .track-detail
+        display: flex
+        gap: 0.5em
+    rb-music-title
+        min-width: 0
+        font-size: 1.25em
+        font-weight: bold
+.score.wide
+    flex: 0
+    flex-basis: 4em
+    display: flex
+    position: relative
+    margin-left: -1em
+    padding: 1.25em 0
+    padding-left: 1em
+    justify-content: center
+    align-items: center
+    overflow: clip
+    color: white
+    background: var(--rb-chart-color)
+    cursor: pointer
+
+    p
+        text-orientation: revert
+        writing-mode: vertical-lr
+        transform: rotate(180deg)
+        text-transform: uppercase
+        margin-bottom: 0 // bypass style for "content p"
+        white-space: nowrap
+    .chart-name
+        position: absolute
+        opacity: 0.3
+        right: 0
+        top: 0.2em
+        user-select: none
+        font-size: 1.25em
+
+    .chart-score
+        font-weight: bold
+    
+    &.not-played
+        background: color-mix(in srgb, var(--rb-chart-color) 15%, white)
+        cursor: not-allowed
+        
+        .chart-score
+            color: color-mix(in srgb, var(--rb-chart-color) 50%, white)
+
+    &.no-score
+        cursor: default
+
+    &.not-played, &.no-score
+        .hover-background
+            background: transparent
+        .chart-score
+            font-size: 0.75rem !important
+            font-weight: normal
+            white-space: nowrap
+.quest-score-container-narrow
+    position: absolute
+    right: 1.25em
+    bottom: -1.25em
+    display: none
+    gap: 0.5em
+.score.narrow
+    display: flex
+    position: relative
+    width: 4em
+    height: 3em
+    padding-top: 1.25em
+    justify-content: center
+    align-items: center
+    overflow: clip
+    border-radius: 0 0 8px 8px !important
+    color: white
+    background: var(--rb-chart-color)
+    transition: padding-top var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000), transform var(--animation-duration-lv2) cubic-bezier(0.100, 0.485, 0.185, 1.000)
+    cursor: pointer
+
+    .chart-score
+        font-weight: bold
+        margin-bottom: 0 // asphyxia fix
+
+    &.not-played
+        cursor: not-allowed
+        background: color-mix(in srgb, var(--rb-chart-color) 15%, white)
+
+        .chart-score
+            font-weight: normal
+        .hover-background
+            background: transparent
+    &.no-score
+        cursor: default
+    &:hover:not(.not-played)
+        transform: translateY(1em)
+        padding-top: 0.25em
+.score.just-collected
+    .chart-score
+        animation: just-collect-animation 2s ease alternate infinite
+.hover-background
+    position: absolute
+    inset: 0
+    background: color-mix(in srgb, var(--rb-chart-color, white) 75%, black)
+    opacity: 0
+    z-index: 0
+    transition: opacity var(--animation-duration-lv3)
+    border-radius: 8px
+
+    .card:hover:not(.not-played):not(.no-score) &
+        opacity: 0.3
+    .card:active:not(.not-played):not(.no-score) &
+        opacity: 0.6
+@media screen and (width < 768px)
+    .rb-panel
+        margin-bottom: 0.5em
+
+    .ranking-id span
+        font-size: 2.5em
+    .quest-info
+        padding: 0.5em
+
+        .content
+            padding: 0.5em
+            gap: 0.5em
+        .quest-name .sub-name
+            font-size: 0.75em
+        .quest-name .main-name
+            font-size: 1em
+    .tracks-container
+        rb-music-title
+            font-size: 1em
+    .score.wide
+        display: none
+    .quest-score-container-narrow
+        display: flex
+@media (prefers-color-scheme: dark)
+    .color0
+        --background: #1a0909
+        --accent-color: #c35155
+    .color1
+        --background: #000925
+        --accent-color: #0f81cc
+    .color2
+        --background: #001100
+        --accent-color: #1ca64c
+    .color3
+        --background: #110900
+        --accent-color: #ffd324
+    .color4
+        --background: #1a001d
+        --accent-color: #a559ac
+    .score.wide
+        &.not-played
+            background: color-mix(in srgb, var(--rb-chart-color) 8%, #0a0a0a)
+            
+            .chart-score
+                color: color-mix(in srgb, var(--rb-chart-color) 30%, #0a0a0a)
+        .chart-name
+            opacity: 0.08
+        .chart-score
+            opacity: 0.7
+    .score.narrow
+        &.not-played
+            background: color-mix(in srgb, var(--rb-chart-color) 8%, #0a0a0a)
+            color: color-mix(in srgb, var(--rb-chart-color) 30%, #0a0a0a)
+    .hover-background
+        background: #fffa

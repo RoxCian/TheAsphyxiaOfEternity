@@ -27,8 +27,10 @@ export abstract class RbActivatableServiceBase<T> {
     }
     deactivate() {
         this.isActivatedInternal.set(false)
+        this.onDeactivate()
     }
     protected abstract onActivate(): HttpResourceRef<T | undefined>
+    protected abstract onDeactivate(): void
 }
 
 export abstract class RbPlayDataServiceBase<T> extends RbActivatableServiceBase<T[]> {
@@ -41,4 +43,5 @@ export abstract class RbPlayDataServiceBase<T> extends RbActivatableServiceBase<
     protected override onActivate(): HttpResourceRef<T[] | undefined> {
         return this.data
     }
+    protected override onDeactivate() { }
 }

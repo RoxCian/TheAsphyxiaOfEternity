@@ -78,10 +78,10 @@ export class Rb3VerdetDesKriegesService extends RbActivatableServiceBase<Rb3Verd
             else if (data && (data.lastReadChapter !== this.chapterInternal() || data.lastReadPage !== this.pageInternal())) this.navigateTo(data.lastReadChapter, data.lastReadPage)
         })
     }
-    onActivate(): HttpResourceRef<Rb3VerdetDesKriegesResponse | undefined> {
+    protected override onActivate(): HttpResourceRef<Rb3VerdetDesKriegesResponse | undefined> {
         return this.verdetDesKrieges
     }
-
+    protected override onDeactivate() { }
     async navigateTo(chapter: number, page: number) {
         if (this.isLoading()) return
         const pageBackup = this.pageInternal()

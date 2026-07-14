@@ -48,6 +48,9 @@ export namespace C {
         const type = (value as ControllerResult)?.type
         return type && (type === "text" || type === "json" || type === "file" || type === "buffer" || type === "redirect" || type === "error")
     }
+    export function isError(value: unknown): value is ControllerResultError {
+        return !!value && (value as ControllerResult).type === "error"
+    }
     export function route<T>(method: string, c: Controller<T>): void
     export function route<T extends RbRequest>(method: string, c: Controller<T>, checkRid: true): void
     export function route<T>(method: string, c: Controller<T>, checkRid?: boolean): void {

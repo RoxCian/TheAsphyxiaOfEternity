@@ -1,0 +1,48 @@
+@if (service.questRecords.value() && mode() === "story") {
+    <bung-divider class="section-divider" prompt="Story progress" />
+    @switch (service.reflesia.value()?.storyProgress) {
+        @case (0) { <p class="progress-text title">Chapter 1</p> }
+        @case (1) { <p class="progress-text title">Chapter 2</p> }
+        @case (2) { <p class="progress-text title">Chapter 3</p> }
+        @case (3) { <p class="progress-text title">Prepare to face the evil lord</p> }
+        @case (4) { <p class="progress-text title">All completed!</p> }
+    }
+    @for (chapter of service.groupedByChapter() | key; track chapter) {
+        @switch (`${chapter}`) {
+            @case ("0") { <bung-divider class="section-divider" prompt="Chapter 1: Where the story begins" /> }
+            @case ("1") { <bung-divider class="section-divider" prompt="Chapter 2: The light of hope" /> }
+            @case ("2") { <bung-divider class="section-divider" prompt="Chapter 3: The evil lord" /> }
+        }
+        <div class="rb-list">
+            @for (group of service.groupedByChapter()[chapter]; track group.quest.questId) {
+                <rb6-reflesia-quest-group-card [group]="group" />
+            }
+        </div>
+    }
+    <bung-divider class="section-divider" prompt="End of The Reflesia story" />
+} @else if (service.questRecords.value() && mode() === "hunting") {
+    <bung-divider class="section-divider" prompt="Hunting quests" />
+    <div class="rb-list">
+        @for (group of service.huntingQuestRecords(); track group.quest.questId) {
+            <rb6-reflesia-quest-group-card [group]="group" />
+        }
+    </div>
+    <bung-divider class="section-divider" prompt="End of hunting quests" />
+} @else if (service.questRecords.value() && mode() === "challenge") {
+    @for (c of service.challengeQuestRecords() | key; track c) {
+        @if (`${c}` === "43") { <bung-divider class="section-divider" prompt="Tower of lament" /> }
+        @else if (`${c}` === "49") { <bung-divider class="section-divider" prompt="Tower of ruin" /> }
+        @for (group of service.challengeQuestRecords()[c]; track group.quest.questId) {
+            <rb6-reflesia-quest-group-card [group]="group" isExpanded />
+        }
+    }
+    <bung-divider class="section-divider" prompt="End of challenge quests" />
+} @else if (service.questRecords.value() && mode() === "ranking") {
+    <bung-divider class="section-divider" prompt="Ranking quests" />
+    <div class="rb-list ranking-quests">
+        @for (quest of (service.rankingQuestRecords.value() ?? []); track quest.rankingId) {
+            <rb6-reflesia-quest [quest]="quest" isExpanded />
+        }
+    </div>
+    <bung-divider class="section-divider" prompt="End of ranking quests" />
+} 

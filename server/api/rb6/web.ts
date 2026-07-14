@@ -3,7 +3,7 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfo, findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerCustom, Rb6PlayerReleasedInfo, Rb6PlayerStageLog, Rb6QuestRecord } from "../../models/rb6/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse, RbChartInfo, Rb6QuestResponse, Rb6QuestType, Rb6QuestRecordResponse, Rb6ReflesiaResponse, Rb6ReflesiaStoryProgress } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse, RbChartInfo, Rb6QuestRecordResponse, Rb6QuestType, Rb6QuestRecordResponseElement, Rb6ReflesiaResponse, Rb6ReflesiaStoryProgress } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { rb6PastelLevel } from "../../data/tables/rb6_pastel_level"
 import { Rb6MusicRecord } from "../../models/rb6/music_record"
@@ -20,6 +20,7 @@ import { Rb6CharacterCard } from "../../models/rb6/character_card"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { rb6DungeonsInfo, rb6Quests, rb6QuestsInfo } from "../../data/tables/rb6_quests"
+import { tryFindMusicResponse } from "../shared_web/musics"
 
 type V = 6
 const version = 6 as const
@@ -34,9 +35,9 @@ export function registerRb6Controllers() {
     C.route("rb6ReadQuestRecords", readQuestRecords, true)
     C.route("rb6ReadRankingQuestRecords", readRankingQuestRecords, true)
     C.route("rb6ReadAvailableItems", readAvailableItems, true)
-    C.route("rb6ReadRankingQuests", readRankingQuests, true)
-    C.route("rb6ReadEquips", readEquips, true)
-    C.route("rb6ReadCharacterCards", readCharacterCards, true)
+    C.route("rb6ReadRankingQuests", readRankingQuests)
+    C.route("rb6ReadEquips", readEquips)
+    C.route("rb6ReadCharacterCards", readCharacterCards)
     C.route("rb6ReadSettings", readSettings, true)
     C.route("rb6WriteSettings", writeSettings, true)
     C.route("rb6RequestAsphyxia", requestAsphyxia, true)
@@ -171,18 +172,18 @@ const readReflesia: C.C<RbRequest, Rb6ReflesiaResponse> = async data => {
         rankingQuestSelected: misc?.rankingQuestIndex ?? 0
     }
 }
-const readQuestRecords: C.C<RbRequest, Rb6QuestResponse[]> = async data => {
+const readQuestRecords: C.C<RbRequest, Rb6QuestRecordResponse[]> = async data => {
     const quests = await rb6Quests
     const questsInfo = await rb6QuestsInfo
     const dungeonsInfo = await rb6DungeonsInfo
     const records = await DBH.find<Rb6QuestRecord>(data.rid, { collection: "rb.rb6.playData.quest", dungeonId: { $ne: 47 } })
-    const result: Rb6QuestResponse[] = []
+    const result: Rb6QuestRecordResponse[] = []
     for (const dungeon of dungeonsInfo) {
         const quest = quests.find(q => q.dungeonId === dungeon.dungeonId)
         if (!quest) continue
         const questInfo = questsInfo.find(q => q.questId === quest?.questId)
         if (!questInfo) continue
-        const isUnlocked = records.find(r => r.dungeonId === dungeon.dungeonId) || dungeon.dungeonsIdToUnlock.every(i => records.find(r => r.dungeonId === i && r.isCleared))
+        const isUnlocked = records.find(r => r.dungeonId === dungeon.dungeonId) || dungeon.dungeonsIdToUnlock.length === 0 || dungeon.dungeonsIdToUnlock.every(i => records.find(r => r.dungeonId === i && r.isCleared))
         if (!isUnlocked) continue
         const dungeonRecords = quest.questType === Rb6QuestType.challenge ?
             [await toQuestRecordResponse(records.find(r => r.dungeonId === dungeon.dungeonId))] :
@@ -197,25 +198,29 @@ const readQuestRecords: C.C<RbRequest, Rb6QuestResponse[]> = async data => {
     }
     return result
 }
-const readRankingQuestRecords: C.C<RbRequest, Rb6QuestResponse[]> = async data => {
-    const quest = (await rb6Quests).find(i => i.dungeonId === 47)!
+const readRankingQuestRecords: C.C<RbRequest, Rb6QuestRecordResponse[]> = async data => {
     const dungeon = (await rb6DungeonsInfo).find(i => i.dungeonId === 47)!
-    const questInfo = (await rb6QuestsInfo).find(i => i.questId === quest?.questId)!
+    const questInfo = (await rb6QuestsInfo).find(i => i.questId === 22)!
     const rankingQuests = await rb6RankingQuests
     const records = await DBH.find<Rb6QuestRecord>(data.rid, { collection: "rb.rb6.playData.quest", dungeonId: 47 })
-    const result: Rb6QuestResponse[] = []
+    const result: Rb6QuestRecordResponse[] = []
     for (const q of rankingQuests) {
+        const music0 = await tryFindMusicResponse(6, q.musicId0)
+        const music1 = await tryFindMusicResponse(6, q.musicId1)
+        const music2 = await tryFindMusicResponse(6, q.musicId2)
+        if (!music0 || !music1 || !music2) continue 
         const dungeonRecords = await Promise.all([0, 1, 2].map(g => toQuestRecordResponse(records.find(r => r.dungeonId === 47 && r.dungeonGrade === g && r.rankingId === q.rankingId))))
         result.push({
             quest: questInfo,
             dungeon,
             rankingId: q.rankingId,
+            musics: [music0, music1, music2],
             charts: [
                 { musicId: q.musicId0, chartType: q.chartType0 },
                 { musicId: q.musicId1, chartType: q.chartType1 },
                 { musicId: q.musicId2, chartType: q.chartType2 }
             ],
-            questType: quest.questType,
+            questType: Rb6QuestType.ranking,
             records: dungeonRecords
         })
     }
@@ -237,8 +242,8 @@ const readAvailableItems: C.C<RbRequest, RbAvailableItemResponse[]> = async data
 
     return result
 }
-const readEquips: C.C<{}, Rb6EquipmentInfo[]> = () => rb6Equips
-const readCharacterCards: C.C<{}, Rb6CharacterCardInfo[]> = () => rb6CharacterCards
+const readEquips: C.C<undefined, Rb6EquipmentInfo[]> = () => rb6Equips
+const readCharacterCards: C.C<undefined, Rb6CharacterCardInfo[]> = () => rb6CharacterCards
 
 const asphyxiaUploadSessionsContent: Record<string, { profileData: Buffer, profileProgress: number, scoresData: Buffer, scoresProgress: number }> = {}
 
@@ -484,7 +489,7 @@ const rb6SettingsFactory: RbSettingsFactory<Rb6SettingsResponse, Rb6SettingsCont
 const readSettings: C.C<RbRequest, Rb6SettingsResponse> = data => readSettingsUsingFactory(data.rid, rb6SettingsFactory)
 const writeSettings: C.C<RbRequest & Rb6SettingsResponse, RbWriteSettingsResponse> = data => writeSettingsUsingFactory(data.rid, data, rb6SettingsFactory)
 
-const readRankingQuests: C.C<{}, Rb6RankingQuestResponse[]> = async () => {
+const readRankingQuests: C.C<undefined, Rb6RankingQuestResponse[]> = async () => {
     const quests = await rb6RankingQuests
     return quests.map(q => ({
         id: q.rankingId,
@@ -530,7 +535,7 @@ async function toStageLogResponse(l: Rb6PlayerStageLog): Promise<RbStageLogRespo
         time: new Date(l.time * 1000)
     }
 }
-async function toQuestRecordResponse(record: Rb6QuestRecord | undefined): Promise<Rb6QuestRecordResponse | undefined> {
+async function toQuestRecordResponse(record: Rb6QuestRecord | undefined): Promise<Rb6QuestRecordResponseElement | undefined> {
     if (!record) return undefined
     return {
         dungeonGrade: record.dungeonGrade,

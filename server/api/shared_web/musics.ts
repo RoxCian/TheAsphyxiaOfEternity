@@ -9,16 +9,27 @@ export function registerMusicsController() {
     C.route("rbReadMusics", readMusics)
 }
 
-const readMusic: C.C<{ version: RbVersion, musicId: number }, RbMusicResponse<RbVersion>> = async data => {
-    const musicUid = (await rbMusicId).find(i => i.version === data.version && i.musicId === data.musicId)?.musicUid
-    if (!musicUid) return C.error(404, "Music not found")
+export async function tryFindMusicResponse<TVersion extends RbVersion>(version: TVersion, musicId: number): Promise<RbMusicResponse<TVersion> | undefined> {
+    try {
+        return await findMusicResponse(version, musicId)
+    } catch {
+        return undefined
+    }
+}
+export async function findMusicResponse<TVersion extends RbVersion>(version: TVersion, musicId: number): Promise<RbMusicResponse<TVersion>> {
+    const musicUid = (await rbMusicId).find(i => i.version === version && i.musicId === musicId)?.musicUid
+    if (!musicUid) throw new Error("Music not found")
     const music = (await rbMusicInfo).find(i => i.musicUid === musicUid)
-    if (!music) return C.error(404, "Music info not found")
-    const charts = (await rbChartInfo).filter(i => i.version === data.version && i.musicId === data.musicId).sort((l, r) => l.chartType - r.chartType) as RbChartsInfo<RbVersion>
-    return {
-        version: data.version,
-        musicId: data.musicId,
-        music, charts
+    if (!music) throw new Error("Music info not found")
+    const charts = (await rbChartInfo).filter(i => i.version === version && i.musicId === musicId).sort((l, r) => l.chartType - r.chartType) as unknown as RbChartsInfo<TVersion>
+    return { version, musicId, music, charts }
+}
+
+const readMusic: C.C<{ version: RbVersion, musicId: number }, RbMusicResponse<RbVersion>> = async data => {
+    try {
+        return await findMusicResponse(data.version, data.musicId)
+    } catch (ex) {
+        if (ex instanceof Error) return C.error(404, ex.message)
     }
 }
 const readMusics: C.C<{ version: RbVersion }, RbMusicResponse<RbVersion>[]> = async data => {

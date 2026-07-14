@@ -1,0 +1,62 @@
+@let q = quest();
+@let slots = q.questType === 3 ? 1 : 3;
+<div class="card rb-panel color{{ q.dungeon.element }}" [class.auto-height]="q.rankingId >= 0">
+    @if (q.rankingId >= 0) {
+        <div class="ranking-id">
+            <span>Group {{ q.rankingId + 1 }}</span>
+        </div>
+    }
+    <div class="quest-info">
+        @if (q.rankingId >= 0) {
+            <div class="tracks-container">
+                <div class="track-detail">
+                    <div class="tag">ROUND 1</div>
+                    <rb-music-title [music]="q.musics![0]!.music" />
+                </div>
+                <div class="track-detail">
+                    <div class="tag">ROUND 2</div>
+                    <rb-music-title [music]="q.musics![1]!.music" />
+                </div>
+                <div class="track-detail">
+                    <div class="tag">ROUND 3</div>
+                    <rb-music-title [music]="q.musics![2]!.music" />
+                </div>
+            </div>
+        } @else {
+            <div class="quest-name">
+                @if (questNameSub()) { <bung-marquee class="sub-name" content="{{ questNameSub() }}" [spacing]="72" [delay]="1500" /> }
+                <bung-marquee class="main-name" content="{{ questNameMain() }}" [spacing]="72" [delay]="1500" />
+            </div>
+            @if (q.questType === 3) {
+                <rb6-reflesia-buffs-list [buffs]="q.dungeon.buffs" />
+            }
+        }
+    </div>
+</div>
+@for (t of slots | range; track t) {
+    <div class="card score wide rb-panel"
+        [class.not-played]="!q.records[t]" [class.no-score]="q.records[t]?.score == undefined" [class.auto-height]="q.rankingId >= 0"
+        [rbChartType]="q.questType === 3 ? 3 : t" [version]="6"
+        bungBreakpoint="mobile"
+        (click)="q.records[t]?.score != undefined ? onShowPopup(t) : undefined">
+        <p class="chart-name is-size-7 heading">
+            {{ q.questType === 3 ? "Challenge" : (t | rbChartTypeLiteral : 6) }}
+        </p>
+        <p class="chart-score {{ q.records[t]?.score != undefined ? 'is-size-4' : 'is-size-7' }}">
+            <span>
+                {{ !q.records[t] ? "\<Not Played\>" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "\<Cleared\>" : "\<Failed\>" : q.records[t]?.score }}
+            </span>
+        </p>
+        <div class="hover-background"></div>
+    </div>
+}
+<div class="quest-score-container-narrow">
+    @for (t of slots | range; track t) {
+        <div class="card score narrow is-size-7 rb-panel" [class.not-played]="!q.records[t]" [class.no-score]="q.records[t]?.score == undefined" [rbChartType]="q.questType === 3 ? 3 : t" [version]="6" (click)="q.records[t]?.score != undefined ? onShowPopup(t) : undefined">
+            <p class="chart-score">
+                {{ !q.records[t] ? "<?>" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "<√>" : "<×>" : q.records[t]?.score }}
+            </p>
+            <div class="hover-background"></div>
+        </div>
+    }
+</div>

@@ -24,6 +24,7 @@ export enum Rb6EquipmentPart {
 export type Rb6QuestInfo = {
     questId: number
     chapter: number
+    questType: Rb6QuestType
     questName: string
     questNameOrig?: string
     element: Rb6CharacterCardElement
@@ -37,7 +38,7 @@ export type Rb6DungeonInfo = {
     buffs: Rb6DungeonBuffFlag
 }
 export enum Rb6QuestType {
-    none, story, hunting, challenge
+    none, story, hunting, challenge, ranking
 }
 
 export type Rb6PastelLevel = {

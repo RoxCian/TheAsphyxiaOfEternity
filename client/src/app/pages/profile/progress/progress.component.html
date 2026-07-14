@@ -50,17 +50,17 @@
         </bung-tabs>
     } @else if (v === 6) {
         <bung-tabs>
-            <bung-tab index="reflesia-story" header="Reflesia - Story" (activated)="onActivate()">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="reflesia-story" header="Reflesia - Story" (activated)="onActivate('rb6Reflesia', $event)">
+                <rb6-reflesia mode="story" />
             </bung-tab>
-            <bung-tab index="reflesia-hunting" header="Reflesia - Hunting Quests" (activated)="onActivate()">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="reflesia-hunting" header="Reflesia - Hunting Quests" (activated)="onActivate('rb6Reflesia', $event)">
+                <rb6-reflesia mode="hunting" />
             </bung-tab>
-            <bung-tab index="reflesia-challenge" header="Reflesia - Challenge Quests" (activated)="onActivate()">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="reflesia-challenge" header="Reflesia - Challenge Quests" (activated)="onActivate('rb6Reflesia', $event)">
+                <rb6-reflesia mode="challenge" />
             </bung-tab>
-            <bung-tab index="reflesia-ranking" header="Reflesia - Ranking Quests" (activated)="onActivate()">
-                <lets-play icon="hard-hat" text="Under Construction..." />
+            <bung-tab index="reflesia-ranking" header="Reflesia - Ranking Quests" (activated)="onActivate('rb6Reflesia', $event)">
+                <rb6-reflesia mode="ranking"/>
             </bung-tab>
         </bung-tabs>
     }

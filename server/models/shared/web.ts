@@ -305,23 +305,24 @@ export type Rb6ReflesiaResponse = {
 export enum Rb6ReflesiaStoryProgress {
     chapter1, chapter2, chapter3, throne, completed
 }
-export type Rb6QuestRecordResponse = {
+export type Rb6QuestRecordResponseElement = {
     dungeonGrade: number
     clearCount: number
     playCount: number
     isCleared: boolean
-    score: number
-    lastPlayTime: Date
-    updateTime: Date
+    score?: number
+    lastPlayTime?: Date
+    updateTime?: Date
     stageLogs?: RbStageLogResponse<6, Rb6ChartType>[]
 }
-export type Rb6QuestResponse = {
+export type Rb6QuestRecordResponse = {
     dungeon: Rb6DungeonInfo
     quest: Rb6QuestInfo
     questType: Rb6QuestType
     rankingId: number
+    musics?: [RbMusicResponse<6>, RbMusicResponse<6>, RbMusicResponse<6>]
     charts?: [Rb6RankingQuestChart, Rb6RankingQuestChart, Rb6RankingQuestChart]
-    records: (Rb6QuestRecordResponse | undefined)[]
+    records: (Rb6QuestRecordResponseElement | undefined)[]
 }
 
 export function createRbSettingsResponse<TVersion extends RbVersion>(version: TVersion): RbSettingsResponse<TVersion> {

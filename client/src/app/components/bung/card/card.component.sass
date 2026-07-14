@@ -10,13 +10,15 @@ bung-card
         overflow: clip
         cursor: pointer
         transition: transform var(--animation-duration-lv3) cubic-bezier(0, 0.055, 0, 1)
+        z-index: 1
 
         .card-header-chevron
             margin-left: 0.5em
+            transform: rotate(180deg)
             transition: transform var(--animation-duration-lv2) var(--ease-in)
 
         &.is-folded .card-header-chevron
-            transform: rotate(180deg)
+            transform: none
 
         &.is-mobile
             .card-header-title, .card-header-icon

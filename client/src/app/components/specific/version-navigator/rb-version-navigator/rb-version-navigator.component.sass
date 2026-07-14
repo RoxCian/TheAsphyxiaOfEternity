@@ -14,6 +14,18 @@
     padding-left: 1em
     z-index: 1
 
+    &::after
+        content: ""
+        position: absolute
+        inset: 0
+        border-radius: 9999px
+        background: color-mix(in srgb, transparent 70%, var(--black-text))
+        opacity: 0
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        pointer-events: none
+        user-select: none
+        z-index: 1
+
     &.background-border
         // margin: -0.125em
         // width: calc(100% + 0.25em)
@@ -27,6 +39,10 @@
         pointer-events: none
         user-select: none
     
+    :host:not(.is-loading) &:hover::after, :host:not(.is-loading) &.is-active::after
+        opacity: 0.1
+    :host:not(.is-loading) &:active::after
+        opacity: 0.3
 
     :host:not(.is-loading) &:not(.normal-style):focus, :host:not(.is-loading) &:not(.normal-style).is-active
         border-color: #fff7
@@ -36,7 +52,7 @@
             opacity: 1
             transform: none
 
-    &:focus:not(.is-loading):not(.is-disabled) .dropdown-trigger, &:not(.is-loading):not(.is-disabled) .dropdown-trigger.is-active
+    :host:focus:not(.is-loading) , :host:not(.is-loading) &.is-active
         .tail-icon-grid i.dropdown-item-chevron
             transform: rotate(3.14rad)
 .dropdown-trigger-content

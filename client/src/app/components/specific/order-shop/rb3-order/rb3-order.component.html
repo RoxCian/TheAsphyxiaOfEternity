@@ -41,8 +41,8 @@
                             </button>
                         }
                     </div>
-                    <div class="order-hint is-size-7">
-                        <p>{{ o.info | rbText : "hint" }}</p>
+                    <div class="order-hint">
+                        <p class="is-size-7">{{ o.info | rbText : "hint" }}</p>
                         <div class="reward-info">
                             <span class="tag leading-tag">Reward</span>
                             <span class="is-size-7">{{ o.info | rbText : "clearRewardName" }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}</span>

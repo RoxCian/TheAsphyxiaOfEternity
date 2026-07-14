@@ -6,7 +6,7 @@ function toHalfWidth(s: string) {
     for (let i = 0; i < s.length; i++) {
         let cc = s.charCodeAt(i)
         if ((cc >= 65281) && (cc <= 65374)) resultCharCodes.push(cc - 65281 + 33)
-        else if (cc == 12288) resultCharCodes.push(32) // Full-width space
+        else if (cc === 12288) resultCharCodes.push(32) // Full-width space
         else resultCharCodes.push(cc)
     }
     return String.fromCharCode(...resultCharCodes)

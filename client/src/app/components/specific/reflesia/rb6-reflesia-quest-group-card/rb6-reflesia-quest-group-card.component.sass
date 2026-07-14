@@ -1,0 +1,56 @@
+.color0
+    --background: #fffafa
+    --accent-color: #e5676a
+    --accent-text-color: white
+.color1
+    --background: #f2ffff
+    --accent-color: #209cee
+    --accent-text-color: white
+.color2
+    --background: #f0fff4
+    --accent-color: #23d160
+    --accent-text-color: white
+.color3
+    --background: #ffffea
+    --accent-color: #ffdd57
+    --accent-text-color: var(--black-text)
+.color4
+    --background: #fff9ff
+    --accent-color: #c36fcb
+    --accent-text-color: white
+::ng-deep bung-card .card-content-wrapper
+    padding: 2em
+p.sub-name
+    opacity: 0.7
+    font-size: 0.75em
+    font-weight: normal
+    letter-spacing: 1px
+    text-transform: uppercase
+.rb-list
+    display: flex
+    flex-direction: column
+    gap: 2em
+@media screen and (width < 768px)
+    ::ng-deep bung-card .card-content-wrapper
+        padding: 0.5em
+    p.main-name
+        font-size: 1rem !important
+    rb6-reflesia-quest:last-child
+        margin-bottom: 1em
+
+@media (prefers-color-scheme: dark)
+    .color0
+        --background: #1a0909
+        --accent-color: #c35155
+    .color1
+        --background: #000925
+        --accent-color: #0f81cc
+    .color2
+        --background: #001100
+        --accent-color: #1ca64c
+    .color3
+        --background: #110900
+        --accent-color: #ffd324
+    .color4
+        --background: #1a001d
+        --accent-color: #a559ac

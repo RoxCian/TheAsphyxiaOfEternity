@@ -75,8 +75,10 @@ import { Rb2GlassListComponent } from '../components/specific/glass-list/rb2-gla
 import { Rb2GlassComponent } from '../components/specific/glass-list/rb2-glass/rb2-glass.component';
 import { Rb3OrderShopComponent } from '../components/specific/order-shop/rb3-order-shop/rb3-order-shop.component';
 import { Rb3OrderComponent } from '../components/specific/order-shop/rb3-order/rb3-order.component';
-import { Rb6ReflesiaQuestListComponent } from '../components/specific/reflesia-quest/rb6-reflesia-quest-list/rb6-reflesia-quest-list.component';
-import { Rb6ReflesiaQuestComponent } from '../components/specific/reflesia-quest/rb6-reflesia-quest/rb6-reflesia-quest.component'
+import { Rb6ReflesiaComponent } from '../components/specific/reflesia/rb6-reflesia/rb6-reflesia.component';
+import { Rb6ReflesiaQuestComponent } from '../components/specific/reflesia/rb6-reflesia-quest/rb6-reflesia-quest.component';
+import { Rb6ReflesiaQuestGroupCardComponent } from '../components/specific/reflesia/rb6-reflesia-quest-group-card/rb6-reflesia-quest-group-card.component';
+import { Rb6ReflesiaBuffsListComponent } from '../components/specific/reflesia/rb6-reflesia-buffs-list/rb6-reflesia-buffs-list.component';
 
 @NgModule({
     declarations: [
@@ -151,8 +153,10 @@ import { Rb6ReflesiaQuestComponent } from '../components/specific/reflesia-quest
         Rb2GlassComponent,
         Rb3OrderShopComponent,
         Rb3OrderComponent,
-        Rb6ReflesiaQuestListComponent,
-        Rb6ReflesiaQuestComponent
+        Rb6ReflesiaComponent,
+        Rb6ReflesiaQuestComponent,
+        Rb6ReflesiaQuestGroupCardComponent,
+        Rb6ReflesiaBuffsListComponent,
     ],
     imports: [
         CommonModule,
