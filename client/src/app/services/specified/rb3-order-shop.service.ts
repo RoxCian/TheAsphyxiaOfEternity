@@ -23,7 +23,7 @@ export class Rb3OrderShopService extends RbActivatableServiceBase<Rb3OrderShopRe
     }, {} as Record<Rb3OrderType, Rb3OrderResponse[]>) ?? {})
     readonly clearedOrderCount = computed(() => this.orderShop.value()?.details.reduce((prev, next) => next.clearedCount > 0 ? prev + 1 : prev, 0) ?? 0)
     readonly firstEmptySlot = computed(() => {
-        const slotVisited = new Array(this.maxSlots).map(() => false)
+        const slotVisited = new Array(this.maxSlots()).map(() => false)
         for (const d of this.orderShop.value()?.details ?? []) {
             if (d.slot >= 0) slotVisited[d.slot] = true
         }

@@ -1,25 +1,28 @@
 .color0
-    --background: #fffafa
+    // fallback of l = 0.95 in oklch
+    --background: #ffe3e1
     --accent-color: #e5676a
     --accent-text-color: white
 .color1
-    --background: #f2ffff
+    --background: #d4f3ff
     --accent-color: #209cee
     --accent-text-color: white
 .color2
-    --background: #f0fff4
+    --background: #b2ffc0
     --accent-color: #23d160
     --accent-text-color: white
 .color3
-    --background: #ffffea
+    --background: #ffed74
     --accent-color: #ffdd57
     --accent-text-color: var(--black-text)
 .color4
-    --background: #fff9ff
+    --background: #ffdfff
     --accent-color: #c36fcb
     --accent-text-color: white
 ::ng-deep bung-card .card-content-wrapper
     padding: 2em
+::ng-deep bung-card .card-header
+    background: linear-gradient(in display-p3 to right, transparent 50%, var(--background) 100%)
 p.sub-name
     opacity: 0.7
     font-size: 0.75em

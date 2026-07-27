@@ -9,6 +9,7 @@ export type Rb3OrderInfo = {
     fragmentNameOrig: string
     orderType: Rb3OrderType
     fragmentCount: number
+    clearRewardType: Rb3OrderClearRewardType
     clearRewardName: string
     clearRewardNameOrig: string
     firstClearRewardAmount: number
@@ -43,7 +44,11 @@ export type Rb3OrderShopLevel = {
 export enum Rb3OrderDetailsParamFlag {
     none = 0,
     unlocked = 1,
-    lockedToSlot = 2
+    lockedToSlot = 1 << 1
+}
+
+export enum Rb3OrderClearRewardType {
+    ticket, winter, spring, summer, autumn, head, body, hand, bywordLeft, bywordRight
 }
 
 export type Rb3VerdetDesKriegesPhrasePart = {
@@ -75,7 +80,7 @@ export type Rb3VerdetDesKriegesResponse = {
     page: number
     lastReadChapter: number
     lastReadPage: number
-    progress: [number, number, number, number, number] // max is 15
+    progress: [number, number, number, number, number] // max is 60
 }
 
 export type Rb3VerdetDesKriegesContent = {

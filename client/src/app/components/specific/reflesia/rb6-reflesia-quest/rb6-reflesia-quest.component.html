@@ -23,6 +23,12 @@
                 </div>
             </div>
         } @else {
+            @if (q.records.some(r => r?.isCleared)) {
+                <div class="deco-background" [class.show-mephius]="isShowMephius()" [style.--mephius-url]="`url(static/assets/images/rb6-mephius.webp)`"></div>
+                <div class="deco-background-blur-box">
+                    <div class="deco-background" [class.show-mephius]="isShowMephius()" [style.--mephius-url]="`url(static/assets/images/rb6-mephius.webp)`"></div>
+                </div>
+            }
             <div class="quest-name">
                 @if (questNameSub()) { <bung-marquee class="sub-name" content="{{ questNameSub() }}" [spacing]="72" [delay]="1500" /> }
                 <bung-marquee class="main-name" content="{{ questNameMain() }}" [spacing]="72" [delay]="1500" />

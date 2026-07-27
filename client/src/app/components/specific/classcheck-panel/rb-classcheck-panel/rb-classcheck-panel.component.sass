@@ -14,73 +14,73 @@
     &.hoverable
         cursor: pointer
 
-    .classcheck-name
-        display: flex
-        flex-direction: column
-        flex-wrap: nowrap
-        overflow: hidden
+.classcheck-name
+    display: flex
+    flex-direction: column
+    flex-wrap: nowrap
+    overflow: hidden
 
-        .sub-name
-            font-size: 1em
-            opacity: 0.7
-        .main-name
-            font-size: 2em
-            font-weight: bold
-    .classcheck-clear-info
-        display: flex
-        flex-direction: column
-        z-index: 1
-
-        .sub-info
-            font-size: 1em
-            opacity: 0.7
-            text-align: end
-        .main-info
-            font-size: 2em
-            font-weight: bold
-            text-align: end
-    bung-divider
-        width: 1px
-        height: 100%
-        z-index: 1
-
-    .classcheck-score-info
-        display: grid
-        grid-template: auto 1.25em 1.25em / 5em 5em
-        gap: 0 0.5em
-        z-index: 1
-
-        > *
-            font-size: 0.75em
-            line-height: 1.25em
-        .classcheck-score-info-heading
-            grid-area: 1 / span 2
-            font-size: 2em
-            font-weight: bold
-            justify-self: center
-        .classcheck-ar, .classcheck-score
-            grid-area: 2 / 1
-        .classcheck-play-count
-            grid-area: 2 / 2
-        .classcheck-update
-            grid-area: 3 / 1
-        .classcheck-last-play
-            grid-area: 3 / 2
-    .deco-background
-        position: absolute
-        inset: 0
-        left: min(50%, calc(100% - 16em))
-        mask-image: linear-gradient(to right, transparent, black)
-        background: var(--rb-background)
+    .sub-name
+        font-size: 1em
         opacity: 0.7
-        z-index: 0
-        
-    .deco-background-blur-box
-        position: absolute
-        inset: 0
-        filter: blur(160px)
-    .has-tooltip
-        padding: 0 0.5em
+    .main-name
+        font-size: 2em
+        font-weight: bold
+.classcheck-clear-info
+    display: flex
+    flex-direction: column
+    z-index: 1
+
+    .sub-info
+        font-size: 1em
+        opacity: 0.7
+        text-align: end
+    .main-info
+        font-size: 2em
+        font-weight: bold
+        text-align: end
+bung-divider
+    width: 1px
+    height: 100%
+    z-index: 1
+
+.classcheck-score-info
+    display: grid
+    grid-template: auto 1.25em 1.25em / 5em 5em
+    gap: 0 0.5em
+    z-index: 1
+
+    > *
+        font-size: 0.75em
+        line-height: 1.25em
+    .classcheck-score-info-heading
+        grid-area: 1 / span 2
+        font-size: 2em
+        font-weight: bold
+        justify-self: center
+    .classcheck-ar, .classcheck-score
+        grid-area: 2 / 1
+    .classcheck-play-count
+        grid-area: 2 / 2
+    .classcheck-update
+        grid-area: 3 / 1
+    .classcheck-last-play
+        grid-area: 3 / 2
+.deco-background
+    position: absolute
+    inset: 0
+    left: min(50%, calc(100% - 16em))
+    mask-image: linear-gradient(to right, transparent, black)
+    background: var(--rb-background)
+    opacity: 0.7
+    z-index: 0
+    
+.deco-background-blur-box
+    position: absolute
+    inset: 0
+    filter: blur(160px)
+.has-tooltip
+    padding: 0 0.5em
 .hover-background
     position: absolute
     inset: 0
