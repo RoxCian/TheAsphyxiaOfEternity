@@ -2,6 +2,12 @@
 
   _TODO: Discription to be added._
 
+- v1.3.0
+
+  Fix mylist issues during data migration for RB groovin ~ RB Reflesia. Fix issues of empty mylist on webui.
+
+  Fix webui settings saving. Now webui handler API transfer data in JSON.
+
 - v1.2.0
 
   New profile can be saved now for RB & RB limelight.
