@@ -101,6 +101,10 @@ export function shiftjisToUtf8(str: string): string {
     do {
         let c = buffer.readInt8(i)
         if (c < 0) {
+            if (i >= buffer.byteLength - 1) {
+                // supposed to be an encoding error
+                return ""
+            }
             c = buffer.readUInt16LE(i)
             i = i + 2
         } else i++

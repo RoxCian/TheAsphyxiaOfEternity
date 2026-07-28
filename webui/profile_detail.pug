@@ -2905,7 +2905,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb6Account == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb6UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb6UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb6-edit-settings", ["General", "In-Game", "Misc", "Pastel-kun", "Mylist", "Data"])
         .field
@@ -3003,7 +3003,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
                   .column(style = "padding-left: 0")
                     +selectControl("pastelEquipArm", rb6Base.pastelParts[3], mapItems(arms))(inputclass = "pastel-arm-input", style = "margin-top: 160px;")
           #tab-content(tab-group = "rb6-edit-settings", tab-index = "4")
-            +rb3Mylist(rb6Mylist ? rb6Mylist.mylist : null, 6)
+            +rb3Mylist(rb6Mylist ? rb6Mylist.mylist : [], 6)
           #tab-content(tab-group = "rb6-edit-settings", tab-index = "5")
             +rbExportButton("rb6-savedata-" + refid + "-" + rb6Base.name, "data:text/plain;base64," + getRb6SaveData(), "Will save in json format.")
             //- .field.is-horizontal
@@ -3087,7 +3087,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb5Account == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb5UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb5UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb5-edit-settings", ["General", "In-Game", "Misc", null, "Mylist", "Data"])
         .field
@@ -3128,7 +3128,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
             +rbLobbyToggle(rb5LobbySettings, "Turn on to enable online matching and comment sending / Reftis.")
           #tab-content(tab-group = "rb5-edit-settings", tab-index = "3")
           #tab-content(tab-group = "rb5-edit-settings", tab-index = "4")
-            +rb3Mylist(rb5Mylist ? rb5Mylist.mylist : null, 5)
+            +rb3Mylist(rb5Mylist ? rb5Mylist.mylist : [], 5)
           #tab-content(tab-group = "rb5-edit-settings", tab-index = "5")
             +rbExportButton("rb5-savedata-" + refid + "-" + rb5Base.name, "data:text/plain;base64," + getRb5SaveData(), "Will save in json format.")
         +submitField
@@ -3136,7 +3136,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb4Account == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb4UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb4UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb4-edit-settings", ["General", "In-Game", "Misc", null, "Mylist", "Data"])
         .field
@@ -3173,7 +3173,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
             +rbLobbyToggle(rb4LobbySettings)
           #tab-content(tab-group = "rb4-edit-settings", tab-index = "3")
           #tab-content(tab-group = "rb4-edit-settings", tab-index = "4")
-            +rb3Mylist(rb4Mylist ? rb4Mylist.mylist : null, 4)
+            +rb3Mylist(rb4Mylist ? rb4Mylist.mylist : [], 4)
           #tab-content(tab-group = "rb4-edit-settings", tab-index = "5")
             +rbExportButton("rb4-savedata-" + refid + "-" + rb4Base.name, "data:text/plain;base64," + getRb4SaveData(), "Will save in json format.")
         +submitField
@@ -3181,7 +3181,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb3Account == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb3UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb3UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb3-edit-settings", ["General", "In-Game", "Misc", null, "Mylist", "Data"])
         .field
@@ -3224,7 +3224,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb2Base == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb2UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb2UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb2-edit-settings", ["General", "In-Game", "Misc", "Mylist", "Data"])
         .field
@@ -3348,7 +3348,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
     if rb1Base == null
       +letsPlay
     else
-      form#validatable(method="post" action="/emit/rb1UpdateSettings")
+      form.settings-form#validatable(method="post" action="/emit/rb1UpdateSettings")
         input(type = "hidden", name = "refid", value = refid)
         +tabs("rb1-edit-settings", ["General", "In-Game", "Misc", "Data"])
         .field

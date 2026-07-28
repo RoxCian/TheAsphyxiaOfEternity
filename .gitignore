@@ -16,3 +16,7 @@ dev
 *.tgz
 *.zip
 dist
+
+# v2
+client
+server

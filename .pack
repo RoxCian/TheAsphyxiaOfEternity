@@ -26,3 +26,7 @@ dist
 .gitignore
 .git
 icon.svg
+
+# v2
+client
+server

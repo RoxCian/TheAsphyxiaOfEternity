@@ -4,19 +4,22 @@ import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 
+type Rb1SettingsWebUI = {
+    refid: string
+    name: string
+    comment: string
+    shotSound: string
+    shotVolume: string
+    explodeType: string
+    frameType: string
+    background: string
+    backgroundBrightness: string
+    isLobbyEnabled?: string
+}
+
 export namespace Rb1HandlersWebUI {
-    export const updateSettings = async (data: {
-        refid: string
-        name: string
-        comment: string
-        shotSound: number
-        shotVolume: number
-        explodeType: number
-        frameType: number
-        background: number
-        backgroundBrightness: number
-        isLobbyEnabled?: string
-    }) => {
+    export const updateSettings = async (dataJSON: string) => {
+        let data: Rb1SettingsWebUI = JSON.parse(dataJSON)
         try {
             let base = await DB.FindOne<IRb1PlayerBase>(data.refid, { collection: "rb.rb1.player.base" })
             let custom = await DB.FindOne<IRb1PlayerCustom>(data.refid, { collection: "rb.rb1.player.custom" })
@@ -30,12 +33,12 @@ export namespace Rb1HandlersWebUI {
 
             lobbySettings.isEnabled = data.isLobbyEnabled != null
 
-            custom.stageShotSound = data.shotSound
-            custom.stageShotVolume = data.shotVolume
-            custom.stageExplodeType = data.explodeType
-            custom.stageFrameType = data.frameType
-            custom.stageBackground = data.background
-            custom.stageBackgroundBrightness = data.backgroundBrightness
+            custom.stageShotSound = parseInt(data.shotSound)
+            custom.stageShotVolume = parseInt(data.shotVolume)
+            custom.stageExplodeType = parseInt(data.explodeType)
+            custom.stageFrameType = parseInt(data.frameType)
+            custom.stageBackground = parseInt(data.background)
+            custom.stageBackgroundBrightness = parseInt(data.backgroundBrightness)
 
             await DBM.update(data.refid, { collection: "rb.rb1.player.custom" }, custom)
             await DBM.upsert(null, { collection: "rb.rb1.player.lobbySettings#userId", userId: base.userId }, lobbySettings)

@@ -4,25 +4,28 @@ import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 
+type Rb2SettingsWebUI = {
+    refid: string
+    name: string
+    comment: string
+    bywordLeft: string
+    bywordRight: string
+    isAutoBywordLeft?: string
+    isAutoBywordRight?: string
+    mainGaugeType: string
+    shotSound: string
+    shotVolume: string
+    explodeType: string
+    frameType: string
+    background: string
+    backgroundBrightness: string
+    mylistMusicId: string
+    isLobbyEnabled?: string
+}
+
 export namespace Rb2HandlersWebUI {
-    export const updateSettings = async (data: {
-        refid: string
-        name: string
-        comment: string
-        bywordLeft: number
-        bywordRight: number
-        isAutoBywordLeft: boolean
-        isAutoBywordRight: boolean
-        mainGaugeType: number
-        shotSound: number
-        shotVolume: number
-        explodeType: number
-        frameType: number
-        background: number
-        backgroundBrightness: number
-        mylistMusicId: string
-        isLobbyEnabled?: string
-    }) => {
+    export const updateSettings = async (dataJSON: string) => {
+        let data: Rb2SettingsWebUI = JSON.parse(dataJSON)
         try {
             let opm = new DBM.DBOperationManager()
             let base = await DB.FindOne<IRb2PlayerBase>(data.refid, { collection: "rb.rb2.player.base" })
@@ -35,22 +38,22 @@ export namespace Rb2HandlersWebUI {
                 opm.update(data.refid, { collection: "rb.rb2.player.base" }, base)
             }
 
-            custom.byword = [data.bywordLeft, data.bywordRight]
-            custom.isAutoByword = [data.isAutoBywordLeft, data.isAutoBywordRight]
-            custom.gaugeStyle = data.mainGaugeType
-            custom.stageShotSound = data.shotSound
-            custom.stageShotVolume = data.shotVolume
-            custom.stageExplodeType = data.explodeType
-            custom.stageFrameType = data.frameType
-            custom.stageBackground = data.background
-            custom.stageBackgroundBrightness = data.backgroundBrightness
+            custom.byword = [JSON.parse(data.bywordLeft), JSON.parse(data.bywordRight)]
+            custom.isAutoByword = [data.isAutoBywordLeft == "1" || data.isAutoBywordLeft?.toLowerCase() == "true", data.isAutoBywordRight == "1" || data.isAutoBywordRight?.toLowerCase() == "true"]
+            custom.gaugeStyle = JSON.parse(data.mainGaugeType)
+            custom.stageShotSound = JSON.parse(data.shotSound)
+            custom.stageShotVolume = JSON.parse(data.shotVolume)
+            custom.stageExplodeType = JSON.parse(data.explodeType)
+            custom.stageFrameType = JSON.parse(data.frameType)
+            custom.stageBackground = JSON.parse(data.background)
+            custom.stageBackgroundBrightness = JSON.parse(data.backgroundBrightness)
 
             lobbySettings.isEnabled = data.isLobbyEnabled != null
 
             let mylist: IRb2Mylist = { collection: "rb.rb2.player.mylist", slot: [] }
             let parsedMylistMusicId: number[] = JSON.parse(data.mylistMusicId)
-            for (let i = 0; i < parsedMylistMusicId.length; i++) if (parsedMylistMusicId[i] >= 0) mylist.slot.push({ slotId: i, musicId: parsedMylistMusicId[i] })
-            if (mylist.slot.length == 0) delete mylist.slot
+            for (let i = 0; i < parsedMylistMusicId.length; i++) if (parsedMylistMusicId[i] >= 0) mylist.slot!.push({ slotId: i, musicId: parsedMylistMusicId[i] })
+            if (mylist.slot!.length == 0) delete mylist.slot
 
             opm.update(data.refid, { collection: "rb.rb2.player.custom" }, custom)
             opm.upsert(data.refid, { collection: "rb.rb2.player.mylist" }, mylist)

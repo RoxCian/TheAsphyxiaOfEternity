@@ -3,7 +3,7 @@ import { getExampleEventControl, Rb4EventControlMap } from "../../models/rb4/eve
 import { initializePlayer } from "./initialize_player"
 import { generateRb4MusicRecord, IRb4MusicRecord, Rb4MusicRecordMap, Rb4OldMusicRecordMap } from "../../models/rb4/music_record"
 import { IRb4Mylist } from "../../models/rb4/mylist"
-import { generateRb4Episode, IRb4Episode, IRb4Player, IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerClasscheckLog, IRb4PlayerConfig, IRb4PlayerCustom, IRb4PlayerParameters, IRb4PlayerReleasedInfo, IRb4PlayerStageLog, IRb4Quest, IRb4Stamp, Rb4EpisodeMap, Rb4PlayerReadMap, Rb4PlayerReleasedInfoMap, Rb4PlayerWriteMap } from "../../models/rb4/profile"
+import { generateRb4Episode, generateRb4Stamp, IRb4Episode, IRb4Player, IRb4PlayerAccount, IRb4PlayerBase, IRb4PlayerClasscheckLog, IRb4PlayerConfig, IRb4PlayerCustom, IRb4PlayerParameters, IRb4PlayerReleasedInfo, IRb4PlayerStageLog, IRb4Quest, IRb4Stamp, Rb4EpisodeMap, Rb4PlayerReadMap, Rb4PlayerReleasedInfoMap, Rb4PlayerWriteMap } from "../../models/rb4/profile"
 import { KRb4ShopInfo } from "../../models/rb4/shop_info"
 import { KITEM2, KObjectMappingRecord, mapBackKObject, mapKObject, toBigInt } from "../../utility/mapping"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
@@ -150,6 +150,10 @@ export namespace Rb4HandlersCommon {
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
 
+            stamp ??= generateRb4Stamp()
+            stamp.magic ??= BigInt(0)
+            stamp.area ??= BigInt(0)
+
             if (episode == null) episode = generateRb4Episode(account.userId)
             if (episode.text == null) episode.text = ""
 
@@ -168,7 +172,7 @@ export namespace Rb4HandlersCommon {
                     released: (released.length > 0) ? { info: released } : <any>{},
                     announce: {},
                     playerParam: (playerParam.length > 0) ? { item: playerParam } : <any>{},
-                    mylist: { list: mylist },
+                    mylist: (mylist == null) ? {} : { list: mylist },
                     musicRankPoint: {},
                     ghost: {},
                     ghostWinCount: {},

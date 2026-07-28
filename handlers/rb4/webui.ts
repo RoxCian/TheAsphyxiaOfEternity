@@ -5,34 +5,36 @@ import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 
+type Rb4SettingsWebUI = {
+    refid: string
+    name: string
+    comment: string
+    gaugeType: string
+    mainGaugeType: string
+    achievementRateDisplayingType: string
+    objectSize: string
+    sameTimeObjectsDisplayingType: string
+    shotSound: string
+    shotVolume: string
+    explodeType: string
+    frameType: string
+    background: string
+    backgroundBrightness: string
+    touchMarker: string
+    bywordLeft: string
+    bywordRight: string
+    isAutoBywordLeft?: string
+    isAutoBywordRight?: string
+    isLobbyEnabled?: string
+    pastelEquipHead: string
+    pastelEquipTop: string
+    pastelEquipUnder: string
+    pastelEquipArm: string
+    mylist: string
+}
+
 export namespace Rb4HandlersWebUI {
-    export const updateSettings = async (data: {
-        refid: string
-        name: string
-        comment: string
-        gaugeType: number
-        mainGaugeType: number
-        achievementRateDisplayingType: number
-        objectSize: number
-        sameTimeObjectsDisplayingType: number
-        shotSound: number
-        shotVolume: number
-        explodeType: number
-        frameType: number
-        background: number
-        backgroundBrightness: number
-        touchMarker: number
-        bywordLeft: number
-        bywordRight: number
-        isAutoBywordLeft?: string
-        isAutoBywordRight?: string
-        isLobbyEnabled?: string
-        pastelEquipHead: number
-        pastelEquipTop: number
-        pastelEquipUnder: number
-        pastelEquipArm: number
-        mylist: string
-    }) => {
+    export const updateSettings = async (data: Rb4SettingsWebUI) => {
         try {
             let rb4Account = await DB.FindOne<IRb4PlayerAccount>(data.refid, { collection: "rb.rb4.player.account" })
             let rb4Base = await DB.FindOne<IRb4PlayerBase>(data.refid, { collection: "rb.rb4.player.base" })
@@ -42,35 +44,40 @@ export namespace Rb4HandlersWebUI {
 
             rb4Base.name = data.name.trim()
             rb4Base.comment = data.comment
-            rb4Custom.stageClearGaugeType = data.gaugeType
-            rb4Custom.stageMainGaugeType = data.mainGaugeType
-            rb4Custom.stageAchievementRateDisplayingType = data.achievementRateDisplayingType
-            rb4Custom.stageObjectSize = data.objectSize
-            rb4Custom.stageSameTimeObjectsDisplayingType = data.sameTimeObjectsDisplayingType
-            rb4Custom.stageShotSound = data.shotSound
-            rb4Custom.stageShotVolume = data.shotVolume
-            rb4Custom.stageExplodeType = data.explodeType
-            rb4Custom.stageFrameType = data.frameType
-            rb4Custom.stageBackground = data.background
-            rb4Custom.stageBackgroundBrightness = data.backgroundBrightness
-            rb4Custom.stageTouchMarkerDisplayingType = data.touchMarker
-            rb4Config.bywordLeft = data.bywordLeft
-            rb4Config.bywordRight = data.bywordRight
+            rb4Custom.stageClearGaugeType = parseInt(data.gaugeType)
+            rb4Custom.stageMainGaugeType = parseInt(data.mainGaugeType)
+            rb4Custom.stageAchievementRateDisplayingType = parseInt(data.achievementRateDisplayingType)
+            rb4Custom.stageObjectSize = parseInt(data.objectSize)
+            rb4Custom.stageSameTimeObjectsDisplayingType = parseInt(data.sameTimeObjectsDisplayingType)
+            rb4Custom.stageShotSound = parseInt(data.shotSound)
+            rb4Custom.stageShotVolume = parseInt(data.shotVolume)
+            rb4Custom.stageExplodeType = parseInt(data.explodeType)
+            rb4Custom.stageFrameType = parseInt(data.frameType)
+            rb4Custom.stageBackground = parseInt(data.background)
+            rb4Custom.stageBackgroundBrightness = parseInt(data.backgroundBrightness)
+            rb4Custom.stageTouchMarkerDisplayingType = parseInt(data.touchMarker)
+            rb4Config.bywordLeft = parseInt(data.bywordLeft)
+            rb4Config.bywordRight = parseInt(data.bywordRight)
             rb4Config.isAutoBywordLeft = (data.isAutoBywordLeft == null) ? false : true
             rb4Config.isAutoBywordRight = (data.isAutoBywordRight == null) ? false : true
 
             rb4LobbySettings.isEnabled = data.isLobbyEnabled != null
 
-            let rb4Mylist: IRb4Mylist = {
-                collection: "rb.rb4.player.mylist",
-                index: 0,
-                mylist: JSON.parse(data.mylist)
+            let mylist: number[] | undefined = []
+            try {
+                mylist = JSON.parse(data.mylist)
+            } catch {
+                mylist = undefined
             }
 
             await DBM.update<IRb4PlayerBase>(data.refid, { collection: "rb.rb4.player.base" }, rb4Base)
             await DBM.update<IRb4PlayerConfig>(data.refid, { collection: "rb.rb4.player.config" }, rb4Config)
             await DBM.update<IRb4PlayerCustom>(data.refid, { collection: "rb.rb4.player.custom" }, rb4Custom)
-            await DBM.upsert<IRb4Mylist>(data.refid, { collection: "rb.rb4.player.mylist" }, rb4Mylist)
+            if (mylist) await DBM.upsert<IRb4Mylist>(data.refid, { collection: "rb.rb4.player.mylist" }, {
+                collection: "rb.rb4.player.mylist",
+                index: 0,
+                mylist: mylist
+            })
             await DBM.upsert<IRbLobbySettings<4>>(null, { collection: "rb.rb4.player.lobbySettings#userId", userId: rb4Account.userId }, rb4LobbySettings)
             UtilityHandlersWebUI.pushMessage("Save RB groovin'!! settings succeeded!", 4, WebUIMessageType.success, data.refid)
         } catch (e) {

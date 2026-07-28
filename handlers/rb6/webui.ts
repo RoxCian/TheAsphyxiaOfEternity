@@ -10,42 +10,45 @@ import { WebUIMessageType } from "../../models/utility/webui_message"
 import { DBM } from "../utility/db_manager"
 import { UtilityHandlersWebUI } from "../utility/webui"
 
+type Rb6SettingsWebUI = {
+    refid: string
+    name: string
+    comment: string
+    gaugeType: string
+    achievementRateDisplayingType: string
+    objectSize: string
+    sameTimeObjectsDisplayingType: string
+    shotSound: string
+    shotVolume: string
+    explodeType: string
+    frameType: string
+    background: string
+    backgroundBrightness: string
+    bywordLeft: string
+    bywordRight: string
+    isAutoBywordLeft?: string
+    isAutoBywordRight?: string
+    bigBangEffectPerformingType: string
+    rivalObjectsDisplayingType: string
+    topAssistDisplayingType: string
+    chatSoundSwitch: string
+    highSpeed: string
+    color: string
+    isLobbyEnabled?: string
+    rankingQuestIndex: string
+    pastelEquipHead: string
+    pastelEquipTop: string
+    pastelEquipUnder: string
+    pastelEquipArm: string
+    mylist: string
+    textToOverride: string
+    asphyxiaProfileTextToImport: string
+    asphyxiaScoresTextToImport: string
+}
+
 export namespace Rb6HandlersWebUI {
-    export const updateSettings = async (data: {
-        refid: string
-        name: string
-        comment: string
-        gaugeType: string
-        achievementRateDisplayingType: string
-        objectSize: string
-        sameTimeObjectsDisplayingType: string
-        shotSound: string
-        shotVolume: string
-        explodeType: string
-        frameType: string
-        background: string
-        backgroundBrightness: string
-        bywordLeft: string
-        bywordRight: string
-        isAutoBywordLeft?: string
-        isAutoBywordRight?: string
-        bigBangEffectPerformingType: string
-        rivalObjectsDisplayingType: string
-        topAssistDisplayingType: string
-        chatSoundSwitch: string
-        highSpeed: string
-        color: string
-        isLobbyEnabled?: string
-        rankingQuestIndex: string
-        pastelEquipHead: string
-        pastelEquipTop: string
-        pastelEquipUnder: string
-        pastelEquipArm: string
-        mylist: string
-        textToOverride: string
-        asphyxiaProfileTextToImport: string
-        asphyxiaScoresTextToImport: string
-    }) => {
+    export const updateSettings = async (dataJSON: string) => {
+        let data: Rb6SettingsWebUI = JSON.parse(dataJSON)
         try {
             // override operation
             // Rb6Common.log(data.textToOverride)
@@ -55,7 +58,6 @@ export namespace Rb6HandlersWebUI {
             //     let r = await operateDataInternal(data.refid, "override", d)
             //     if (r != null) throw new Error(r)
             // }
-
             let rb6Account = await DB.FindOne<IRb6PlayerAccount>(data.refid, { collection: "rb.rb6.player.account" })
             let rb6Base = await DB.FindOne<IRb6PlayerBase>(data.refid, { collection: "rb.rb6.player.base" })
             let rb6Config = await DB.FindOne<IRb6PlayerConfig>(data.refid, { collection: "rb.rb6.player.config" })
@@ -100,10 +102,11 @@ export namespace Rb6HandlersWebUI {
 
             rb6LobbySettings.isEnabled = data.isLobbyEnabled != null
 
-            let rb6Mylist: IRb6Mylist = {
-                collection: "rb.rb6.player.mylist",
-                index: 0,
-                mylist: JSON.parse(data.mylist)
+            let mylist: number[] | undefined = []
+            try {
+                mylist = JSON.parse(data.mylist)
+            } catch { 
+                mylist = undefined
             }
 
             let rb6MiscSettings: IRb6MiscSettings = {
@@ -114,7 +117,11 @@ export namespace Rb6HandlersWebUI {
             await DBM.update<IRb6PlayerBase>(data.refid, { collection: "rb.rb6.player.base" }, rb6Base)
             await DBM.update<IRb6PlayerConfig>(data.refid, { collection: "rb.rb6.player.config" }, rb6Config)
             await DBM.update<IRb6PlayerCustom>(data.refid, { collection: "rb.rb6.player.custom" }, rb6Custom)
-            await DBM.upsert<IRb6Mylist>(data.refid, { collection: "rb.rb6.player.mylist" }, rb6Mylist)
+            if (mylist) await DBM.upsert<IRb6Mylist>(data.refid, { collection: "rb.rb6.player.mylist" }, {
+                collection: "rb.rb6.player.mylist",
+                index: 0,
+                mylist: mylist
+            })
             await DBM.upsert<IRbLobbySettings<6>>(null, { collection: "rb.rb6.player.lobbySettings#userId", userId: rb6Account.userId }, rb6LobbySettings)
             await DBM.upsert<IRb6MiscSettings>(data.refid, { collection: "rb.rb6.player.misc" }, rb6MiscSettings)
             UtilityHandlersWebUI.pushMessage("Save RB Reflesia settings succeeded!", 6, WebUIMessageType.success, data.refid)

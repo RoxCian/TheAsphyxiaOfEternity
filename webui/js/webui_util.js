@@ -310,6 +310,21 @@ function clipFloat(v) {
     if (typeof v == "string") return Math.round((typeof v == "string" ? parseFloat(v) : v) * 100000000000) / 100000000000
 }
 
+function initializeForm() {
+    let forms = qsa("form.settings-form")
+    for (let f of forms) {
+        f.addEventListener("submit", async (e) => {
+            e.preventDefault()
+            const formData = Object.fromEntries(new FormData(f).entries())
+            try {
+                await axios.post(f.action, JSON.stringify(formData), { headers: { "content-type": "application/json" }})
+            } catch {
+                location.reload()
+            }
+        })
+    }
+}
+
 function initializeFormValidation() {
     let forms = qsa("form#validatable")
     for (let f of forms) {
@@ -813,6 +828,7 @@ $(document).ready(() =>
         initializeTabs,
         initializeToggles,
         initializeModals,
+        initializeForm,
         initializeFormSelects,
         initializeFormNumerics,
         initializeFormPaginations,

@@ -30,7 +30,7 @@ export async function writePlayerPreProcess(player: KITEM2<IRb4Player>): Promise
         // Process fields specifically
         if (isUnlockSongs || isUnlockItems) {
             let oldBase = await DB.FindOne<IRb4PlayerBase>(player.pdata.account.rid["@content"], { collection: "rb.rb4.player.base" })
-            player.pdata.base.level["@content"] = [oldBase.level]
+            player.pdata.base["lv"]["@content"] = [oldBase.level]
         }
         // General
         if (isUnlockSongs && isUnlockItems) {
