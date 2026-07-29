@@ -5,18 +5,21 @@ const protocols: { [P in string]: {
 } } = {
     "date": {
         type: Date,
-        parse: t => new Date(t),
+        parse: t => t === "null" ? null : t === "undefined" ? undefined : new Date(t),
         stringify: (d: Date) => d.toJSON()
     },
     "bigint": {
         type: v => typeof v === "bigint",
-        parse: t => BigInt(t),
+        parse: t => t === "null" ? null : t === "undefined" ? undefined : BigInt(t),
         stringify: (b: bigint) => b.toString()
     }
 }
 
 function PJReviver(this: any, _: string, value: any): any {
-    if (typeof value === "string" && value.startsWith("pj@") && value.includes(":")) for (let pn in protocols) if (value.startsWith(`pj@${pn}:`)) return protocols[pn].parse!(value.substring(pn.length + 4))
+    if (typeof value === "string" && value.startsWith("pj@") && value.includes(":")) for (let pn in protocols) if (value.startsWith(`pj@${pn}:`)) {
+        const valueString = value.substring(pn.length + 4)
+        return protocols[pn].parse!(valueString)
+    }
     return value
 }
 function PJReplacer(this: any, key: string, _: any, replacedValue?: any): any {

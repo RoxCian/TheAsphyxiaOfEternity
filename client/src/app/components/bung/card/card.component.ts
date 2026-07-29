@@ -14,6 +14,6 @@ import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 export class BungCardComponent {
     readonly isFoldedInput = input(false, { alias: "isFolded", transform: toggleTransform })
     readonly isFolded = linkedToggle(this.isFoldedInput)
-    readonly cardContentHeight = computed(() => document.defaultView?.getComputedStyle(this.cardContent()?.nativeElement ?? new HTMLElement()).height ?? "auto")
+    protected readonly cardContentHeight = computed(() => document.defaultView?.getComputedStyle(this.cardContent()?.nativeElement ?? new HTMLElement()).height ?? "auto")
     private readonly cardContent = viewChild<ElementRef<HTMLElement>>("cardContent")
 }

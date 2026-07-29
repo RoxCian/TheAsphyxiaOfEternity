@@ -13,9 +13,9 @@ export async function initialize() {
     initialized = true
     console.log("🔵 悠久のアスフィクシア -The Asphyxia of Eternity-")
     const version = await DBH.findOne<IPluginVersion>({ collection: "rb.pluginVersion" })
+    initializeBatch()
+    await Batch.execute(pluginVersion)
     if (!version || isHigherVersion(version.version, pluginVersion)) {
-        initializeBatch()
-        await Batch.execute(pluginVersion)
         await DBH.upsert<IPluginVersion>({ collection: "rb.pluginVersion" }, { collection: "rb.pluginVersion", version: pluginVersion })
     }
     await removeAllLobbies()

@@ -55,12 +55,12 @@
     display: flex
     flex-direction: column
 
-    .classcheck-info
+    .course-info
         display: grid
         grid-template: 1fr / 1fr auto auto
         gap: 1.25em
 
-    .classcheck-name
+    .course-name
         display: flex
         flex-direction: column
         flex-wrap: nowrap
@@ -73,8 +73,11 @@
         .main-name
             font-size: 2em
             font-weight: bold
+        .chart-type
+            color: var(--rb-chart-color)
+            opacity: 0.7
 
-    .classcheck-score-info
+    .course-score-info
         display: grid
         grid-template: auto 1.25em 1.25em / 5em 5em
         gap: 0 0.5em
@@ -84,32 +87,32 @@
         > *
             font-size: 0.75em
             line-height: 1.25em
-        .classcheck-score-info-heading
+        .course-score-info-heading
             grid-area: 1 / span 2
             font-size: 2em
             font-weight: bold
             justify-self: center
-        .classcheck-ar, .classcheck-score
+        .course-ar, .course-score
             grid-area: 2 / 1
-        .classcheck-play-count
+        .course-play-count
             grid-area: 2 / 2
-        .classcheck-update
+        .course-update
             grid-area: 3 / 1
-        .classcheck-last-play
+        .course-last-play
             grid-area: 3 / 2
-.classcheck-lamp
+.course-lamp
     position: relative
     height: 2em
     margin: 2em -2em
     overflow-x: clip
 
-    .classcheck-lamp-wrapper
+    .course-lamp-wrapper
         width: 100%
         height: 100%
-    .classcheck-lamp-background-box
+    .course-lamp-background-box
         position: absolute
         inset: 0
-    .classcheck-lamp-background
+    .course-lamp-background
         position: absolute
         inset: 0.25em 0
         background: var(--rb-background, #70707050)
@@ -129,7 +132,6 @@
         text-align: center
         font-size: 0.75em
         gap: 0.5em
-        color: var(--invert-card-background)
 
         &.failed
             color: white
@@ -139,7 +141,7 @@
 
         .line
             flex: 1
-            background: var(--invert-card-background)
+            background: var(--text-color)
             height: 1px
         .line.middle
             min-width: 12em
@@ -170,15 +172,20 @@
         grid-auto-flow: column
         height: 100%
     .stage-index
+        display: flex
+        height: 2em
+        padding-bottom: 8px
+        align-items: center
+        justify-content: center
+        border-radius: 8px 8px 0 0
         text-align: center
-        padding-bottom: 1em
     .stage-index:not(.failed)
         background: var(--rb-background)
-        background-size: calc(100% * var(--capacity, 3) + calc(var(--capacity, 3) - 1) * 1em) calc(100% - 1em + 8px)
+        background-size: calc(100% * var(--capacity, 3) + calc(var(--capacity, 3) - 1) * 1em) calc(100% + 8px)
         background-position: var(--background-offset, 0) 0
         color: var(--invert-card-background)
     .stage-log-info
-        margin-top: -1em
+        margin-top: -8px
         padding: 1em
         z-index: 1
     .stage-log-info.failed
@@ -228,17 +235,19 @@
     .info-container
         padding: 0.5em
         padding-top: 4em
-    .info-container .classcheck-info
+    .info-container .course-info
         gap: 0.5em
-    .info-container .classcheck-name .main-name, .info-container .classcheck-score-info .classcheck-score-info-heading
+    .info-container .course-name .main-name, .info-container .course-score-info .course-score-info-heading
         font-size: 1em
-    .info-container .classcheck-name .sub-name
+    .info-container .course-name .sub-name
         font-size: 0.75em
-    .info-container .classcheck-score-info
+    .info-container .course-name .chart-type
+        font-size: 0.75em
+    .info-container .course-score-info
         grid-template: auto auto auto / 5em
-    .classcheck-lamp
+    .course-lamp
         margin: 0.5em -0.5em
-    .classcheck-lamp .clear-info .line.middle
+    .course-lamp .clear-info .line.middle
         min-width: 2em
     .stage-log-info-wrapper
         // margin-bottom: -2.5em
@@ -249,14 +258,18 @@
         font-size: 1em
     .defeated-part2
         display: none
+    .course-lamp .course-lamp-background
+        inset: 0.5em 0
+    rb-chart-lamp, .stage-log-info-wrapper .stage-index
+        height: 1.5em
     bung-divider
         font-size: 0.75em
 
-.classcheck-info-in
+.course-info-in
     transform: translateY(-2em)
     opacity: 0
-.classcheck-info-show
-    animation: show-classcheck-info 0.4s var(--ease-in) forwards
+.course-info-show
+    animation: show-course-info 0.4s var(--ease-in) forwards
 // .background-container
 //     height: 0
 .background-show
@@ -269,20 +282,20 @@
     transform: translateY(calc(-100% - 1em))
 .stage-log-show
     animation: show-stage-log 0.4s var(--stage-log-delay) var(--ease-in) forwards
-.classcheck-lamp-wrapper
+.course-lamp-wrapper
     transform: translateX(calc(-100% - 54px))
-.classcheck-lamp-show
-    animation: classcheck-clear-lamp-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
-.classcheck-lamp-background-box:not(.failed)
-    .classcheck-lamp-background
+.course-lamp-show
+    animation: course-clear-lamp-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+.course-lamp-background-box:not(.failed)
+    .course-lamp-background
         animation: background-blink 0.1s var(--ease-in) infinite
-    .classcheck-lamp-background.blur
+    .course-lamp-background.blur
         animation: background-blur-blink 0.1s var(--ease-in) infinite
 .clear-info
     transform: translateX(calc(100% - 8em))
-.classcheck-clear-info-show
-    animation: classcheck-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
-@keyframes show-classcheck-info
+.course-clear-info-show
+    animation: course-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+@keyframes show-course-info
     from
         transform: translateY(-6em)
         opacity: 0
@@ -320,12 +333,12 @@
     to
         opacity: 1
         filter: blur(12px)
-@keyframes classcheck-clear-lamp-enter
+@keyframes course-clear-lamp-enter
     from
         transform: translateX(calc(-100% - 54px))
     to
         transform: none
-@keyframes classcheck-clear-info-enter
+@keyframes course-clear-info-enter
     from
         transform: translateX(calc(100% - 8em))
     to

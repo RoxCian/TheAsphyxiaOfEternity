@@ -17,7 +17,7 @@ import { Rb6PlayerStart, Rb6PlayerSucceed } from "../../models/rb6/common"
 import { rb6UnlockItems } from "../../data/tables/rb6_unlock_items"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { RbPlayerRead } from "../../models/shared/common"
-import { Rb6ChartType, Rb6ClasscheckIndex, RbColor, RbSession } from "../../models/shared/rb_types"
+import { Rb6ChartType, Rb6ClasscheckIndex, Rb6ClearType, RbColor, RbSession } from "../../models/shared/rb_types"
 import { Rb6JustCollection, Rb6ReadJustCollection, Rb6ReadJustCollectionParameters } from "../../models/rb6/just_collection"
 import { Rb6Ghost, Rb6ReadGhost, Rb6ReadGhostParam } from "../../models/rb6/ghost"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
@@ -290,19 +290,32 @@ async function writePlayerCore(player: Rb6Player, session: RbSessionStorage) {
         await updateClasscheckRecordFromLog(rid, player.pdata.classcheck as Rb6Classcheck, player.pdata.stageLogs.log ?? [], t)
     }
     if (hasAny(player.pdata.quest?.list) && hasAny(player.pdata.stageLogs?.log)) for (const q of player.pdata.quest.list) {
-        const now = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1].time
-        if (player.pdata?.stageLogs?.log) {
-            const score = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
-            if (q.dungeonId === 47) q.rankingId = session.rb6RankingQuestIndex // Ranking Quest
-            const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId === 47) ? [{ rankingId: q.rankingId }] : [] })
-            if (!oldRecord || (oldRecord.score ?? 0) < score) {
-                q.updateTime = now
-                q.score = score
-                q.stageLogs = player.pdata.stageLogs.log
-            } else q.score = oldRecord.score
+        // treat quest record as blank
+        const lastStage = player.pdata.stageLogs.log[player.pdata.stageLogs.log.length - 1]
+        const now = lastStage.time
+        const query: Query<Rb6QuestRecord> = { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId === 47) ? [{ rankingId: q.rankingId }] : [] }
+        const oldRecord = await DBH.findOne<Rb6QuestRecord>(rid, query)
+        const score = player.pdata.stageLogs.log.reduce((total, curr) => curr.score + total, 0)
+        if (q.dungeonId === 47) q.rankingId = session.rb6RankingQuestIndex // Ranking Quest
+        if (!oldRecord || (oldRecord.score ?? 0) < score) {
+            q.updateTime = now
+            q.score = score
+            q.stageLogs = player.pdata.stageLogs.log
+        } else {
+            q.updateTime = oldRecord.updateTime
+            q.score = oldRecord.score
+            q.stageLogs = oldRecord.stageLogs ?? player.pdata.stageLogs.log
+        }
+        if (lastStage.clearType >= Rb6ClearType.clear) {
+            q.isCleared = true
+            q.clearCount = (oldRecord?.clearCount ?? 0) + 1
+        } else {
+            q.isCleared = oldRecord?.isCleared ?? false
+            q.clearCount = oldRecord?.clearCount ?? 0
         }
         q.lastPlayTime = now
-        t.upsert(rid, { collection: "rb.rb6.playData.quest", dungeonId: q.dungeonId, dungeonGrade: q.dungeonGrade, $and: (q.dungeonId === 47) ? [{ rankingId: q.rankingId }] : [] }, q)
+        q.playCount = (oldRecord?.playCount ?? 0) + 1
+        t.upsert(rid, query, q)
     }
     if (hasAny(player.pdata.justCollections?.list)) for (const j of player.pdata.justCollections.list) await updateJustCollection(player.pdata.account.userId, j, t)
     if (hasAny(player.pdata.characterCards?.list)) for (const c of player.pdata.characterCards.list) t.upsert(rid, { collection: "rb.rb6.player.characterCard", characterCardId: c.characterCardId }, c)

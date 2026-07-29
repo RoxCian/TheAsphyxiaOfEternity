@@ -219,7 +219,7 @@
                             </div>
                         </ng-template>
                         <ng-template let-q #rankingQuestOptionTemplate>
-                            @let musics = [findMusic($safeNavigationMigration(q.charts[0]?.musicId)), findMusic($safeNavigationMigration(q.charts[1]?.musicId)), findMusic($safeNavigationMigration(q.charts[2]?.musicId))];
+                            @let musics = [findMusic(q.charts[0]?.musicId), findMusic(q.charts[1]?.musicId), findMusic(q.charts[2]?.musicId)];
                             @let isMobile = breakpointService.breakpointsToggled.mobile();
                             <bung-insertion class="ranking-quest-option-insertion" [class.is-mobile]="isMobile" [isVirtualized]="!isMobile" sharedIntersectionGroup="rb-settings-ranking-quest-dropdown" [placeholder]="rankingQuestOptionPlaceholder" [placeholderContext]="musics | implicit">
                                 <div class="ranking-quest-option-content" [class.is-mobile]="isMobile">

@@ -1,7 +1,7 @@
 import { Component, computed, ElementRef, inject, input } from "@angular/core"
 import { RbClasscheckResponse, Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbVersionWithClasscheck } from "rbweb"
 import { BungPopupService } from "../../../../services/bung/popup.service"
-import { RbClasscheckPopupComponent } from "../../classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component"
+import { RbCoursePopupComponent } from "../../course-popup/rb-course-popup/rb-course-popup.component"
 
 @Component({
     selector: "rb-classcheck",
@@ -139,13 +139,27 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
     private readonly popupService = inject(BungPopupService)
 
     protected onShowPopup() {
-        if (!this.classcheck().stageLogs) return
+        const classcheck = this.classcheck()
+        if (!classcheck.stageLogs) return
         setTimeout(() => this.element.nativeElement.blur(), 500)
-        this.popupService.popup(undefined, undefined, RbClasscheckPopupComponent, {
+        const headerNameSub = classcheck.version === 4 ? classcheck.class < Rb4DojoIndex.examination ? "CLASSCHECK " : "EXAMINATION " : undefined
+        const headerNameMain = classcheck.version === 4 ? classcheck.class < Rb4DojoIndex.examination ? "認定試験　" : "検定試験　" : "CLASSCHECK "
+        this.popupService.popup(undefined, undefined, RbCoursePopupComponent, {
             layer: "rb-classcheck",
             duration: Infinity,
             bindings: {
-                classcheck: this.classcheck
+                version: classcheck.version,
+                stageLogs: classcheck.stageLogs,
+                isCleared: classcheck.clearType > 1,
+                courseNameSub: this.classcheckNameSub,
+                courseNameMain: this.classcheckNameMain,
+                clearInfoSub: this.clearInfoSub() ? `${headerNameSub}${this.clearInfoSub()!.toUpperCase()}` : undefined,
+                clearInfoMain: `${headerNameMain}${this.clearInfoMain().toUpperCase()}`,
+                emphasisScore: classcheck.version === 4 && classcheck.class >= Rb4DojoIndex.examination,
+                averageAchievementRate: classcheck.averageAchievementRate,
+                playCount: classcheck.playCount,
+                update: classcheck.update,
+                lastPlay: classcheck.lastPlay
             }
         })
     }

@@ -2,12 +2,12 @@
     <bung-insertion class="notify-content" [content]="content()" [context]="context()" />
 </ng-template>
 <ng-template let-data #buttonReturnTemplate>
-    <button class="button {{ data?.elementClass }} is-small" [bungReturn]="$safeNavigationMigration(data?.value)">
-        <bung-insertion [content]="isSignal($safeNavigationMigration(data?.content)) ? data.content() : $safeNavigationMigration(data?.content)" [context]="isSignal($safeNavigationMigration(data?.context)) ? data.context() : $safeNavigationMigration(data?.context)" />
+    <button class="button {{ data?.elementClass }} is-small" [bungReturn]="data?.value">
+        <bung-insertion [content]="isSignal(data?.content) ? data.content() : data?.content" [context]="isSignal(data?.context) ? data.context() : data?.context" />
     </button>
 </ng-template>
 <ng-template let-data #noButtonReturnTemplate>
-    <bung-insertion [class]="data?.elementClass" [content]="isSignal($safeNavigationMigration(data?.content)) ? data.content() : $safeNavigationMigration(data?.content)" [context]="isSignal($safeNavigationMigration(data?.context)) ? data.context() : $safeNavigationMigration(data?.context)" />
+    <bung-insertion [class]="data?.elementClass" [content]="isSignal(data?.content) ? data.content() : data?.content" [context]="isSignal(data?.context) ? data.context() : data?.context" />
 </ng-template>
 <ng-template #returnContextsTemplate>
     @if (returnContext()) {

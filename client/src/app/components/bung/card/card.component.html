@@ -1,4 +1,4 @@
-<div class="card-header" [class.is-folded]="isFolded()" (click)="isFolded.toggle()" bungBreakpoint="mobile">
+<div class="card-header" [class.is-folded]="isFolded()" (click)="isFolded.toggle()">
     <div class="card-hover-background"></div>
     <div class="card-header-title">
         <ng-content select="[cardHeaderTitle]" />
@@ -10,7 +10,7 @@
 </div>
 @if (!isFolded()) {
     <div class="card-content" [style.--card-content-height]="cardContentHeight()" animate.enter="card-expand" animate.leave="card-collapse" #cardContent>
-        <div class="card-content-wrapper" animate.enter="card-expand" animate.leave="card-collapse" bungBreakpoint="mobile">
+        <div class="card-content-wrapper" animate.enter="card-expand" animate.leave="card-collapse">
             <ng-content />
         </div>
     </div>

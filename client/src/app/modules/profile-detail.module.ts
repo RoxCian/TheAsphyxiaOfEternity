@@ -61,7 +61,7 @@ import { RbMylistEditorComponent } from '../components/specific/mylist-editor/rb
 import { RbSharedComponentsModule } from "./rb-shared-components.module"
 import { RbSaveDataSubpage } from "../pages/profile/save-data/save-data.component";
 import { RbChartLampBadgeComponent } from '../components/specific/chart-lamp/rb-chart-lamp-badge/rb-chart-lamp-badge.component';
-import { RbClasscheckPopupComponent } from '../components/specific/classcheck-popup/rb-classcheck-popup/rb-classcheck-popup.component';
+import { RbCoursePopupComponent } from '../components/specific/course-popup/rb-course-popup/rb-course-popup.component';
 import { RangePipe } from '../pipes/misc/range.pipe';
 import { RbMusicUnlockPopupComponent } from '../components/specific/music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component';
 import { Rb3VerdetDesKriegesStoryboardComponent } from '../components/specific/verdet-des-krieges/rb3-verdet-des-krieges-storyboard/rb3-verdet-des-krieges-storyboard.component';
@@ -139,7 +139,7 @@ import { Rb6ReflesiaBuffsListComponent } from '../components/specific/reflesia/r
         RbSaveDataSubpage,
         RbMylistEditorComponent,
         RbChartLampBadgeComponent,
-        RbClasscheckPopupComponent,
+        RbCoursePopupComponent,
         RangePipe,
         RbMusicUnlockPopupComponent,
         Rb3VerdetDesKriegesStoryboardComponent,

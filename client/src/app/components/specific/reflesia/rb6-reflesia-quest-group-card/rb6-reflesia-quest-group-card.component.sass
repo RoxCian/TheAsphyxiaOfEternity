@@ -22,13 +22,14 @@
 ::ng-deep bung-card .card-content-wrapper
     padding: 2em
 ::ng-deep bung-card .card-header
-    background: linear-gradient(in display-p3 to right, transparent 50%, var(--background) 100%)
+    background: linear-gradient(to right, transparent 50%, var(--background) 100%)
 p.sub-name
-    opacity: 0.7
+    margin-bottom: 0 // Asphyxia fix
     font-size: 0.75em
     font-weight: normal
     letter-spacing: 1px
     text-transform: uppercase
+    opacity: 0.7
 .rb-list
     display: flex
     flex-direction: column
@@ -38,8 +39,9 @@ p.sub-name
         padding: 0.5em
     p.main-name
         font-size: 1rem !important
-    rb6-reflesia-quest:last-child
-        margin-bottom: 1em
+    .rb-list
+        gap: 2.5em
+        padding-bottom: 2em
 
 @media (prefers-color-scheme: dark)
     .color0

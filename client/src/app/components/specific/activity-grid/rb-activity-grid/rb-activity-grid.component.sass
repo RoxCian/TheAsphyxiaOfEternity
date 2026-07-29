@@ -65,6 +65,10 @@ p.pc
 @media screen and (width < 768px)
     .grid-wrapper
         padding: 0.5em
+    .calendar-grid
+        grid-template: repeat(7, 0.75em) / repeat(var(--weeks-count), 0.75em)
+        gap: 0.3em
+
 @media (prefers-color-scheme: dark)
     .day
         background: #11111180

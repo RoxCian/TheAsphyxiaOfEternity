@@ -50,7 +50,7 @@
         </p>
         <p class="chart-score {{ q.records[t]?.score != undefined ? 'is-size-4' : 'is-size-7' }}">
             <span>
-                {{ !q.records[t] ? "\<Not Played\>" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "\<Cleared\>" : "\<Failed\>" : q.records[t]?.score }}
+                {{ !q.records[t] ? "\<Not Played\>" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "\<Cleared\>" : "\<Failed\>" : q.records[t]?.stageLogs ? sumScore(q.records[t].stageLogs!) : q.records[t]?.score }}
             </span>
         </p>
         <div class="hover-background"></div>
