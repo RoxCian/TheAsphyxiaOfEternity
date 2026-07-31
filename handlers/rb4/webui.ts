@@ -21,6 +21,7 @@ type Rb4SettingsWebUI = {
     background: string
     backgroundBrightness: string
     touchMarker: string
+    cheerVoice: string
     bywordLeft: string
     bywordRight: string
     isAutoBywordLeft?: string
@@ -56,6 +57,7 @@ export namespace Rb4HandlersWebUI {
             rb4Custom.stageBackground = parseInt(data.background)
             rb4Custom.stageBackgroundBrightness = parseInt(data.backgroundBrightness)
             rb4Custom.stageTouchMarkerDisplayingType = parseInt(data.touchMarker)
+            rb4Custom.cheerVoice = parseInt(data.cheerVoice)
             rb4Config.bywordLeft = parseInt(data.bywordLeft)
             rb4Config.bywordRight = parseInt(data.bywordRight)
             rb4Config.isAutoBywordLeft = (data.isAutoBywordLeft == null) ? false : true

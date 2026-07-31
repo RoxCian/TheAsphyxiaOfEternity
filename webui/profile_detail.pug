@@ -3169,6 +3169,7 @@ if (webuiMessage != null) && ((webuiMessage.refid == null) || (webuiMessage.refi
             +selectField("Stage Background", "background", rb4Custom.stageBackground, mapItems("background"))
             +numberUpDownField("Background Brightness", "60px", { name: "backgroundBrightness", value: rb4Custom.stageBackgroundBrightness, minValue: 0, maxValue: 100, step: 1 })
             +selectField("Touch Marker", "touchMarker", rb4Custom.stageTouchMarkerDisplayingType, ["Show", "Hide"])
+            +selectField("Announcer During Play", "cheerVoice", rb4Custom.cheerVoice, ["On", "Off"])
           #tab-content(tab-group = "rb4-edit-settings", tab-index = "2")
             +rbLobbyToggle(rb4LobbySettings)
           #tab-content(tab-group = "rb4-edit-settings", tab-index = "3")

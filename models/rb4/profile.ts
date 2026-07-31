@@ -335,7 +335,7 @@ export const Rb4PlayerCustomMap: KObjectMappingRecord<IRb4PlayerCustom> = {
     stageClearCondition: u8me("st_clr_cond"),
     chatStickersBeforeMatching: s16me("schat_0"),
     chatStickersAfterMatching: s16me("schat_1"),
-    cheerVoice: u8me()
+    cheerVoice: u8me("cheer_voice")
 }
 export function generateRb4PlayerCustom(): IRb4PlayerCustom {
     return {
