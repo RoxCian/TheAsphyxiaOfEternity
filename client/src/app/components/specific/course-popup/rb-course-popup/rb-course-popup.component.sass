@@ -134,14 +134,14 @@
         gap: 0.5em
 
         &.failed
-            color: white
-
+            .text
+                color: white
             .line
                 background: white
 
         .line
             flex: 1
-            background: var(--text-color)
+            background: var(--invert-card-background)
             height: 1px
         .line.middle
             min-width: 12em
@@ -149,6 +149,7 @@
             display: flex
             align-items: center
             gap: 0.5em
+            color: var(--invert-card-background)
 .stage-log-info-wrapper
     display: flex
     gap: 2em
@@ -231,7 +232,7 @@
         width: 24em
         max-width: 28em
     .modal-card-background
-        background: linear-gradient(to bottom, transparent 3.75em, var(--card-background) 6.75em)
+        background: linear-gradient(to bottom, transparent 2em, var(--card-background) 6.75em)
     .info-container
         padding: 0.5em
         padding-top: 4em
@@ -279,7 +280,7 @@
 .jacket-show
     animation: show-jacket 0.4s var(--stage-log-delay) var(--ease-in) forwards
 .stage-log-wrapper
-    transform: translateY(calc(-100% - 1em))
+    transform: translateY(calc(-100% - 1em - 8px))
 .stage-log-show
     animation: show-stage-log 0.4s var(--stage-log-delay) var(--ease-in) forwards
 .course-lamp-wrapper
@@ -316,7 +317,7 @@
         transform: none
 @keyframes show-stage-log
     from
-        transform: translateY(calc(-100% - 1em))
+        transform: translateY(calc(-100% - 1em - 8px))
     to
         transform: none
 @keyframes background-blink

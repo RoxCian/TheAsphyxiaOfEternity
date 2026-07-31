@@ -24,6 +24,7 @@ export function register() {
     R.Config("comment_feature", { type: "boolean", default: true })
 
     R.Config("<colette>_daily_stamp_boost", { type: "integer", default: 1, range: [1, 9] })
+    R.Config("<groovin'_upper>_fill_upper_points", { type: "boolean", default: false })
 
     registerRb1Handlers()
     registerRb2Handlers()

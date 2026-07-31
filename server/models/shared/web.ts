@@ -195,6 +195,7 @@ export class Rb4SettingsResponse extends Rb2SettingsResponseBase {
     achievementRateDisplayingType = 0
     objectSize = 0
     sameTimeObjectsDisplayingType = 0
+    cheerVoice = 0
     backgroundMusic = 0
     touchMarkerDisplayingType = 0
     mylist: number[] = []

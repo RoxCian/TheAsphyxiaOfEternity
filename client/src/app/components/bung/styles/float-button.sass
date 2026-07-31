@@ -1,0 +1,43 @@
+.bung-float-button-layer-top
+    position: fixed
+    display: flex
+    inset: 3em
+    align-items: end
+    justify-content: end
+    user-select: none
+    pointer-events: none
+    z-index: 4998
+.bung-float-button-layer
+    display: flex
+    flex-direction: column-reverse
+    align-items: stretch
+    gap: 1em
+    user-select: none
+    pointer-events: none
+
+    div
+        display: none
+    
+    bung-insertion:empty
+        display: none
+
+    button[bungFloatButton]
+        display: flex
+
+        &.float-button-enter
+            animation: bung-float-button-enter-animation var(--animation-duration-lv3) var(--ease-in) forwards
+        &.float-button-leave
+            animation: bung-float-button-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse forwards
+        &.float-button-move-down
+            animation: bung-float-button-move-down-animation var(--animation-duration-lv3) var(--ease-in) forwards
+
+@keyframes bung-float-button-enter-animation
+    from
+        transform: translateX(calc(100% + 2em))
+    to
+        transform: none
+@keyframes bung-float-button-move-down-animation
+    from
+        transform: none
+    to
+        transform: translateY(calc(var(--bung-float-button-move-down) + 1em))

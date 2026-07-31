@@ -177,6 +177,16 @@
                     </bung-select>
                 </bung-field>
             }
+            @if (version === 4) {
+                @let casted = settingsService.cast(form, 4);
+                <bung-field label="Announcer During Play" [formField]="casted.cheerVoice">
+                    <bung-select [formField]="casted.cheerVoice" [equalFn]="selectOptionEq">
+                        <bung-option [value]="0">On</bung-option>
+                        <bung-option [value]="1">Off</bung-option>
+                    </bung-select>
+                </bung-field>
+            }
+
             @if (version === 5) {
                 @let casted = settingsService.cast(form, 5);
                 <bung-field label="Voice Message Set" [formField]="casted.voiceMessageSet">

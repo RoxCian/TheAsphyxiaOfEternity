@@ -123,7 +123,7 @@ export class Rb4PlayerCustom implements ICollection<"rb.rb4.player.custom"> {
 
     @XD.s16("schat_0") chatStickersBeforeMatching = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     @XD.s16("schat_1") chatStickersAfterMatching = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-    @XD.u8("cheerVoice") cheerVoice = 0
+    @XD.u8() cheerVoice = 0
 }
 
 export class Rb4PlayerStageLog implements ICollection<"rb.rb4.playData.stageLog"> {

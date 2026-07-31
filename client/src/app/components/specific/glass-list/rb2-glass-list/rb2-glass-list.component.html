@@ -1,7 +1,7 @@
 <ng-template #placeholder>
     <div class="rb-panel"></div>
 </ng-template>
-@if (service.isActivated()) {
+@if (service.isActivated() && !service.data.isLoading() && service.data.value()) {
     @for (key of service.grouped() | key; track key) {
         <bung-divider class="section-divider" prompt="Glasses - {{ key }}" />
         <div class="rb-list">

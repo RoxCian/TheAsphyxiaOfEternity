@@ -165,6 +165,7 @@ const rb4SettingsFactory: RbSettingsFactory<Rb4SettingsResponse, Rb4SettingsCont
         frame: "custom.stageFrameType",
         background: "custom.stageBackground",
         backgroundBrightness: "custom.stageBackgroundBrightness",
+        cheerVoice: "custom.cheerVoice",
         backgroundMusic: "config.musicSelectBgm",
         touchMarkerDisplayingType: "custom.stageTouchMarkerDisplayingType",
         isLobbyEnabled: "lobbySettings.isEnabled",

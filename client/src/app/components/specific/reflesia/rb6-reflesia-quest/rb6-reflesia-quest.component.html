@@ -60,7 +60,7 @@
     @for (t of slots | range; track t) {
         <div class="card score narrow is-size-7 rb-panel" [class.not-played]="!q.records[t]" [class.no-score]="q.records[t]?.score == undefined" [rbChartType]="q.questType === 3 ? 3 : t" [version]="6" (click)="q.records[t]?.score != undefined ? onShowPopup(t) : undefined">
             <p class="chart-score">
-                {{ !q.records[t] ? "<?>" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "<√>" : "<×>" : q.records[t]?.score }}
+                {{ !q.records[t] ? "<->" : q.records[t]?.score == undefined ? q.records[t]?.isCleared ? "<√>" : "<×>" : q.records[t]?.score }}
             </p>
             <div class="hover-background"></div>
         </div>
