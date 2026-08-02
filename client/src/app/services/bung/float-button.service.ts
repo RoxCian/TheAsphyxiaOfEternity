@@ -6,6 +6,7 @@ import { BungInsertionComponent } from "../../components/bung/insertion/insertio
 type ButtonRecord = {
     button: BungFloatButtonComponent
     element: HTMLButtonElement
+    key?: string
     insertionRef: ComponentRef<BungInsertionComponent>
 }
 
@@ -47,12 +48,16 @@ export class BungFloatButtonService {
         BungFloatButtonService.initContainer(this.envInjector, this.injector, this.application)
     }
 
-    async register(button: BungFloatButtonComponent): Promise<void> {
+    async register(button: BungFloatButtonComponent, key?: string): Promise<void> {
         if (this.animatingPromise) {
             this.pendingButtons.add(button)
             await this.animatingPromise
             if (!this.pendingButtons.has(button)) return
             this.pendingButtons.delete(button)
+        }
+        if (key != undefined && this.buttonList.find(r => r.key === key)) {
+            button.element.nativeElement.classList.add("hide")
+            return
         }
         const element = button.element.nativeElement as HTMLButtonElement
         element.classList.add("float-button-enter")
@@ -66,18 +71,16 @@ export class BungFloatButtonService {
             resolver()
             clearTimeout(timeout)
             if (this.animatingPromise === animating) this.animatingPromise = undefined
-            console.log("register end")
         }
         const timeout = setTimeout(onAnimationEnd, 2000)
         element.addEventListener("animationend", onAnimationEnd)
         element.addEventListener("animationcancel", onAnimationEnd)
         
         const insertionRef = this.createInsertionRef(button)
-        this.buttonList.push({ button, element, insertionRef })
+        this.buttonList.push({ button, element, key, insertionRef })
         await animating
     }
     async unregister(button: BungFloatButtonComponent): Promise<void> {
-        console.log("wait for unregister")
         if (this.pendingButtons.has(button)) {
             // unregister before register happened
             this.pendingButtons.delete(button)

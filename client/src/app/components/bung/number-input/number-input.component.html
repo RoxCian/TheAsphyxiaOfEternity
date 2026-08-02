@@ -6,6 +6,6 @@
     @if (disabled() || readonly()) {
         <span>{{ value() }}</span>
     } @else {
-        <input type="text" size="1" [value]="this.formatter()(value())" [max]="max()" [min]="min()" (change)="onChange($event)" (focus)="isInputFocused.set(true)" (blur)="isInputFocused.set(false)" [disabled]="disabled()" #input>
+        <input type="text" size="1" [value]="this.formatter()(value())" [max]="max()" [min]="min()" (change)="onChange($event)" (focus)="isInputFocused.set(true)" (blur)="isInputFocused.set(false)" [disabled]="disabled()" inputmode="numeric" #input>
     }
 </div>

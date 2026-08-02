@@ -24,7 +24,7 @@
         @if (isTemplateRef(p)) {
             <ng-container *ngTemplateOutlet="p; context: placeholderContext()"/>
         } @else if (isComponentType(p)) {
-            <ng-container *ngComponentOutlet="p; context: placeholderContext()" />
+            <ng-container *ngComponentOutlet="p; inputs: placeholderContext()?.inputs; content: placeholderContext()?.content; ngModule: placeholderContext()?.ngModule" />
         } @else if (isString(p)) {
             @if (textContentTag() == undefined) {
                 {{ p }}

@@ -1,5 +1,9 @@
 <img src="./icon.svg">
 
+<style>
+    .content tr td ul { margin: 0 }
+</style>
+
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
 Plugin Version: **v2.0.0-beta** 
@@ -42,8 +46,3 @@ This project used some data for web UI and game from several external websites/p
 - [Rb poor](https://github.com/cubele/rbsimulator) for .ply structures.
 
 I'm appreciated for their help.
-
-
-
-
-

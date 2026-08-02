@@ -6,8 +6,13 @@ bung-field
         display: inline-grid
     label bung-insertion::before
         position: absolute
-        content: "●"
+        content: ""
+        top: calc(50% - 0.25em)
         right: -1em
+        width: 0.5em
+        height: 0.5em
+        border-radius: 9999px
+        background-color: var(--title-color)
         opacity: 0
         transition: opacity var(--animation-duration-lv3) var(--ease-in)
     label.is-dirty bung-insertion::before

@@ -116,7 +116,7 @@
         </bung-tab>
         <bung-tab header="Music Records" index="record" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)" [minHeight]="`calc(${minTabHeight()}px - 3em)`">
             @if (musicRecordService.data.hasValue()) {
-                <auto-load-panel class="rb-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
+                <auto-load-panel class="rb-list record-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
                     @for (record of musicRecordPaginated(); track record.musicId) {
                     <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
                         <rb-record [record]="record" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
@@ -287,4 +287,5 @@
     @if (v === 5 || v === 6) {
         <rb-level-display-switch />
     }
+    <return-to-top-button />
 }

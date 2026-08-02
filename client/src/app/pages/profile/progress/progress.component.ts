@@ -32,7 +32,11 @@ export class RbProgressSubpage {
     protected onActivate(key?: keyof this["services"], e?: BungWaitableEvent) {
         const lastActivated = this.#lastActivated
         if (lastActivated === key) return
-        if (lastActivated) setTimeout(() => {
+        if (key && this.#deactivateTimeout[key] != undefined) {
+            clearTimeout(this.#deactivateTimeout[key])
+            delete this.#deactivateTimeout[key]
+        }
+        if (lastActivated) this.#deactivateTimeout[lastActivated] = setTimeout(() => {
             if (this.#deactivateTimeout[lastActivated] == undefined) return
             {
                 (this.services as unknown as Record<keyof this["services"], RbPlayDataServiceBase<unknown>>)[lastActivated].deactivate()
@@ -42,11 +46,6 @@ export class RbProgressSubpage {
         if (!key) {
             this.#lastActivated = undefined
             return
-        }
-        const deactivateTimeout = this.#deactivateTimeout[key]
-        if (deactivateTimeout != undefined) {
-            clearTimeout(deactivateTimeout)
-            delete this.#deactivateTimeout[key]
         }
         if (e) e.resource = (this.services as unknown as Record<keyof this["services"], RbPlayDataServiceBase<unknown>>)[key].activate()
         this.#lastActivated = key

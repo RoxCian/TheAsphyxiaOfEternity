@@ -3,7 +3,7 @@ bung-marquee
     position: relative
     width: 100%
 
-    .marquee-animation-wrapper
+    > .marquee-animation-wrapper
         display: flex
         position: relative
         width: 100%
@@ -14,35 +14,35 @@ bung-marquee
         animation: none
         justify-content: var(--marquee-align)
 
-        .marquee-content
+        > .marquee-content
             margin-bottom: 0
-        .marquee-content.cloned
+        > .marquee-content.cloned
             position: absolute
             left: 0
             top: 0
             transform: translateX(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
             user-select: none
         &.is-overflowed
-            .marquee-content:not(.cloned)
+            > .marquee-content:not(.cloned)
                 animation: marquee-animation-x var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
-            .marquee-content.cloned
+            > .marquee-content.cloned
                 animation: marquee-animation-cloned-x var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
-    bung-insertion
-        white-space: nowrap
-    .marquee-animation-wrapper.is-vertical
+        > .marquee-content > bung-insertion
+            white-space: nowrap
+    > .marquee-animation-wrapper.is-vertical
         flex-direction: column
         overflow-y: clip
         overflow-x: visible
 
-        .marquee-content.cloned
+        > .marquee-content.cloned
             position: absolute
             left: 0
             top: 0
             transform: translateY(calc(100% * var(--marquee-factor) + var(--marquee-spacing)))
         &.is-overflowed
-            .marquee-content:not(.cloned), .spacer
+            > .marquee-content:not(.cloned), .spacer
                 animation: marquee-animation-y var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
-            .marquee-content.cloned
+            > .marquee-content.cloned
                 animation: marquee-animation-cloned-y var(--marquee-duration) var(--marquee-delay) infinite var(--marquee-ease)
 bung-marquee:has(.marquee-animation-wrapper.is-vertical)
     width: auto

@@ -5,9 +5,6 @@ button[bungFloatButton]
     height: 3em
     font-weight: bold
 
-    &.sr
-        background: var(--accent-color)
-        color: var(--accent-text-color)
     span
         grid-area: 2 / 1
         transition: opacity var(--animation-duration-lv3) var(--ease-in)
@@ -19,6 +16,8 @@ button[bungFloatButton]
         margin-top: 0
     span.hide
         opacity: 0
+    .mdi-arrow-up-thick
+        font-size: 1.25em
 @media screen and (width < 768px)
     button[bungFloatButton]
         grid-template: auto / auto

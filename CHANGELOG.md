@@ -2,6 +2,10 @@
 
   _TODO: Discription to be added._
 
+- v1.3.1
+
+  Fix announcer settings for RB groovin'.
+
 - v1.3.0
 
   Fix mylist issues during data migration for RB groovin ~ RB Reflesia. Fix issues of empty mylist on webui.

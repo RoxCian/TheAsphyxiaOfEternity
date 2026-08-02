@@ -5,6 +5,74 @@
     gap: 2em
     grid-auto-flow: row
     grid-template-columns: repeat(auto-fill, minmax(min(36em, 100%), 1fr))
+
+.color0
+    --background: #f0fff4
+    --accent-color: #23d160
+    --accent-text-color: white
+.color1
+    --background: #ffffea
+    --accent-color: #ffdd57
+    --accent-text-color: var(--black-text)
+.color2
+    --background: #f2ffff
+    --accent-color: #209cee
+    --accent-text-color: white
+.color3
+    --background: #fff9ff
+    --accent-color: #c36fcb
+    --accent-text-color: white
+.color4
+    --background: #fffafa
+    --accent-color: #e5676a
+    --accent-text-color: white
+
+button[bungFloatButton].filter-button
+    display: grid
+    grid-template: auto auto / auto
+    width: 7em
+    height: 3em
+    font-weight: bold
+
+    &.is-selected
+        background: var(--accent-color)
+        color: var(--accent-text-color)
+
+        &.is-loading::after
+            border-color: transparent transparent var(--accent-text-color) var(--accent-text-color)
+        &.is-focused, &:focus
+            border-color: color-mix(in srgb, var(--accent-color) 85%, white)
+    span
+        grid-area: 2 / 1
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        margin-top: -0.5em
+        z-index: 2
+    span.heading
+        grid-area: 1 / 1
+        font-weight: normal
+        margin-top: 0
+    span.hide
+        display: none
+
 @media screen and (width < 768px)
     .rb-list
         gap: 0.5em
+    button[bungFloatButton].filter-button, ::ng-deep button[bungFloatButton].return-to-top
+        width: 5em
+
+@media (prefers-color-scheme: dark)
+    .color0
+        --background: #001100
+        --accent-color: #1ca64c
+    .color1
+        --background: #110900
+        --accent-color: #ffd324
+    .color2
+        --background: #000925
+        --accent-color: #0f81cc
+    .color3
+        --background: #1a001d
+        --accent-color: #a559ac
+    .color4
+        --background: #1a0909
+        --accent-color: #c35155

@@ -1,7 +1,8 @@
 .bung-float-button-layer-top
     position: fixed
     display: flex
-    inset: 3em
+    inset: 1.5em
+    bottom: 4em
     align-items: end
     justify-content: end
     user-select: none
@@ -22,8 +23,6 @@
         display: none
 
     button[bungFloatButton]
-        display: flex
-
         &.float-button-enter
             animation: bung-float-button-enter-animation var(--animation-duration-lv3) var(--ease-in) forwards
         &.float-button-leave
@@ -31,9 +30,13 @@
         &.float-button-move-down
             animation: bung-float-button-move-down-animation var(--animation-duration-lv3) var(--ease-in) forwards
 
+@media screen and (width < 768px)
+    .bung-float-button-layer
+        gap: 0.5em
+
 @keyframes bung-float-button-enter-animation
     from
-        transform: translateX(calc(100% + 2em))
+        transform: translateX(calc(100% + 1.5em))
     to
         transform: none
 @keyframes bung-float-button-move-down-animation

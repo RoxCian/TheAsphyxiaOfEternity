@@ -1,4 +1,4 @@
-import { AnimationCallbackEvent, Component, ElementRef, inject, OnDestroy, OnInit, output, signal, ViewEncapsulation } from "@angular/core"
+import { AnimationCallbackEvent, Component, ElementRef, inject, input, OnDestroy, OnInit, output, signal, ViewEncapsulation } from "@angular/core"
 import { BungFloatButtonService } from "../../../services/bung/float-button.service"
 import { timeout } from "../../../utils/functions"
 
@@ -17,10 +17,11 @@ export class BungFloatButtonComponent implements OnInit {
     private readonly attrsInternal = signal<Record<string, string | undefined>>({})
     readonly attrs = this.attrsInternal.asReadonly()
     readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
+    readonly registeredAs = input<string>()
     private readonly service = inject(BungFloatButtonService)
     private isLeaving = false
     ngOnInit() {
-        this.service.register(this)
+        this.service.register(this, this.registeredAs())
     }
     destroy() {
         if (this.isLeaving) return

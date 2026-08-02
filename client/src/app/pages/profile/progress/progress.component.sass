@@ -22,6 +22,9 @@ p.verdet-header-orig
 
     &.leave
         animation: static-bg-leave-animation 0.8s var(--ease-in) forwards
+@media (width < 768px)
+    bung-tabs ::ng-deep .tabs
+        font-size: 0.75em
 @media (prefers-color-scheme: dark)
     .static-bg
         background-image: var(--bg-url-dark)
