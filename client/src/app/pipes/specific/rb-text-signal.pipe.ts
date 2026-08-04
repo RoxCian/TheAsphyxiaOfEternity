@@ -1,4 +1,4 @@
-import { inject, Pipe, PipeTransform } from "@angular/core"
+import { computed, inject, Injector, Pipe, PipeTransform, Signal } from "@angular/core"
 import { RbLanguageService } from "../../services/specified/rb-language.service"
 
 type KeysOfOrig<T extends object> = {
@@ -9,12 +9,12 @@ type KeysOfHasOrig<T extends object> = keyof {
 } extends `${infer TK}Orig` ? TK & keyof T : never
 
 @Pipe({
-    name: "rbTextPlain",
+    name: "rbText",
     standalone: false
 })
-export class RbTextPipe implements PipeTransform {
+export class RbTextSignalPipe implements PipeTransform {
     private readonly langService = inject(RbLanguageService)
-    transform<T extends object, K extends KeysOfHasOrig<T>>(value: T, key: K): T[K] {
-        return this.langService.currentLanguage() === "en" ? (value[key] ?? value[`${key}Orig` as K]) : (value[`${key}Orig` as K] ?? value[key])
+    transform<T extends object, K extends KeysOfHasOrig<T>>(value: T, key: K): Signal<T[K]> {
+        return computed(() => this.langService.currentLanguage() === "en" ? (value[key] ?? value[`${key}Orig` as K]) : (value[`${key}Orig` as K] ?? value[key]))
     }
 }

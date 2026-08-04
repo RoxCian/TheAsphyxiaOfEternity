@@ -20,7 +20,7 @@
                         </div>
                         <div class="order-name is-size-4">
                             <ng-template #orderName>
-                                @for (el of (o.info | rbText : "orderName").split("|"); let i = $index; track el) {
+                                @for (el of (o.info | rbText : "orderName")().split("|"); let i = $index; track el) {
                                     <span [class.sub]="i > 0">{{ el }}</span>
                                 }
                             </ng-template>
@@ -42,7 +42,7 @@
                         }
                     </div>
                     <div class="order-hint">
-                        <p class="is-size-7">{{ o.info | rbText : "hint" }}</p>
+                        <p class="is-size-7">{{ (o.info | rbText : "hint")() }}</p>
                         <div class="reward-info">
                             <span class="tag leading-tag">Reward</span>
                             <span class="is-size-7">
@@ -58,7 +58,7 @@
                                     @case (8) { <bung-icon iconUrl="static/assets/icons/byword.svg" /> }
                                     @case (9) { <bung-icon iconUrl="static/assets/icons/byword.svg" style="rotate: 180deg" /> }
                                 }
-                                {{ o.info | rbText : "clearRewardName" }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}
+                                {{ (o.info | rbText : "clearRewardName")() }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}
                             </span>
                         </div>
                     </div>

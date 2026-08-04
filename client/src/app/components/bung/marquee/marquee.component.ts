@@ -23,7 +23,8 @@ export class BungMarqueeComponent implements AfterViewInit, OnDestroy {
     readonly contentAlign = input<"start" | "end" | "center" | "stretch">("start")
     readonly duration = computed(() => Math.abs(this.speed()) * (this.contentSize() + this.spacing()) / 100) // in seconds
     readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
-    readonly clonedElement = computed(() => <HTMLElement>this.contentInsertion()?.element?.nativeElement.cloneNode(true))
+    private readonly updateFlag = signal(0)
+    readonly clonedElement = computed(() => this.updateFlag() >= 0 ? <HTMLElement>this.contentInsertion()?.element?.nativeElement.cloneNode(true) : new HTMLElement())
     readonly isOverflowed = signal(false)
     readonly easingWhenHasDelay = computed(() => getMarqueeEasing(this.duration(), 1 /* second */))
     private readonly contentInsertion = viewChild("contentInsertion", { read: BungInsertionComponent })
@@ -65,6 +66,12 @@ export class BungMarqueeComponent implements AfterViewInit, OnDestroy {
                 this.isOverflowed.set(newValue)
             }
         }
+    }
+    markContentUpdated() {
+        setTimeout(() => {
+            this.updateFlag.update(f => f += 1)
+            this.checkOverflowed()
+        }, 0)
     }
 }
 

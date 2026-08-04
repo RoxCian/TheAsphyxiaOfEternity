@@ -225,18 +225,22 @@ rb-matching-grade
     gap: 1em
 .rb-nav
     grid-area: 2 / 1
-    display: flex
+    display: grid
+    grid-template: 1fr / 1fr auto
     margin-top: -2em
     padding: 2em
     align-items: center
-    flex-wrap: wrap
     gap: 2em
     z-index: 1
 .rb-nav-container
+    grid: 1 / 1
     flex: 1
-    display: flex
-    align-items: stretch
+    flex-shrink: 1
+    min-width: 0
+    display: grid
+    grid-template: 1fr / 1fr
 .rb-nav-buttons
+    grid-area: 1 / 1
     margin: 0
     flex-wrap: nowrap
 
@@ -255,7 +259,10 @@ rb-matching-grade
 
         ::ng-deep bung-icon .icon-svg svg .icon-fill
             fill: var(--accent-text-color) !important
-        
+
+rb-version
+    grid-area: 1 / 2
+
 @media (prefers-color-scheme: dark)
     .name-and-byword .name
         &.rb3-player-event-level1

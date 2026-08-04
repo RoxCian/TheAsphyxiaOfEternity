@@ -6,17 +6,17 @@ export const rb3VerdetDesKriegesContents = loadCsvAsync<Rb3VerdetDesKriegesConte
         chapter: el.chapter,
         page: el.page,
     } as Rb3VerdetDesKriegesContent
-    const phraseParts = el.phrase.split("$")
+    const phraseParts = el.phrase?.split("$")
     const phraseOrigParts = el.phraseOrig.split("$")
-    if (phraseParts.length <= 1) {
+    if ((phraseParts?.length ?? 0) <= 1) {
         try {
-            result.phrase = [JSON.parse(el.phrase)]
+            if (el.phrase) result.phrase = [JSON.parse(el.phrase)]
         } catch {
             result.phrase = el.phrase
         }
     } else {
         result.phrase = []
-        for (const ph of phraseParts) {
+        for (const ph of phraseParts!) {
             try {
                 result.phrase.push(JSON.parse(ph))
             } catch {

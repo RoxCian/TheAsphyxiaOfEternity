@@ -1,6 +1,6 @@
 @if (annotation()) {
-    <h6 class="is-size-6"><b>{{ annotation()! | rbText : "name" }}</b></h6>
-    @for (c of (annotation()! | rbText : "note").split("\n"); track c) {
+    <h6 class="is-size-6"><b>{{ (annotation()! | rbText : "name")() }}</b></h6>
+    @for (c of (annotation()! | rbText : "note")().split("\n"); track c) {
         <p>{{ c }}</p>
     }
 }

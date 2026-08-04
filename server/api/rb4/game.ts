@@ -293,10 +293,12 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
         isNeedUpdate = true
         classRecord.rank = log.rank
     }
-    if (isInitial || !classRecord.totalScore || (log.totalScore > classRecord.totalScore)) {
+    if (isInitial || !classRecord.totalCompletionScore || (log.totalCompletionScore > classRecord.totalCompletionScore)) {
         isNeedUpdate = true
-        classRecord.totalScore = log.totalScore
-        if (clearTypeCurrent >= clearTypeSaved || log.class >= Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
+        classRecord.totalCompletionScore = log.totalCompletionScore
+        classRecord.separateCompletionScore = log.separateCompletionScore
+        classRecord.separateCompletionRateTimes100 = log.separateCompletionRateTimes100
+        if (!classRecord.stageLogs || clearTypeCurrent >= clearTypeSaved || log.class >= Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
     if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true

@@ -4,6 +4,7 @@ import { Rb3VerdetDesKriegesPhrasePart, Rb3VerdetDesKriegesUnlockRequestType } f
 import { timeout } from "../../../../utils/functions"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 
 @Component({
     selector: "rb3-verdet-des-krieges-storyboard",
@@ -25,6 +26,8 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     protected readonly isShowUnlockMusicModal = signal(false)
     protected readonly isUnlocked = signal(false)
     protected readonly showUnlockScreen = computed(() => this.service.isActivated() && !this.notUnlockNow() && ((this.service.canUnlockMusic() && this.service.chapter() === this.service.verdetDesKrieges.value()?.chapter) || this.isShowUnlockMusicModal() || this.isUnlocking()))
+
+    protected readonly langService = inject(RbLanguageService)
 
     private readonly popupService = inject(BungPopupService)
     private viewStateBackup?: "cover" | "contents" | "page"

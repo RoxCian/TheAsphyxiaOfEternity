@@ -71,7 +71,7 @@ export type Rb3VerdetDesKriegesAppearance = {
 export type Rb3VerdetDesKriegesContentRaw = {
     chapter: number
     page: number
-    phrase: string
+    phrase?: string
     phraseOrig: string
 }
 export type Rb3VerdetDesKriegesResponse = {
@@ -86,7 +86,7 @@ export type Rb3VerdetDesKriegesResponse = {
 export type Rb3VerdetDesKriegesContent = {
     chapter: number
     page: number
-    phrase: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
+    phrase?: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
     phraseOrig: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
 }
 

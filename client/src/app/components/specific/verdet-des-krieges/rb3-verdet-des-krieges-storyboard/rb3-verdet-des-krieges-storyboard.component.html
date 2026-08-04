@@ -62,163 +62,167 @@
 
 @let content = service.pageContent();
 @let data = service.verdetDesKrieges.value();
-@if (viewState() === "cover" && !service.isLoading()) {
-    <section class="storyboard" animate.leave="non-page-leave" (animate.leave)="onContentTransitionEnd($event)">
-        <div class="content storyboard-content is-centered">
-            @for (c of content; let i = $index; track c) {
-                @if (!c.phraseOrig) { <br> }
-                @else {
-                    <p [style.--timeout]="`${(i + 1) * 0.8}s`">{{ c.phraseOrig }}</p>
+@for (lang of [langService.currentLanguage()]; track lang) {
+    @if (viewState() === "cover" && !service.isLoading()) {
+        <section class="storyboard" animate.leave="non-page-leave" (animate.leave)="onContentTransitionEnd($event)">
+            <div class="content storyboard-content is-centered">
+                @for (c of content; let i = $index; track c) {
+                    @let p = (c | rbText : "phrase");
+                    @if (!p) { <br> }
+                    @else {
+                        <p [style.--timeout]="`${(i + 1) * 0.8}s`">{{ p }}</p>
+                    }
                 }
-            }
-            <div class="cover-buttons">
-                <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 2) * 0.8}s`" [class.is-loading]="service.isLoading()" [disabled]="service.isLoading()" (click)="onEnter()">{{ data ? "Continue reading" : "Step into the castle" }}</button>
-                @if (data) { <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 3) * 0.8}s`" [disabled]="service.isLoading()" (click)="onGotoContents()">Contents</button> }
+                <div class="cover-buttons">
+                    <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 2) * 0.8}s`" [class.is-loading]="service.isLoading()" [disabled]="service.isLoading()" (click)="onEnter()">{{ data ? "Continue reading" : "Step into the castle" }}</button>
+                    @if (data) { <button class="button cover-button" [style.--timeout]="`${(service.pageContent().length + 3) * 0.8}s`" [disabled]="service.isLoading()" (click)="onGotoContents()">Contents</button> }
+                </div>
             </div>
-        </div>
-    </section>
-} @else if (viewState() === "contents" && !service.isLoading()) {
-    <section class="storyboard" animate.enter="page-enter" animate.leave="non-page-leave" (animate.leave)="onContentTransitionEnd($event)">
-        <h2 class="contents-header" [style.--timeout]="'0.8s'">
-            <button class="button back-button" [disabled]="service.isLoading()" (click)="onGotoCover()"><i class="mdi mdi-chevron-left"></i></button>
-            Contents
-        </h2>
-        <div class="content storyboard-content is-centered">
-            <div class="contents-buttons">
-                <button class="button contents-button" [style.--timeout]="`1.6s`" [disabled]="!data || data.chapter < 1 || service.isLoading()" (click)="onNavigateToChapter(1)">Chapter 1</button>
-                <button class="button contents-button" [style.--timeout]="`2.4s`" [disabled]="!data || data.chapter < 2 || service.isLoading()" (click)="onNavigateToChapter(2)">Chapter 2</button>
-                <button class="button contents-button" [style.--timeout]="`3.2s`" [disabled]="!data || data.chapter < 3 || service.isLoading()" (click)="onNavigateToChapter(3)">Chapter Final</button>
+        </section>
+    } @else if (viewState() === "contents" && !service.isLoading()) {
+        <section class="storyboard" animate.enter="page-enter" animate.leave="non-page-leave" (animate.leave)="onContentTransitionEnd($event)">
+            <h2 class="contents-header" [style.--timeout]="'0.8s'">
+                <button class="button back-button" [disabled]="service.isLoading()" (click)="onGotoCover()"><i class="mdi mdi-chevron-left"></i></button>
+                Contents
+            </h2>
+            <div class="content storyboard-content is-centered">
+                <div class="contents-buttons">
+                    <button class="button contents-button" [style.--timeout]="`1.6s`" [disabled]="!data || data.chapter < 1 || service.isLoading()" (click)="onNavigateToChapter(1)">Chapter 1</button>
+                    <button class="button contents-button" [style.--timeout]="`2.4s`" [disabled]="!data || data.chapter < 2 || service.isLoading()" (click)="onNavigateToChapter(2)">Chapter 2</button>
+                    <button class="button contents-button" [style.--timeout]="`3.2s`" [disabled]="!data || data.chapter < 3 || service.isLoading()" (click)="onNavigateToChapter(3)">Chapter Final</button>
+                </div>
             </div>
-        </div>
-    </section>
-} @else if ((viewState() === "page" || viewState() === "transit-page" || viewState() === "transit-chapter") && (!service.canUnlockMusic() || notUnlockNow())) {
-    <section class="storyboard" [class.no-animation]="showUnlockScreen() || isUnlocked()" animate.leave="non-page-leave">
-        @if (viewState() === "page" || viewState() === "transit-page") {
-            <div class="chapter-domain" animate.enter="page-enter" animate.leave="page-leave">
-                <h2 [style.--timeout]="'0.8s'">
-                    <button class="button back-button" [disabled]="service.isLoading()" (click)="onGotoContents()"><i class="mdi mdi-chevron-left"></i></button>
-                    <span>
-                        @switch (service.chapter()) {
-                            @case (1) { Chapter 1 }
-                            @case (2) { Chapter 2 }
-                            @case (3) { Chapter Final }
-                        }
-                    </span>
-                </h2>
-                @if (viewState() === "page") {
-                    <div class="page-domain content storyboard-content" animate.leave="page-leave" (animate.leave)="onContentTransitionEnd($event)">
-                        @for (c of content; let i = $index; track c) {
-                            @let p = c.phraseOrig;
-                            @let timeoutBase = (i + (viewState() === "page" ? 2 : 1)) * 0.8;
-                            @let highlightSlice = content.slice(0, i).filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
-                            @let timeoutOffset = highlightSlice.reduce((prev, next) => prev + computeHighlightPhraseLength(next.phraseOrig) * 0.1 + 3.2, 0);
-                            @if (!p) { <br> }
-                            @else {
-                                @if (typeof p === "string") {
-                                    <p [style.--timeout]="`${timeoutBase + timeoutOffset}s`">{{ p }}</p>
-                                } @else {
-                                    @let hasHighlight = p.some(part => typeof part !== "string" && part.highlight);
-                                    @let highlightAdditionalTimeout = hasHighlight ? computeHighlightPhraseLength(p) * 0.1 + 2.8 : 0;
-                                    @if (hasHighlight) {
-                                        <div class="highlight-complex">
-                                            <p class="h" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" [style.--leave-timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout - 0.4}s`">
-                                                <ng-container *ngTemplateOutlet="phraseHighlighted; context: { phraseParts: p, timeout: timeoutBase + timeoutOffset, indexOffset: 0 }" />
-                                            </p>
+        </section>
+    } @else if ((viewState() === "page" || viewState() === "transit-page" || viewState() === "transit-chapter") && (!service.canUnlockMusic() || notUnlockNow())) {
+        <section class="storyboard" [class.no-animation]="showUnlockScreen() || isUnlocked()" animate.leave="non-page-leave">
+            @if (viewState() === "page" || viewState() === "transit-page") {
+                <div class="chapter-domain" animate.enter="page-enter" animate.leave="page-leave">
+                    <h2 [style.--timeout]="'0.8s'">
+                        <button class="button back-button" [disabled]="service.isLoading()" (click)="onGotoContents()"><i class="mdi mdi-chevron-left"></i></button>
+                        <span>
+                            @switch (service.chapter()) {
+                                @case (1) { Chapter 1 }
+                                @case (2) { Chapter 2 }
+                                @case (3) { Chapter Final }
+                            }
+                        </span>
+                    </h2>
+                    @if (viewState() === "page") {
+                        <div class="page-domain content storyboard-content" animate.leave="page-leave" (animate.leave)="onContentTransitionEnd($event)">
+                            @for (c of content; let i = $index; track c) {
+                                @let p = (c | rbText : "phrase")();
+                                @let timeoutBase = (i + (viewState() === "page" ? 2 : 1)) * 0.8;
+                                @let highlightSlice = content.slice(0, i).filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
+                                @let timeoutOffset = highlightSlice.reduce((prev, next) => prev + computeHighlightPhraseLength(lang === "en" ? next.phrase ?? next.phraseOrig : next.phraseOrig) * 0.1 + 3.2, 0);
+                                @if (!p) { <br> }
+                                @else {
+                                    @if (typeof p === "string") {
+                                        <p [style.--timeout]="`${timeoutBase + timeoutOffset}s`">{{ p }}</p>
+                                    } @else {
+                                        @let hasHighlight = p.some(part => typeof part !== "string" && part.highlight);
+                                        @let highlightAdditionalTimeout = hasHighlight ? computeHighlightPhraseLength(p) * 0.1 + 2.8 : 0;
+                                        @if (hasHighlight) {
+                                            <div class="highlight-complex">
+                                                <p class="h" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" [style.--leave-timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout - 0.4}s`">
+                                                    <ng-container *ngTemplateOutlet="phraseHighlighted; context: { phraseParts: p, timeout: timeoutBase + timeoutOffset, indexOffset: 0 }" />
+                                                </p>
+                                                <p [style.--timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout}s`">
+                                                    <ng-container *ngTemplateOutlet="phrase; context: { phraseParts: p, timeout: timeoutBase + timeoutOffset + highlightAdditionalTimeout }" />
+                                                </p>
+                                            </div>
+                                            <div class="highlight-bg" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" [style.--leave-timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout - 0.4}s`"></div>
+                                        } @else {
                                             <p [style.--timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout}s`">
                                                 <ng-container *ngTemplateOutlet="phrase; context: { phraseParts: p, timeout: timeoutBase + timeoutOffset + highlightAdditionalTimeout }" />
                                             </p>
-                                        </div>
-                                        <div class="highlight-bg" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" [style.--leave-timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout - 0.4}s`"></div>
-                                    } @else {
-                                        <p [style.--timeout]="`${timeoutBase + timeoutOffset + highlightAdditionalTimeout}s`">
-                                            <ng-container *ngTemplateOutlet="phrase; context: { phraseParts: p, timeout: timeoutBase + timeoutOffset + highlightAdditionalTimeout }" />
-                                        </p>
+                                        }
                                     }
                                 }
                             }
+                        </div>
+                        @if (data?.completed && data?.chapter === 3 && data?.page === (service.pageCount.value()?.pageCount ?? 0) - 1) {
+                            @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
+                            @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
+                            @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(lang === "en" ? next.phrase ?? next.phraseOrig : next.phraseOrig) * 0.1 + 3.2, 0);
+                            <bung-divider animate.enter="page-enter" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" prompt="Verdet des Krieges The End" />
                         }
-                    </div>
-                    @if (data?.completed && data?.chapter === 3 && data?.page === (service.pageCount.value()?.pageCount ?? 0) - 1) {
-                        @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
-                        @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
-                        @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(next.phraseOrig) * 0.1 + 3.2, 0);
-                        <bung-divider animate.enter="page-enter" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" prompt="Verdet des Krieges The End" />
                     }
-                }
-                <bung-divider class="progress-divider" prompt="Progress" />
-                <div class="progress-lamps">
-                    @for (i of 5 | range; track i) {
-                        <div class="progress-card card is-size-7 lamps-enter" animate.leave="lamps-leave" [class.--timeout]="`${i * 0.2}s`">
-                            <div class="text">
-                                <span>Clue {{ i + 1 }}</span>
-                                <span class="empty"></span>
-                                <div class="progress-label" [class.is-loading]="service.isLoading() || !service.isActivated()">
-                                    <div class="loader"></div>
-                                    @if (service.chapter() < (data?.chapter ?? 0)) {
-                                        <span><i class="mdi mdi-check"></i></span>
-                                    } @else if (i === 4 && (data?.page ?? 0) < 4) {
-                                        <span><i class="mdi mdi-lock"></i></span>
-                                    } @else {
-                                        <span>{{ ((data?.progress?.[i] ?? 0) / 0.60).toFixed(0) + "%" }}</span>
-                                    }
+                    <bung-divider class="progress-divider" prompt="Progress" />
+                    <div class="progress-lamps">
+                        @for (i of 5 | range; track i) {
+                            <div class="progress-card card is-size-7 lamps-enter" animate.leave="lamps-leave" [class.--timeout]="`${i * 0.2}s`">
+                                <div class="text">
+                                    <span>Clue {{ i + 1 }}</span>
+                                    <span class="empty"></span>
+                                    <div class="progress-label" [class.is-loading]="service.isLoading() || !service.isActivated()">
+                                        <div class="loader"></div>
+                                        @if (service.chapter() < (data?.chapter ?? 0)) {
+                                            <span><i class="mdi mdi-check"></i></span>
+                                        } @else if (i === 4 && (data?.page ?? 0) < 4) {
+                                            <span><i class="mdi mdi-lock"></i></span>
+                                        } @else {
+                                            <span>{{ ((data?.progress?.[i] ?? 0) / 0.60).toFixed(0) + "%" }}</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="progress-base">
+                                    <div class="progress-body" [style.--progress-body-left]="`${service.chapter() < (data?.chapter ?? 0) ? 0 : (100 - (data?.progress?.[i] ?? 0) / 0.60)}%`" [style.background]="service.appearances.value()?.[i]?.themeColor"></div>
                                 </div>
                             </div>
-                            <div class="progress-base">
-                                <div class="progress-body" [style.--progress-body-left]="`${service.chapter() < (data?.chapter ?? 0) ? 0 : (100 - (data?.progress?.[i] ?? 0) / 0.60)}%`" [style.background]="service.appearances.value()?.[i]?.themeColor"></div>
-                            </div>
-                        </div>
-                    }
-                </div>
-                <nav class="pagination is-centered" animate.enter="page-enter" animate.leave="page-leave">
-                    <button class="button pagination-previous" [class.is-loading]="service.isLoading()" [disabled]="(service.chapter() <= 1 && service.page() <= 0) || service.isLoading()" (click)="onNavigateToPrevious()">
-                        <i class="mdi mdi-chevron-left"></i>
-                        Previous {{ service.page() === 0 ? "chapter" : "page" }}
-                    </button>
-                    <ul class="pagination-list">
-                        @for (i of (service.pageCount.value()?.pageCount ?? 0 | range); track i) {
-                            <li>
-                                <button class="button pagination-link" [class.is-info]="i === service.page()" [disabled]="(service.chapter() >= (data?.chapter ?? 0) && i > (data?.page ?? 0)) || service.isLoading()" (click)="i === service.page() ? undefined : onNavigateToPage(i)">{{ i + 1 }}</button>
-                            </li>
                         }
-                    </ul>
-                    @if (viewState() === "page") {
-                        @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
-                        @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
-                        @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(next.phraseOrig) * 0.1 + 3.2, 0);
-                        <button class="button pagination-next" animate.enter="page-enter" animate.leave="page-leave"
-                            [class.is-loading]="service.isLoading()"
-                            [style.--timeout]="`${timeoutBase + timeoutOffset}s`"
-                            [disabled]="data?.completed || (!service.canNavigateToNextPage() && !service.canNavigateToNextChapter() && !service.canUnlockMusic()) || service.isLoading()"
-                            [bungTooltip]="`Increase progress to unlock ${service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1 ? 'new music' : 'next page'}`"
-                            [bungTooltip.disabled]="service.canNavigateToNextPage() || service.canNavigateToNextChapter() || service.canUnlockMusic()"
-                            (click)="onNavigateToNext()">
-                            @if (data?.completed) {
-                                The end
-                            } @else if (service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
-                                @if (service.chapter() === data?.chapter && service.canUnlockMusic()) {
-                                    Unlock...
-                                } @else {
-                                    Next chapter...
-                                }
-                            } @else {
-                                Next page
-                            }
-                            <i class="mdi mdi-chevron-right"></i>
+                    </div>
+                    <nav class="pagination is-centered" animate.enter="page-enter" animate.leave="page-leave">
+                        <button class="button pagination-previous" [class.is-loading]="service.isLoading()" [disabled]="(service.chapter() <= 1 && service.page() <= 0) || service.isLoading()" (click)="onNavigateToPrevious()">
+                            <i class="mdi mdi-chevron-left"></i>
+                            Previous {{ service.page() === 0 ? "chapter" : "page" }}
                         </button>
-                    }
-                </nav>
-            </div>
-        }
-    </section>
+                        <ul class="pagination-list">
+                            @for (i of (service.pageCount.value()?.pageCount ?? 0 | range); track i) {
+                                <li>
+                                    <button class="button pagination-link" [class.is-info]="i === service.page()" [disabled]="(service.chapter() >= (data?.chapter ?? 0) && i > (data?.page ?? 0)) || service.isLoading()" (click)="i === service.page() ? undefined : onNavigateToPage(i)">{{ i + 1 }}</button>
+                                </li>
+                            }
+                        </ul>
+                        @if (viewState() === "page") {
+                            @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
+                            @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
+                            @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(lang === "en" ? next.phrase ?? next.phraseOrig : next.phraseOrig) * 0.1 + 3.2, 0);
+                            <button class="button pagination-next" animate.enter="page-enter" animate.leave="page-leave"
+                                [class.is-loading]="service.isLoading()"
+                                [style.--timeout]="`${timeoutBase + timeoutOffset}s`"
+                                [disabled]="data?.completed || (!service.canNavigateToNextPage() && !service.canNavigateToNextChapter() && !service.canUnlockMusic()) || service.isLoading()"
+                                [bungTooltip]="`Increase progress to unlock ${service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1 ? 'new music' : 'next page'}`"
+                                [bungTooltip.disabled]="service.canNavigateToNextPage() || service.canNavigateToNextChapter() || service.canUnlockMusic()"
+                                (click)="onNavigateToNext()">
+                                @if (data?.completed) {
+                                    The end
+                                } @else if (service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
+                                    @if (service.chapter() === data?.chapter && service.canUnlockMusic()) {
+                                        Unlock...
+                                    } @else {
+                                        Next chapter...
+                                    }
+                                } @else {
+                                    Next page
+                                }
+                                <i class="mdi mdi-chevron-right"></i>
+                            </button>
+                        }
+                    </nav>
+                </div>
+            }
+        </section>
+    }
+    @if (showUnlockScreen()) {
+        <div class="unlock-box" animate.leave="leave">
+            <div class="unlock-bg" (click)="notUnlockNow.set(true)"></div>
+            <button class="button unlock-button" [class.is-loading]="isUnlocking()" (click)="onUnlock()">Unleash the melody...</button>
+        </div>
+    }
+    @if (showPastel() && pastelProperty.pastelId >= 0) {
+        <div class="pastel-kun is-{{ pastelProperty.side }}" [style.--position]="pastelProperty.position" animate.leave="leave" bungTooltip="\ Squeak /" triggerMethod="click" closeTriggerMethod="click" [delay]="0" [duration]="1000" (tooltipOpened)="onPastelClicked()">
+            <img src="static/assets/images/rb3-pastel-{{ pastelProperty.pastelId }}.webp">
+        </div>
+    }
 }
-@if (showUnlockScreen()) {
-    <div class="unlock-box" animate.leave="leave">
-        <div class="unlock-bg" (click)="notUnlockNow.set(true)"></div>
-        <button class="button unlock-button" [class.is-loading]="isUnlocking()" (click)="onUnlock()">Unleash the melody...</button>
-    </div>
-}
-@if (showPastel() && pastelProperty.pastelId >= 0) {
-    <div class="pastel-kun is-{{ pastelProperty.side }}" [style.--position]="pastelProperty.position" animate.leave="leave" bungTooltip="\ Squeak /" triggerMethod="click" closeTriggerMethod="click" [delay]="0" [duration]="1000" (tooltipOpened)="onPastelClicked()">
-        <img src="static/assets/images/rb3-pastel-{{ pastelProperty.pastelId }}.webp">
-    </div>
-}
+@if (service.isActivated()) { <rb-lang-switch /> }

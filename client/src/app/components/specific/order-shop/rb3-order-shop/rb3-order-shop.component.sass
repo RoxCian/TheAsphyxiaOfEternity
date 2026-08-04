@@ -26,7 +26,12 @@
     --background: #fffafa
     --accent-color: #e5676a
     --accent-text-color: white
-
+::ng-deep .rb3-order-shop-filter-item.color3
+    --accent-color: #c36fcb
+    --accent-text-color: white
+::ng-deep .rb3-order-shop-filter-item.color4
+    --accent-color: #e5676a
+    --accent-text-color: white
 button[bungFloatButton].filter-button
     display: grid
     grid-template: auto auto / auto
@@ -57,8 +62,8 @@ button[bungFloatButton].filter-button
 @media screen and (width < 768px)
     .rb-list
         gap: 0.5em
-    button[bungFloatButton].filter-button, ::ng-deep button[bungFloatButton].return-to-top
-        width: 5em
+    button[bungFloatButton].filter-button
+        width: 3em
 
 @media (prefers-color-scheme: dark)
     .color0
@@ -75,4 +80,8 @@ button[bungFloatButton].filter-button
         --accent-color: #a559ac
     .color4
         --background: #1a0909
+        --accent-color: #c35155
+    ::ng-deep .rb3-order-shop-filter-item.color3
+        --accent-color: #a559ac
+    ::ng-deep .rb3-order-shop-filter-item.color4
         --accent-color: #c35155

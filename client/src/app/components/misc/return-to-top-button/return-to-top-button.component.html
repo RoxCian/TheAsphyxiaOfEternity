@@ -1,7 +1,7 @@
 @if (service.canReturnToTop()) {
     <button bungFloatButton class="return-to-top" registeredAs="returnToTop" (click)="service.returnToTop()">
         <span class="heading" [class.hide]="isMobile()">Return</span>
-        <span class="to-top">
+        <span class="text">
             @if (isMobile()) {
                 <i class="mdi mdi-arrow-up-thick"></i>
             } @else { Top }

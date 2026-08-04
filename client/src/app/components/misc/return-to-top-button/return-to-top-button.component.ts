@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from "@angular/core"
+import { Component, inject, OnDestroy, viewChild } from "@angular/core"
 import { ReturnToTopService } from "../../../services/misc/return-to-top.service"
 import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
 import { BungFloatButtonComponent } from "../../bung/float-button/float-button.component"
@@ -9,7 +9,7 @@ import { BungFloatButtonComponent } from "../../bung/float-button/float-button.c
     templateUrl: "./return-to-top-button.component.html",
     styleUrl: "./return-to-top-button.component.sass",
 })
-export class ReturnToTopButtonComponent {
+export class ReturnToTopButtonComponent implements OnDestroy {
     protected readonly service = inject(ReturnToTopService)
     private readonly breakpointService = inject(BungBreakpointService)
     
@@ -17,8 +17,7 @@ export class ReturnToTopButtonComponent {
 
     private readonly button = viewChild(BungFloatButtonComponent)
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.button()?.destroy()
     }
-
 }

@@ -40,25 +40,30 @@
     </div>
     <bung-divider class="section-divider" prompt="End of order shop" />
     <bung-menu-def [class]="isMobile() ? 'is-small' : ''" #filterDropdown>
-        <bung-menu-item content="All Orders" (click)="filter.set(-1)" />
-        <bung-menu-item content="Starter" (click)="filter.set(0)" />
-        <bung-menu-item content="Normal" (click)="filter.set(1)" />
-        <bung-menu-item content="Equip" (click)="filter.set(2)" />
-        <bung-menu-item content="Event" (click)="filter.set(3)" />
-        <bung-menu-item content="Challenge" (click)="filter.set(4)" />
+        <bung-menu-item content="All Orders" [isActive]="filter() === -1" (click)="filter.set(-1)" />
+        <bung-menu-item content="Starter" [isActive]="filter() === 0" class="is-success" (click)="filter.set(0)" />
+        <bung-menu-item content="Normal" [isActive]="filter() === 1" class="is-warning" icon="" (click)="filter.set(1)" />
+        <bung-menu-item content="Equip" [isActive]="filter() === 2" class="is-info" (click)="filter.set(2)" />
+        <bung-menu-item content="Event" [isActive]="filter() === 3" class="rb3-order-shop-filter-item color3" (click)="filter.set(3)" />
+        <bung-menu-item content="Challenge" [isActive]="filter() === 4" class="rb3-order-shop-filter-item color4" (click)="filter.set(4)" />
     </bung-menu-def>
     <button bungFloatButton class="filter-button {{ filter() >= 0 ? `color${filter()}` : '' }}" [class.is-selected]="filter() >= 0" [bungDropdown]="filterDropdown" float="left">
         <span class="heading" [class.hide]="isMobile()">Filter</span>
         <span class="filter-name">
-            @switch (filter()) {
-                @case (-1) { {{ isMobile() ? "All" : "All Orders" }} }
-                @case (0) { Starter }
-                @case (1) { Normal }
-                @case (2) { Equip }
-                @case (3) { Event }
-                @case (4) { {{ isMobile() ? "Chall." : "Challenge" }} }
+            @if (isMobile()) {
+                <i class="mdi {{ filter() === -1 ? 'mdi-filter' : 'mdi-filter-check' }}"></i>
+            } @else {
+                @switch (filter()) {
+                    @case (-1) { All Orders }
+                    @case (0) { Starter }
+                    @case (1) { Normal }
+                    @case (2) { Equip }
+                    @case (3) { Event }
+                    @case (4) { Challenge }
+                }
             }
         </span>
     </button>
+    <rb-lang-switch />
     <return-to-top-button />
 }

@@ -52,7 +52,7 @@ int,string,string?,fire|aqua|wood|light|dark,boolean
 48,STAFF6,,aqua,FALSE
 49,STAFF7,,wood,FALSE
 50,STAFF,,fire,FALSE
-51,Nord Braun,ノール?ブラウン,wood,TRUE
+51,Nord Braun,ノール・ブラウン,wood,TRUE
 52,Ignaz,イグナーツ,aqua,TRUE
 53,Chaton,シャトン,dark,TRUE
 54,Flower Seller of the Time,時の花売り,wood,TRUE

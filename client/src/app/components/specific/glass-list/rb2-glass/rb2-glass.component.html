@@ -6,7 +6,7 @@
             <bung-insertion [content]="processSvg(iconElement() | async)" />
         </figure>
         <div class="glass-info">
-            <bung-marquee class="glass-name is-size-4" content="{{ g | rbText : 'category' }} {{ g | rbText : 'name' }}" [spacing]="72" [delay]="1500" />
+            <bung-marquee class="glass-name is-size-4" content="{{ (g | rbText : 'category')() }} {{ (g | rbText : 'name')() }}" [spacing]="72" [delay]="1500" />
             <bung-divider class="progress-divider" prompt="Progress" promptLayout="start" />
             <span class="glass-progress">
                 @if (glass().experiences >= g.experiences) {

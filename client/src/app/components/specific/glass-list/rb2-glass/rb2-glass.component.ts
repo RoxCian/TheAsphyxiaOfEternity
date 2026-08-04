@@ -1,8 +1,10 @@
-import { Component, computed, inject, input } from "@angular/core"
+import { Component, computed, effect, inject, input, viewChild } from "@angular/core"
 import { DomSanitizer } from "@angular/platform-browser"
 import { iconUrlToSvg } from "../../../../utils/bung-svg-util"
 import { Rb2GlassResponse } from "rbweb"
 import { Rb2GlassesService } from "../../../../services/specified/rb2-glasses.service"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 
 @Component({
     selector: "rb2-glass",
@@ -18,6 +20,20 @@ export class Rb2GlassComponent {
     protected readonly progress = computed(() => this.glass().glass ? Math.min(Math.max(this.glass().experiences / this.glass().glass!.experiences, 0), 1) : 0)
 
     protected readonly service = inject(Rb2GlassesService)
+    
+    private readonly langService = inject(RbLanguageService)
+    private readonly titleMarquee = viewChild(BungMarqueeComponent)
+    private langBackup?: "en" | "orig"
+
+    constructor() {
+        effect(() => {
+            const lang = this.langService.currentLanguage()
+            if (this.langBackup !== lang) {
+                this.langBackup = lang
+                if (this.langBackup != undefined) this.titleMarquee()?.markContentUpdated()
+            }
+        })
+    }
 
     processSvg(el?: SVGElement | null): SVGElement | undefined {
         if (!el || !this.glass().glass) return el ?? undefined

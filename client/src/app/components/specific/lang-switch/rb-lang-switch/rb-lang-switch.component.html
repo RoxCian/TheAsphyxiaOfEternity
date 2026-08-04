@@ -1,0 +1,19 @@
+<button bungFloatButton class="lang-switch" registeredAs="rbLangSwitch" (click)="service.switchLanguage()">
+    <span class="heading" [class.hide]="isMobile()">Text</span>
+    <div class="text">
+        @switch (service.currentLanguage()) {
+            @case ("orig") {
+                <span animate.enter="text-enter" animate.leave="text-leave">
+                    @if (isMobile()) { <i class="mdi mdi-ideogram-cjk-variant"></i> }
+                    @else { Original }
+                </span>
+            }
+            @case ("en") {
+                <span animate.enter="text-enter" animate.leave="text-leave">
+                    @if (isMobile()) { <bung-icon iconUrl="static/assets/icons/eng.svg" /> }
+                    @else { Translated }
+                </span>
+            }
+        }
+    </div>
+</button>

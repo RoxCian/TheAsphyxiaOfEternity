@@ -1,10 +1,12 @@
-import { Component, computed, inject, input } from "@angular/core"
+import { Component, computed, effect, inject, input, viewChild } from "@angular/core"
 import { Rb3OrderResponse } from "rbweb"
 import { toggleTransform } from "../../../../signals/transforms"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { Rb3OrderDetailsParamFlag } from "rbweb"
 import { Rb3OrderShopService } from "../../../../services/specified/rb3-order-shop.service"
-import { hasFlag } from "../../../../utils/functions"
+import { hasFlag, timeout } from "../../../../utils/functions"
+import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 
 @Component({
     selector: "rb3-order",
@@ -20,4 +22,17 @@ export class Rb3OrderComponent {
     readonly isLocked = computed(() => hasFlag(this.order()?.param ?? Rb3OrderDetailsParamFlag.none, Rb3OrderDetailsParamFlag.lockedToSlot))
     protected readonly breakpointService = inject(BungBreakpointService)
     protected readonly service = inject(Rb3OrderShopService)
+    private readonly langService = inject(RbLanguageService)
+    private readonly titleMarquee = viewChild(BungMarqueeComponent)
+    private langBackup?: "en" | "orig"
+
+    constructor() {
+        effect(() => {
+            const lang = this.langService.currentLanguage()
+            if (this.langBackup !== lang) {
+                this.langBackup = lang
+                if (this.langBackup != undefined) this.titleMarquee()?.markContentUpdated()
+            }
+        })
+    }
 }

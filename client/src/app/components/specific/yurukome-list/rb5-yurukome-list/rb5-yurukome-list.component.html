@@ -1,7 +1,7 @@
 <ng-template #placeholder>
     <div class="rb-panel"></div>
 </ng-template>
-@if (service.isActivated()) {
+@if (service.isActivated() && !service.data.isLoading() && service.data.value()) {
     <div class="rb-list">
         @for (yurukome of service.data.value(); track yurukome.id) {
             <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
@@ -10,5 +10,6 @@
         }
     </div>
     <bung-divider prompt="End of Pastel-kun's Casual Comments" />
+    <rb-lang-switch />
     <return-to-top-button />
 }

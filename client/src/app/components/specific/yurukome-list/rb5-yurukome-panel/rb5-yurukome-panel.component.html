@@ -32,7 +32,7 @@
             <div class="comment-wrapper">
                 <div class="comment-info">
                     <div class="comment-title is-size-4">
-                        <bung-marquee [content]="y.info | rbText : 'title'" [delay]="1500" [spacing]="72" />
+                        <bung-marquee [content]="(y.info | rbText : 'title')()" [delay]="1500" [spacing]="72" />
                     </div>
                     @if (y.isRare) {
                         <div class="rare-label is-size-7">
@@ -41,7 +41,7 @@
                     }
                 </div>
                 <div class="comment-content is-size-7">
-                    @for (p of (y.info | rbText : "comment")?.split("\n") ?? []; track p) {
+                    @for (p of (y.info | rbText : "comment")()?.split("\n") ?? []; track p) {
                         <p>{{ p }}</p>
                     }
                 </div>

@@ -1,0 +1,50 @@
+button[bungFloatButton]
+    display: grid
+    grid-template: auto auto / auto
+    width: 7em
+    height: 3em
+    font-weight: bold
+
+    .heading, .text
+        grid-area: 2 / 1
+        transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        margin-top: -0.5em
+        z-index: 2
+    span.heading
+        grid-area: 1 / 1
+        font-weight: normal
+        margin-top: 0
+    span.hide
+        opacity: 0
+    .text
+        display: inline-grid
+        grid-template: 1fr / 1fr
+
+        > *
+            grid-area: 1 / 1
+            display: inline-flex
+            justify-content: center
+            align-items: center
+        > .text-enter
+            animation: text-enter-animation var(--animation-duration-lv3) var(--ease-in)
+        > .text-leave
+            animation: text-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+    
+    bung-icon
+        justify-content: center
+    i, bung-icon
+        font-size: 1.5em
+@media screen and (width < 768px)
+    button[bungFloatButton]
+        grid-template: auto / auto
+        width: 3em
+        height: 3em
+
+        .heading, .text
+            grid-area: 1 / 1
+            margin-top: 0
+@keyframes text-enter-animation
+    from
+        opacity: 0
+    to
+        opacity: 1

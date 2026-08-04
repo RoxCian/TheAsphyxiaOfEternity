@@ -84,6 +84,9 @@ export interface RbClasscheckResponse<T extends RbVersionWithClasscheck> {
     clearType: number
     averageAchievementRate: number
     totalScore: number
+    totalCompletionScore?: number
+    separateCompletionScore?: number[]
+    separateCompletionRate?: number[]
     playCount: number
     lastPlay: Date
     update: Date

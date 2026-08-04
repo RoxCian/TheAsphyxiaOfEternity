@@ -78,7 +78,9 @@ import { Rb3OrderComponent } from "../components/specific/order-shop/rb3-order/r
 import { Rb6ReflesiaComponent } from "../components/specific/reflesia/rb6-reflesia/rb6-reflesia.component"
 import { Rb6ReflesiaQuestComponent } from "../components/specific/reflesia/rb6-reflesia-quest/rb6-reflesia-quest.component"
 import { Rb6ReflesiaQuestGroupCardComponent } from "../components/specific/reflesia/rb6-reflesia-quest-group-card/rb6-reflesia-quest-group-card.component"
-import { Rb6ReflesiaBuffsListComponent } from "../components/specific/reflesia/rb6-reflesia-buffs-list/rb6-reflesia-buffs-list.component"
+import { Rb6ReflesiaBuffsListComponent } from "../components/specific/reflesia/rb6-reflesia-buffs-list/rb6-reflesia-buffs-list.component";
+import { RbLangSwitchComponent } from '../components/specific/lang-switch/rb-lang-switch/rb-lang-switch.component';
+import { RbTextSignalPipe } from '../pipes/specific/rb-text-signal.pipe'
 
 @NgModule({
     declarations: [
@@ -157,6 +159,8 @@ import { Rb6ReflesiaBuffsListComponent } from "../components/specific/reflesia/r
         Rb6ReflesiaQuestComponent,
         Rb6ReflesiaQuestGroupCardComponent,
         Rb6ReflesiaBuffsListComponent,
+        RbLangSwitchComponent,
+        RbTextSignalPipe,
     ],
     imports: [
         CommonModule,

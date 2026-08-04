@@ -84,10 +84,16 @@ export function initializeBatch() {
                 if (stageLogs[i].stageIndex !== 0) continue
                 if (classcheck.collection === "rb.rb4.playData.classcheck") {
                     t.update<Rb4Classcheck>(rid, { collection: "rb.rb4.playData.classcheck", class: classcheck.class as Rb4DojoIndex }, {
-                        $set: { stageLogs: stageLogs.splice(i) as Rb4PlayerStageLog[] },
+                        $set: {
+                            stageLogs: stageLogs.splice(i) as Rb4PlayerStageLog[],
+                            totalCompletionScore: (classcheck as any)["totalScore"],
+                            separateCompletionScore: (classcheck as any)["seperateScore"],
+                            separateCompletionRateTimes100: (classcheck as any)["seperateAchievementRateTimes100"]
+                        },
                         $unset: {
                             musicsId: true,
                             chartsType: true,
+                            totalScore: true,
                             seperateScore: true,
                             seperateAchievementRateTimes100: true
                         }
@@ -113,7 +119,7 @@ export function initializeBatch() {
             stageLogs.sort((l, r) => l.time - r.time)
             for (let i = stageLogs.length - 1; i >= 0; i--) {
                 if (stageLogs[i].stageIndex !== 0) continue
-                t.update<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: quest.dungeonId, dungeonGrade: quest.dungeonGrade, $and: (quest.dungeonId === 47) ? [{ rankingId: quest.rankingId }] : []  }, { $set: { stageLogs: stageLogs.splice(i) } })
+                t.update<Rb6QuestRecord>(rid, { collection: "rb.rb6.playData.quest", dungeonId: quest.dungeonId, dungeonGrade: quest.dungeonGrade, $and: (quest.dungeonId === 47) ? [{ rankingId: quest.rankingId }] : [] }, { $set: { stageLogs: stageLogs.splice(i) } })
                 break
             }
         }

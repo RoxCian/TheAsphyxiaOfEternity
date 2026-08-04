@@ -2,7 +2,7 @@
 @let capacity = stageLogs().length > 3 ? 4 : 3;
 @let isMobile = breakpointService.breakpointsToggled.mobile();
 
-<ng-template let-stageLog="stageLog" let-stageIndex="stageIndex" #stageResult>
+<ng-template let-stageLog="stageLog" let-stageIndex="stageIndex" let-completionScore="completionScore" let-completionRate="completionRate" #stageResult>
     <div class="stage-log-container">
         <div class="stage-log-animation-wrapper">
             @let stgId = stageLog?.stageIndex ?? stageIndex;
@@ -24,7 +24,11 @@
                         </div>
                         <bung-divider />
                         <div class="stage-log-score-grid">
-                            <bung-icon class="has-tooltip" icon="counter" isNoWrap bungTooltip="Score">{{ stageLog.score }}</bung-icon>
+                            @if (completionScore != undefined) {
+                                <bung-icon class="has-tooltip" icon="counter" isNoWrap bungTooltip="Completion score">{{ completionScore }}</bung-icon>
+                            } @else {
+                                <bung-icon class="has-tooltip" icon="counter" isNoWrap bungTooltip="Score">{{ stageLog.score }}</bung-icon>
+                            }
                             <bung-icon class="has-tooltip" icon="percent" isNoWrap bungTooltip="Achievement rate">{{ stageLog.achievementRate.toFixed(2) + "%" }}</bung-icon>
                             @if (v === 6) {
                                 <bung-icon class="has-tooltip" iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ stageLog.combo }}</bung-icon>
@@ -73,9 +77,9 @@
                 </div>
                 <bung-divider isVertical />
                 <div class="course-score-info">
-                    <div class="course-score-info-heading has-tooltip" [bungTooltip]="emphasisScore() ? 'Total score' : 'Average achievement rate'">
+                    <div class="course-score-info-heading has-tooltip" [bungTooltip]="emphasisScore() ? totalCompletionScore() != undefined ? 'Total score (Completion)' : 'Total score' : 'Average achievement rate'">
                         @if (emphasisScore()) {
-                            {{ totalScore() }}
+                            {{ totalCompletionScore() ?? totalScore() }}
                         } @else {
                             {{ averageAchievementRate().toFixed(2) }}%
                         }
@@ -83,7 +87,7 @@
                     @if (emphasisScore()) {
                         <bung-icon class="course-ar has-tooltip" icon="percent" bungTooltip="Average achievement rate">{{ averageAchievementRate().toFixed(2) }}%</bung-icon>
                     } @else {
-                        <bung-icon class="course-score has-tooltip" icon="counter" bungTooltip="Total score">{{ totalScore() }}</bung-icon>
+                        <bung-icon class="course-score has-tooltip" icon="counter" [bungTooltip]="totalCompletionScore() != undefined ? 'Total score (Completion)' : 'Total score'">{{ totalCompletionScore() ?? totalScore() }}</bung-icon>
                     }
                     @if (!isMobile) { <bung-icon class="course-play-count has-tooltip" icon="restart" bungTooltip="Play count">{{ playCount() }}</bung-icon> }
                     <bung-icon class="course-update has-tooltip" icon="update" bungTooltip="Update time">{{ !update() ? "-" : update() | relativeTime }}</bung-icon>
