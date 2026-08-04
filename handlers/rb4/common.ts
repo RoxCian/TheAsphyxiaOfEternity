@@ -132,6 +132,11 @@ export namespace Rb4HandlersCommon {
             if ((base.comment == null) || (base.comment == "")) base.comment = "Welcome to REFLEC BEAT groovin'!"
             if (base.uattr == null) base.uattr = 0
             if (base.mlog == null) base.mlog = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            if (base.upperPoints == null) base.upperPoints = 0
+            if (U.GetConfig("<groovin'_upper>_fill_upper_points")) {
+                account.upperPoints = 1000000
+                base.upperPoints = 1000000
+            }
             if (mylist?.index < 0) mylist.index = 0
             let scores: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(readParam.rid, { collection: "rb.rb4.playData.musicRecord" })
 
@@ -147,8 +152,12 @@ export namespace Rb4HandlersCommon {
                 if (isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
             }
 
+            config.folderType ??= 0
             config.randomEntryWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 99999999)))
             config.customFolderWork = init(config.randomEntryWork, BigInt(Math.trunc(Math.random() * 9999999999999)))
+
+            custom.stageClearCondition ??= 0
+            custom.cheerVoice ??= 0
 
             stamp ??= generateRb4Stamp()
             stamp.magic ??= BigInt(0)
@@ -216,6 +225,8 @@ export namespace Rb4HandlersCommon {
                 if (player.pdata.account.userId <= 0) {
                     player.pdata.account.userId = await generateUserId()
                     player.pdata.account.isFirstFree = true
+                    player.pdata.account.upperPoints = 0
+                    player.pdata.account.upperOption = -1
                     initializePlayer(player)
                 }
                 if (player.pdata.base) {
@@ -232,6 +243,8 @@ export namespace Rb4HandlersCommon {
                 }
                 playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
+                if (player.pdata.account.upperPoints != null) playerAccountForPlayCountQuery.upperPoints = player.pdata.account.upperPoints
+                if (player.pdata.account.upperOption != null) playerAccountForPlayCountQuery.upperOption = player.pdata.account.upperOption
                 if (player.pdata.base) player.pdata.base.name = (await opm.findOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
 
                 opm.update(rid, { collection: "rb.rb4.player.account" }, playerAccountForPlayCountQuery)
@@ -241,13 +254,28 @@ export namespace Rb4HandlersCommon {
                 if (oldBase != null) {
                     if (oldBase.name) player.pdata.base.name = oldBase.name
                     player.pdata.base.comment = oldBase.comment
+                    if (player.pdata.base.upperPoints == null) player.pdata.base.upperPoints = oldBase.upperPoints ?? 0
                 } else {
                     if (player.pdata.base.comment == "Welcome to REFLEC BEAT groovin!!") player.pdata.base.comment = ""
                 }
                 opm.upsert<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" }, player.pdata.base)
             }
-            if (player.pdata.config) opm.upsert<IRb4PlayerConfig>(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
-            if (player.pdata.custom) opm.upsert<IRb4PlayerCustom>(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
+            if (player.pdata.config) {
+                // groovin' fix
+                let oldConfig = await opm.findOne<IRb4PlayerConfig>(rid, { collection: "rb.rb4.player.config" })
+                if (oldConfig) player.pdata.config.folderType ??= oldConfig.folderType ?? 0
+                opm.upsert<IRb4PlayerConfig>(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
+            }
+            if (player.pdata.custom) {
+                // groovin' fix
+                let oldCustom = await opm.findOne<IRb4PlayerCustom>(rid, { collection: "rb.rb4.player.custom" })
+                if (oldCustom) {
+                    player.pdata.custom.stageClearCondition ??= oldCustom.stageClearCondition ?? 0
+                    player.pdata.custom.cheerVoice ??= oldCustom.cheerVoice ?? 0
+                    player.pdata.custom.stageSameTimeObjectsDisplayingType ??= oldCustom.stageSameTimeObjectsDisplayingType ?? 0
+                }
+                opm.upsert<IRb4PlayerCustom>(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
+            }
             if ((<IRb4PlayerClasscheckLog>player.pdata.classcheck)?.class != null) {
                 let musicsId: number[] = [player.pdata.stageLogs.log[0].musicId, (player.pdata.stageLogs.log[1] == null ? -1 : player.pdata.stageLogs.log[1].musicId), (player.pdata.stageLogs.log[2] == null ? -1 : player.pdata.stageLogs.log[2].musicId)]
                 let chartsType: number[] = [player.pdata.stageLogs.log[0].chartType, (player.pdata.stageLogs.log[1] == null ? -1 : player.pdata.stageLogs.log[1].chartType), (player.pdata.stageLogs.log[2] == null ? -1 : player.pdata.stageLogs.log[2].chartType)]

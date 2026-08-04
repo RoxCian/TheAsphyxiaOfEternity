@@ -1,3 +1,9 @@
+- v1.3.2
+
+  Fix fields missing issue after played RB groovin' when you already have save data for RB groovin' upper.
+  
+  Add an option of auto fill upper points to 1,000,000 for RB groovin' upper.
+
 - v1.3.1
 
   Fix announcer settings for RB groovin'.
