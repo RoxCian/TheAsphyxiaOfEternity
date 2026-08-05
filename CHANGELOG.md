@@ -1,4 +1,4 @@
-- v1.3.2
+- v1.3.3
 
   Fix fields missing issue after played RB groovin' when you already have save data for RB groovin' upper.
   
