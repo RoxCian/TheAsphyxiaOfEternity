@@ -51,11 +51,12 @@ const succeedPlayer: H.H = async data => {
     const released = await DBH.find(rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
     const record = await DBH.find(rid, Rb4MusicRecord, { collection: "rb.rb4.playData.musicRecord" })
     result.name = base.name
-    result.lv = 0
-    result.exp = 0
-    result.grd = 0
-    result.ap = 0
-    result.money = 0
+
+    result.lv = base.level
+    result.exp = base.experience
+    result.grd = base.matchingGrade
+    result.ap = base.abilityPointTimes100
+    result.money = base.money
     if (released.length > 0) result.released.i = released
     if (record.length > 0) result.mrecord.mrec = record
     return XF.x(result)
@@ -101,6 +102,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     account.st ??= DBBigInt(0)
     if (!isToday(toBigInt(account.st))) account.playCountToday = 1
     else account.playCountToday = (account.playCountToday ?? 0) + 1
+
     account.opc ??= 0
     account.lpc ??= 0
     account.cpc ??= 0
@@ -111,7 +113,10 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     base.mlog ??= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     if (mylist && mylist.index < 0) mylist.index = 0
 
-    if (U.GetConfig("<groovin'_upper>_fill_upper_points")) base.upperPoints = 1000000
+    if (U.GetConfig("<groovin'_upper>_fill_upper_points")) {
+        account.upperPoints = 1000000
+        base.upperPoints = 1000000
+    }
 
     const scores = await DBH.find<Rb4MusicRecord>(read.rid, { collection: "rb.rb4.playData.musicRecord" })
 
@@ -143,12 +148,13 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
-const writePlayer: H.H<Rb4Player> = async data => {
+const writePlayer: H.H<Rb4Player> = async (data, req) => {
     const player = XF.o(data, Rb4Player)
     const session = await getSession(player.pdata.account.rid, 4)
-    if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
+    if (!session || (player.pdata.account.sessionId !== 0 && session.sessionId !== player.pdata.account.sessionId)) return H.deny
     await writePlayerPreProcess(player)
-    await writePlayerCore(player, session)
+    const isUpper = parseInt(req.model.match(/\d{10}$/)?.[0] ?? "0") >= 2014112000
+    await writePlayerCore(player, session, isUpper)
     return { uid: K.ITEM("s32", player.pdata.account.userId) }
 }
 const endPlayer: H.H = async data => {
@@ -194,7 +200,7 @@ const readPlayerScore: H.H = async data => {
     return XF.x(result)
 }
 
-async function writePlayerCore(player: Rb4Player, session: RbSession) {
+async function writePlayerCore(player: Rb4Player, session: RbSession, isUpper: boolean) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
 
@@ -220,6 +226,10 @@ async function writePlayerCore(player: Rb4Player, session: RbSession) {
         }
         accountSaved.st = DBBigInt(session.time)
         accountSaved.playCountToday++
+        if (isUpper) {
+            accountSaved.upperPoints = player.pdata.account.upperPoints
+            accountSaved.upperOption = player.pdata.account.upperOption
+        }
 
         t.update(rid, accountQuery, accountSaved)
     }
@@ -229,13 +239,35 @@ async function writePlayerCore(player: Rb4Player, session: RbSession) {
         if (baseSaved) {
             if (baseSaved.name) player.pdata.base.name = baseSaved.name
             player.pdata.base.comment = baseSaved.comment
+            if (!isUpper) {
+                player.pdata.base.upperPoints = baseSaved.upperPoints
+            }
         } else {
             if (player.pdata.base.comment === "Welcome to REFLEC BEAT groovin!!") player.pdata.base.comment = ""
         }
         t.upsert(rid, baseQuery, player.pdata.base)
     }
-    if (player.pdata.config) t.upsert(rid, { collection: "rb.rb4.player.config" }, player.pdata.config)
-    if (player.pdata.custom) t.upsert(rid, { collection: "rb.rb4.player.custom" }, player.pdata.custom)
+    if (player.pdata.config) {
+        const configQuery: Query<Rb4PlayerConfig> = { collection: "rb.rb4.player.config" }
+        if (!isUpper) {
+            const configSaved = await t.findOne(rid, configQuery)
+            if (configSaved) {
+                player.pdata.config.folderType = configSaved.folderType
+            }
+        }
+        t.upsert(rid, configQuery, player.pdata.config)
+    }
+    if (player.pdata.custom) {
+        const customQuery: Query<Rb4PlayerCustom> = { collection: "rb.rb4.player.custom" }
+        if (!isUpper) {
+            const customSaved = await t.findOne(rid, customQuery)
+            if (customSaved) {
+                player.pdata.custom.stageClearCondition = customSaved.stageClearCondition
+                player.pdata.custom.cheerVoice = customSaved.cheerVoice
+            }
+        }
+        t.upsert(rid, customQuery, player.pdata.custom)
+    }
     if (player.pdata.classcheck && !isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck!.class > Rb4DojoIndex.none && hasAny(player.pdata.stageLogs?.log)) {
         await updateClasscheck(rid, player.pdata.classcheck, player.pdata.stageLogs?.log ?? [], t)
         if (player.pdata.classcheck.clearType === 1) { // Stage log mark for webui
@@ -300,9 +332,9 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
         classRecord.separateCompletionRateTimes100 = log.separateCompletionRateTimes100
         if (!classRecord.stageLogs || clearTypeCurrent >= clearTypeSaved || log.class >= Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
-    if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
+    if (isInitial || (log.averageCompletionRateTimes100 > classRecord.averageCompletionRateTimes100)) {
         isNeedUpdate = true
-        classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
+        classRecord.averageCompletionRateTimes100 = log.averageCompletionRateTimes100
     }
     const time = stageLogs[stageLogs.length - 1]?.time ?? 0
     classRecord.lastPlayTime = time

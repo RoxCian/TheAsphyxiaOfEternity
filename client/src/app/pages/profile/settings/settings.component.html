@@ -57,9 +57,9 @@
                 <bung-field label="Mode" [formField]="casted.clearGaugeType">
                     <bung-select [formField]="casted.clearGaugeType" [equalFn]="selectOptionEq">
                         <bung-option [value]="0">Normal</bung-option>
-                        <bung-option [value]="1">Hard</bung-option>
+                        <bung-option [value]="version === 4 ? 6 : 1">Hard</bung-option>
                         @if (version === 4 || version === 5) {
-                            <bung-option [value]="2">S-Hard</bung-option>
+                            <bung-option [value]="version === 4 ? 7 : 2">S-Hard</bung-option>
                         }
                     </bung-select>
                 </bung-field>

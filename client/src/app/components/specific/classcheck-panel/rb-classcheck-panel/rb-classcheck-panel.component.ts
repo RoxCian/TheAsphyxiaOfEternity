@@ -109,7 +109,7 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
         }
         if (!classcheck.examination) return undefined
         const examination = classcheck.examination
-        const score = classcheck.totalScore
+        const score = classcheck.totalCompletionScore ?? classcheck.totalScore
         if (score >= examination.scoreBorderA) return "Rank A"
         else if (score >= examination.scoreBorderB) return "Rank B"
         else if (score >= examination.scoreBorderC) return "Rank C"
@@ -124,7 +124,7 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
                 return "不合格"
             }
             const examination = classcheck.examination
-            const score = classcheck.totalScore
+            const score = classcheck.totalCompletionScore ?? classcheck.totalScore
             if (score >= examination.scoreBorderA) return "秀"
             else if (score >= examination.scoreBorderB) return "優"
             else if (score >= examination.scoreBorderC) return "良"
@@ -155,11 +155,12 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
                 courseNameMain: this.classcheckNameMain,
                 clearInfoSub: this.clearInfoSub() ? `${headerNameSub}${this.clearInfoSub()!.toUpperCase()}` : undefined,
                 clearInfoMain: `${headerNameMain}${this.clearInfoMain().toUpperCase()}`,
+                averageAchievementRate: classcheck.averageAchievementRate,
                 totalCompletionScore: classcheck.totalCompletionScore,
+                averageCompletionRate: classcheck.averageCompletionRate,
                 separateCompletionScore: classcheck.separateCompletionScore,
                 separateCompletionRate: classcheck.separateCompletionRate,
                 emphasisScore: classcheck.version === 4 && classcheck.class >= Rb4DojoIndex.examination,
-                averageAchievementRate: classcheck.averageAchievementRate,
                 playCount: classcheck.playCount,
                 update: classcheck.update,
                 lastPlay: classcheck.lastPlay

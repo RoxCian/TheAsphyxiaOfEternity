@@ -87,6 +87,7 @@ export function initializeBatch() {
                         $set: {
                             stageLogs: stageLogs.splice(i) as Rb4PlayerStageLog[],
                             totalCompletionScore: (classcheck as any)["totalScore"],
+                            averageCompletionRateTimes100: (classcheck as any)["averageAchievementRateTimes100"],
                             separateCompletionScore: (classcheck as any)["seperateScore"],
                             separateCompletionRateTimes100: (classcheck as any)["seperateAchievementRateTimes100"]
                         },
@@ -94,6 +95,7 @@ export function initializeBatch() {
                             musicsId: true,
                             chartsType: true,
                             totalScore: true,
+                            averageAchievementRateTimes100: true,
                             seperateScore: true,
                             seperateAchievementRateTimes100: true
                         }
@@ -262,7 +264,7 @@ async function renameField<T extends ICollection<any>>(key: keyof T | (keyof T)[
             if (value[key] == undefined) value[key] = (value as any)[typeof oldKey === "string" ? oldKey : oldKey[0]]
             delete (value as any)[typeof oldKey === "string" ? oldKey : oldKey[0]]
             const saveQuery = saveQueryCreator?.(value) ?? query
-            t.update(hasRid ? (value as any).__refid : undefined, saveQuery)
+            t.update(hasRid ? (value as any).__refid : undefined, saveQuery, value)
         } else if (Array.isArray(key)) {
             for (let i = 0; i < key.length; i++) {
                 const k = key[i]
@@ -270,7 +272,7 @@ async function renameField<T extends ICollection<any>>(key: keyof T | (keyof T)[
                 delete (value as any)[typeof oldKey === "string" ? oldKey : oldKey[i]]
             }
             const saveQuery = saveQueryCreator?.(value) ?? query
-            t.update(hasRid ? (value as any).__refid : undefined, saveQuery)
+            t.update(hasRid ? (value as any).__refid : undefined, saveQuery, value)
         }
     }
     await t.commit()

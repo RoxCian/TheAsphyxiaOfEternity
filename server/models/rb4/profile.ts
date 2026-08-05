@@ -206,7 +206,7 @@ export class Rb4Episode implements ICollection<"rb.rb4.player.episode#userId"> {
     @XD.u8() type = 0
     @XD.u16("value0") value0 = 0
     @XD.u16("value1") value1 = 0
-    @XD.str() text = ""
+    @XD.str() text = "Hello"
     @XD.s32() time = 0
 
     constructor(userId?: number) {

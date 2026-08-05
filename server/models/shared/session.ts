@@ -16,7 +16,7 @@ export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
     constructor(version: RbVersion) {
         this.version = version
         this.time = Date.now()
-        this.sessionId = Math.round(Math.random() * 99999999)
+        this.sessionId = Math.round(Math.random() * 99999999) + 1
         this.unlockSettings = {
             unlockAllSongs: U.GetConfig("unlock_all_songs"),
             unlockAllItems: U.GetConfig("unlock_all_items")
@@ -25,6 +25,6 @@ export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
     }
 
     regenerateSessionId() {
-        this.sessionId = Math.round(Math.random() * 99999999)
+        this.sessionId = Math.round(Math.random() * 99999999) + 1
     }
 }

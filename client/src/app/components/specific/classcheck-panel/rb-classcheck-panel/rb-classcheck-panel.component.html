@@ -24,17 +24,17 @@
     </div>
     <bung-divider isVertical />
     <div class="classcheck-score-info">
-        <div class="classcheck-score-info-heading has-tooltip" [bungTooltip]="isV4 && classcheck().class > 16 ? 'Total score' : 'Average achievement rate'">
+        <div class="classcheck-score-info-heading has-tooltip" [bungTooltip]="isV4 && classcheck().class > 16 ? classcheck().totalCompletionScore != undefined ? 'Total score (completion)' : 'Total score' : classcheck().averageCompletionRate != undefined ? 'Average completion rate' : 'Average achievement rate'">
             @if (isV4 && classcheck().class > 16) {
-                {{ classcheck().totalScore }}
+                {{ classcheck().totalCompletionScore ?? classcheck().totalScore }}
             } @else {
-                {{ classcheck().averageAchievementRate }}%
+                {{ (classcheck().averageCompletionRate ?? classcheck().averageAchievementRate).toFixed(2) }}%
             }
         </div>
         @if (isV4 && classcheck().class > 16) {
-            <bung-icon class="classcheck-ar has-tooltip" icon="percent" bungTooltip="Average achievement rate">{{ classcheck().averageAchievementRate }}%</bung-icon>
+            <bung-icon class="classcheck-ar has-tooltip" icon="percent" [bungTooltip]="classcheck().averageCompletionRate != undefined ? 'Average completion rate' : 'Average achievement rate'">{{ (classcheck().averageCompletionRate ?? classcheck().averageAchievementRate).toFixed(2) }}%</bung-icon>
         } @else {
-            <bung-icon class="classcheck-score has-tooltip" icon="counter" bungTooltip="Total score">{{ classcheck().totalScore }}</bung-icon>
+            <bung-icon class="classcheck-score has-tooltip" icon="counter" [bungTooltip]="classcheck().totalCompletionScore != undefined ? 'Total score (completion)' : 'Total score'">{{ classcheck().totalCompletionScore ?? classcheck().totalScore }}</bung-icon>
         }
         <bung-icon class="classcheck-play-count has-tooltip" icon="restart" bungTooltip="Play count">{{ classcheck().playCount }}</bung-icon>
         <bung-icon class="classcheck-update has-tooltip" icon="update" bungTooltip="Update time">{{ classcheck().update | relativeTime }}</bung-icon>

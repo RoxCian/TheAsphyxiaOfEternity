@@ -115,17 +115,21 @@
             </div>
         </bung-tab>
         <bung-tab header="Music Records" index="record" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)" [minHeight]="`calc(${minTabHeight()}px - 3em)`">
-            @if (musicRecordService.data.hasValue()) {
-                <auto-load-panel class="rb-list record-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
-                    @for (record of musicRecordPaginated(); track record.musicId) {
-                    <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                        <rb-record [record]="record" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
-                    </bung-insertion>
-                    }
-                </auto-load-panel>
-            }
-            @if (musicRecordPaginated.isFinished() && !musicRecordService.data.isLoading()) {
-                <bung-divider class="music-records-divider section-divider" prompt="End of music records" />
+            @if (musicRecordService.data.value()?.length) {
+                @if (musicRecordService.data.hasValue()) {
+                    <auto-load-panel class="rb-list record-list is-mobile" (loading)="loadRecord($event)" animate.leave="rb-panel-leave" #recordPanel>
+                        @for (record of musicRecordPaginated(); track record.musicId) {
+                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                <rb-record [record]="record" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                            </bung-insertion>
+                        }
+                    </auto-load-panel>
+                }
+                @if (musicRecordPaginated.isFinished() && !musicRecordService.data.isLoading()) {
+                    <bung-divider class="music-records-divider section-divider" prompt="End of music records" />
+                } 
+            } @else if (!musicRecordService.data.isLoading()) {
+                <lets-play />
             }
         </bung-tab>
         @if (versionService.version() >= 4) {
@@ -215,17 +219,21 @@
             </bung-tab>
         }
         <bung-tab header="Play History" index="stglog" [disabled]="loading || noProfile" (activated)="onActivateStageLogTab($event)" [minHeight]="`calc(${minTabHeight()}px - 3em)`">
-            @if (stageLogService.data.hasValue()) {
-            <auto-load-panel class="rb-list" (loading)="loadStageLog($event)" animate.leave="rb-panel-leave" #stageLogPanel>
-                @for (stglog of stageLogPaginated(); track stglog.time) {
-                <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
-                    <rb-stage-log-panel [stageLog]="stglog" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
-                </bung-insertion>
+            @if (stageLogService.data.value()?.length) {
+                @if (stageLogService.data.hasValue()) {
+                    <auto-load-panel class="rb-list" (loading)="loadStageLog($event)" animate.leave="rb-panel-leave" #stageLogPanel>
+                        @for (stglog of stageLogPaginated(); track stglog.time) {
+                            <bung-insertion isVirtualized [placeholder]="placeholder" sharedIntersectionGroup="rb-panel">
+                                <rb-stage-log-panel [stageLog]="stglog" animate.enter="rb-panel-enter" animate.leave="rb-panel-leave" />
+                            </bung-insertion>
+                        }
+                    </auto-load-panel>
                 }
-            </auto-load-panel>
-            }
-            @if (stageLogPaginated.isFinished() && !stageLogService.data.isLoading()) {
-                <bung-divider class="section-divider" prompt="End of play history" />
+                @if (stageLogPaginated.isFinished() && !stageLogService.data.isLoading()) {
+                    <bung-divider class="section-divider" prompt="End of play history" />
+                }
+            } @else if (!stageLogService.data.isLoading()) {
+                <lets-play />
             }
         </bung-tab>
         @if (versionService.version() >= 5) {

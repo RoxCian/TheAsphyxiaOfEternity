@@ -238,7 +238,7 @@ int,string,int,int,string,string?,boolean
 1,frame,3,4,Platinum,,FALSE
 1,frame,3,5,Black,,FALSE
 1,frame,3,6,Crimson,,FALSE
-6,explodeEffect,4,0,VOLZZA 1,,TRUE
+6,explodeEffect,4,0,Default,,TRUE
 6,explodeEffect,4,1,Mild,,TRUE
 5,explodeEffect,4,0,Default,,TRUE
 5,explodeEffect,4,1,Classic,,TRUE
@@ -253,7 +253,7 @@ int,string,int,int,string,string?,boolean
 5,explodeEffect,4,10,quaver♪,,TRUE
 5,explodeEffect,4,11,Heart,,TRUE
 5,explodeEffect,4,12,Rose,,TRUE
-5,explodeEffect,4,13,VOLZZA 2,,TRUE
+5,explodeEffect,4,13,VOLZZA 1,,TRUE
 5,explodeEffect,4,14,DJ TOTTO,,TRUE
 4,explodeEffect,4,0,Default,,TRUE
 4,explodeEffect,4,1,Classic,,FALSE

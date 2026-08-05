@@ -220,7 +220,7 @@
         </div>
     }
     @if (showPastel() && pastelProperty.pastelId >= 0) {
-        <div class="pastel-kun is-{{ pastelProperty.side }}" [style.--position]="pastelProperty.position" animate.leave="leave" bungTooltip="\ Squeak /" triggerMethod="click" closeTriggerMethod="click" [delay]="0" [duration]="1000" (tooltipOpened)="onPastelClicked()">
+        <div class="pastel-kun is-{{ pastelProperty.side }}" [style.--position]="pastelProperty.position" animate.leave="leave" bungTooltip="\ *Squeak* /" triggerMethod="click" closeTriggerMethod="click" [delay]="0" [duration]="1000" (tooltipOpened)="onPastelClicked()">
             <img src="static/assets/images/rb3-pastel-{{ pastelProperty.pastelId }}.webp">
         </div>
     }
