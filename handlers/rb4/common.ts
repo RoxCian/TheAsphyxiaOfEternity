@@ -243,6 +243,7 @@ export namespace Rb4HandlersCommon {
                 }
                 playerAccountForPlayCountQuery.st = player.pdata.account.st
                 playerAccountForPlayCountQuery.playCountToday++
+                if (player.pdata.account.version > playerAccountForPlayCountQuery.version) playerAccountForPlayCountQuery.version = player.pdata.account.version
                 if (player.pdata.account.upperPoints != null) playerAccountForPlayCountQuery.upperPoints = player.pdata.account.upperPoints
                 if (player.pdata.account.upperOption != null) playerAccountForPlayCountQuery.upperOption = player.pdata.account.upperOption
                 if (player.pdata.base) player.pdata.base.name = (await opm.findOne<IRb4PlayerBase>(rid, { collection: "rb.rb4.player.base" })).name
@@ -323,6 +324,7 @@ export namespace Rb4HandlersCommon {
         let rid: string = $(data).str("rid")
 
         let scores: IRb4MusicRecord[] = await DB.Find<IRb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord" })
+        for (let s of scores) s.param ??= 0 // fix for groovin'
         let result = {
             pdata: {
                 record: (scores?.length > 0) ? { rec: scores } : {}, recordOld: { rec: [] }
@@ -341,7 +343,7 @@ export namespace Rb4HandlersCommon {
                 score: r.score,
                 combo: r.combo,
                 missCount: r.missCount,
-                param: r.param,
+                param: r.param ?? 0, // fix for groovin'
                 bestAchievementRateUpdateTime: r.achievementRateUpdateTime,
                 bestComboUpdateTime: r.comboUpdateTime,
                 bestScoreUpdateTime: r.scoreUpdateTime,
@@ -425,7 +427,7 @@ export namespace Rb4HandlersCommon {
             musicRecord.achievementRateTimes100 = stageLog.achievementRateTimes100
             musicRecord.score = stageLog.score
             musicRecord.missCount = stageLog.missCount
-            musicRecord.param = stageLog.param
+            musicRecord.param = stageLog.param ?? 0 // fix for groovin'
             musicRecord.bestScoreUpdateTime = stageLog.time
             musicRecord.bestMissCountUpdateTime = stageLog.time
             musicRecord.bestAchievementRateUpdateTime = stageLog.time
