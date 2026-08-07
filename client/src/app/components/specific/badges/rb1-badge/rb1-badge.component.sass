@@ -1,15 +1,23 @@
 .badge-background
-    background: #7c1d9b
+    background: conic-gradient(#17001d9f 0%, #1d00239f 9%, #0c010e9f 15%, #3200339f 19%, #2201239f 23%, #1401169f 30%, #28002e9f 32%, #3c004b9f 40%, #0b000d9f 46%, #1d01259f 48%, #0c01109f 63%, #2c012d9f 68%, #3a013b9f 73%, #1100119f 79%, #31013a9f 81%, #2800309f 82%, #2c00399f 92%, #17001d9f 100%) #9423ba
+    filter: blur(4px)
+
+::ng-deep .dropdown-trigger-content rb- .badge-background
+    border-radius: 9999px
+span.c
+    display: inline-grid
+    grid-template: 1fr / 1fr
+    align-items: center
+    justify-items: center
+
+    > *
+        grid-area: 1 / 1
 .note-object
-    display: inline-block
-    margin-left: -0.35em
-    margin-top: -0.2em
-    min-width: 0.3em
-    min-height: 0.3em
+    width: 0.3em
+    height: 0.3em
     background: linear-gradient(to bottom, #E9E5E4 -92.85%, #F6F3F3 30%, #B79075 70%, #EFEDE1 104.29%)
     opacity: 0
     border-radius: 9999px
-    vertical-align: middle
     transition: opacity 0.2s
 :host.is-active:not(.is-disabled), :host.enter:not(.is-disabled)
     .badge-label

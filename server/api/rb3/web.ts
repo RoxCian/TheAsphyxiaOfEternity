@@ -15,6 +15,7 @@ import { readAvailableItemsShared } from "../shared_web/available_items"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
 import { getVerdetDesKriegesAppearances, getVerdetDesKriegesPage, getVerdetDesKriegesPageCount, rb3VerdetDesKriegesNotes } from "../../data/tables/rb3_verdet_des_krieges"
 import { getOrderShopLevel, rb3OrdersInfo } from "../../data/tables/rb3_orders"
+import { computeQuickPerformanceScore } from "../shared_web/performance"
 
 type V = 3
 const version = 3 as const
@@ -74,17 +75,19 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     }
     result.extraValues = [base.onigiriTimes10 / 10, eventProgressFlag]
     result.bywords = {
-        left: await getRbByword(version, RbColor.red, config.bywordLeft),
-        right: await getRbByword(version, RbColor.blue, config.bywordRight)
+        left: getRbByword(version, RbColor.red, config.bywordLeft),
+        right: getRbByword(version, RbColor.blue, config.bywordRight)
     }
     return result
 }
 const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = async data => {
     const activity = await statActivity(data.rid)
     const recentHighlightPlay = await Promise.all((await DBH.find<Rb3PlayerStageLog>(data.rid, { collection: "rb.rb3.playData.stageLog", time: { $exists: true, $gte: Date.now() / 1000 - 14 * 86400 } }))
-        .sort((l, r) => r.achievementRateTimes100 - l.achievementRateTimes100 || r.time - l.time)
+        .map(l => ({ log: l, perf: computeQuickPerformanceScore(version, l.achievementRateTimes100, l.musicId, l.chartType) }))
+        .sort((l, r) => r.perf - l.perf || r.log.time - l.log.time)
+        .filter((l, i, a) => a.findIndex(_l => _l.log.musicId === l.log.musicId && _l.log.chartType === l.log.chartType) === i) // distinct
         .slice(0, 5)
-        .map(toStageLogResponse))
+        .map(l => toStageLogResponse(l.log)))
     let totalScore = 0
     const totalScoreSeparated = [0, 0, 0]
     const records = await DBH.find<Rb3MusicRecord>(data.rid, { collection: "rb.rb3.playData.musicRecord" })
@@ -101,8 +104,8 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version,
             musicId: record.musicId,
-            music: await findMusicInfo(record.musicId, version),
-            charts: await findCharts(record.musicId, version),
+            music: findMusicInfo(record.musicId, version),
+            charts: findCharts(record.musicId, version),
             scores: {}
         }
         if (!el.music) continue
@@ -129,16 +132,16 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb1ChartType>[]> = asy
 
 const readVerdetDesKrieges: C.C<RbRequest, Rb3VerdetDesKriegesResponse> = async data => await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
 const readVerdetDesKriegesPageCount: C.C<{ chapter: number }, { pageCount: number }> = async data => {
-    return { pageCount: await getVerdetDesKriegesPageCount(data.chapter) }
+    return { pageCount: getVerdetDesKriegesPageCount(data.chapter) }
 }
 const readVerdetDesKriegesPage: C.C<RbRequest & Rb3VerdetDesKriegesPageRequest, Rb3VerdetDesKriegesContent[]> = async data => {
     const event = await DBH.findOne<Rb3VerdetDesKrieges>(data.rid, { collection: "rb.rb3.event.verdetDesKrieges" })
     if (!event) {
-        if (data.chapter === 0 && data.page === 0) return await getVerdetDesKriegesPage(0, 0)
+        if (data.chapter === 0 && data.page === 0) return getVerdetDesKriegesPage(0, 0)
         else return C.error(403, "Progress not reached")
     }
     if (data.chapter > event.chapter) return C.error(403, "Progress not reached")
-    if (data.page >= await getVerdetDesKriegesPageCount(data.chapter)) C.error(403, "Page number overflow")
+    if (data.page >= getVerdetDesKriegesPageCount(data.chapter)) C.error(403, "Page number overflow")
     if (data.chapter === event.chapter) {
         if (data.page === 4 && event.page === 3) {
             if (!event.progress.slice(0, 4).every(p => p === 60)) return C.error(403, "Progress not reached")
@@ -255,8 +258,8 @@ const unlockVerdetDesKrieges: C.C<RbRequest & Rb3VerdetDesKriegesUnlockRequest, 
 
 const readOrderShop: C.C<RbRequest, Rb3OrderShopResponse> = async data => {
     const orderShop = await DBH.findOne<Rb3Order>(data.rid, { collection: "rb.rb3.player.order" })
-    const level = await getOrderShopLevel(orderShop?.experience ?? 0)
-    const allOrders = await rb3OrdersInfo
+    const level = getOrderShopLevel(orderShop?.experience ?? 0)
+    const allOrders = rb3OrdersInfo
     const releasedMusics = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo", type: 0 })
     return {
         experiences: orderShop?.experience ?? 0,
@@ -302,9 +305,9 @@ const writeOrderSlot: C.C<RbRequest & Rb3OrderSlot> = async data => {
         orderShop.details ??= []
         orderShop.details.push(detail)
     }
-    const info = (await rb3OrdersInfo).find(i => i.id === data.index)
+    const info = rb3OrdersInfo.find(i => i.id === data.index)
     if (!info) return C.error(404, "Cannot find order info")
-    const level = await getOrderShopLevel(orderShop.experience)
+    const level = getOrderShopLevel(orderShop.experience)
     const maxSlots = level.level >= 100 ? 5 : level.level >= 30 ? 4 : 3
     if (data.slot >= 0 && detail.clearedCount > 0 && !info.reacceptable) return C.error(404, "Order cannot reaccept")
     if (data.slot >= maxSlots) return C.error(403, "Order slots overflow")
@@ -377,8 +380,8 @@ async function toStageLogResponse(l: Rb3PlayerStageLog): Promise<RbStageLogRespo
         stageIndex: l.stageIndex,
         musicId: l.musicId,
         chartType: l.chartType,
-        music: await findMusicInfo(l.musicId, version),
-        chart: await findChartInfoResponse(l.musicId, version, l.chartType),
+        music: findMusicInfo(l.musicId, version),
+        chart: findChartInfoResponse(l.musicId, version, l.chartType),
         color: l.color,
         matchingGrade: l.matchingGrade,
         score: l.score,

@@ -19,8 +19,8 @@ export class Rb6Quest {
     @XD.s8("note_grade_2") chartType2: Rb6ChartType | -1 = -1
 
     static async createExamples(rankingQuestId: number): Promise<Rb6Quest[]> {
-        const rankingQuest = (await rb6RankingQuests).find(q => q.rankingId === rankingQuestId)
-        if (!rankingQuest) return await rb6Quests
-        return [...await rb6Quests, rankingQuest]
+        const rankingQuest = rb6RankingQuests.find(q => q.rankingId === rankingQuestId)
+        if (!rankingQuest) return rb6Quests
+        return [...rb6Quests, rankingQuest]
     }
 }

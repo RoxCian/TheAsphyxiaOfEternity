@@ -43,15 +43,14 @@
         z-index: 1
     span.no-activity
         opacity: 0.7
-    .day-background
+    .day-bg
         position: absolute
         inset: 0
         background: var(--rb-background)
+        opacity: 0
         // background-size: calc(var(--weeks-count) * 1.2em) 8.2em
         // background-position: calc(calc(var(--column) - 1) * -1.2em) calc(calc(var(--row) - 1) * -1.2em)
 
-        &.activity-level0
-            opacity: 0
         &.activity-level1
             opacity: 0.4
         &.activity-level2

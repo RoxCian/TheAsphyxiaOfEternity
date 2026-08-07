@@ -1,8 +1,9 @@
-import { Component, computed, inject } from "@angular/core"
+import { Component, computed, inject, output } from "@angular/core"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbProfileService } from "../../../../services/specified/rb-profile.service"
 import { BungSelectComponent } from "../../../bung/select/select.component"
+import { RbVersion } from "rbweb"
 
 @Component({
     selector: "rb-version",
@@ -14,6 +15,8 @@ import { BungSelectComponent } from "../../../bung/select/select.component"
     }
 })
 export class RbVersionNavigatorComponent extends BungSelectComponent<void> {
+    readonly navigationStarted = output()
+
     protected readonly breakpointService = inject(BungBreakpointService)
     protected readonly versionService = inject(RbVersionService)
     protected readonly profileService = inject(RbProfileService)
@@ -21,5 +24,10 @@ export class RbVersionNavigatorComponent extends BungSelectComponent<void> {
 
     protected asNumber<T>(value: T): Extract<T, number> | undefined {
         return typeof value === "number" ? value as Extract<T, number> : undefined
+    }
+    protected onNavigate(version?: RbVersion) {
+        if ((version ?? this.versionService.defaultVersion()) === this.versionService.version()) return
+        this.navigationStarted.emit()
+        this.versionService.changeVersion(version)
     }
 }

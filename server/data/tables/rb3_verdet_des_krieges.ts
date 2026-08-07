@@ -1,7 +1,7 @@
 import { Rb3VerdetDesKriegesAppearance, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesContentRaw, Rb3VerdetDesKriegesNote } from "../../models/rb3/types"
-import { loadCsvAsync } from "../../utils/csv"
+import { loadCsv } from "../../utils/csv"
 
-export const rb3VerdetDesKriegesContents = loadCsvAsync<Rb3VerdetDesKriegesContentRaw>("rb3_verdet_des_krieges_content").then(d => d.map(el => {
+export const rb3VerdetDesKriegesContents = loadCsv<Rb3VerdetDesKriegesContentRaw>("rb3_verdet_des_krieges_content").map(el => {
     const result = {
         chapter: el.chapter,
         page: el.page,
@@ -41,17 +41,17 @@ export const rb3VerdetDesKriegesContents = loadCsvAsync<Rb3VerdetDesKriegesConte
         }
     }
     return result
-}))
-export const rb3VerdetDesKriegesNotes = loadCsvAsync<Rb3VerdetDesKriegesNote>("rb3_verdet_des_krieges_notes")
-export const rb3VerdetDesKriegesAppearances = loadCsvAsync<Rb3VerdetDesKriegesAppearance>("rb3_verdet_des_krieges_appearance")
+})
+export const rb3VerdetDesKriegesNotes = loadCsv<Rb3VerdetDesKriegesNote>("rb3_verdet_des_krieges_notes")
+export const rb3VerdetDesKriegesAppearances = loadCsv<Rb3VerdetDesKriegesAppearance>("rb3_verdet_des_krieges_appearance")
 
-export async function getVerdetDesKriegesPage(chapter: number, page: number): Promise<Rb3VerdetDesKriegesContent[]> {
-    return (await rb3VerdetDesKriegesContents).filter(c => c.chapter === chapter && c.page === page)
+export function getVerdetDesKriegesPage(chapter: number, page: number): Rb3VerdetDesKriegesContent[] {
+    return rb3VerdetDesKriegesContents.filter(c => c.chapter === chapter && c.page === page)
 }
-export async function getVerdetDesKriegesPageCount(chapter: number): Promise<number> {
+export function getVerdetDesKriegesPageCount(chapter: number): number {
     if (chapter === 0) return 0
-    return (await rb3VerdetDesKriegesContents).filter(c => c.chapter === chapter).reduce((prev, next) => next.page > prev ? next.page : prev, 0) + 1
+    return rb3VerdetDesKriegesContents.filter(c => c.chapter === chapter).reduce((prev, next) => next.page > prev ? next.page : prev, 0) + 1
 }
-export async function getVerdetDesKriegesAppearances(chapter: number): Promise<Rb3VerdetDesKriegesAppearance[]> {
-    return (await rb3VerdetDesKriegesAppearances).filter(c => c.chapter === chapter)
+export function getVerdetDesKriegesAppearances(chapter: number): Rb3VerdetDesKriegesAppearance[] {
+    return rb3VerdetDesKriegesAppearances.filter(c => c.chapter === chapter)
 }

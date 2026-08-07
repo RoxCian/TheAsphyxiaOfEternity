@@ -1,4 +1,4 @@
 import { Rb5YurukomeInfo } from "../../models/rb5/types"
-import { loadCsvAsync } from "../../utils/csv"
+import { loadCsv } from "../../utils/csv"
 
-export const rb5Yurukome = loadCsvAsync<Rb5YurukomeInfo>("rb5_yurukome")
+export const rb5Yurukome = loadCsv<Rb5YurukomeInfo>("rb5_yurukome")

@@ -12,7 +12,6 @@ import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { hasAny, isToday, sumBy } from "../../utils/utility_functions"
 import { generateUserId } from "../shared_game/generate_user_id"
-import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
 import { Rb6PlayerStart, Rb6PlayerSucceed } from "../../models/rb6/common"
 import { rb6UnlockItems } from "../../data/tables/rb6_unlock_items"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
@@ -75,7 +74,7 @@ const startPlayer: H.H = async data => {
     const result = new Rb6PlayerStart(session.sessionId)
     result.questCtrl.data = await Rb6Quest.createExamples(session.rb6RankingQuestIndex)
     const today = new Date()
-    result.itemCtrl.data = (await rb6UnlockItems).filter(i => {
+    result.itemCtrl.data = rb6UnlockItems.filter(i => {
         if (!i.unlockableTimeStart || !i.unlockableTimeEnd) return true
         let startTime = new Date(today.getFullYear(), i.unlockableTimeStart.month, i.unlockableTimeStart.date)
         let endTime = new Date(today.getFullYear() + (i.unlockableTimeEnd.nextYear ? 1 : 0), i.unlockableTimeEnd.month, i.unlockableTimeEnd.date)

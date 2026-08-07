@@ -2,7 +2,7 @@
     <div class="rb-panel"></div>
 </ng-template>
 @if (profileService.hasProfiles() || profileService.isReloading()) {
-    <rb-player-card animate.enter="enter" animate.leave="leave" [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" [profileDeleted]="profileService.lastDeletedProfile() === versionService.version()" />
+    <rb-player-card animate.enter="enter" animate.leave="leave" [profile]="profileService.rbProfiles()[versionService.version()]" [isLoading]="profileService.isLoading()" [profileDeleted]="profileService.lastDeletedProfile() === versionService.version()" (versionNavigateStarted)="onNavVersion()" />
     @if (profileService.rbProfiles()[versionService.version()]) {
         <div class="page-container" animate.enter="enter" animate.leave="leave">
             @for (p of fakeSubpageParams(); track p.random) {

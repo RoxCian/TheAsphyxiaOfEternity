@@ -1,4 +1,4 @@
 import { RbItemResponse } from "../../models/shared/web"
-import { loadCsvAsync } from "../../utils/csv"
+import { loadCsv } from "../../utils/csv"
 
-export const rbItems = loadCsvAsync<RbItemResponse>("rb_items")
+export const rbItems = loadCsv<RbItemResponse>("rb_items")

@@ -7,9 +7,9 @@ export function registerPlayerIconController() {
     C.route("rbGetAvailablePlayerIcons", getAvailablePlayerIcons)
 }
 
-const getPlayerIcon: C.C<{ version: RbVersion, id: number }, RbPlayerIcon> = async data => {
-    return (await rbPlayerIcon).find(i => i.version === data.version && i.id === data.id)
+const getPlayerIcon: C.C<{ version: RbVersion, id: number }, RbPlayerIcon> = data => {
+    return rbPlayerIcon.find(i => i.version === data.version && i.id === data.id)
 }
-const getAvailablePlayerIcons: C.C<{ version: RbVersion }, RbPlayerIcon[]> = async data => {
-    return (await rbPlayerIcon).filter(i => i.version === data.version)
+const getAvailablePlayerIcons: C.C<{ version: RbVersion }, RbPlayerIcon[]> = data => {
+    return rbPlayerIcon.filter(i => i.version === data.version)
 }

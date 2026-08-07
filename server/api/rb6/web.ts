@@ -21,6 +21,7 @@ import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, write
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { rb6DungeonsInfo, rb6Quests, rb6QuestsInfo } from "../../data/tables/rb6_quests"
 import { tryFindMusicResponse } from "../shared_web/musics"
+import { computeQuickPerformanceScore } from "../shared_web/performance"
 
 type V = 6
 const version = 6 as const
@@ -64,7 +65,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     result.matchingGrade = base.matchingGrade
     result.playCount = account.playCount
     result.experiences = base.pastelExperiences
-    const pl = await rb6PastelLevel
+    const pl = rb6PastelLevel
     result.extraValues = [-1 /* current experiences to next level **/, -1/* total experiences to next level **/]
     for (let i = 0; i < pl.length; i++) {
         const l = pl[i]
@@ -75,17 +76,19 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
         }
     }
     result.bywords = {
-        left: await getRbByword(version, RbColor.red, config.bywordLeft),
-        right: await getRbByword(version, RbColor.blue, config.bywordRight)
+        left: getRbByword(version, RbColor.red, config.bywordLeft),
+        right: getRbByword(version, RbColor.blue, config.bywordRight)
     }
     return result
 }
 const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = async data => {
     const activity = await statActivity(data.rid)
     const recentHighlightPlay = await Promise.all((await DBH.find<Rb6PlayerStageLog>(data.rid, { collection: "rb.rb6.playData.stageLog", time: { $exists: true, $gte: Date.now() / 1000 - 14 * 86400 } }))
-        .sort((l, r) => r.achievementRateTimes100 - l.achievementRateTimes100 || r.time - l.time)
+        .map(l => ({ log: l, perf: computeQuickPerformanceScore(version, l.achievementRateTimes100, l.musicId, l.chartType) }))
+        .sort((l, r) => r.perf - l.perf || r.log.time - l.log.time)
+        .filter((l, i, a) => a.findIndex(_l => _l.log.musicId === l.log.musicId && _l.log.chartType === l.log.chartType) === i) // distinct
         .slice(0, 5)
-        .map(toStageLogResponse))
+        .map(l => toStageLogResponse(l.log)))
     let totalScore = 0
     const totalScoreSeparated = [0, 0, 0, 0]
     const records = await DBH.find<Rb6MusicRecord>(data.rid, { collection: "rb.rb6.playData.musicRecord" })
@@ -102,8 +105,8 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version,
             musicId: record.musicId,
-            music: await findMusicInfo(record.musicId, version),
-            charts: await findCharts(record.musicId, version),
+            music: findMusicInfo(record.musicId, version),
+            charts: findCharts(record.musicId, version),
             scores: {}
         }
         if (!el.music) continue
@@ -173,9 +176,9 @@ const readReflesia: C.C<RbRequest, Rb6ReflesiaResponse> = async data => {
     }
 }
 const readQuestRecords: C.C<RbRequest, Rb6QuestRecordResponse[]> = async data => {
-    const quests = await rb6Quests
-    const questsInfo = await rb6QuestsInfo
-    const dungeonsInfo = await rb6DungeonsInfo
+    const quests = rb6Quests
+    const questsInfo = rb6QuestsInfo
+    const dungeonsInfo = rb6DungeonsInfo
     const records = await DBH.find<Rb6QuestRecord>(data.rid, { collection: "rb.rb6.playData.quest", dungeonId: { $ne: 47 } })
     const result: Rb6QuestRecordResponse[] = []
     for (const dungeon of dungeonsInfo) {
@@ -199,9 +202,9 @@ const readQuestRecords: C.C<RbRequest, Rb6QuestRecordResponse[]> = async data =>
     return result
 }
 const readRankingQuestRecords: C.C<RbRequest, Rb6QuestRecordResponse[]> = async data => {
-    const dungeon = (await rb6DungeonsInfo).find(i => i.dungeonId === 47)!
-    const questInfo = (await rb6QuestsInfo).find(i => i.questId === 22)!
-    const rankingQuests = await rb6RankingQuests
+    const dungeon = rb6DungeonsInfo.find(i => i.dungeonId === 47)!
+    const questInfo = rb6QuestsInfo.find(i => i.questId === 22)!
+    const rankingQuests = rb6RankingQuests
     const records = await DBH.find<Rb6QuestRecord>(data.rid, { collection: "rb.rb6.playData.quest", dungeonId: 47 })
     const result: Rb6QuestRecordResponse[] = []
     for (const q of rankingQuests) {
@@ -368,7 +371,7 @@ const importAsphyxia: C.C<RbRequest> = async data => {
         for (let k of validCheckKeys2) if (s[k] == undefined) continue
 
         const query: Query<Rb6MusicRecord> = { collection: "rb.rb6.playData.musicRecord", musicId: mid, chartType: ct }
-        const chartInfo = await findChartInfo(mid, version, ct)
+        const chartInfo = findChartInfo(mid, version, ct)
         let musicRecord = await DB.FindOne<Rb6MusicRecord>(rid, query)
 
         if (!musicRecord) {
@@ -490,7 +493,7 @@ const readSettings: C.C<RbRequest, Rb6SettingsResponse> = data => readSettingsUs
 const writeSettings: C.C<RbRequest & Rb6SettingsResponse, RbWriteSettingsResponse> = data => writeSettingsUsingFactory(data.rid, data, rb6SettingsFactory)
 
 const readRankingQuests: C.C<undefined, Rb6RankingQuestResponse[]> = async () => {
-    const quests = await rb6RankingQuests
+    const quests = rb6RankingQuests
     return quests.map(q => ({
         id: q.rankingId,
         charts: [
@@ -507,8 +510,8 @@ async function toStageLogResponse(l: Rb6PlayerStageLog): Promise<RbStageLogRespo
         stageIndex: l.stageIndex,
         musicId: l.musicId,
         chartType: l.chartType,
-        music: await findMusicInfo(l.musicId, version),
-        chart: await findChartInfoResponse(l.musicId, version, l.chartType),
+        music: findMusicInfo(l.musicId, version),
+        chart: findChartInfoResponse(l.musicId, version, l.chartType),
         color: l.color,
         matchingGrade: l.matchingGrade,
         score: l.score,
@@ -562,7 +565,7 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
     return result
 }
 async function computeSkillPoint(record: Rb6MusicRecord): Promise<number> {
-    const chart = await findChartInfo(record.musicId, version, record.chartType)
+    const chart = findChartInfo(record.musicId, version, record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com
     const maxScore = (chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50

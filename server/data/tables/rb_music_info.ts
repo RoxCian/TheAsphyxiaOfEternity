@@ -1,8 +1,8 @@
 import { RbMusicInfo, RbVersion } from "../../models/shared/rb_types"
-import { loadCsvAsync } from "../../utils/csv"
+import { loadCsv } from "../../utils/csv"
 import { getMusicUid } from "./rb_music_id"
 
-export const rbMusicInfo = loadCsvAsync<RbMusicInfo>("rb_music_info")
+export const rbMusicInfo = loadCsv<RbMusicInfo>("rb_music_info")
 
 const defaultMusicInfo: RbMusicInfo = {
     musicUid: "----",
@@ -13,8 +13,8 @@ const defaultMusicInfo: RbMusicInfo = {
     category: ""
 }
 
-export async function findMusicInfo(musicId: number, version: RbVersion): Promise<RbMusicInfo> {
-    const musicUid = await getMusicUid(musicId, version)
+export function findMusicInfo(musicId: number, version: RbVersion): RbMusicInfo {
+    const musicUid = getMusicUid(musicId, version)
     if (!musicUid) return defaultMusicInfo
-    return (await rbMusicInfo).find(i => i.musicUid === musicUid) ?? defaultMusicInfo
+    return rbMusicInfo.find(i => i.musicUid === musicUid) ?? defaultMusicInfo
 }

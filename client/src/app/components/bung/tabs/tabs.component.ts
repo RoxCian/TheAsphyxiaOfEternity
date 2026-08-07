@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, inject, input, linkedSignal, output, signal, viewChild, viewChildren } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, effect, inject, input, linkedSignal, output, signal, untracked, viewChild, viewChildren } from "@angular/core"
 import { BungTabComponent } from "../tab/tab.component"
 import { BungInsertionComponent } from "../insertion/insertion.component"
 import { isUnloaded } from "../../../utils/functions"
 import { asPromise } from "../../../signals/functions"
 import { BungWaitableEvent } from "../../../utils/bung"
+import { toggleTransform } from "../../../signals/transforms"
 
 @Component({
     selector: "bung-tabs",
@@ -31,17 +32,26 @@ export class BungTabsComponent implements AfterViewInit, OnDestroy {
         return tabs[0]?.index()
     })
     readonly indexChanged = output<string | undefined>()
+    readonly isLoadingResources = input(false, { transform: toggleTransform })
     protected readonly direction = signal<"left" | "right" | undefined>(undefined)
     protected readonly currIndex = signal<string | undefined>(undefined)
     protected readonly leftIndex = signal<string | undefined>(undefined)
     protected readonly rightIndex = signal<string | undefined>(undefined)
     protected readonly loadingTabIndex = signal<string | undefined>(undefined)
 
+    private readonly isTabLoading = signal(false)
+
     private readonly contentObserver = new ResizeObserver(() => this.checkStyle())
     private readonly injector = inject(Injector)
 
     #previousContentInsertion?: BungInsertionComponent
     #currentAnimation?: Animation
+
+    constructor() {
+        effect(() => {
+            if (!this.isTabLoading() && !this.isLoadingResources() && untracked(this.direction)) this.onStartAnimation()
+        })
+    }
 
     async ngAfterViewInit(): Promise<void> {
         this.checkStyle()
@@ -138,12 +148,13 @@ export class BungTabsComponent implements AfterViewInit, OnDestroy {
                 this.rightIndex.set(index)
                 this.direction.set("right")
             }
+            this.isTabLoading.set(true)
         }
         this.activatedBackupInternal.set(index)
         this.indexChanged.emit(index)
     }
     protected onTabInited() {
-        this.onStartAnimation()
+        this.isTabLoading.set(false)
     }
     private async onStartAnimation() {
         const dir = this.direction()

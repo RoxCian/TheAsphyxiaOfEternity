@@ -14,6 +14,7 @@ import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { rb5Yurukome } from "../../data/tables/rb5_yurukome"
+import { computeQuickPerformanceScore } from "../shared_web/performance"
 
 type V = 5
 const version = 5 as const
@@ -51,17 +52,19 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     result.level = 0
     result.extraValues = [base.money /* Volzza Keys **/]
     result.bywords = {
-        left: await getRbByword(version, RbColor.red, config.bywordLeft),
-        right: await getRbByword(version, RbColor.blue, config.bywordRight)
+        left: getRbByword(version, RbColor.red, config.bywordLeft),
+        right: getRbByword(version, RbColor.blue, config.bywordRight)
     }
     return result
 }
 const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = async data => {
     const activity = await statActivity(data.rid)
     const recentHighlightPlay = await Promise.all((await DBH.find<Rb5PlayerStageLog>(data.rid, { collection: "rb.rb5.playData.stageLog", time: { $exists: true, $gte: Date.now() / 1000 - 14 * 86400 } }))
-        .sort((l, r) => r.achievementRateTimes100 - l.achievementRateTimes100 || r.time - l.time)
+        .map(l => ({ log: l, perf: computeQuickPerformanceScore(version, l.achievementRateTimes100, l.musicId, l.chartType) }))
+        .sort((l, r) => r.perf - l.perf || r.log.time - l.log.time)
+        .filter((l, i, a) => a.findIndex(_l => _l.log.musicId === l.log.musicId && _l.log.chartType === l.log.chartType) === i) // distinct
         .slice(0, 5)
-        .map(toStageLogResponse))
+        .map(l => toStageLogResponse(l.log)))
     let totalScore = 0
     const totalScoreSeparated = [0, 0, 0, 0]
     const records = await DBH.find<Rb5MusicRecord>(data.rid, { collection: "rb.rb5.playData.musicRecord" })
@@ -78,8 +81,8 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version: version,
             musicId: record.musicId,
-            music: await findMusicInfo(record.musicId, version),
-            charts: await findCharts(record.musicId, version),
+            music: findMusicInfo(record.musicId, version),
+            charts: findCharts(record.musicId, version),
             scores: {}
         }
         if (!el.music) continue
@@ -128,7 +131,7 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
 const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: -1 })
 const readYurukome: C.C<RbRequest, Rb5YurukomeResponse[]> = async data => {
     const yurukome = await DBH.find<Rb5Yurukome>(data.rid, { collection: "rb.rb5.event.yurukome" })
-    return (await rb5Yurukome).map(i => ({
+    return rb5Yurukome.map(i => ({
         id: i.id,
         info: yurukome.find(y => y.yurukomeId === i.id) ? i : undefined,
         isRare: i.isRare
@@ -198,8 +201,8 @@ async function toStageLogResponse(l: Rb5PlayerStageLog): Promise<RbStageLogRespo
         stageIndex: l.stageIndex,
         musicId: l.musicId,
         chartType: l.chartType,
-        music: await findMusicInfo(l.musicId, version),
-        chart: await findChartInfoResponse(l.musicId, version, l.chartType),
+        music: findMusicInfo(l.musicId, version),
+        chart: findChartInfoResponse(l.musicId, version, l.chartType),
         color: l.color,
         matchingGrade: l.matchingGrade,
         score: l.score,
@@ -240,7 +243,7 @@ async function statActivity(rid: string): Promise<Record<number, number>> {
     return result
 }
 async function computeSkillPoint(record: Rb5MusicRecord): Promise<number> {
-    const chart = await findChartInfo(record.musicId, version, record.chartType)
+    const chart = findChartInfo(record.musicId, version, record.chartType)
     if (!chart || chart.maxJustReflec < 0) return -1
     // formulae are come from bemaniwiki.com
     const maxScore = chart.maxCombo * 3 + chart.maxJustReflec * 10 + 50

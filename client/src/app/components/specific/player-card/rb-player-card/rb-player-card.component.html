@@ -139,7 +139,7 @@
                     }
                 }
             </div>
-            <rb-version [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave" />
+            <rb-version [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave" (navigationStarted)="onNavVersion()" />
         </div>
     </div>
     @if (p) {

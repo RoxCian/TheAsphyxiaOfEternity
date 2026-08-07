@@ -29,6 +29,15 @@ export class RbProgressSubpage {
     }
     #lastActivated?: keyof this["services"]
     #deactivateTimeout: Partial<Record<keyof this["services"], number>> = {}
+    deactivate() {
+        switch (this.versionService.version()) {
+            case 2: return this.services.rb2Glasses.deactivate()
+            case 3: return this.services.rb3OrderShop.deactivate(), this.services.rb3Verdet.deactivate()
+            // case 4:
+            case 5: return this.services.rb5Yurukome.deactivate()
+            case 6: return this.services.rb6Reflesia.deactivate()
+        }
+    }
     protected onActivate(key?: keyof this["services"], e?: BungWaitableEvent) {
         const lastActivated = this.#lastActivated
         if (lastActivated === key) return

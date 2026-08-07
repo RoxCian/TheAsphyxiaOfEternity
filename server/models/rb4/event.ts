@@ -18,7 +18,7 @@ export class Rb4EventControl {
     static init() {
         if (this.initialized) return
         this.initialized = true
-        const limit = [100, 100, 100, 50, 50, 100]
+        const limit = [100, 100, 100, 50, 50, 5]
         for (let i = 0; i < limit.length; i++) {
             for (let j = 0; j < limit[i]; j++) {
                 const e = new Rb4EventControl(i, j)

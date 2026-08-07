@@ -51,7 +51,7 @@
         <span class="heading" [class.hide]="isMobile()">Filter</span>
         <span class="filter-name">
             @if (isMobile()) {
-                <i class="mdi {{ filter() === -1 ? 'mdi-filter' : 'mdi-filter-check' }}"></i>
+                <i class="mdi mdi-filter-menu"></i>
             } @else {
                 @switch (filter()) {
                     @case (-1) { All Orders }

@@ -114,7 +114,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     if (mylist && mylist.index < 0) mylist.index = 0
 
     if (U.GetConfig("<groovin'_upper>_fill_upper_points")) {
-        account.upperPoints = 1000000
+        // account.upperPoints = 1000000
         base.upperPoints = 1000000
     }
 
@@ -129,7 +129,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     for (const s of scores) {
         base.totalBestScore += s.score
         base.totalBestScoreEachChartType[s.chartType] += s.score
-        if (await isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
+        if (isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
     }
 
     const p = result.pdata
@@ -226,6 +226,7 @@ async function writePlayerCore(player: Rb4Player, session: RbSession, isUpper: b
         }
         accountSaved.st = DBBigInt(session.time)
         accountSaved.playCountToday++
+        if (accountSaved.version < player.pdata.account.version) accountSaved.version = player.pdata.account.version
         if (isUpper) {
             accountSaved.upperPoints = player.pdata.account.upperPoints
             accountSaved.upperOption = player.pdata.account.upperOption

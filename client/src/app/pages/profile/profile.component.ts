@@ -1,13 +1,11 @@
-import { Component, computed, inject, model } from "@angular/core"
+import { Component, computed, inject, model, viewChild } from "@angular/core"
 import { ProfileDetailModule } from "../../modules/profile-detail.module"
 import { RbProfileService } from "../../services/specified/rb-profile.service"
 import { BungModule } from "../../modules/bung.module"
 import { RbVersionService } from "../../services/specified/rb-version.service"
 import { RbSubpageService } from "../../services/specified/rb-subpage.service"
 import { RbPlayDataSubpage } from "./play-data/play-data.component"
-import { CommonModule } from "@angular/common"
-import { BungNotificationService } from "../../services/bung/notification.service"
-import { Rb6ClearTypeLiteral } from "../../../../../server/models/shared/rb_types"
+import { CommonModule, NgComponentOutlet } from "@angular/common"
 
 @Component({
     selector: "profile-page",
@@ -24,27 +22,13 @@ export class ProfilePageComponent {
         version: this.versionService.version(),
         subpage: this.subpageService.componentType()
     }])
+    private readonly subpageOutlet = viewChild(NgComponentOutlet)
 
     constructor() {
         this.subpageService.componentType.set(RbPlayDataSubpage)
     }
 
-    protected readonly notificationService = inject(BungNotificationService)
-    protected readonly notifyModel = model("Notify button")
-    notify() {
-        this.notificationService.notify("Notification", undefined, undefined, {
-            duration: Infinity,
-            values: {
-                button1: {
-                    value: "ok",
-                    content: this.notifyModel
-                }
-            },
-            setter: popup => {
-                popup.classList.add("is-warning")
-                popup.isSingleLine.set(true)
-                popup.float.set("bottom")
-            }
-        })
+    protected onNavVersion() {
+        this.subpageOutlet()?.componentInstance?.deactivate()
     }
 }

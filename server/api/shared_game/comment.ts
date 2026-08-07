@@ -66,7 +66,7 @@ export function createWriteCommentHandler<TVersion extends RbVersion>(version: T
 async function convertIconOrCharacterId(commentVersion: RbVersion, iconOrCharacterId: number, targetVersion: RbVersion): Promise<number> {
     if (commentVersion < 6 && targetVersion === 6) return commentVersion + 7 // CPU 1 ~ CPU 5
     if (commentVersion === 6 && targetVersion === 6) return iconOrCharacterId
-    const icons = await rbPlayerIcon
+    const icons = rbPlayerIcon
     const findIconFromAsset = (aId: number) => icons.find(i => i.assetId === aId && i.version === targetVersion)?.id
     if (commentVersion === 6) {
         if (targetVersion === 5) return 96 // CPU 6

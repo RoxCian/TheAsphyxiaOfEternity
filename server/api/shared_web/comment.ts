@@ -10,7 +10,7 @@ export function registerCommentsController() {
 }
 
 const getComments: C.C<undefined, RbCommentResponse<RbVersion>[]> = async () => {
-    const icons = await rbPlayerIcon
+    const icons = rbPlayerIcon
     return (await DBH.find<RbCommentBase<RbVersion>>({ collection: "rb.info.comment" })).sort((l, r) => r.time - l.time).map(c => {
         const result = c as RbCommentResponse<RbVersion>
         if (result.iconId != undefined) result.icon = icons.find(i => i.version === result.version && i.id === result.iconId)

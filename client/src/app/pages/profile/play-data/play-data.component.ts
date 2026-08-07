@@ -59,16 +59,18 @@ export class RbPlayDataSubpage implements AfterViewInit {
         const footerHeight = footer?.clientHeight ?? 0
         return (window.visualViewport?.height ?? 0) - tabTop - footerHeight
     })
+    protected readonly tabsLoading = signal(false)
 
     private readonly mainTabs = viewChild("mainTabs", { read: BungTabsComponent })
     private readonly breakpointService = inject(BungBreakpointService)
     private readonly intersectionService = inject(BungIntersectionService)
 
+    #loadingTimeout?: number
     #versionBackup: RbVersion = 6
 
     constructor() {
-        this.musicRecordPaginated = paginated(this.musicRecordService.data.value, 30)
-        this.stageLogPaginated = paginated(this.stageLogService.data.value, 30)
+        this.musicRecordPaginated = paginated(this.musicRecordService.data.value, 0)
+        this.stageLogPaginated = paginated(this.stageLogService.data.value, 0)
         this.intersectionService.createGroup("rb-panel", {
             rootMargin: "100% 0%"
         })
@@ -79,11 +81,28 @@ export class RbPlayDataSubpage implements AfterViewInit {
             this.recordPanel()?.reset()
             this.checkLevelDisplaySwitchVisible()
         })
+        effect(() => {
+            if ((!this.musicRecordService.needsUpdate() && this.musicRecordService.data.value()?.length === 0 || !this.stageLogService.needsUpdate() && this.stageLogService.data.value()?.length === 0) && this.tabsLoading()) {
+                this.tabsLoading.set(false)
+            }
+        })
     }
     async ngAfterViewInit() {
         this.viewInited.set(true)
     }
-    protected onActivateMusicRecordTab(e: BungWaitableEvent) {
+    deactivate() {
+        this.musicRecordService.deactivate()
+        this.classcheckService.deactivate()
+        this.stageLogService.deactivate()
+    }
+    protected onActivateMusicRecordTab(e: BungWaitableEvent, isReadingSkillPoint?: boolean) {
+        if (this.musicRecordService.needsUpdate() && !isReadingSkillPoint) {
+            if (this.#loadingTimeout != undefined) {
+                clearTimeout(this.#loadingTimeout)
+                this.#loadingTimeout = undefined
+            }
+            this.tabsLoading.set(true)
+        }
         e.resource = this.musicRecordService.activate()
         this.classcheckService.deactivate()
         this.stageLogService.deactivate()
@@ -94,6 +113,13 @@ export class RbPlayDataSubpage implements AfterViewInit {
         this.stageLogService.deactivate()
     }
     protected onActivateStageLogTab(e: BungWaitableEvent) {
+        if (this.stageLogService.needsUpdate()) {
+            if (this.#loadingTimeout != undefined) {
+                clearTimeout(this.#loadingTimeout)
+                this.#loadingTimeout = undefined
+            }
+            this.tabsLoading.set(true)
+        }
         this.musicRecordService.deactivate()
         this.classcheckService.deactivate()
         e.resource = this.stageLogService.activate()
@@ -108,6 +134,13 @@ export class RbPlayDataSubpage implements AfterViewInit {
     }
     protected loadStageLog(event: AutoLoadEvent) {
         event.result = (async () => {
+            if (this.tabsLoading()) {
+                if (this.#loadingTimeout != undefined) clearTimeout(this.#loadingTimeout)
+                this.#loadingTimeout = setTimeout(() => {
+                    this.tabsLoading.set(false)
+                    this.#loadingTimeout = undefined
+                }, 0)
+            }
             if (!this.stageLogService.data.hasValue()) return undefined
             this.stageLogPaginated.load()
             if (this.stageLogPaginated.isFinished()) return "finished"
@@ -116,6 +149,13 @@ export class RbPlayDataSubpage implements AfterViewInit {
     }
     protected loadRecord(event: AutoLoadEvent) {
         event.result = (async () => {
+            if (this.tabsLoading()) {
+                if (this.#loadingTimeout != undefined) clearTimeout(this.#loadingTimeout)
+                this.#loadingTimeout = setTimeout(() => {
+                    this.tabsLoading.set(false)
+                    this.#loadingTimeout = undefined
+                }, 0)
+            }
             if (!this.musicRecordService.data.hasValue()) return undefined
             this.musicRecordPaginated.load()
             if (this.musicRecordPaginated.isFinished()) return "finished"
@@ -127,9 +167,6 @@ export class RbPlayDataSubpage implements AfterViewInit {
             classcheck: dojoRecords.filter(d => d.class < Rb4DojoIndex.examination),
             examination: dojoRecords.filter(d => d.class >= Rb4DojoIndex.examination)
         }
-    }
-    protected msg(m: string) {
-        alert(m)
     }
     protected checkLevelDisplaySwitchVisible() {
         const version = this.versionService.version()

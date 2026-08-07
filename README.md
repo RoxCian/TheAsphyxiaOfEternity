@@ -18,12 +18,13 @@ Features supported:
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
 | Profile saving | √ | √ | √ | √ | √ | √ |
 | Score saving | √ | √ | √ | √ | √ | √ |
-| Classcheck / Dojo | - | - | - | √ | √ | √ |
+| Classcheck / Dojo | - | - | - | 〇<sup>*</sup> | √ | √ |
 | Profile web UI | √ | √ | √ | √ | √ | √ |
 | Puzzle comment | √ | √ | √ | √ | √ | √ |
 | Ranking | × | × | × | × | × | × |
 | Friends | × | × | × | × | × | × |
 
+_<div style="font-size:0.75em"><sup>*</sup>Classes above 師範 are not able to be unlocked for now.</div>_
 
 Events supported:
 

@@ -14,6 +14,7 @@ import { Rb4Mylist } from "../../models/rb4/mylist"
 import { RbLobbySettings } from "../../models/shared/lobby"
 import { contextQueryElement, RbSettingsFactory, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
+import { computeQuickPerformanceScore } from "../shared_web/performance"
 
 type V = 4
 const version = 4 as const
@@ -48,17 +49,19 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     result.level = base.level
     result.extraValues = [base.money /* Refle **/]
     result.bywords = {
-        left: await getRbByword(version, RbColor.red, config.bywordLeft),
-        right: await getRbByword(version, RbColor.blue, config.bywordRight)
+        left: getRbByword(version, RbColor.red, config.bywordLeft),
+        right: getRbByword(version, RbColor.blue, config.bywordRight)
     }
     return result
 }
 const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = async data => {
     const activity = await statActivity(data.rid)
     const recentHighlightPlay = await Promise.all((await DBH.find<Rb4PlayerStageLog>(data.rid, { collection: "rb.rb4.playData.stageLog", time: { $exists: true, $gte: Date.now() / 1000 - 14 * 86400 } }))
-        .sort((l, r) => r.achievementRateTimes100 - l.achievementRateTimes100 || r.time - l.time)
+        .map(l => ({ log: l, perf: computeQuickPerformanceScore(version, l.achievementRateTimes100, l.musicId, l.chartType) }))
+        .sort((l, r) => r.perf - l.perf || r.log.time - l.log.time)
+        .filter((l, i, a) => a.findIndex(_l => _l.log.musicId === l.log.musicId && _l.log.chartType === l.log.chartType) === i) // distinct
         .slice(0, 5)
-        .map(toStageLogResponse))
+        .map(l => toStageLogResponse(l.log)))
     let totalScore = 0
     const totalScoreSeparated = [0, 0, 0, 0]
     const records = await DBH.find<Rb4MusicRecord>(data.rid, { collection: "rb.rb4.playData.musicRecord" })
@@ -75,8 +78,8 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version,
             musicId: record.musicId,
-            music: await findMusicInfo(record.musicId, version),
-            charts: await findCharts(record.musicId, version),
+            music: findMusicInfo(record.musicId, version),
+            charts: findCharts(record.musicId, version),
             scores: {}
         }
         if (!el.music) continue
@@ -187,8 +190,8 @@ async function toStageLogResponse(l: Rb4PlayerStageLog): Promise<RbStageLogRespo
         stageIndex: l.stageIndex,
         musicId: l.musicId,
         chartType: l.chartType,
-        music: await findMusicInfo(l.musicId, version),
-        chart: await findChartInfoResponse(l.musicId, version, l.chartType),
+        music: findMusicInfo(l.musicId, version),
+        chart: findChartInfoResponse(l.musicId, version, l.chartType),
         color: l.color,
         matchingGrade: l.matchingGrade,
         score: l.score,

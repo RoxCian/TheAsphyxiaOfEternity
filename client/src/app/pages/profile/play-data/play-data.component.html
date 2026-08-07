@@ -8,10 +8,10 @@
 <!-- <bung-toggle class="is-rounded" />
 <button class="button">Button</button> -->
 @if (!noProfile) {
-    <bung-tabs activated="overview" [class.has-error]="noProfile" (indexChanged)="checkLevelDisplaySwitchVisible()" animate.leave="leave" #mainTabs>
+    <bung-tabs activated="overview" [isLoadingResources]="tabsLoading()" [class.has-error]="noProfile" (indexChanged)="checkLevelDisplaySwitchVisible()" animate.leave="leave" #mainTabs>
         <bung-tab header="Overview" index="overview" [disabled]="loading || noProfile" (activated)="onActivateTab()">
             <bung-divider class="section-divider" prompt="Activity" />
-            <rb-activity-grid class="has-rb{{ versionService.version() }}-background" [activity]="playerPerformanceService.playerPerformance.value()?.activity ?? {}" />
+            <rb-activity-grid class="has-rb{{ versionService.version() }}-background use-percent" [activity]="playerPerformanceService.playerPerformance.value()?.activity ?? {}" />
             <div class="performance-two-columns">
                 <div class="stat">
                     <bung-divider class="section-divider" prompt="Performance" />
@@ -237,7 +237,7 @@
             }
         </bung-tab>
         @if (versionService.version() >= 5) {
-            <bung-tab header="Skill Point" index="skillpoint" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event)">
+            <bung-tab header="Skill Point" index="skillpoint" [disabled]="loading || noProfile" (activated)="onActivateMusicRecordTab($event, true)">
                 <bung-divider class="section-divider" prompt="Total Skill Point" />
                 <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
                     <div class="stat-item rb-stat has-text-centered" bungTooltip="Songs not unlocked are also included">

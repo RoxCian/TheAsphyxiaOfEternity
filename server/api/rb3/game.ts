@@ -13,14 +13,13 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { Rb3ItemLockCtrl, Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
-import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, Rb3OrderType, RbSession } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbSession } from "../../models/shared/rb_types"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
 import { inspect } from "util"
-import { rb3OrdersInfo } from "../../data/tables/rb3_orders"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)

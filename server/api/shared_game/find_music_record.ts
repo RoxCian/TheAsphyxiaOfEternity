@@ -83,9 +83,9 @@ export enum RbBestMusicRecordGaugeType {
 }
 
 export async function findBestMusicRecord<TVersion extends RbVersion>(rid: string, musicUid: string, chartType: RbChartType<TVersion>, version: TVersion): Promise<RbBestMusicRecord | undefined> {
-    const mid = await getMusicId(musicUid, version)
+    const mid = getMusicId(musicUid, version)
     if (mid == undefined) return undefined
-    const chartInfo = await findChartInfo(mid, version, chartType)
+    const chartInfo = findChartInfo(mid, version, chartType)
     if (!chartInfo) return undefined
     if (chartInfo.chartVersion === version) return undefined // Newly updated chart and shouldn't have an old score
     const clearTypeArray: RbBestMusicRecordClearType[] = []
@@ -103,11 +103,11 @@ export async function findBestMusicRecord<TVersion extends RbVersion>(rid: strin
     const historyVersions: RbVersion[] = (version >= 4 && chartType === Rb4ChartType.special) ? [4, 5] : [1, 2, 3, 4, 5]
 
     for (const v of historyVersions) if (v !== version) {
-        const historyChartInfo = await findChartInfo(mid, v, chartType)
+        const historyChartInfo = findChartInfo(mid, v, chartType)
         if (!historyChartInfo) continue
         switch (v) {
             case 1:
-                const midRb1 = await getMusicId(musicUid, 1)
+                const midRb1 = getMusicId(musicUid, 1)
                 const recordRb1: Rb1MusicRecord = await DB.FindOne<Rb1MusicRecord>(rid, { collection: "rb.rb1.playData.musicRecord", musicId: midRb1, chartType: chartType as Rb1ChartType })
                 if (!recordRb1) break
 
@@ -123,7 +123,7 @@ export async function findBestMusicRecord<TVersion extends RbVersion>(rid: strin
                 drawCountArray.push(recordRb1.drawCount)
                 break
             case 2:
-                const midRb2 = await getMusicId(musicUid, 2)
+                const midRb2 = getMusicId(musicUid, 2)
                 const recordRb2: Rb2MusicRecord = await DB.FindOne<Rb2MusicRecord>(rid, { collection: "rb.rb2.playData.musicRecord", musicId: midRb2, chartType: chartType as Rb1ChartType })
                 if (!recordRb2) break
 
@@ -139,7 +139,7 @@ export async function findBestMusicRecord<TVersion extends RbVersion>(rid: strin
                 drawCountArray.push(recordRb2.newRecord.drawCount)
                 break
             case 3:
-                const midRb3 = await getMusicId(musicUid, 3)
+                const midRb3 = getMusicId(musicUid, 3)
                 const recordRb3: Rb3MusicRecord = await DB.FindOne<Rb3MusicRecord>(rid, { collection: "rb.rb3.playData.musicRecord", musicId: midRb3, chartType: chartType as Rb1ChartType })
                 if (!recordRb3) break
 
@@ -152,7 +152,7 @@ export async function findBestMusicRecord<TVersion extends RbVersion>(rid: strin
                 playCountArray.push(recordRb3.playCount)
                 break
             case 4:
-                const midRb4 = await getMusicId(musicUid, 4)
+                const midRb4 = getMusicId(musicUid, 4)
                 const recordRb4 = await DB.FindOne<Rb4MusicRecord>(rid, { collection: "rb.rb4.playData.musicRecord", musicId: midRb4, chartType: chartType as Rb4ChartType })
                 if (!recordRb4) break
 
@@ -166,7 +166,7 @@ export async function findBestMusicRecord<TVersion extends RbVersion>(rid: strin
                 playCountArray.push(recordRb4.playCount)
                 break
             case 5:
-                const midRb5 = await getMusicId(musicUid, 5)
+                const midRb5 = getMusicId(musicUid, 5)
                 const recordRb5 = await DB.FindOne<Rb5MusicRecord>(rid, { collection: "rb.rb5.playData.musicRecord", musicId: midRb5, chartType: chartType as Rb4ChartType })
                 if (!recordRb5) break
 
@@ -247,10 +247,10 @@ export async function findAllBestMusicRecord(rid: string, version: RbVersion): P
         if (version === v) continue
         for (const rv of await DBH.find(rid, { collection: `rb.rb${v}.playData.musicRecord` }) as RbMusicRecord[]) {
             if ((version === 1 || version === 2 || version === 3) && (rv.chartType === Rb4ChartType.special)) continue
-            const info = await findChartInfo(rv.musicId, v, rv.chartType)
-            const musicIdCurrentVersion = await convertMusicId(rv.musicId, v, version)
+            const info = findChartInfo(rv.musicId, v, rv.chartType)
+            const musicIdCurrentVersion = convertMusicId(rv.musicId, v, version)
             if (musicIdCurrentVersion == undefined) continue
-            const infoCurrentVersion = await findChartInfo(musicIdCurrentVersion, v, rv.chartType)
+            const infoCurrentVersion = findChartInfo(musicIdCurrentVersion, v, rv.chartType)
             if (!info || !infoCurrentVersion || info.version !== infoCurrentVersion.version) continue
             const records = resultMap[musicIdCurrentVersion] ?? []
             resultMap[musicIdCurrentVersion] = records

@@ -18,7 +18,7 @@
             @let rc = getGridRowColumn(d);
             @let date = getDate(d);
             <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount }">
-                <div class="day-background activity-level{{ activityLevel }}"></div>
+                <div class="day-bg {{ activityLevel > 0 ? `activity-level${activityLevel}` : '' }}"></div>
                 @if (date.getDate() === 1) {
                     <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
                 }

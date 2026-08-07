@@ -132,7 +132,6 @@ export function initializeBatch() {
         // fix order shop / equip experiences for RB colette
         const t = new DBH.T()
         const orders = await t.find<Rb3Order>(undefined, { collection: "rb.rb3.player.order" })
-        const ordersInfo = await rb3OrdersInfo
         for (const order of orders) {
             const orderDetailsToAddClearCount: Rb3OrderDetails[] = []
             const equipsToSetExp: Rb3Equip[] = []
@@ -142,7 +141,7 @@ export function initializeBatch() {
             const equips = await DBH.find<Rb3Equip>(rid, { collection: "rb.rb3.player.equip" })
             const details = order.details ?? []
             for (const d of details) {
-                const info = ordersInfo.find(i => i.id === d.index)
+                const info = rb3OrdersInfo.find(i => i.id === d.index)
                 if (!info) continue
                 const cond = info.unlockCondition
                 if (cond.allOrdersCleared) {
@@ -170,7 +169,7 @@ export function initializeBatch() {
                 }
             }
             for (const d of details) {
-                const info = ordersInfo.find(i => i.id === d.index)
+                const info = rb3OrdersInfo.find(i => i.id === d.index)
                 if (!info) continue
                 const cond = info.unlockCondition
                 if (!cond.equipCondition) continue

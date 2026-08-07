@@ -1,4 +1,4 @@
 import { Rb6Quest } from "../../models/rb6/quest"
-import { loadCsvAsync } from "../../utils/csv"
+import { loadCsv } from "../../utils/csv"
 
-export const rb6RankingQuests = loadCsvAsync("rb6_ranking_quests", Rb6Quest)
+export const rb6RankingQuests = loadCsv("rb6_ranking_quests", Rb6Quest)

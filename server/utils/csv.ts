@@ -1,8 +1,8 @@
 import { resolve } from "path"
-import { createReadStream, readdirSync, statSync } from "fs"
-import { createInterface as readline } from "readline"
+import { readdirSync, readFileSync, statSync } from "fs"
 import { pluginDir } from "../system/const"
 import { Type } from "./types"
+import { readFile } from "fs/promises"
 
 export type CsvFile = {
     readonly path: string
@@ -171,101 +171,100 @@ export function enumerateCsvFiles(baseDir: string): CsvFile[] {
     return result
 }
 
-function readCsvAsync(path: string): Promise<CsvTable> {
+function readCsvCore(text: string): CsvTable {
     let maxColumns = 0
     let rows = 0
     const data: string[][] = []
 
-    let resolve: (result: CsvTable) => void
-    const result = new Promise<CsvTable>(res => resolve = res)
-
-    const lines = readline(createReadStream(path, "utf8"))
     let rowData: string[] = []
     let currentCell: string[] = []
     let quoted = false
     let quotedquoted = false
     let notAllowedToAppend = false
-    lines.on("line", line => {
-        let lineFinished = false
-        for (let i = 0; i < line.length; i++) {
-            const c = line.charAt(i)
-            if (quotedquoted) {
-                quotedquoted = false
-                switch (c) {
-                    case "\"":
-                        currentCell.push("\"")
-                        break
-                    case ",":
-                        quoted = false
-                        rowData.push(currentCell.join(""))
-                        currentCell.splice(0, currentCell.length)
-                        break
-                    default:
-                        quoted = false
-                        rowData.push(currentCell.join(""))
-                        currentCell.splice(0, currentCell.length)
-                        notAllowedToAppend = true
-                        break
-                }
-            } else if (quoted) {
-                switch (c) {
-                    case "\"":
-                        quotedquoted = true
-                        break
-                    default:
-                        currentCell.push(c)
-                        break
-                }
-            } else {
-                switch (c) {
-                    case "\"":
-                        if (notAllowedToAppend) break
-                        if (currentCell.length == 0) quoted = true
-                        else currentCell.push(c)
-                        break
-                    case ",":
-                        rowData.push(currentCell.join(""))
-                        currentCell.splice(0, currentCell.length)
-                        notAllowedToAppend = false
-                        break
-                    default:
-                        if (notAllowedToAppend) break
-                        currentCell.push(c)
-                        break
-                }
-            }
-        }
+
+    let lastCharacter = ""
+
+    const finishCell = () => {
+        rowData.push(currentCell.join(""))
+        currentCell.splice(0, currentCell.length)
+    }
+    const finishRow = () => {
+        rows++
+        maxColumns = Math.max(maxColumns, rowData.length)
+        data.push(rowData)
+        rowData = []
+    }
+
+    for (let i = 0; i < text.length; i++) {
+        const c = text.charAt(i)
         if (quotedquoted) {
             quotedquoted = false
-            quoted = false
-            rowData.push(currentCell.join(""))
-            currentCell.splice(0, currentCell.length)
-            lineFinished = true
+            switch (c) {
+                case "\"":
+                    currentCell.push("\"")
+                    break
+                case ",":
+                    quoted = false
+                    finishCell()
+                    notAllowedToAppend = false
+                    break
+                case "\n":
+                case "\r":
+                    quoted = false
+                    finishCell()
+                    finishRow()
+                    notAllowedToAppend = false
+                    break
+                default:
+                    quoted = false
+                    finishCell()
+                    notAllowedToAppend = true
+                    break
+            }
         } else if (quoted) {
-            currentCell.push("\n")
+            switch (c) {
+                case "\"":
+                    quotedquoted = true
+                    break
+                default:
+                    currentCell.push(c)
+                    break
+            }
         } else {
-            rowData.push(currentCell.join(""))
-            currentCell.splice(0, currentCell.length)
-            lineFinished = true
+            switch (c) {
+                case "\"":
+                    if (notAllowedToAppend) break
+                    if (currentCell.length === 0) quoted = true
+                    else currentCell.push(c)
+                    break
+                case ",":
+                    finishCell()
+                    notAllowedToAppend = false
+                    break
+                case "\n":
+                case "\r":
+                    if (lastCharacter === "\n" || lastCharacter === "\r") break
+                    finishCell()
+                    finishRow()
+                    notAllowedToAppend = false
+                    break
+                default:
+                    if (!notAllowedToAppend) currentCell.push(c)
+                    break
+            }
         }
-        notAllowedToAppend = false
-        if (lineFinished) {
-            rows++
-            maxColumns = Math.max(maxColumns, rowData.length)
-            data.push(rowData)
-            rowData = []
-        }
-    })
-    lines.on("close", () => {
-        if (currentCell.length > 0) rowData.push(currentCell.join(""))
-        if (rowData.length > 0) {
-            rows++
-            maxColumns = Math.max(maxColumns, rowData.length)
-            data.push(rowData)
-        }
-        resolve({ cacheKey: Symbol(), maxColumns, rows, data })
-    })
-    return result
+        lastCharacter = c
+    }
+    if (currentCell.length !== 0) finishCell()
+    if (rowData.length !== 0) finishRow()
+    return { cacheKey: Symbol(), maxColumns, rows, data }
+}
+
+async function readCsvAsync(path: string): Promise<CsvTable> {
+    return readCsvCore(await readFile(path, "utf8"))
+}
+function readCsvSync(path: string): CsvTable {
+    return readCsvCore(readFileSync(path, "utf8"))
 }
 
 const dataCache: Record<symbol, any[][]> = {}
@@ -286,6 +285,19 @@ export async function loadCsvAsync<T extends object>(name: string, type?: Type<T
     let hasError = false
     try {
         const csv = await readCsvAsync(resolve(pluginDir, `data/contents/${name}.csv`))
+        // return createCsvIndexer(csv, type)
+        return createCsvRows(csv, type)
+    } catch (ex) {
+        hasError = true
+        throw ex
+    } finally {
+        if (hasError) console.log(`csv table name: ${name}`)
+    }
+}
+export function loadCsv<T extends object>(name: string, type?: Type<T>): Readonly<T>[] {
+    let hasError = false
+    try {
+        const csv = readCsvSync(resolve(pluginDir, `data/contents/${name}.csv`))
         // return createCsvIndexer(csv, type)
         return createCsvRows(csv, type)
     } catch (ex) {

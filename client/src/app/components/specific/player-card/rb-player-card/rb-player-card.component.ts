@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnInit, signal } from "@angular/core"
+import { Component, computed, inject, input, OnInit, output, signal } from "@angular/core"
 import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
@@ -70,6 +70,8 @@ export class RbPlayerCardComponent implements OnInit {
             }
         }
     })
+
+    readonly versionNavigateStarted = output()
     protected readonly pageVisible = signal(false)
     protected readonly isImageLoaded = signal(false)
     protected readonly breakpointService = inject(BungBreakpointService)
@@ -100,6 +102,9 @@ export class RbPlayerCardComponent implements OnInit {
     }
     protected onImgLoaded() {
         this.isImageLoaded.set(true)
+    }
+    protected onNavVersion() {
+        this.versionNavigateStarted.emit()
     }
     protected onNavToSubpage(index: keyof typeof profileSubpages) {
         this.subpageService.componentType.set(profileSubpages[index])

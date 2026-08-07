@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common"
 import { NgModule } from "@angular/core"
 import { FormsModule } from "@angular/forms"
 import { BungModule } from "./bung.module"
-import { VersionNavComponent } from "../components/misc/version-nav/version-nav.component"
 import { RbBattleStatComponent } from "../components/specific/battle-stat/rb-battle-stat/rb-battle-stat.component"
 import { RbBywordTagComponent } from "../components/specific/byword-tag/rb-byword-tag/rb-byword-tag.component"
 import { RbChartLampComponent } from "../components/specific/chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
@@ -84,7 +83,6 @@ import { RbTextSignalPipe } from '../pipes/specific/rb-text-signal.pipe'
 
 @NgModule({
     declarations: [
-        VersionNavComponent,
         RbBywordTagComponent,
         RbLevelPromptComponent,
         RbPlayerTagComponent,
@@ -171,7 +169,6 @@ import { RbTextSignalPipe } from '../pipes/specific/rb-text-signal.pipe'
     ],
     exports: [
         RbSharedComponentsModule,
-        VersionNavComponent,
         RbBywordTagComponent,
         RbLevelPromptComponent,
         RbPlayerTagComponent,
