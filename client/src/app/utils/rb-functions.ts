@@ -52,7 +52,7 @@ export function toRbClasscheckSub<TVersion extends RbVersionWithClasscheck>(clas
             case Rb4DojoIndex.shihandai: return "Assistant Master"
             case Rb4DojoIndex.shihan: return "Master"
             case Rb4DojoIndex.meiyoshihan: return "Honorary Master"
-            case Rb4DojoIndex.saikoshihan: return "Legendary Master"
+            case Rb4DojoIndex.saikoshihan: return "Grand Master"
             default: return classcheck.examination?.name
         }
     } else if (classcheck.version === 5) {
@@ -89,7 +89,7 @@ export function toRbClasscheckNameMain<TVersion extends RbVersionWithClasscheck>
             case Rb4DojoIndex.shihandai: return "Assistant Master"
             case Rb4DojoIndex.shihan: return "Master"
             case Rb4DojoIndex.meiyoshihan: return "Honorary Master"
-            case Rb4DojoIndex.saikoshihan: return "Legendary Master"
+            case Rb4DojoIndex.saikoshihan: return "Grand Master"
             default: return classcheck.examination?.name
         }
     } else if (classcheck.version === 5) {

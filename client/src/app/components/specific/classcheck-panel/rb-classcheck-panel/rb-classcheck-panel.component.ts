@@ -43,7 +43,7 @@ export class RbClasscheckPanelComponent<T extends RbVersionWithClasscheck> {
                 case Rb4DojoIndex.shihandai: return "Assistant Master"
                 case Rb4DojoIndex.shihan: return "Master"
                 case Rb4DojoIndex.meiyoshihan: return "Honorary Master"
-                case Rb4DojoIndex.saikoshihan: return "Legendary Master"
+                case Rb4DojoIndex.saikoshihan: return "Grand Master"
                 default: return classcheck.examination?.name
             }
         } else if (isVersion(classcheck, 5)) {

@@ -51,6 +51,10 @@
             </div>
         </div>
     </div>
+    <div class="deco-jackets">
+        <img class="image-background" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+        <img class="image-foreground" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+    </div>
 </div>
 <div class="clear-info">
     <bung-marquee [spacing]="0" [content]="marqueeContent" [context]="{ large: true }" />

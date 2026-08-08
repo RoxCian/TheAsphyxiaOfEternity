@@ -322,12 +322,52 @@
     :host
         font-size: 0.75em
     .music-card.card
-        width: 40em
+        width: 32em
     .music-card .music-info
         width: 20.5em
     .clear-info
-        width: 40em
+        width: 32em
+    .music-card.card .music-info-deco
+        left: -0.5em
+    .matching-result
+        width: 32em
+    .matching-result.card
+        .your-result
+            .you-and-score-label
+                left: -5em
+            .you-and-score-label .you-label
+                padding-left: 6em
 
+                div
+                    margin-top: -0.2em
+                    font-size: 2em
+            .score-label
+                padding-left: 8em
+        
+        .rival-result
+            .rival-label
+                right: -5em
+                padding-right: 5em
+                
+                div
+                    margin-top: -0.2em
+                    font-size: 2em
+            .score-value
+                font-size: 2.25em
+    .music-card.card .music-info .chart-type-block .chart-label
+        margin-left: -1.5em
+        padding-left: 1.5em
+    .matching-result.card .your-result .score-info
+        grid-template: 1fr / auto auto 1fr auto 8em
+        padding-left: 2em
+        padding-right: 0
+
+        .score-value, rb-rank
+            font-size: 2.25em
+        .ar-value
+            font-size: 0.75em
+    .jacket, .result-deco
+        display: none
 @keyframes fc-label-background-animation
     from
         background: #209CEE

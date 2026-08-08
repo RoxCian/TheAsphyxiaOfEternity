@@ -1,0 +1,33 @@
+.music-card.card
+    position: relative
+
+    > *
+        z-index: 1
+    .deco-jackets
+        display: none
+        position: absolute
+        inset: 0
+        align-items: center
+        justify-content: center
+        overflow: clip
+        opacity: 0.5
+        z-index: 0
+        user-select: none
+        pointer-events: none
+
+        img.image-foreground
+            height: 20em
+            font-size: 1.2em
+            filter: blur(4px)
+            -webkit-mask-image: linear-gradient(to right, transparent, black, transparent)
+            mask-image: linear-gradient(to right, transparent, black, transparent)
+
+        img.image-background
+            position: absolute
+            width: 100%
+            filter: blur(80px)
+            opacity: 0.5
+
+@media screen and (width < 768px)
+    .music-card.card .deco-jackets
+        display: flex

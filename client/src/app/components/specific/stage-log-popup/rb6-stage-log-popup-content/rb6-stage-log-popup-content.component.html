@@ -37,6 +37,10 @@
         <div class="failed-text">Failed</div>
         }
     </div>
+    <div class="deco-jackets">
+        <img class="image-background" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+        <img class="image-foreground" [src]="(music.musicUid | rbJacket : stageLog().chart.chartType)()">
+    </div>
 </div>
 <div class="matching-result">
     <div class="card your-result">

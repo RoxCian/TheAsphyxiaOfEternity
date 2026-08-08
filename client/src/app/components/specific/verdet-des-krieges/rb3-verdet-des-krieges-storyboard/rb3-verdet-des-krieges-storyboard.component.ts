@@ -5,6 +5,7 @@ import { timeout } from "../../../../utils/functions"
 import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { ReturnToTopService } from "../../../../services/misc/return-to-top.service"
 
 @Component({
     selector: "rb3-verdet-des-krieges-storyboard",
@@ -30,6 +31,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
     protected readonly langService = inject(RbLanguageService)
 
     private readonly popupService = inject(BungPopupService)
+    private readonly returnToTopService = inject(ReturnToTopService)
     private viewStateBackup?: "cover" | "contents" | "page"
 
     constructor() {
@@ -85,6 +87,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
         this.isUnlocked.set(false)
         this.viewState.set("transit-page")
         this.service.navigateTo(this.service.chapter(), page)
+        this.returnToTopService.returnToTop()
     }
     protected onNavigateToPrevious() {
         this.isUnlocked.set(false)
@@ -95,6 +98,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
             this.viewState.set("transit-page")
             this.service.navigateTo(this.service.chapter(), this.service.page() - 1)
         }
+        this.returnToTopService.returnToTop()
     }
     protected onNavigateToNext() {
         this.isUnlocked.set(false)
@@ -109,6 +113,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
             this.viewState.set("transit-page")
             this.service.navigateTo(this.service.chapter(), this.service.page() + 1)
         }
+        this.returnToTopService.returnToTop()
     }
     protected onNavigateToChapter(chapter: number) {
         this.isUnlocked.set(false)
@@ -117,6 +122,7 @@ export class Rb3VerdetDesKriegesStoryboardComponent implements OnInit {
             this.viewState.set("transit-non-page")
             this.service.navigateTo(chapter, 0)
         }
+        this.returnToTopService.returnToTop()
     }
     protected onPastelClicked() {
         this.service.unlock(Rb3VerdetDesKriegesUnlockRequestType.hiddenLink1)

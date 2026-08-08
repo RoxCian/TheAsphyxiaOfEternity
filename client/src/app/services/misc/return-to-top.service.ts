@@ -20,6 +20,6 @@ export class ReturnToTopService {
     }
 
     returnToTop() {
-        if (this.canReturnToTop()) this.scrollHost.scrollTo({ top: 0 })
+        this.scrollHost.scrollTo({ top: 0 })
     }
 }

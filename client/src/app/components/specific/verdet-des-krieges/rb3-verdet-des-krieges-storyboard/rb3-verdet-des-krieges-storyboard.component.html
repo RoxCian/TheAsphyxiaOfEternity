@@ -67,7 +67,7 @@
         <section class="storyboard" animate.leave="non-page-leave" (animate.leave)="onContentTransitionEnd($event)">
             <div class="content storyboard-content is-centered">
                 @for (c of content; let i = $index; track c) {
-                    @let p = (c | rbText : "phrase");
+                    @let p = (c | rbText : "phrase")();
                     @if (!p) { <br> }
                     @else {
                         <p [style.--timeout]="`${(i + 1) * 0.8}s`">{{ p }}</p>
