@@ -261,7 +261,6 @@ class Rb3PlayerData {
     @XD.ToX.aw("rec", Rb3MusicOldRecord) recordOld?: ArrayWrapper<"rec", Rb3MusicOldRecord> = {}
     @XD.ToO.aw("stglog", "log", Rb3PlayerStageLog) stageLogs?: ArrayWrapper<"log", Rb3PlayerStageLog> = {}
     @XD.aw("info", Rb3PlayerReleasedInfo) released: ArrayWrapper<"info", Rb3PlayerReleasedInfo> = {}
-    @XD.obj({}) announce = {}
     @XD.type("fav_music_slot", Rb3Mylist) mylist = new Rb3Mylist()
     @XD.obj({}) musicRankPoint = {}
     @XD.obj({}) ghost = {}

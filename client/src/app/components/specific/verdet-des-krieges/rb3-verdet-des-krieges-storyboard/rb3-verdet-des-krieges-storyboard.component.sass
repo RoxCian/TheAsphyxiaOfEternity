@@ -50,17 +50,14 @@ h2.contents-header
     span.has-emphasis
         margin: 0 -1em
         padding: 0 1em
+        border-radius: 4px
+        background: linear-gradient(90deg, transparent 0%, var(--emphasis-background) 1em, var(--emphasis-background) calc(100% - 1em), transparent 100%)
+        background-position-x: 50%
+        background-size: 0 100%
+        background-repeat: no-repeat
+        animation: emphasis-background-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
         z-index: 1
-
-        &::before
-            content: ''
-            position: absolute
-            inset: 0
-            border-radius: 4px
-            background: linear-gradient(90deg, transparent 0%, var(--emphasis-background) 1em, var(--emphasis-background) calc(100% - 1em), transparent 100%)
-            opacity: 0
-            animation: emphasis-background-animation 0.8s var(--emphasis-timeout) var(--ease-in) forwards
-            z-index: 1
+        box-decoration-break: clone
         
         span
             color: var(--emphasis-color)
@@ -127,6 +124,10 @@ h2.contents-header
         min-width: 12em
         max-width: 20em
 
+    .end-divider
+        opacity: 0
+        user-select: none
+        animation: normal-phrase-animation 0.4s var(--timeout, 0s) var(--ease-in) forwards
 .progress-lamps
     grid-area: 2 / 2
     display: flex
@@ -174,6 +175,7 @@ h2.contents-header
     inset: 0
     left: var(--progress-body-left, 100%)
     border-radius: 9999px 0 0 9999px
+    background: var(--background)
     transition: left var(--animation-duration-lv3) var(--ease-in)
 nav
     grid-area: 3 / span 2
@@ -289,8 +291,13 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
     .storyboard-content span.has-emphasis span
         color: var(--emphasis-color-dark)
         // animation: emphasis-text-animation-dark 0.8s var(--emphasis-timeout) var(--ease-in) forwards
-    .storyboard-content span.has-emphasis::before
+    .storyboard-content span.has-emphasis
         background: linear-gradient(90deg, transparent 0%, var(--emphasis-background-dark) 1em, var(--emphasis-background-dark) calc(100% - 1em), transparent 100%)
+        background-position-x: 50%
+        background-size: 0 100%
+        background-repeat: no-repeat
+    .progress-body
+        background: var(--background-dark)
 @keyframes normal-phrase-animation
     from
         user-select: none
@@ -318,11 +325,11 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         color: var(--emphasis-color-dark) !important
 @keyframes emphasis-background-animation
     from
-        opacity: 0
-        transform: scaleX(0)
+        background-position-x: 50%
+        background-size: 0 100%
     to
-        opacity: 1
-        transform: none
+        background-position-x: 0%
+        background-size: 100% 100%
 @keyframes show-highlight-character
     from
         opacity: 0

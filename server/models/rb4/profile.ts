@@ -176,6 +176,13 @@ export class Rb4PlayerReleasedInfo implements ICollection<"rb.rb4.player.release
     @XD.u16() param = 0
     // @XD.s32() insertTime = 0 // TODO: check
 }
+export class Rb4PlayerReleasedInfoAnnounce implements ICollection<"rb.rb4.player.releasedInfoAnnounce"> {
+    readonly collection = "rb.rb4.player.releasedInfoAnnounce"
+    @XD.u8() type = 0
+    @XD.u16() id = 0
+    @XD.u16() param = 0
+    @XD.bool("bneedannounce") needAnnounce = false
+}
 
 export class Rb4PlayerParameters implements ICollection<"rb.rb4.player.parameters"> {
     readonly collection = "rb.rb4.player.parameters"
@@ -236,7 +243,7 @@ class Rb4PlayerData {
     @XD.ToO.aw("stglog", "log", Rb4PlayerStageLog) stageLogs?: ArrayWrapper<"log", Rb4PlayerStageLog>
     @XD.ToX.aw("dojo", "rec", Rb4Classcheck) @XD.ToO.type("dojo", Rb4Classcheck) classcheck?: ArrayWrapper<"rec", Rb4Classcheck> | Rb4Classcheck = {}
     @XD.aw("info", Rb4PlayerReleasedInfo) released: ArrayWrapper<"info", Rb4PlayerReleasedInfo> = {}
-    @XD.obj({}) announce = {}
+    @XD.aw("info", Rb4PlayerReleasedInfoAnnounce) announce: ArrayWrapper<"info", Rb4PlayerReleasedInfoAnnounce> = {}
     @XD.aw("item", Rb4PlayerParameters) playerParam: ArrayWrapper<"item", Rb4PlayerParameters> = {}
     @XD.aw("list", Rb4Mylist) mylist: ArrayWrapper<"list", Rb4Mylist> = { list: [new Rb4Mylist()] }
     @XD.obj({}) musicRankPoint = {}

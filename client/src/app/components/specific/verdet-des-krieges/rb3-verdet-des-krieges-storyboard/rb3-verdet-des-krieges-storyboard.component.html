@@ -4,7 +4,7 @@
     } @else {
         @for (part of phraseParts; track part) {
             @if (typeof part === "string") {
-                <span>{{ part }}</span>
+                <span>{{ part.replaceAll("\n", "") }}</span>
             } @else {
                 @let clueAppearrance = part.clueId != undefined ? service.appearances.value()?.[part.clueId] : undefined;
                 <span [class.has-emphasis]="part.clueId != undefined"
@@ -15,9 +15,9 @@
                     [style.--emphasis-background-dark]="clueAppearrance?.backgroundDark"
                     [style.--emphasis-timeout]="`${timeout + 0.4}s`"
                     [bungTooltip]="noteContent"
-                    [bungTooltip.disabled]="part.annotation == undefined"
-                    float="right"
-                    [context]="(part.annotation ?? 0) | implicit">
+                    [preferedFloats]="['horizontal', 'vertical']"
+                    [context]="(part.annotation ?? 0) | implicit"
+                    [bungTooltip.disabled]="part.annotation == undefined">
                     <ng-container *ngTemplateOutlet="phrase; context: { phraseParts: part.text, timeout }" />
                 </span>
             }
@@ -34,7 +34,7 @@
         @for (part of phraseParts; let i = $index; track part) {
             @let prevLength = computeHighlightPhraseLength(phraseParts.slice(0, i));
             @if (typeof part === "string") {
-                @for (character of phraseParts; let j = $index; track character) {
+                @for (character of part; let j = $index; track character) {
                     <span class="h" [style.--timeout]="`${highlightBaseOffset + (j + prevLength) * 0.1}s`">{{ character }}</span>
                 }
             } @else {
@@ -139,13 +139,13 @@
                                     }
                                 }
                             }
+                            @if (data?.completed && service.chapter() === 3 && service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
+                                @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
+                                @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
+                                @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(lang === "en" ? next.phrase ?? next.phraseOrig : next.phraseOrig) * 0.1 + 3.2, 0);
+                                <bung-divider class="end-divider" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" prompt="Verdet des Krieges The End" />
+                            }
                         </div>
-                        @if (data?.completed && data?.chapter === 3 && data?.page === (service.pageCount.value()?.pageCount ?? 0) - 1) {
-                            @let timeoutBase = (content.length + (viewState() === "page" ? 3 : 1)) * 0.8;
-                            @let highlights = content.filter(el => typeof el.phraseOrig !== "string" && el.phraseOrig.some(part => typeof part !== "string" && part.highlight));
-                            @let timeoutOffset = highlights.reduce((prev, next) => prev + computeHighlightPhraseLength(lang === "en" ? next.phrase ?? next.phraseOrig : next.phraseOrig) * 0.1 + 3.2, 0);
-                            <bung-divider animate.enter="page-enter" [style.--timeout]="`${timeoutBase + timeoutOffset}s`" prompt="Verdet des Krieges The End" />
-                        }
                     }
                     <bung-divider class="progress-divider" prompt="Progress" />
                     <div class="progress-lamps">
@@ -156,8 +156,8 @@
                                     <span class="empty"></span>
                                     <div class="progress-label" [class.is-loading]="service.isLoading() || !service.isActivated()">
                                         <div class="loader"></div>
-                                        @if (service.chapter() < (data?.chapter ?? 0)) {
-                                            <span><i class="mdi mdi-check"></i></span>
+                                        @if (data?.completed || service.chapter() < (data?.chapter ?? 0)) {
+                                            <span><i class="mdi mdi-fire"></i></span>
                                         } @else if (i === 4 && (data?.page ?? 0) < 4) {
                                             <span><i class="mdi mdi-lock"></i></span>
                                         } @else {
@@ -166,7 +166,7 @@
                                     </div>
                                 </div>
                                 <div class="progress-base">
-                                    <div class="progress-body" [style.--progress-body-left]="`${service.chapter() < (data?.chapter ?? 0) ? 0 : (100 - (data?.progress?.[i] ?? 0) / 0.60)}%`" [style.background]="service.appearances.value()?.[i]?.themeColor"></div>
+                                    <div class="progress-body" [style.--progress-body-left]="`${service.chapter() < (data?.chapter ?? 0) ? 0 : (100 - (data?.progress?.[i] ?? 0) / 0.60)}%`" [style.--background]="service.appearances.value()?.[i]?.themeColor" [style.--background-dark]="service.appearances.value()?.[i]?.themeColorDark ?? service.appearances.value()?.[i]?.themeColor"></div>
                                 </div>
                             </div>
                         }
@@ -190,22 +190,21 @@
                             <button class="button pagination-next" animate.enter="page-enter" animate.leave="page-leave"
                                 [class.is-loading]="service.isLoading()"
                                 [style.--timeout]="`${timeoutBase + timeoutOffset}s`"
-                                [disabled]="data?.completed || (!service.canNavigateToNextPage() && !service.canNavigateToNextChapter() && !service.canUnlockMusic()) || service.isLoading()"
+                                [disabled]="(data?.completed && service.chapter() === 3 && service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) || (!service.canNavigateToNextPage() && !service.canNavigateToNextChapter() && !service.canUnlockMusic()) || service.isLoading()"
                                 [bungTooltip]="`Increase progress to unlock ${service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1 ? 'new music' : 'next page'}`"
-                                [bungTooltip.disabled]="service.canNavigateToNextPage() || service.canNavigateToNextChapter() || service.canUnlockMusic()"
+                                [bungTooltip.disabled]="data?.completed || service.canNavigateToNextPage() || service.canNavigateToNextChapter() || service.canUnlockMusic()"
                                 (click)="onNavigateToNext()">
-                                @if (data?.completed) {
+                                @if (data?.completed && service.chapter() === 3 && service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
                                     The end
                                 } @else if (service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
                                     @if (service.chapter() === data?.chapter && service.canUnlockMusic()) {
-                                        Unlock...
+                                        Unlock...<i class="mdi mdi-chevron-right"></i>
                                     } @else {
-                                        Next chapter...
+                                        Next chapter...<i class="mdi mdi-chevron-right"></i>
                                     }
                                 } @else {
-                                    Next page
+                                    Next page<i class="mdi mdi-chevron-right"></i>
                                 }
-                                <i class="mdi mdi-chevron-right"></i>
                             </button>
                         }
                     </nav>

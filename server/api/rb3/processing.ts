@@ -1,9 +1,5 @@
 import { Rb3Player, Rb3PlayerReleasedInfo, Rb3Stamp } from "../../models/rb3/profile"
 import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidthPlayerName } from "../shared_game/player_processing"
-// player.pdata.released.info.type == 0 -> song
-// player.pdata.released.info.type == 6 -> character card
-// player.pdata.released.info.type == 7 -> byword
-// player.pdata.released.info.type == 10 -> pastel garden seeds
 
 export async function readPlayerPostProcess(player: Rb3Player) {
     toFullWidthPlayerName(player)

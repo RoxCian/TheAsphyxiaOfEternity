@@ -1,11 +1,5 @@
 import { Rb1Player, Rb1PlayerBase, Rb1PlayerReleasedInfo } from "../../models/rb1/profile"
 import { attachReleaseInfo, detachReleaseInfo, toFullWidthPlayerName, toHalfWidthPlayerName } from "../shared_game/player_processing"
-// player.pdata.released.info.type == 0 -> song
-// player.pdata.released.info.type == 1 -> sfx
-// player.pdata.released.info.type == 2 -> bgm
-// player.pdata.released.info.type == 3 -> frame
-// player.pdata.released.info.type == 4 -> explode fx
-// player.pdata.released.info.type == 5 -> bg
 
 export async function readPlayerPostProcess(player: Rb1Player) {
     toFullWidthPlayerName(player)

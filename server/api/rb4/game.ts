@@ -3,7 +3,7 @@ import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb4MusicOldRecord, Rb4MusicRecord, Rb4MusicRecords } from "../../models/rb4/music_record"
 import { Rb4Mylist } from "../../models/rb4/mylist"
-import { Rb4Episode, Rb4Episodes, Rb4Player, Rb4PlayerAccount, Rb4PlayerBase, Rb4PlayerConfig, Rb4PlayerCustom, Rb4PlayerParameters, Rb4PlayerReleasedInfo, Rb4PlayerStageLog, Rb4Quest, Rb4Stamp } from "../../models/rb4/profile"
+import { Rb4Episode, Rb4Episodes, Rb4Player, Rb4PlayerAccount, Rb4PlayerBase, Rb4PlayerConfig, Rb4PlayerCustom, Rb4PlayerParameters, Rb4PlayerReleasedInfo, Rb4PlayerReleasedInfoAnnounce, Rb4PlayerStageLog, Rb4Quest, Rb4Stamp } from "../../models/rb4/profile"
 import { Rb4ShopInfo } from "../../models/rb4/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
@@ -131,6 +131,8 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         base.totalBestScoreEachChartType[s.chartType] += s.score
         if (isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
     }
+
+    classcheck.find(c => c.class === Rb4DojoIndex.shihandai)!.clearType = RbClasscheckClearType.clear
 
     const p = result.pdata
     p.account = account

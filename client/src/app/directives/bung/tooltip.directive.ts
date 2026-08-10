@@ -1,6 +1,6 @@
 import { Directive, effect, ElementRef, inject, input, OnDestroy, output, OutputRefSubscription, signal } from "@angular/core"
 import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
-import { BungTooltipComponent, BungTooltipFloat } from "../../components/bung/tooltip/tooltip.component"
+import { BungTooltipAlign, BungTooltipComponent, BungTooltipFloat, BungTooltipFloatExtend } from "../../components/bung/tooltip/tooltip.component"
 import { BungTooltipService } from "../../services/bung/tooltip.service"
 import { throttle } from "../../utils/functions"
 import { toggleTransform } from "../../signals/transforms"
@@ -17,6 +17,9 @@ export class BungTooltipDirective implements OnDestroy {
     readonly triggerMethod = input<"mouseenter" | "click">("mouseenter")
     readonly closeTriggerMethod = input<"mouseleave" | "click">("mouseleave")
     readonly float = input<BungTooltipFloat>("auto")
+    readonly preferedFloats = input<BungTooltipFloatExtend | BungTooltipFloatExtend[]>("vertical")
+    readonly align = input<BungTooltipAlign>("center")
+    readonly padding = input<number | [number, number] | [number, number, number, number]>(32)
     readonly delay = input(250)
     readonly duration = input(Infinity)
     readonly disabled = input(false, { alias: "bungTooltip.disabled", transform: toggleTransform })
@@ -104,7 +107,7 @@ export class BungTooltipDirective implements OnDestroy {
         if (this.disabled() || this.#component || this.#delayTimeout == undefined || this.content() == undefined) return
         this.#delayTimeout = undefined
         this.#component = this.tooltipService.tip(this.content, this.context, this.hostElement, Object.assign({}, this.options(), {
-            bindings: { float: this.float, duration: this.duration }
+            bindings: { float: this.float, preferedFloats: this.preferedFloats, align: this.align, padding: this.padding, duration: this.duration }
         } as BungPopupOptions<BungTooltipComponent>))
         const openedHandle = this.#component.opened.subscribe(() => {
             this.tooltipOpened.emit()

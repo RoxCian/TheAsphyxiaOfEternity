@@ -62,6 +62,7 @@ export type Rb3VerdetDesKriegesAppearance = {
     chapter: number
     clueId: number
     themeColor: string
+    themeColorDark?: string
     textColor: string
     background: string
     textColorDark: string

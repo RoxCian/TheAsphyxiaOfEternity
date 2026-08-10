@@ -19,7 +19,6 @@ import { createReadCommentHandler, createWriteCommentHandler } from "../shared_g
 import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
-import { inspect } from "util"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -49,11 +48,6 @@ const startPlayer: H.H = async data => {
     const lincleLink = await DBH.findOne(rid, Rb2LincleLink, { collection: "rb.rb2.player.lincleLink" }, true)
     result.lincleLink = lincleLink
     result.itemLockCtrl.item = []
-    const music = new Rb3ItemLockCtrl()
-    music.type = 0
-    music.id = 386
-    music.param = 2
-    result.itemLockCtrl.item.push(music)
     return XF.x(result)
 }
 
@@ -102,7 +96,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const seedPod = await DBH.find(read.rid, Rb3SeedPod, { collection: "rb.rb3.player.event.seedPod" })
     const order = await DBH.findOne(read.rid, Rb3Order, { collection: "rb.rb3.player.order" }, true)
     const stamp = await DBH.findOne(read.rid, Rb3Stamp, { collection: "rb.rb3.player.stamp" }, true)
-    
+
     account.sessionId = session.sessionId
 
     if (!isToday(toBigInt(account.st))) account.playCountToday = 1
@@ -174,9 +168,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     return XF.x(result)
 }
 const writePlayer: H.H<Rb3Player> = async data => {
-    console.log(inspect((data as any).pdata.base.hidden_param))
     const player = XF.o(data, Rb3Player)
-    console.log(inspect(player.pdata.base.hiddenParam))
 
     const session = await getSession(player.pdata.account.rid, 3)
     if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
@@ -469,7 +461,6 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
     const equips = await t.find<Rb3Equip>(rid, { collection: "rb.rb3.player.equip" })
     const changedEquips: Rb3Equip[] = []
     const newReleases: Rb3PlayerReleasedInfo[] = []
-    console.log(inspect(order))
     if (!playerBase || !stamp) {
         console.warn("Data not found when update order.")
         return
@@ -535,7 +526,7 @@ async function updateOrder(rid: string, order: Rb3Order, currentVersion: number,
                     case 34:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 5
                         else stamp.ticketCount[currentVersion - 1] += 2
-                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot: -1, o.param)
+                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
                         break
                     case 35:
                         if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 6
