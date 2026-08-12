@@ -11,7 +11,7 @@
     transition: box-shadow var(--animation-duration-lv2) var(--ease-in)
 
     &.is-selected
-        box-shadow: 0 2px 3px color-mix(in srgb, var(--palette-color2), transparent 90%), 0 0 0 1px color-mix(in srgb, var(--palette-color1), transparent 90%), -2px -4px 8px color-mix(in srgb, var(--palette-color3), transparent 90%)
+        box-shadow: 2px 3px 6px color-mix(in srgb, var(--palette-color2), transparent 70%), 0 0 0 1px color-mix(in srgb, var(--palette-color1), transparent 30%), -2px -4px 8px color-mix(in srgb, var(--palette-color3), transparent 70%)
 .empty
     flex: 1
 .glass-image
@@ -89,8 +89,8 @@
         opacity: 1
 @media screen and (width < 768px)
     .rb-panel
-        padding: 0.5em
-        gap: 0.5em
+        padding: 0.75em
+        gap: 0.75em
     .glass-image
         width: 4em
         height: 4em

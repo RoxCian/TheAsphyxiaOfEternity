@@ -1,10 +1,12 @@
-import { Component, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, signal, viewChild, ViewEncapsulation } from "@angular/core"
+import { Component, computed, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, signal, viewChild, ViewEncapsulation } from "@angular/core"
 import { BungOptionComponent } from "../option/option.component"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
 import { BungDropdownDirective } from "../../../directives/bung/dropdown.directive"
 import { FormValueControl } from "@angular/forms/signals"
 import { asPromise } from "../../../signals/functions"
+import { BungDropdownAlign } from "../dropdown/dropdown.component"
+import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "bung-select",
@@ -37,6 +39,11 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
     readonly hasClearButton = input(false, { transform: toggleTransform })
     readonly dropdownClass = input("")
     readonly triggerMethod = input<"click" | "mouseover">("click")
+    readonly dropdownAlign = input<BungDropdownAlign>("stretch")
+    readonly dropdownAlignOverflowed = input<BungDropdownAlign | "default">("default")
+    readonly dropdownPadding = input(32)
+    readonly dropdownMinWidth = input("12em")
+
     readonly isReversed = input(false, { transform: toggleTransform })
     readonly equalFn = input(((option: T, value: T | undefined) => option === value))
 
@@ -45,6 +52,12 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
 
     protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
     protected readonly inheritedDropdownClass = signal("")
+    protected readonly dropdownAlignOverflowedComputed = computed(() => {
+        const align = this.dropdownAlignOverflowed()
+        if (align === "default") return this.breakpointService.breakpointsToggled.mobile() ? "stretch" : "start"
+        return align
+    })
+    protected readonly breakpointService = inject(BungBreakpointService)
     private readonly injector = inject(Injector)
 
     private dropdownTrigger = viewChild("dropdownTrigger", { read: BungDropdownDirective })

@@ -1,6 +1,5 @@
 import { Component, computed, inject, output } from "@angular/core"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbProfileService } from "../../../../services/specified/rb-profile.service"
 import { BungSelectComponent } from "../../../bung/select/select.component"
 import { RbVersion } from "rbweb"
@@ -17,7 +16,6 @@ import { RbVersion } from "rbweb"
 export class RbVersionNavigatorComponent extends BungSelectComponent<void> {
     readonly navigationStarted = output()
 
-    protected readonly breakpointService = inject(BungBreakpointService)
     protected readonly versionService = inject(RbVersionService)
     protected readonly profileService = inject(RbProfileService)
     protected readonly isLoadingComputed = computed(() => this.profileService.isLoading() || this.profileService.isLoading())

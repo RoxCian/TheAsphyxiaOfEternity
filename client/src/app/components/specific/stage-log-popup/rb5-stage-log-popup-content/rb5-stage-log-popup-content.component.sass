@@ -123,17 +123,20 @@
             .e
                 color: #E7A649
 .matching-result.card
-    padding: 1.25em
+    display: flex
+    flex-direction: column
     margin-bottom: 1.25em
+    padding: 1.25em
+    gap: 1.25em
     .shadow-wrapper
         filter: drop-shadow(0 2px 3px var(--card-shadow-color)) drop-shadow(0 0 2px var(--card-shadow-color))
     .your-result
         position: relative
         overflow: clip
         clip-path: polygon(0 0, 100% 0, calc(100% - 1em) 100%, 1em 100%)
-        margin-bottom: 1em
         border: 1px solid transparent
         background: var(--card-background)
+        rotate: -1deg
 
         .you-and-score-label
             position: absolute
@@ -236,9 +239,9 @@
         position: relative
         overflow: clip
         clip-path: polygon(0 0, 100% 0, calc(100% - 1em) 100%, 1em 100%)
-        margin-bottom: 1em
         border: 1px solid transparent
         background: var(--card-background)
+        rotate: -1deg
 
         .rival-label
             position: absolute
@@ -323,15 +326,20 @@
         font-size: 0.75em
     .music-card.card
         width: 32em
+        margin-bottom: 1em
     .music-card .music-info
         width: 20.5em
     .clear-info
         width: 32em
+        margin-bottom: 1em
     .music-card.card .music-info-deco
         left: -0.5em
-    .matching-result
-        width: 32em
     .matching-result.card
+        width: 32em
+        margin-bottom: 1em
+        padding: 1em
+        gap: 1em
+
         .your-result
             .you-and-score-label
                 left: -5em

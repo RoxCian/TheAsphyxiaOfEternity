@@ -132,8 +132,8 @@
             background: transparent
 .score-container-narrow
     position: absolute
-    right: 1.25em
-    bottom: -0.75em
+    right: 1.5em
+    bottom: -1.5em
     display: none
     gap: 0.5em
 .score.narrow
@@ -141,7 +141,7 @@
     position: relative
     width: 4em
     height: 3em
-    padding-top: 1.25em
+    padding-top: 1em
     justify-content: center
     align-items: center
     overflow: clip
@@ -168,7 +168,10 @@
             background: transparent
     &:hover:not(.disabled):not(.not-played)
         transform: translateY(1em)
-        padding-top: 0.25em
+        padding-top: 0
+
+    .hover-background
+        border-radius: 0 0 8px 8px
 .score.just-collected
     .chart-score
         animation: just-collect-animation 2s ease alternate infinite
@@ -187,11 +190,9 @@
         opacity: 0.6
 @media screen and (width < 768px)
     :host .card.music, :host .placeholder
-        margin-bottom: 0.5em
-
         .content
-            padding: 0.5em
-            gap: 0.5em
+            padding: 0.75em
+            gap: 0.75em
 
             .jacket
                 width: 4em

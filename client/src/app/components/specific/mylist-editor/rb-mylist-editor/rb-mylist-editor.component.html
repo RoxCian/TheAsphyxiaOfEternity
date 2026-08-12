@@ -14,9 +14,9 @@
 
 @let l = mylist?.()?.value() ?? [];
 @for (music of musicsSorted(); track music.musicId) {
-    <bung-insertion isVirtualized sharedIntersectionGroup="rb-settings-mylist-editor" [placeholder]="mylistEditorMusicPlaceholder" [placeholderContext]="music | implicit">
+    <bung-insertion class="mylist-icon-box-insertion" isVirtualized sharedIntersectionGroup="rb-settings-mylist-editor" [placeholder]="mylistEditorMusicPlaceholder" [placeholderContext]="music | implicit">
         <div class="mylist-icon-box" animate.leave="leave">
-            <rb-music-icon [music]="music" isVirtualized>
+            <rb-music-icon [music]="music" [isImpact]="breakpointService.breakpointsToggled.mobile()" [isSelected]="l.includes(music.musicId)" isVirtualized>
                 @let s = slot();
                 @if (s == undefined) {
                     <!-- list mode -->

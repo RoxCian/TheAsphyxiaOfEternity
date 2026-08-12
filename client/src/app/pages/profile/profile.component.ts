@@ -29,6 +29,6 @@ export class ProfilePageComponent {
     }
 
     protected onNavVersion() {
-        this.subpageOutlet()?.componentInstance?.deactivate()
+        this.subpageOutlet()?.componentInstance?.deactivate?.()
     }
 }

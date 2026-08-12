@@ -232,33 +232,32 @@ rb6-just-collect
         .tag
             padding: 0 1.25em
     .music-info-wrapper
-        margin: 0.6667em 2.6667em
+        margin: 1em 3.3333em
 
         .music-info .music-title
             font-size: 1.3333em !important // 1em / 0.75
         .music-info .music-artist
             font-size: 1em !important // 0.75em / 0.75
     .chart-info-wrapper
-        gap: 0.6667em
+        gap: 1em
     .chart-score-wrapper
         width: calc(22em + 8px)
         .chart-jacket
-            padding: 0.6667em
+            padding: 1em
             padding-right: 2.3333em
 
             img
                 width: 4.6667em
                 height: 4.6667em
         .score-info
-            width: 22em
-            max-width: 22em
+            width: calc(20em + 16px)
 
             .score-info-wrapper
-                padding: calc(0.5em + 2px)
+                padding: calc(0.75em + 2px)
             .score-data
                 grid-template: 1fr 1fr / 1fr 1fr
     rb6-just-collect
-                width: auto
+        width: auto
 @media (prefers-color-scheme: dark)
     .modal-card-background
         background: linear-gradient(to bottom, transparent 5em, #111 9em)

@@ -4,9 +4,7 @@ bung-dropdown
     position: absolute
     left: var(--dropdown-left, 0)
     top: var(--dropdown-top, 0)
-    bottom: var(--dropdown-bottom, auto)
     font-size: 1rem
-    min-width: max(12em, var(--dropdown-width))
     border-radius: 4px
     overflow: clip
     background: var(--card-background)
@@ -73,18 +71,27 @@ bung-dropdown
 
 @keyframes bung-show-dropdown-animation
     from
-        height: 0
-    99.99%
-        height: var(--dropdown-height, auto)
+        left: var(--dropdown-init-left, auto)
+        top: var(--dropdown-init-top, auto)
+        width: var(--dropdown-init-width, auto)
+        height: var(--dropdown-init-height, auto)
     to
-        height: auto
+        left: var(--dropdown-left, auto)
+        top: var(--dropdown-top, auto)
+        width: var(--dropdown-width, auto)
+        height: var(--dropdown-height, auto)
 @keyframes bung-show-dropdown-content-animation
     from
-        transform: translateY(var(--dropdown-content-init-top))
+        transform: translate(var(--dropdown-content-init-left), var(--dropdown-content-init-top))
     to
         transform: none
 @keyframes bung-hide-dropdown-animation
     from
         opacity: 1
+        width: var(--dropdown-width, 0)
+        height: var(--dropdown-height, 0)
+
     to
         opacity: 0
+        width: var(--dropdown-width, 0)
+        height: var(--dropdown-height, 0)

@@ -8,10 +8,15 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
     templateUrl: "./rb-music-icon.component.html",
     styleUrl: "./rb-music-icon.component.sass",
     standalone: false,
+    host: {
+        "[class.is-impact]": "isImpact()"
+    }
 })
 export class RbMusicIconComponent {
     readonly music = input<RbMusicResponse<RbVersion>>()
     readonly chartType = input<RbChartType<RbVersion> | RbChartType<RbVersion>[] | undefined>(undefined)
+    readonly isImpact = input(false, { transform: toggleTransform })
+    readonly isSelected = input(false, { transform: toggleTransform })
     readonly isVirtualized = input(false, { transform: toggleTransform })
     readonly isPlaceholder = input(false, { transform: toggleTransform })
 

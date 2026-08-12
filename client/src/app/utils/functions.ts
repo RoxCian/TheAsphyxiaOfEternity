@@ -34,6 +34,18 @@ export function throttle<TSelf, TArgs extends any[], TReturn>(operation: (this: 
     return result
 }
 
+let fakeEl = document.createElement("div")
+fakeEl.style.display = "none"
+fakeEl.style.position = "absolute"
+export function toPixelsLength(el: HTMLElement, cssLength: string): number {
+    el.appendChild(fakeEl)
+    el.style.width = cssLength
+    const computedWidth = getComputedStyle(el).width
+    const result = parseFloat(computedWidth.slice(0, computedWidth.length - 2))
+    el.removeChild(fakeEl)
+    return isNaN(result) ? 0 : result
+}
+
 type TryResult<TResult> = {
     hasError: false
     result: TResult

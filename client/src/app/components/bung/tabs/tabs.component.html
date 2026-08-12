@@ -1,4 +1,4 @@
-<div class="tabs" bungBreakpoint="mobile">
+<div class="tabs">
     <ul>
         @for (tab of tabs(); track tab.index()) {
         <li class="tab" [class.disabled]="tab.disabled()" [class.is-loading]="tab.index() === loadingTabIndex()" [class.is-active]="!tab.disabled() && tab.index() == (direction() === 'left' ? leftIndex() : direction() === 'right' ? rightIndex() : (activated() ?? getFirstAvailableTabIndex()))" (click)="!tab.disabled() ? onChangeIndex(tab.index()) : undefined">

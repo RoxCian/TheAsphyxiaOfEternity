@@ -3,9 +3,11 @@ import { BungPopupComponent } from "../popup/popup.component"
 import { BungMenuDef, BungMenuDefComponent } from "../menu-def/menu-def.component"
 import { BungMenuItemComponent } from "../menu-item/menu-item.component"
 import { BungDropdownService } from "../../../services/bung/dropdown.service"
-import { timeout } from "../../../utils/functions"
+import { timeout, toPixelsLength } from "../../../utils/functions"
 
-export type BungDropdownFloat = "align-left" | "left" | "top-and-align-left" | "top" | "top-and-align-right" | "align-right" | "right" | "bottom-and-align-right" | "bottom" | "bottom-and-align-left" | "auto"
+export type BungDropdownFloat = "left" | "top" | "right" | "bottom" | "covered" | "auto"
+export type BungDropdownFloatExtend = "left" | "top" | "right" | "bottom" | "horizontal" | "vertical" | "covered"
+export type BungDropdownAlign = "start" | "center" | "end" | "stretch"
 
 declare global {
     interface ArrayConstructor {
@@ -23,16 +25,25 @@ declare global {
         "[class]": "class()",
         "[class.is-reversed]": "isReversed()",
         "[style.--dropdown-left]": "`${dropdownLeft()}px`",
-        "[style.--dropdown-top]": "dropdownTop()",
-        "[style.--dropdown-bottom]": "dropdownBottom()",
+        "[style.--dropdown-top]": "`${dropdownTop()}px`",
         "[style.--dropdown-width]": "`${dropdownWidth()}px`",
         "[style.--dropdown-height]": "`${dropdownHeight()}px`",
+        "[style.--dropdown-init-left]": "`${dropdownInitLeft()}px`",
+        "[style.--dropdown-init-top]": "`${dropdownInitTop()}px`",
+        "[style.--dropdown-init-width]": "`${dropdownInitWidth()}px`",
+        "[style.--dropdown-init-height]": "`${dropdownInitHeight()}px`",
         "[style.--dropdown-content-init-top]": "dropdownContentInitTop()",
+        "[style.--dropdown-content-init-left]": "dropdownContentInitLeft()",
     }
 })
 export class BungDropdownComponent extends BungPopupComponent {
     readonly def = model<BungMenuDef>([])
     readonly float = model<BungDropdownFloat>("auto")
+    readonly preferedFloats = model<BungDropdownFloatExtend | BungDropdownFloatExtend[]>("vertical")
+    readonly align = model<BungDropdownAlign>("stretch")
+    readonly alignOverflowed = model<BungDropdownAlign>("start")
+    readonly minWidth = model<string>("12em")
+    readonly padding = model<number | [number, number] | [number, number, number, number]>(32)
     readonly host = model<ElementRef<HTMLElement> | MouseEvent>()
     readonly isReversed = model(false)
 
@@ -48,11 +59,15 @@ export class BungDropdownComponent extends BungPopupComponent {
     protected readonly hasIcons = computed(() => this.items().some(i => i.icon() || i.iconUrl()))
 
     protected readonly dropdownLeft = signal(0)
-    protected readonly dropdownTop = signal("")
-    protected readonly dropdownBottom = signal("")
+    protected readonly dropdownTop = signal(0)
     protected readonly dropdownWidth = signal(0)
     protected readonly dropdownHeight = signal(0)
-    protected readonly dropdownContentInitTop = signal("")
+    protected readonly dropdownInitLeft = signal(0)
+    protected readonly dropdownInitTop = signal(0)
+    protected readonly dropdownInitWidth = signal(0)
+    protected readonly dropdownInitHeight = signal(0)
+    protected readonly dropdownContentInitLeft = signal("0")
+    protected readonly dropdownContentInitTop = signal("0")
 
     protected readonly subDropdownFloat = computed(() => {
         const float = this.float()
@@ -60,6 +75,13 @@ export class BungDropdownComponent extends BungPopupComponent {
         return float.includes("align-right") ? "left" : "right"
     })
     protected readonly itemWithSubDropdown = signal<BungMenuItemComponent | undefined>(undefined)
+
+    protected readonly paddingComputed = computed(() => {
+        const padding = this.padding()
+        if (typeof padding === "number") return [padding, padding, padding, padding] as const
+        if (padding.length === 2) return [padding[0], padding[1], padding[0], padding[1]] as const
+        return padding
+    })
 
     private readonly offset = 8
     private readonly dropdownService = inject(BungDropdownService)
@@ -88,88 +110,221 @@ export class BungDropdownComponent extends BungPopupComponent {
         const def = this.def()
         if (def instanceof BungMenuDefComponent) this.class.set(def.class())
         else this.class.set("")
-        
+
         const items = this.items()
         this.itemsClass.set(items.map(i => i.element.nativeElement.classList.toString()))
     }
-    updatePosition() {
-        let float: BungDropdownFloat | `${"top" | "bottom"}-and-${"left" | "right"}` = this.float()
+    async updatePosition() {
+        let float = this.float()
+        const preferedFloats = this.preferedFloats()
+        const floatSelectArray: ("left" | "top" | "right" | "bottom" | "covered")[] = []
         const host = this.host()
-        const hr = host instanceof MouseEvent ? new DOMRect(host.x, host.y, 0, 0) : (host?.nativeElement.getBoundingClientRect() ?? new DOMRect())
-        const viewportRect = document.body.getBoundingClientRect()
+        const hr = host instanceof MouseEvent ? new DOMRect(host.x, host.y, 0, 0) : host?.nativeElement.getBoundingClientRect() ?? new DOMRect()
         const tr = this.element?.nativeElement.getBoundingClientRect() ?? new DOMRect()
-        if (float === "auto" || float === "align-left" || float === "align-right" || float === "left" || float === "right") {
-            if (hr.bottom + this.offset + tr.height > viewportRect.height - this.offset) float = float === "auto" ? "top" : `top-and-${float}`
-            else float = float === "auto" ? "bottom" : `bottom-and-${float}`
+        const padding = this.paddingComputed()
+        const viewportRect = document.body.getBoundingClientRect()
+        if (float === "auto") {
+            for (const f of Array.isArray(preferedFloats) ? preferedFloats : [preferedFloats]) {
+                switch (f) {
+                    case "left": case "top": case "right": case "bottom":
+                    case "covered":
+                        if (!floatSelectArray.includes(f)) floatSelectArray.push(f)
+                        break
+                    case "horizontal":
+                        if (!floatSelectArray.includes("right")) floatSelectArray.push("right")
+                        if (!floatSelectArray.includes("left")) floatSelectArray.push("left")
+                        break
+                    case "vertical":
+                        if (!floatSelectArray.includes("bottom")) floatSelectArray.push("bottom")
+                        if (!floatSelectArray.includes("top")) floatSelectArray.push("top")
+                        break
+                }
+            }
         }
+        for (const f of floatSelectArray) {
+            switch (f) {
+                case "left":
+                    if (hr.x - tr.width >= Math.max(padding[0], viewportRect.width * 0.3333)) float = f
+                    break
+                case "right":
+                    if (hr.x + hr.width + tr.width <= Math.min(viewportRect.right - padding[2], viewportRect.width * 0.6667)) float = f
+                    break
+                case "top":
+                    if (hr.y - tr.height >= Math.max(padding[1], viewportRect.height * 0.3333)) float = f
+                    break
+                case "bottom":
+                    if (hr.y + hr.height + tr.height <= Math.min(viewportRect.bottom - padding[3], viewportRect.height * 0.6667)) float = f
+                    break
+            }
+            if (float !== "auto") break
+        }
+        if (float === "auto") for (const f of floatSelectArray) {
+            switch (f) {
+                case "left":
+                    if (hr.x - tr.width >= padding[0]) float = f
+                    break
+                case "right":
+                    if (hr.x + hr.width + tr.width <= viewportRect.right - padding[2]) float = f
+                    break
+                case "top":
+                    if (hr.y - tr.height >= padding[1]) float = f
+                    break
+                case "bottom":
+                    if (hr.y + hr.height + tr.height <= viewportRect.bottom - padding[3]) float = f
+                    break
+                case "covered":
+                    float = f
+                    break
+            }
+            if (float !== "auto") break
+        }
+        if (float === "auto") float = floatSelectArray[floatSelectArray.length - 1]
 
         let x = 0
-        let t = "auto"
-        let b = "auto"
-        let w = tr.width
-        let initCY = "0"
+        let y = 0
+        const minWidth = toPixelsLength(this.element.nativeElement, this.minWidth())
+        let w = Math.max(tr.width, minWidth)
+        let h = tr.height
+        let initX = 0
+        let initY = 0
+        let initW = 0
+        let initH = 0
+        let cT = "0"
+        let cL = "0"
+        const clampX = (x: number) => Math.min(Math.max(x, padding[0]), viewportRect.right - padding[2])
+        const clampY = (y: number) => Math.min(Math.max(y, padding[0]), viewportRect.bottom - padding[3])
+        const align = (float === "left" || float === "right" ? tr.height > hr.height : w > hr.width) ? this.alignOverflowed() : this.align()
         switch (float) {
-            case "top-and-align-left":
-                x = hr.x
-                b = `${viewportRect.bottom - hr.top + this.offset}px`
-                initCY = `calc(-${tr.height}px + 1em)`
-                break
             case "top":
-                w = Math.max(tr.width, hr.width)
-                x = hr.x + hr.width / 2 - w / 2
-                b = `${viewportRect.bottom - hr.top + this.offset}px`
-                initCY = `calc(-${tr.height}px + 1em)`
+                switch (align) {
+                    case "start":
+                        x = this.isReversed() ? clampX(hr.x + hr.width - w) : clampX(hr.x)
+                        break
+                    case "end":
+                        x = this.isReversed() ? clampX(hr.x) : clampX(hr.x + hr.width - w)
+                        break
+                    case "center":
+                        x = clampX(hr.x + hr.width / 2 - w / 2)
+                        break
+                    case "stretch":
+                        x = clampX(hr.x)
+                        w = Math.max(hr.width, minWidth)
+                        break
+                }
+                y = clampY(hr.y - tr.height - this.offset)
+                initX = x
+                initY = y + tr.height
+                initW = w
+                initH = 0
+                cT = `calc(${-h}px + 2em)`
                 break
-            case "top-and-align-right":
-                x = hr.x + hr.width - tr.width
-                b = `${viewportRect.bottom - hr.top + this.offset}px`
-                initCY = `calc(-${tr.height}px + 1em)`
+            case "left":
+                switch (align) {
+                    case "start":
+                        y = clampY(hr.y)
+                        break
+                    case "end":
+                        y = clampY(hr.y + hr.height - tr.height)
+                        break
+                    case "center":
+                        y = clampY(hr.y + hr.height / 2 - tr.height / 2)
+                        break
+                    case "stretch":
+                        y = clampY(hr.y)
+                        h = hr.height
+                        break
+                }
+                x = clampX(hr.x - w - this.offset)
+                initX = x + w
+                initY = y
+                initW = 0
+                initH = h
+                cL = `calc(${-x}px + 2em)`
                 break
-            case "bottom-and-align-left":
-                x = hr.x
-                t = `${hr.top + hr.height + this.offset}px`
-                initCY = `-1em`
+            case "right":
+                switch (align) {
+                    case "start":
+                        y = clampY(hr.y)
+                        break
+                    case "end":
+                        y = clampY(hr.y + hr.height - tr.height)
+                        break
+                    case "center":
+                        y = clampY(hr.y + hr.height / 2 - tr.height / 2)
+                        break
+                    case "stretch":
+                        y = clampY(hr.y)
+                        h = hr.height
+                        break
+                }
+                x = clampX(hr.x + hr.width + this.offset)
+                initX = x
+                initY = y
+                initW = 0
+                initH = h
+                cL = "-2em"
                 break
             case "bottom":
-                w = Math.max(tr.width, hr.width)
-                x = hr.x + hr.width / 2 - w / 2
-                t = `${hr.top + hr.height + this.offset}px`
-                initCY = `-1em`
+                switch (align) {
+                    case "start":
+                        x = this.isReversed() ? clampX(hr.x + hr.width - w) : clampX(hr.x)
+                        break
+                    case "end":
+                        x = this.isReversed() ? clampX(hr.x) : clampX(hr.x + hr.width - w)
+                        break
+                    case "center":
+                        x = clampX(hr.x + hr.width / 2 - w / 2)
+                        break
+                    case "stretch":
+                        x = clampX(hr.x)
+                        w = Math.max(hr.width, minWidth)
+                        break
+                }
+                y = clampY(hr.y + hr.height + this.offset)
+                initX = x
+                initY = y
+                initW = w
+                initH = 0
+                cT = `-2em`
                 break
-            case "bottom-and-align-right":
-                x = hr.x + hr.width - tr.width
-                t = `${hr.top + hr.height + this.offset}px`
-                initCY = `-1em`
-                break
-            case "top-and-left":
-                x = hr.x - tr.width - this.offset
-                b = `calc(${viewportRect.bottom - hr.bottom}px - var(--dropdown-padding))`
-                initCY = `calc(-${tr.height}px + 1em)`
-                break
-            case "top-and-right":
-                x = hr.x + hr.width + this.offset
-                b = `calc(${viewportRect.bottom - hr.bottom}px - var(--dropdown-padding))`
-                initCY = `calc(-${tr.height}px + 1em)`
-                break
-            case "bottom-and-left":
-                x = hr.x - tr.width - this.offset
-                t = `calc(${hr.top}px - var(--dropdown-padding))`
-                initCY = `-1em`
-                break
-            case "bottom-and-right":
-                x = hr.x + hr.width + this.offset
-                t = `calc(${hr.top}px - var(--dropdown-padding))`
-                initCY = `-1em`
-                break
+            case "covered":
+                switch (align) {
+                    case "start":
+                        x = this.isReversed() ? clampX(hr.x + hr.width - w) : clampX(hr.x)
+                        y = clampY(hr.y)
+                        break
+                    case "end":
+                        x = this.isReversed() ? clampX(hr.x) : clampX(hr.x + hr.width - w)
+                        y = clampY(hr.y + hr.height - tr.height)
+                        break
+                    case "center":
+                        x = clampX(hr.x + hr.width / 2 - w / 2)
+                        y = clampY(hr.y + hr.height / 2 - tr.height / 2)
+                        break
+                    case "stretch":
+                        x = clampX(hr.x)
+                        y = clampY(hr.y)
+                        w = hr.width
+                        h = hr.height
+                        break
+                }
+                initX = x
+                initY = hr.y + tr.height / 2
+                initH = 0
+
         }
-        if (x < this.offset) x = this.offset
-        else if (x + tr.width > viewportRect.width - this.offset) x = viewportRect.width - this.offset - tr.width
         this.dropdownLeft.set(x)
-        this.dropdownTop.set(t)
-        this.dropdownBottom.set(b)
+        this.dropdownTop.set(y)
+        if (w + padding[0] + padding[2] >= viewportRect.width) w = viewportRect.width - padding[0] - padding[2]
+        if (h + padding[1] + padding[3] >= viewportRect.height) h = viewportRect.height - padding[1] - padding[3]
         this.dropdownWidth.set(w)
-        this.dropdownHeight.set(tr.height)
-        this.dropdownContentInitTop.set(initCY)
+        this.dropdownHeight.set(h)
+        this.dropdownInitLeft.set(initX)
+        this.dropdownInitTop.set(initY)
+        this.dropdownInitWidth.set(initW)
+        this.dropdownInitHeight.set(initH)
+        this.dropdownContentInitLeft.set(cL)
+        this.dropdownContentInitTop.set(cT)
     }
 
     protected onClick(item: BungMenuItemComponent, e: MouseEvent) {

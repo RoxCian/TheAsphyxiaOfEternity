@@ -4,7 +4,7 @@ import { BungPopupComponent } from "../popup/popup.component"
 export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "covered" | "auto"
 // diagonal1: <\>, diagonal2: </>
 export type BungTooltipFloatExtend = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "horizontal" | "vertical" | "diagonal1" | "diagonal2" | "covered"
-export type BungTooltipAlign = "start" | "center" | "end" | "stretched"
+export type BungTooltipAlign = "start" | "center" | "end" | "stretch"
 
 @Component({
     selector: "bung-tooltip",
@@ -78,7 +78,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         if (float === "auto") {
             for (const f of Array.isArray(preferedFloats) ? preferedFloats : [preferedFloats]) {
                 switch (f) {
-                    case "left": case "top": case "right": case "bottom": 
+                    case "left": case "top": case "right": case "bottom":
                     case "top-left": case "top-right": case "bottom-right": case "bottom-left":
                     case "covered":
                         if (!floatSelectArray.includes(f)) floatSelectArray.push(f)
@@ -167,6 +167,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                 if (float !== "auto") break
             }
         }
+        if (float === "auto") float = floatSelectArray[floatSelectArray.length - 1]
         let x = 0
         let y = 0
         let w: number | undefined = undefined
@@ -193,7 +194,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                     case "center":
                         x = clampX(hr.x + hr.width / 2 - tr.width / 2)
                         break
-                    case "stretched":
+                    case "stretch":
                         x = clampX(hr.x)
                         w = hr.width
                         break
@@ -219,7 +220,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                     case "center":
                         y = clampY(hr.y + hr.height / 2 - tr.height / 2)
                         break
-                    case "stretched":
+                    case "stretch":
                         y = clampY(hr.y)
                         h = hr.height
                         break
@@ -239,7 +240,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                     case "center":
                         y = clampY(hr.y + hr.height / 2 - tr.height / 2)
                         break
-                    case "stretched":
+                    case "stretch":
                         y = clampY(hr.y)
                         h = hr.height
                         break
@@ -265,7 +266,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                     case "center":
                         x = clampX(hr.x + hr.width / 2 - tr.width / 2)
                         break
-                    case "stretched":
+                    case "stretch":
                         x = clampX(hr.x)
                         w = hr.width
                         break
@@ -294,7 +295,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         x = clampX(hr.x + hr.width / 2 - tr.width / 2)
                         y = clampY(hr.y + hr.height / 2 - tr.height / 2)
                         break
-                    case "stretched":
+                    case "stretch":
                         x = clampX(hr.x)
                         y = clampY(hr.y)
                         w = hr.width

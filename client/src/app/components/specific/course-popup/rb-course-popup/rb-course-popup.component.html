@@ -71,7 +71,7 @@
                         <bung-marquee class="sub-name" [content]="courseNameSub()" [spacing]="60" [delay]="1500" />
                     }
                     <bung-marquee class="main-name" [attr.lang]="courseNameSub() ? 'ja' : undefined" [content]="courseNameMain()" [spacing]="60" [delay]="1500" />
-                    @if (chartType()) {
+                    @if (chartType() != undefined) {
                         <div class="chart-type" [rbChartType]="chartType()!" [version]="v">{{ chartType()! | rbChartTypeLiteral : v }}</div>
                     }
                 </div>

@@ -229,15 +229,14 @@
     
 @media screen and (width < 768px)
     .modal-body
-        width: 24em
-        max-width: 28em
+        width: calc(7.5em * var(--capacity) + 1.5em)
     .modal-card-background
         background: linear-gradient(to bottom, transparent 2em, var(--card-background) 6.75em)
     .info-container
-        padding: 0.5em
+        padding: 0.75em
         padding-top: 4em
     .info-container .course-info
-        gap: 0.5em
+        gap: 0.75em
     .info-container .course-name .main-name, .info-container .course-score-info .course-score-info-heading
         font-size: 1em
     .info-container .course-name .sub-name
@@ -247,14 +246,14 @@
     .info-container .course-score-info
         grid-template: auto auto auto / 5em
     .course-lamp
-        margin: 0.5em -0.5em
+        margin: 0.75em -0.75em
     .course-lamp .clear-info .line.middle
         min-width: 2em
     .stage-log-info-wrapper
         // margin-bottom: -2.5em
-        gap: 0.5em
+        gap: 0.75em
     .stage-log-info-wrapper .stage-log-info
-        padding: 0.5em
+        padding: 0.75em
     .stage-log-info-wrapper rb-music-title
         font-size: 1em
     .defeated-part2

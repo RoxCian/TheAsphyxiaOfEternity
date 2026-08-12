@@ -15,6 +15,7 @@ export class BungModalDirective<TReturn> {
     readonly bodyContext = input<any>()
     readonly options = input<BungPopupOptions<BungModalComponent<TReturn>>>()
     readonly isCard = input(false, { transform: toggleTransform })
+    readonly hasDelete = input(false, { transform: toggleTransform })
     readonly returned = output<TReturn>()
 
     readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef)
@@ -44,6 +45,7 @@ export class BungModalDirective<TReturn> {
         const options = Object.assign({}, this.options())
         options.bindings ??= {}
         options.bindings["isCard"] ??= this.isCard
+        options.bindings["hasDelete"] ??= this.hasDelete
         this.#component = this.modalService.modal(this.header, this.body, this.headerContext, this.bodyContext, options)
         this.#componentCloseHandle = this.#component.closed.subscribe(this.cleanEventHandler)
         this.#componentReturnedHandle = this.#component.returned.subscribe(v => this.returned.emit(v))

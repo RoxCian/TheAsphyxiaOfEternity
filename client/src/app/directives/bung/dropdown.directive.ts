@@ -1,7 +1,7 @@
 import { Directive, ElementRef, OnDestroy, OutputRefSubscription, computed, effect, inject, input, inputBinding, model, output, signal } from "@angular/core"
 import { BungMenuDef } from "../../components/bung/menu-def/menu-def.component"
 import { BungPopupOptions } from "../../utils/bung"
-import { BungDropdownComponent, BungDropdownFloat } from "../../components/bung/dropdown/dropdown.component"
+import { BungDropdownAlign, BungDropdownComponent, BungDropdownFloat, BungDropdownFloatExtend } from "../../components/bung/dropdown/dropdown.component"
 import { BungDropdownService } from "../../services/bung/dropdown.service"
 import { throttle } from "../../utils/functions"
 import { toggleTransform } from "../../signals/transforms"
@@ -17,7 +17,12 @@ export class BungDropdownDirective implements OnDestroy {
     readonly triggerMethod = input<"mouseenter" | "click" | "contextmenu">("click")
     readonly closeTriggerMethod = input<"mouseleave" | "click">("click")
     readonly isContextMenu = computed(() => this.triggerMethod() === "contextmenu")
-    readonly float = input<BungDropdownFloat>("auto")
+    readonly float = model<BungDropdownFloat>("auto")
+    readonly preferedFloats = model<BungDropdownFloatExtend | BungDropdownFloatExtend[]>("vertical")
+    readonly align = model<BungDropdownAlign>("stretch")
+    readonly alignOverflowed = model<BungDropdownAlign>("start")
+    readonly minWidth = model<string>("12em")
+    readonly padding = model<number | [number, number] | [number, number, number, number]>(32)
     readonly delay = input<number>(0)
     readonly duration = input<number>(Infinity)
     readonly disabled = input(false, { transform: toggleTransform })
@@ -141,6 +146,11 @@ export class BungDropdownDirective implements OnDestroy {
         this.#component = this.dropdownService.dropdown(this.def, this.#lastMouseEvent ?? this.hostElement, Object.assign({}, this.options(), {
             bindings: {
                 float: this.float,
+                preferedFloats: this.preferedFloats,
+                align: this.align,
+                alignOverflowed: this.alignOverflowed,
+                padding: this.padding,
+                minWidth: this.minWidth,
                 isReversed: this.isReversed
             }
         }))

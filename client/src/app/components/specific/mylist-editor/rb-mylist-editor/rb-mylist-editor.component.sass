@@ -30,3 +30,29 @@
         margin-bottom: 0.5em
     .text
         font-size: 0.75em
+@media screen and (width < 768px)
+    :host
+        grid-template-columns: repeat(auto-fill, minmax(16em, 1fr))
+        grid-auto-rows: auto
+        width: 100%
+        gap: 0.75em
+    // :host .mylist-icon-box-insertion > ::ng-deep .insertion-content
+    //     min-width: 0
+    .mylist-button
+        width: calc(2.25em + 8px)
+        height: 6.6667em
+        max-height: 6.6667em
+        padding-right: 16px
+        padding-top: 8px
+        padding-bottom: 8px
+        border-radius: 8px 0 0 8px
+
+        bung-icon ::ng-deep .icon-element
+            transform: rotate(90deg)
+
+    .mylist-editor-music-placeholder
+        height: 5em
+        
+        .figure
+            height: 0
+            margin-bottom: 0

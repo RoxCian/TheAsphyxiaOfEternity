@@ -13,7 +13,7 @@
         </div>
     </div>
 } @else {
-    <div class="card music">
+    <div class="card music" [class.is-selected]="isSelected()">
         <figure class="jacket">
             @if (isVirtualized()) {
                 <img [bungImgSrc]="(m.music.musicUid | rbJacket)()" placeholderSrc="./static/assets/jackets/nowloading.svg" sharedIntersectionGroup="rb-music-icon-img">

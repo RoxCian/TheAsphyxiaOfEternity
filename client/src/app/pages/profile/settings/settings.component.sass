@@ -15,8 +15,6 @@ input.input
     flex: 1
 ::ng-deep bung-select.byword-select
     min-width: 9.75em
-::ng-deep .byword-select-dropdown
-    min-width: max(9.75em, var(--dropdown-width, 0))
 
 .byword-select:focus, .byword-select:has(.dropdown-trigger.is-active), .byword-auto-wear-button:focus
     z-index: 1
@@ -75,10 +73,9 @@ input.input
 ::ng-deep rb-music-icon.ranking-quest-option .music
     background-color: color-mix(in srgb, var(--card-background), transparent 30%)
 ::ng-deep .ranking-quest-select-dropdown
-    min-width: min(calc(100vw - 8em), max(12em, var(--dropdown-width)))
+    // min-width: min(calc(100vw - 8em), max(12em, var(--dropdown-width)))
 ::ng-deep .ranking-quest-select-dropdown .dropdown-container
     min-height: 40vh
-    max-width: calc(100vw - 8em)
 .ranking-quest-option-music-names
     display: flex
     max-width: 100%
@@ -250,6 +247,8 @@ rb-level-display-switch.leave
         margin-top: -10px
     .pastel-kun-selects
         margin-top: 34px
+    .submit-footer
+        padding-bottom: 2.5rem
 @keyframes rb-mylist-icon-leave-animation
     from
         transform: none
@@ -272,3 +271,31 @@ rb-level-display-switch.leave
 @media screen and (width < 768px)
     .submit-footer .button-and-notification
         padding-left: 0.75em
+    .mylist-list
+        grid-template-columns: repeat(auto-fill, minmax(16em, 1fr))
+        width: 100%
+        gap: 0.75em
+    .mylist-remove-button
+        width: calc(2.25em + 8px)
+        height: 6.6667em
+        padding-right: 16px
+        padding-top: 8px
+        padding-bottom: 8px
+        border-radius: 8px 0 0 8px
+
+        bung-icon ::ng-deep .icon-element
+            transform: rotate(90deg)
+    .mylist-edit-button
+        width: 100%
+
+        .edit-button-content
+            display: flex
+            flex-direction: row
+            gap: 0.75em
+
+            p.icon
+                width: 1.5em
+                margin-bottom: 0
+
+                i
+                    transform: scale(0.75)
