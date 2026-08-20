@@ -1,4 +1,4 @@
-<ng-template let-date="date" let-playCount="playCount" #playCountLabel>
+<ng-template let-id="id" let-date="date" let-playCount="playCount" #playCountLabel>
     <p class="pc">
         @if (playCount === 0) {
             No Play
@@ -7,7 +7,7 @@
             <span style="margin-left: 0.25em">{{ playCount === 1 ? "Play" : "Plays" }}</span>
         }
     </p>
-    <p class="pc">{{ date.toLocaleDateString() }}</p>
+    <p class="pc">{{ id === 0 ? "Today" : date.toLocaleDateString() }}</p>
 </ng-template>
 <div class="card">
     <div class="grid-wrapper">
@@ -17,10 +17,12 @@
             @let activityLevel = getActivityLevel(playCount);
             @let rc = getGridRowColumn(d);
             @let date = getDate(d);
-            <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount }">
+            <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount, id: d }">
                 <div class="day-bg {{ activityLevel > 0 ? `activity-level${activityLevel}` : '' }}"></div>
                 @if (date.getDate() === 1) {
                     <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
+                } @else if (d === 0) {
+                    <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">⁕</span>
                 }
             </div>
         }

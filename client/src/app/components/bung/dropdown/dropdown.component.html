@@ -1,4 +1,4 @@
-<div class="dropdown-container">
+<div class="dropdown-container" [class.is-align-bottom]="isContainerAlignBottom()" [class.is-align-right]="isContainerAlignRight()">
     @for (item of items(); let i = $index; track item) {
         @if (item.isDivider()) {
             <hr class="dropdown-divider">

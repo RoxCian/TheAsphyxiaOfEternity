@@ -40,7 +40,7 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
     readonly dropdownClass = input("")
     readonly triggerMethod = input<"click" | "mouseover">("click")
     readonly dropdownAlign = input<BungDropdownAlign>("stretch")
-    readonly dropdownAlignOverflowed = input<BungDropdownAlign | "default">("default")
+    readonly dropdownAlignOverflowed = input<BungDropdownAlign>("start")
     readonly dropdownPadding = input(32)
     readonly dropdownMinWidth = input("12em")
 
@@ -52,11 +52,6 @@ export class BungSelectComponent<T> implements FormValueControl<T | undefined> {
 
     protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef)
     protected readonly inheritedDropdownClass = signal("")
-    protected readonly dropdownAlignOverflowedComputed = computed(() => {
-        const align = this.dropdownAlignOverflowed()
-        if (align === "default") return this.breakpointService.breakpointsToggled.mobile() ? "stretch" : "start"
-        return align
-    })
     protected readonly breakpointService = inject(BungBreakpointService)
     private readonly injector = inject(Injector)
 

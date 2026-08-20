@@ -1,5 +1,6 @@
 import { Component, computed, effect, ElementRef, model, signal, ViewEncapsulation } from "@angular/core"
 import { BungPopupComponent } from "../popup/popup.component"
+import { isPixelMeasuringElement, toPixelsLength } from "../../../utils/functions"
 
 export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "covered" | "auto"
 // diagonal1: <\>, diagonal2: </>
@@ -15,8 +16,8 @@ export type BungTooltipAlign = "start" | "center" | "end" | "stretch"
     host: {
         "[style.--tooltip-left]": "`${tooltipLeft()}px`",
         "[style.--tooltip-top]": "`${tooltipTop()}px`",
-        "[style.--tooltip-init-left]": "tooltipInitLeft()",
-        "[style.--tooltip-init-top]": "tooltipInitTop()",
+        "[style.--tooltip-init-left]": "`${tooltipInitLeft()}px`",
+        "[style.--tooltip-init-top]": "`${tooltipInitTop()}px`",
         "[style.--tooltip-width]": "tooltipWidth() == undefined ? '' : `${tooltipWidth()}px`",
         "[style.--tooltip-height]": "tooltipHeight() == undefined ? '' : `${tooltipHeight()}px`"
     }
@@ -32,8 +33,8 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
     protected readonly tooltipTop = signal(0)
     protected readonly tooltipWidth = signal<number | undefined>(undefined)
     protected readonly tooltipHeight = signal<number | undefined>(undefined)
-    protected readonly tooltipInitLeft = signal("")
-    protected readonly tooltipInitTop = signal("")
+    protected readonly tooltipInitLeft = signal(0)
+    protected readonly tooltipInitTop = signal(0)
 
     protected readonly paddingComputed = computed(() => {
         const padding = this.padding()
@@ -55,7 +56,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
             if (el === this.#lastObserved) return
             if (this.#lastObserved) this.#observer?.disconnect()
             if (el) {
-                this.#observer = new MutationObserver(() => this.updatePosition())
+                this.#observer = new MutationObserver(m => this.updatePosition(m))
                 this.#observer.observe(el, { childList: true, subtree: true, characterData: true })
             }
             this.#lastObserved = el
@@ -66,7 +67,11 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         this.updatePosition()
         super.open()
     }
-    updatePosition() {
+    updatePosition(mutations?: MutationRecord[]) {
+        if (mutations?.every(m => (!m.addedNodes || Array.from(m.addedNodes).every(isPixelMeasuringElement)) && (!m.removedNodes || Array.from(m.removedNodes).every(isPixelMeasuringElement)))) {
+            // skip for adding and removing of length measuring element
+            return
+        }
         let float = this.float()
         const preferedFloats = this.preferedFloats()
         const align = this.align()
@@ -75,6 +80,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         const tr = this.element?.nativeElement.getBoundingClientRect() ?? new DOMRect()
         const padding = this.paddingComputed()
         const viewportRect = document.body.getBoundingClientRect()
+        const animationOffset = toPixelsLength(this.element.nativeElement, "2em")
         if (float === "auto") {
             for (const f of Array.isArray(preferedFloats) ? preferedFloats : [preferedFloats]) {
                 switch (f) {
@@ -172,16 +178,16 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         let y = 0
         let w: number | undefined = undefined
         let h: number | undefined = undefined
-        let initX = "0"
-        let initY = "0"
+        let initX = 0
+        let initY = 0
         const clampX = (x: number) => Math.min(Math.max(x, padding[0]), viewportRect.right - padding[2])
         const clampY = (y: number) => Math.min(Math.max(y, padding[0]), viewportRect.bottom - padding[3])
         switch (float) {
             case "top-left":
                 x = clampX(hr.x - tr.width - this.offset)
                 y = clampY(hr.y - tr.height - this.offset)
-                initX = `calc(${x}px - 2em)`
-                initY = `${y}px`
+                initX = x - animationOffset
+                initY = y
                 break
             case "top":
                 switch (align) {
@@ -200,14 +206,14 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         break
                 }
                 y = clampY(hr.y - tr.height - this.offset)
-                initX = `${x}px`
-                initY = `calc(${y}px - 2em)`
+                initX = x
+                initY = y - animationOffset
                 break
             case "top-right":
                 x = clampX(hr.x + hr.width + this.offset)
                 y = clampY(hr.y - tr.height + this.offset)
-                initX = `calc(${x}px + 2em)`
-                initY = `${y}px`
+                initX = x + animationOffset
+                initY = y
                 break
             case "left":
                 switch (align) {
@@ -226,8 +232,8 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         break
                 }
                 x = clampX(hr.x - tr.width - this.offset)
-                initX = `calc(${x}px - 2em)`
-                initY = `${y}px`
+                initX = x - animationOffset
+                initY = y
                 break
             case "right":
                 switch (align) {
@@ -246,14 +252,14 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         break
                 }
                 x = clampX(hr.x + hr.width + this.offset)
-                initX = `calc(${x}px + 2em)`
-                initY = `${y}px`
+                initX = x + animationOffset
+                initY = y
                 break
             case "bottom-left":
                 x = clampX(hr.x - tr.width - this.offset)
                 y = clampY(hr.y + hr.height + this.offset)
-                initX = `calc(${x}px - 2em)`
-                initY = `${y}px`
+                initX = x - animationOffset
+                initY = y
                 break
             case "bottom":
                 switch (align) {
@@ -272,14 +278,14 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         break
                 }
                 y = clampY(hr.y + hr.height + this.offset)
-                initX = `${x}px`
-                initY = `calc(${y}px + 2em)`
+                initX = x
+                initY = y + animationOffset
                 break
             case "bottom-right":
                 x = clampX(hr.x + hr.width + this.offset)
                 y = clampY(hr.y + hr.height + this.offset)
-                initX = `calc(${x}px + 2em)`
-                initY = `${y}px`
+                initX = x + animationOffset
+                initY = y
                 break
             case "covered":
                 switch (align) {
@@ -302,16 +308,32 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                         h = hr.height
                         break
                 }
-                initX = `${x}px`
-                initY = `${y}px`
+                initX = x
+                initY = y
 
         }
-        this.tooltipLeft.set(x)
-        this.tooltipTop.set(y)
+        if ((w ?? tr.width) + padding[0] + padding[2] >= viewportRect.width) {
+            w = viewportRect.width - padding[0] - padding[2]
+            x = padding[0]
+        } else if ((w ?? tr.width) + x + padding[2] > viewportRect.width) {
+            const newX = viewportRect.width - (w ?? tr.width) - padding[2]
+            initX = newX - x + initX
+            x = newX
+        }
+        if ((h ?? tr.height) + padding[1] + padding[3] >= viewportRect.height) {
+            h = viewportRect.height - padding[1] - padding[3]
+            y = padding[1]
+        } else if ((h ?? tr.height) + y + padding[3] > viewportRect.height) {
+            const newY = viewportRect.height - (h ?? tr.height) - padding[3]
+            initY = newY - y + initY
+            y = newY
+        }
+        if (this.tooltipLeft() !== x) this.tooltipLeft.set(x)
+        if (this.tooltipTop() !== y) this.tooltipTop.set(y)
         if ((w ?? tr.width) + padding[0] + padding[2] >= viewportRect.width) w = viewportRect.width - padding[0] - padding[2]
         if ((h ?? tr.height) + padding[1] + padding[3] >= viewportRect.height) h = viewportRect.height - padding[1] - padding[3]
-        this.tooltipWidth.set(w)
-        this.tooltipHeight.set(h)
+        if (this.tooltipWidth() !== w) this.tooltipWidth.set(w)
+        if (this.tooltipHeight() !== h) this.tooltipHeight.set(h)
         this.tooltipInitLeft.set(initX)
         this.tooltipInitTop.set(initY)
     }

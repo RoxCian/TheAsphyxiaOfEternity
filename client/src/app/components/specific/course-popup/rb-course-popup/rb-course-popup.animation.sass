@@ -1,0 +1,77 @@
+.course-info-in
+    transform: translateY(-2em)
+    opacity: 0
+.course-info-show
+    animation: show-course-info 0.4s var(--ease-in) forwards
+.background-show
+    animation: show-background 0.4s var(--ease-in) forwards
+.jacket-large img
+    transform: translateY(-100%)
+.jacket-show
+    animation: show-jacket 0.4s var(--stage-log-delay) var(--ease-in) forwards
+.stage-log-wrapper
+    transform: translateY(calc(-100% - 1em - 8px))
+.stage-log-show
+    animation: show-stage-log 0.4s var(--stage-log-delay) var(--ease-in) forwards
+
+.course-lamp-wrapper
+    transform: translateX(calc(-100% - 54px))
+.course-lamp-show
+    animation: course-clear-lamp-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+.course-lamp-background-box:not(.failed)
+    .course-lamp-background
+        animation: background-blink 0.1s var(--ease-in) infinite
+    .course-lamp-background.blur
+        animation: background-blur-blink 0.1s var(--ease-in) infinite
+.clear-info
+    transform: translateX(calc(100% - 8em))
+.course-clear-info-show
+    animation: course-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
+
+@keyframes show-course-info
+    from
+        transform: translateY(-6em)
+        opacity: 0
+    to
+        transform: none
+        opacity: 1
+@keyframes show-background
+    from
+        height: 0
+    99.9999%
+        height: var(--background-end-height)
+    to
+        height: auto
+@keyframes show-jacket
+    from
+        transform: translateY(-100%)
+    to
+        transform: none
+@keyframes show-stage-log
+    // no "from" is intentional
+    to
+        transform: none
+@keyframes background-blink
+    from
+        opacity: 0.8
+        filter: brightness(1.3)
+    to
+        opacity: 1
+        filter: none
+@keyframes background-blur-blink
+    from
+        opacity: 0.8
+        filter: brightness(1.3) blur(6px)
+    to
+        opacity: 1
+        filter: blur(12px)
+@keyframes course-clear-lamp-enter
+    from
+        transform: translateX(calc(-100% - 54px))
+    to
+        transform: none
+@keyframes course-clear-info-enter
+    from
+        transform: translateX(calc(100% - 8em))
+    to
+        transform: none

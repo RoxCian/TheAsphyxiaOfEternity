@@ -3,7 +3,7 @@
 @if (o) {
     <div class="order-box" [class.is-slot]="isSlot()" animate.enter="enter" animate.leave="leave">
         <div class="card order-card rb-panel {{ color }}" [class.is-premium-slot]="isPremiumSlot()" [class.error-info]="!o">
-            <div class="order-content" #contentElement>
+            <div class="order-card-inside" #contentElement>
                 @if (isSlot()) {
                     <div class="slot-id">
                         @if (isPremiumSlot()) {
@@ -13,53 +13,55 @@
                         }
                     </div>
                 }
-                <div class="order-wrapper">
-                    <div class="order-info">
-                        <div class="no tag leading-tag">
-                            No. {{ o.info.orderShopId.toString().padStart(3, "0") }}
-                        </div>
-                        <div class="order-name is-size-4">
-                            <ng-template #orderName>
-                                @for (el of (o.info | rbText : "orderName")().split("|"); let i = $index; track el) {
-                                    <span [class.sub]="i > 0">{{ el }}</span>
+                <div class="order-content">
+                    <div class="order-wrapper">
+                        <div class="order-info">
+                            <div class="no tag leading-tag">
+                                No. {{ o.info.orderShopId.toString().padStart(3, "0") }}
+                            </div>
+                            <div class="order-name is-size-4">
+                                <ng-template #orderName>
+                                    @for (el of (o.info | rbText : "orderName")().split("|"); let i = $index; track el) {
+                                        <span [class.sub]="i > 0">{{ el }}</span>
+                                    }
+                                </ng-template>
+                                <bung-marquee [content]="orderName" [delay]="1500" [spacing]="72" />
+                            </div>
+                            <div class="stars tag" [class.is-success]="o.info.stars <= 3" [class.is-warning]="o.info.stars <= 6 && o.info.stars > 3" [class.is-danger]="o.info.stars >= 7">
+                                @if (breakpointService.breakpointsToggled.mobile()) {
+                                    <i class="mdi mdi-star"></i>{{ o.info.stars }}
+                                } @else {
+                                    @for (i of o.info.stars | range; track i) {
+                                        <i class="mdi mdi-star"></i>
+                                    }
                                 }
-                            </ng-template>
-                            <bung-marquee [content]="orderName" [delay]="1500" [spacing]="72" />
-                        </div>
-                        <div class="stars tag" [class.is-success]="o.info.stars <= 3" [class.is-warning]="o.info.stars <= 6 && o.info.stars > 3" [class.is-danger]="o.info.stars >= 7">
-                            @if (breakpointService.breakpointsToggled.mobile()) {
-                                <i class="mdi mdi-star"></i>{{ o.info.stars }}
-                            } @else {
-                                @for (i of o.info.stars | range; track i) {
-                                    <i class="mdi mdi-star"></i>
-                                }
+                            </div>
+                            @if (isSlot() && o.clearedCount > 0 && o.info.reacceptable) {
+                                <button class="button lock-button is-small" [class.is-selected]="isLocked()" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.toggleOrderLock(slotId())">
+                                    <i class="mdi {{ isLocked() ? 'mdi-pin' : 'mdi-pin-off' }}"></i>
+                                </button>
                             }
                         </div>
-                        @if (isSlot() && o.clearedCount > 0 && o.info.reacceptable) {
-                            <button class="button lock-button is-small" [class.is-selected]="isLocked()" [class.is-loading]="service.loadingOrder() === o.info.id" [disabled]="service.orderShop.isLoading() || service.loadingOrder() >= 0" (click)="service.toggleOrderLock(slotId())">
-                                <i class="mdi {{ isLocked() ? 'mdi-pin' : 'mdi-pin-off' }}"></i>
-                            </button>
-                        }
-                    </div>
-                    <div class="order-hint">
-                        <p class="is-size-7">{{ (o.info | rbText : "hint")() }}</p>
-                        <div class="reward-info">
-                            <span class="tag leading-tag">Reward</span>
-                            <span class="is-size-7">
-                                @switch (o.info.clearRewardType) {
-                                    @case (0) { <i class="mdi mdi-ticket"></i> }
-                                    @case (1) { <i class="mdi mdi-snowboard"></i> }
-                                    @case (2) { <i class="mdi mdi-sprout"></i> }
-                                    @case (3) { <i class="mdi mdi-fish"></i> }
-                                    @case (4) { <i class="mdi mdi-fruit-pear"></i> }
-                                    @case (5) { <bung-icon iconUrl="static/assets/icons/hat.svg" /> }
-                                    @case (6) { <i class="mdi mdi-tshirt-crew"></i> }
-                                    @case (7) { <i class="mdi mdi-sword"></i> }
-                                    @case (8) { <bung-icon iconUrl="static/assets/icons/byword.svg" /> }
-                                    @case (9) { <bung-icon iconUrl="static/assets/icons/byword.svg" style="rotate: 180deg" /> }
-                                }
-                                {{ (o.info | rbText : "clearRewardName")() }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}
-                            </span>
+                        <div class="order-hint">
+                            <p class="is-size-7">{{ (o.info | rbText : "hint")() }}</p>
+                            <div class="reward-info">
+                                <span class="tag leading-tag">Reward</span>
+                                <span class="is-size-7">
+                                    @switch (o.info.clearRewardType) {
+                                        @case (0) { <i class="mdi mdi-ticket"></i> }
+                                        @case (1) { <i class="mdi mdi-snowboard"></i> }
+                                        @case (2) { <i class="mdi mdi-sprout"></i> }
+                                        @case (3) { <i class="mdi mdi-fish"></i> }
+                                        @case (4) { <i class="mdi mdi-fruit-pear"></i> }
+                                        @case (5) { <bung-icon iconUrl="static/assets/icons/hat.svg" /> }
+                                        @case (6) { <i class="mdi mdi-tshirt-crew"></i> }
+                                        @case (7) { <i class="mdi mdi-sword"></i> }
+                                        @case (8) { <bung-icon iconUrl="static/assets/icons/byword.svg" /> }
+                                        @case (9) { <bung-icon iconUrl="static/assets/icons/byword.svg" style="rotate: 180deg" /> }
+                                    }
+                                    {{ (o.info | rbText : "clearRewardName")() }}{{ o.clearedCount > 0 && o.info.reacceptable ? o.info.clearRewardAmount > 1 ? ` × ${o.info.clearRewardAmount}` : "" : o.info.firstClearRewardAmount > 1 ? ` × ${o.info.firstClearRewardAmount}` : "" }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,7 +122,7 @@
                 }
                 <div class="error-icon">
                     <span class="icon is-large">
-                        <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+                        <i class="mdi mdi-emoticon-happy {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-36px' : 'mdi-48px' }}"></i>
                     </span>
                 </div>
                 <div class="error-text">

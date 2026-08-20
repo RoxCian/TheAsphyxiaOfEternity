@@ -1,10 +1,16 @@
+@forward "./rb-course-popup.animation.sass"
+
 :host
     display: flex
-    justify-content: center
-    align-items: center
+    overflow: auto
+    overflow-y: clip
     pointer-events: none !important
+    margin: -0.5em 0
+    padding: 0.5em 0
 
     > *
+        margin-left: auto
+        margin-right: auto
         pointer-events: all
 
 .modal-body
@@ -79,7 +85,7 @@
 
     .course-score-info
         display: grid
-        grid-template: auto 1.25em 1.25em / 5em 5em
+        grid-template: auto 1.25em 1.25em / 6em 6em
         gap: 0 0.5em
         align-self: center
         z-index: 1
@@ -91,7 +97,8 @@
             grid-area: 1 / span 2
             font-size: 2em
             font-weight: bold
-            justify-self: center
+            justify-self: stretch
+            text-align: center
         .course-ar, .course-score
             grid-area: 2 / 1
         .course-play-count
@@ -228,8 +235,15 @@
     padding: 0 0.5em
     
 @media screen and (width < 768px)
+    :host
+        padding-left: 0.5em
+        padding-right: 0.5em
     .modal-body
-        width: calc(7.5em * var(--capacity) + 1.5em)
+        width: 18em
+        max-width: 18em
+        
+    .info-container, .background-container
+        margin: 0 1.5em
     .modal-card-background
         background: linear-gradient(to bottom, transparent 2em, var(--card-background) 6.75em)
     .info-container
@@ -244,102 +258,81 @@
     .info-container .course-name .chart-type
         font-size: 0.75em
     .info-container .course-score-info
-        grid-template: auto auto auto / 5em
+        grid-template: auto auto auto / 6em
+    .info-container .course-score-info, .course-info bung-divider
+        display: none
+
     .course-lamp
         margin: 0.75em -0.75em
     .course-lamp .clear-info .line.middle
         min-width: 2em
+    .course-lamp .course-lamp-background
+        inset: 0.5em 0
+    .clear-info-sub, .line.middle
+        display: none
     .stage-log-info-wrapper
-        // margin-bottom: -2.5em
+        flex-direction: column
+        width: 18em
+        margin-left: -2.25em
         gap: 0.75em
+
+        .jacket, img
+            height: 100%
+
     .stage-log-info-wrapper .stage-log-info
+        display: grid
+        grid-template: auto auto auto auto auto / 3.5em 1fr
         padding: 0.75em
+        margin: 0 -8px
+        max-width: none
+        gap: 0 0.75em
+
+        &.failed
+            flex-direction: row
+            gap: 0.75em
+        .jacket
+            grid-area: span 3 / 1
+        rb-music-title
+            grid-area: 1 / 2
+            min-width: 0
+        .artist
+            grid-area: 2 / 2
+            min-width: 0
+        .chart
+            grid-area: 3 / 2
+        bung-divider
+            grid-area: 4 / span 2
+        .stage-log-score-grid
+            grid-area: 5 / span 2
+    .stage-log-animation-wrapper
+        pointer-events: none
+    .stage-log-info-wrapper .stage-log-wrapper
+        pointer-events: all
+        grid-template: auto / 1.5em 1fr 1.5em
+        transform: translateX(calc(-100% - 1em - 8px))
     .stage-log-info-wrapper rb-music-title
         font-size: 1em
     .defeated-part2
         display: none
-    .course-lamp .course-lamp-background
-        inset: 0.5em 0
-    rb-chart-lamp, .stage-log-info-wrapper .stage-index
-        height: 1.5em
+    .stage-log-info-wrapper .stage-index
+        height: auto
+        padding: 0
+        padding-left: 8px
+        writing-mode: vertical-rl
+        border-radius: 0 8px 8px 0
+    .stage-log-info-wrapper ::ng-deep rb-chart-lamp.is-vertical .chart-lamp-container
+        padding: 0
+        padding-left: 8px
+    .stage-log-info-wrapper rb-chart-lamp.is-vertical, .stage-log-info-wrapper .stage-index
+        margin-top: 0
+        width: 1.5em
+    .stage-log-info-wrapper .stage-index
+        transform: rotate(180deg)
+    .stage-log-score-grid
+        display: flex
+
+        > *
+            flex: 1
     bung-divider
         font-size: 0.75em
 
-.course-info-in
-    transform: translateY(-2em)
-    opacity: 0
-.course-info-show
-    animation: show-course-info 0.4s var(--ease-in) forwards
-// .background-container
-//     height: 0
-.background-show
-    animation: show-background 0.4s var(--ease-in) forwards
-.jacket-large img
-    transform: translateY(-100%)
-.jacket-show
-    animation: show-jacket 0.4s var(--stage-log-delay) var(--ease-in) forwards
-.stage-log-wrapper
-    transform: translateY(calc(-100% - 1em - 8px))
-.stage-log-show
-    animation: show-stage-log 0.4s var(--stage-log-delay) var(--ease-in) forwards
-.course-lamp-wrapper
-    transform: translateX(calc(-100% - 54px))
-.course-lamp-show
-    animation: course-clear-lamp-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
-.course-lamp-background-box:not(.failed)
-    .course-lamp-background
-        animation: background-blink 0.1s var(--ease-in) infinite
-    .course-lamp-background.blur
-        animation: background-blur-blink 0.1s var(--ease-in) infinite
-.clear-info
-    transform: translateX(calc(100% - 8em))
-.course-clear-info-show
-    animation: course-clear-info-enter 0.4s var(--lamp-delay) var(--ease-in) forwards
-@keyframes show-course-info
-    from
-        transform: translateY(-6em)
-        opacity: 0
-    to
-        transform: none
-        opacity: 1
-@keyframes show-background
-    from
-        height: 0
-    99.9999%
-        height: var(--background-end-height)
-    to
-        height: auto
-@keyframes show-jacket
-    from
-        transform: translateY(-100%)
-    to
-        transform: none
-@keyframes show-stage-log
-    from
-        transform: translateY(calc(-100% - 1em - 8px))
-    to
-        transform: none
-@keyframes background-blink
-    from
-        opacity: 0.8
-        filter: brightness(1.3)
-    to
-        opacity: 1
-        filter: none
-@keyframes background-blur-blink
-    from
-        opacity: 0.8
-        filter: brightness(1.3) blur(6px)
-    to
-        opacity: 1
-        filter: blur(12px)
-@keyframes course-clear-lamp-enter
-    from
-        transform: translateX(calc(-100% - 54px))
-    to
-        transform: none
-@keyframes course-clear-info-enter
-    from
-        transform: translateX(calc(100% - 8em))
-    to
-        transform: none

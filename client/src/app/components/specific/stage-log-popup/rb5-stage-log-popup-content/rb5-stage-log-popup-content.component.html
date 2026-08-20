@@ -93,9 +93,9 @@
 </div>
 <div class="clear-info">
     @if (stageLog().clearType && stageLog().clearType !== "f") {
-    <bung-marquee class="clear-marquee" [content]="clearMarqueeContent" [spacing]="0" />
+    <bung-marquee class="clear-marquee" [content]="clearMarqueeContent" [spacing]="0" isDblClickCopyDisabled isLongTapCopyDisabled />
     } @else {
-    <bung-marquee class="failed-marquee" [content]="failedMarqueeContent" [spacing]="0" />
+    <bung-marquee class="failed-marquee" [content]="failedMarqueeContent" [spacing]="0" isDblClickCopyDisabled isLongTapCopyDisabled />
     }
 </div>
 <div class="card matching-result">

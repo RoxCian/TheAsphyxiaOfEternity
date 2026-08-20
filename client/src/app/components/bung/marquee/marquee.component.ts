@@ -39,7 +39,7 @@ export class BungMarqueeComponent implements AfterViewInit, OnDestroy {
     private readonly elementEventListeners: Record<string, EventListener> = {}
     private readonly tooltipService = inject(BungTooltipService)
 
-    #touchStarted?: number
+    #touchTimeout?: number
 
     constructor() {
         effect(() => this.checkOverflowedCallback())
@@ -129,17 +129,17 @@ export class BungMarqueeComponent implements AfterViewInit, OnDestroy {
         }, 0)
     }
     private onTouchStart(e: Event) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
-        this.#touchStarted = Date.now()
+        // e.preventDefault()
+        if (this.#touchTimeout != undefined) return
+        this.#touchTimeout = setTimeout(() => {
+            this.#touchTimeout = undefined
+            this.copyText()
+        }, 500)
     }
     private onTouchEnd(e: Event) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
-        if (this.#touchStarted == undefined) return
-        const elapsed = Date.now() - this.#touchStarted
-        if (elapsed > 200) this.copyText()
-        this.#touchStarted = undefined
+        // e.preventDefault()
+        if (this.#touchTimeout != undefined) clearTimeout(this.#touchTimeout)
+        this.#touchTimeout = undefined
     }
     copyText() {
         const contentEl = this.element.nativeElement.querySelector(".marquee-animation-wrapper > .marquee-content")

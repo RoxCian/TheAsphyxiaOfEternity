@@ -39,6 +39,8 @@ bung-tabs.has-error.leave
 .stat-item > *
     &.heading.rb
         opacity: 0.83
+    &.heading.mobile
+        display: none
     &.title .has-tooltip
         padding: 0 0.5em
     bung-icon
@@ -143,6 +145,10 @@ rb-level-display-switch.leave
         font-size: 0.75em
     .stat-grid
         margin-bottom: 0.75em
+    .stat-item > .heading.mobile
+        display: block
+    .stat-item > .heading.desktop
+        display: none
 
     .rb-list:not(.is-mobile), .rb-classcheck-list, .rb-classcheck-list-two-columns, .rb-classcheck-list-two-columns .rb-dojo
         gap: 0.75em

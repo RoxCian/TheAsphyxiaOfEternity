@@ -1,6 +1,6 @@
 bung-dropdown
     --dropdown-padding: 0.5em
-    display: block
+    display: flex
     position: absolute
     left: var(--dropdown-left, 0)
     top: var(--dropdown-top, 0)
@@ -9,26 +9,27 @@ bung-dropdown
     overflow: clip
     background: var(--card-background)
     box-shadow: 0 2px 3px var(--card-shadow-color), 0 0 0 1px var(--card-shadow-color)
-    // padding: 0.5em 1em
-    // font-size: 0.75em
-    // border-radius: 4px
-    // box-shadow: 0 2px 3px #0a0a0a1a, 0 0 0 1px #0a0a0a1a
-    // background: white
 
     &.show
         animation: bung-show-dropdown-animation var(--animation-duration-lv3) var(--ease-in) forwards
 
         > .dropdown-container
             animation: bung-show-dropdown-content-animation var(--animation-duration-lv3) var(--ease-in) forwards
+
     &.out
         animation: bung-hide-dropdown-animation var(--animation-duration-lv3) var(--ease-in) forwards !important
         pointer-events: none
     .dropdown-container
-        display: block
+        flex: 1
         max-height: 33vh
         padding-bottom: var(--dropdown-padding)
         padding-top: var(--dropdown-padding)
         overflow-y: auto
+
+        &.is-align-bottom
+            align-self: self-end
+    &:has(.dropdown-container.is-align-right)
+        justify-content: end
     .dropdown-item
         --default-background: #3273dc
         position: relative
@@ -82,9 +83,19 @@ bung-dropdown
         height: var(--dropdown-height, auto)
 @keyframes bung-show-dropdown-content-animation
     from
+        min-width: var(--dropdown-width, auto)
+        width: var(--dropdown-width, auto)
+        height: var(--dropdown-height, auto)
         transform: translate(var(--dropdown-content-init-left), var(--dropdown-content-init-top))
-    to
+    99.9999%
+        min-width: var(--dropdown-width, auto)
+        width: var(--dropdown-width, auto)
+        height: var(--dropdown-height, auto)
         transform: none
+    to
+        min-width: auto
+        width: auto
+        height: auto
 @keyframes bung-hide-dropdown-animation
     from
         opacity: 1

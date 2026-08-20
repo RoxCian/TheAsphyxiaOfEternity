@@ -48,7 +48,7 @@
                     [style.--emphasis-timeout]="`${timeout + 0.4 + (indexOffset + prevLength) * 0.1}s`"
                     [bungTooltip]="noteContent"
                     [bungTooltip.disabled]="part.annotation == undefined"
-                    float="right"
+                    [preferedFloats]="['horizontal', 'vertical']"
                     [context]="(part.annotation ?? 0) | implicit">
                     <ng-container *ngTemplateOutlet="phraseHighlighted; context: { phraseParts: part.text, timeout, indexOffset: indexOffset + prevLength }" />
                 </span>

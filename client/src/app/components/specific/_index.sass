@@ -59,6 +59,17 @@
     opacity: 0
     overflow: clip
 
+button.modal-close
+    position: absolute
+    right: calc(-32px - 1em)
+    top: calc(-32px - 1em)
+    transition: background var(--animation-duration-lv3) var(--ease-in)
+
+    &.modal-close-enter
+        animation: fade-in-animation var(--animation-duration-lv3) var(--ease-in)
+    &.modal-close-leave
+        animation: fade-in-animation var(--animation-duration-lv3) var(--ease-out) reverse
+
 bung-divider.section-divider
     margin: 2em 0
 
@@ -120,3 +131,10 @@ bung-divider.section-divider
 
     .rb-prompt
         color: var(--rb-chart-color, #363636)
+
+
+@keyframes fade-in-animation
+    from
+        opacity: 0
+    to
+        opacity: 1

@@ -241,11 +241,13 @@
                 <bung-divider class="section-divider" prompt="Total Skill Point" />
                 <div class="stat-grid" [style.--max-item-width]="'calc(50% - 2em)'">
                     <div class="stat-item rb-stat has-text-centered" bungTooltip="Songs not unlocked are also included">
-                        <div class="heading">Computed Skill Point</div>
+                        <div class="heading mobile">Computed</div>
+                        <div class="heading desktop">Computed Skill Point</div>
                         <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ skillPointService.entries().total.toFixed(1) }}</div>
                     </div>
                     <div class="stat-item rb-stat has-text-centered">
-                        <div class="heading">Skill Point In Profile</div>
+                        <div class="heading mobile">In Profile</div>
+                        <div class="heading desktop">Skill Point In Profile</div>
                         <div class="title is-skill-point is-rb{{ v }} is-tier{{ skillPointTier() }}">{{ p.skillPoint ?? 0 }}</div>
                     </div>
                 </div>

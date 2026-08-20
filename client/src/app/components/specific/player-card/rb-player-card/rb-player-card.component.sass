@@ -49,9 +49,10 @@
     align-items: end
 .player-card-content
     grid-area: 1 / 1
-    display: flex
+    display: grid
+    grid-template: auto auto auto auto / auto auto 1px 1fr
     padding: 2em
-    gap: 1em
+    gap: 0 1em
     overflow: clip
     z-index: 1
 
@@ -71,9 +72,6 @@
 .player-card-content.visible.leave, .bg-container.visible.leave, .rb-nav-buttons.visible.leave
     animation: player-card-content-leave-animation var(--animation-duration-lv2) var(--ease-in)
 
-.name-grid
-    display: grid
-    grid-template: auto auto auto / auto 1fr
 .user-id
     grid-area: 1 / 1
     opacity: 0.7
@@ -99,6 +97,7 @@
 
     span
         transition: opacity var(--animation-duration-lv3) var(--ease-in)
+        white-space: nowrap
 
     .claudia
         opacity: 0
@@ -115,22 +114,22 @@
 rb-byword-tag
     grid-area: 2 / 2
     opacity: 0.7
-    margin-left: 1em
 .comment
     grid-area: 3 / span 2
 bung-divider
+    grid-area: span 3 / 3
     flex: 0
 .player-badges
-    grid-area: 3 / span 2
+    grid-area: span 3 / 4
     display: flex
     justify-content: start
     align-items: stretch
     gap: 1em
     opacity: 0.9
 
-    .class .has-character-count-2
+    .has-character-count-2
         font-size: 1.5rem
-    .class .has-character-count-3, .class .has-character-count-4
+    .has-character-count-3, .has-character-count-4
         font-size: 1rem
         white-space: normal
 .player-badge
@@ -145,6 +144,25 @@ bung-divider
     .title
         grid-area: 2 / 1
         align-self: center
+
+    &.mg-class
+        .title
+            display: flex
+            flex-direction: column
+            height: 100%
+            align-items: stretch
+            justify-content: space-evenly
+
+        .has-character-count-2
+            font-size: 0.75em
+        .has-character-count-3, .has-character-count-4
+            font-size: 0.75em
+
+        bung-divider
+            min-height: 0.5em
+        .has-tooltip
+            padding: 0 0.5em
+
 
 .session
     display: grid
@@ -281,9 +299,11 @@ rb-version
     :host
         margin-bottom: calc(-16vh + 0.5em)
     .player-card-content
-        flex-direction: column
+        grid-template-columns: auto 1px 1fr
         padding: 1em
-        gap: 0.5em
+    rb-byword-tag
+        grid-area: 2 / 1
+        margin: 0.25em 0
     .large-card
         min-height: max(25vh, 16rem)
         padding: 0.5em 1em
@@ -291,25 +311,24 @@ rb-version
             font-size: 0.75em
 
         .name
+            grid-area: 3 / 1
             font-size: 1.5rem !important
 
         .tag
             font-size: 0.75em
-    .name-grid
-        grid-auto-flow: row
+        .comment
+            grid-area: 4 / span 4
+            margin-top: 0.75em
+    bung-divider
+        grid-column: 2
     .player-badges
-        grid-area: 4 / 1
-        align-items: stretch
-        gap: 1em
+        grid-column: 3
+    .player-badge
+        width: auto
+        min-width: 4em
 
-        .heading
-            font-size: 0.75em
-            margin: 0
         .title
             font-size: 1.5em
-
-        .class .has-character-count-2, .class .has-character-count-3, .class .has-character-count-4
-            font-size: 1em
     .rb-nav
         margin-top: -0.75em
         padding: 0.75em
@@ -320,6 +339,15 @@ rb-version
 
     // rb-version
     //     padding: 1em
+@media screen and (width < 480px)
+    .rb-nav
+        display: flex
+        flex-wrap: wrap
+        align-items: flex-start
+    .rb-nav-container
+        min-width: auto
+    .large-card .comment
+        display: none
 @keyframes player-card-content-enter-animation
     from
         opacity: 0

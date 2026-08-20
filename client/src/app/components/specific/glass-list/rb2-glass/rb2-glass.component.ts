@@ -5,6 +5,7 @@ import { Rb2GlassResponse } from "rbweb"
 import { Rb2GlassesService } from "../../../../services/specified/rb2-glasses.service"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb2-glass",
@@ -20,6 +21,7 @@ export class Rb2GlassComponent {
     protected readonly progress = computed(() => this.glass().glass ? Math.min(Math.max(this.glass().experiences / this.glass().glass!.experiences, 0), 1) : 0)
 
     protected readonly service = inject(Rb2GlassesService)
+    protected readonly breakpointService = inject(BungBreakpointService)
     
     private readonly langService = inject(RbLanguageService)
     private readonly titleMarquee = viewChild(BungMarqueeComponent)

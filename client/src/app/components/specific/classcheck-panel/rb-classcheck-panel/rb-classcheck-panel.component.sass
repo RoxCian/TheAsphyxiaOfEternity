@@ -46,7 +46,7 @@ bung-divider
 
 .classcheck-score-info
     display: grid
-    grid-template: auto 1.25em 1.25em / 5em 5em
+    grid-template: auto 1.25em 1.25em / 6em 6em
     gap: 0 0.5em
     z-index: 1
 
@@ -57,7 +57,8 @@ bung-divider
         grid-area: 1 / span 2
         font-size: 2em
         font-weight: bold
-        justify-self: center
+        justify-self: stretch
+        text-align: center
     .classcheck-ar, .classcheck-score
         grid-area: 2 / 1
     .classcheck-play-count
@@ -103,7 +104,7 @@ bung-divider
         .classcheck-name .sub-name, .classcheck-clear-info .sub-info
             font-size: 0.75em
         .classcheck-score-info
-            grid-template: auto auto auto / 5em
+            grid-template: auto auto auto / 6em
             gap: 0
         .classcheck-play-count, .classcheck-last-play
             display: none

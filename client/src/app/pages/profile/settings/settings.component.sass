@@ -179,7 +179,7 @@ input.input
     display: grid
     grid-template: auto / auto
     align-items: stretch
-    width: 8em
+    width: 8.5em
     height: auto
     padding: 0
     background: color-mix(in srgb, var(--card-background), transparent 70%)
@@ -271,8 +271,10 @@ rb-level-display-switch.leave
 @media screen and (width < 768px)
     .submit-footer .button-and-notification
         padding-left: 0.75em
+    .byword-field
+        flex-direction: column
     .mylist-list
-        grid-template-columns: repeat(auto-fill, minmax(16em, 1fr))
+        grid-template-columns: repeat(auto-fill, minmax(13.5em, 1fr))
         width: 100%
         gap: 0.75em
     .mylist-remove-button

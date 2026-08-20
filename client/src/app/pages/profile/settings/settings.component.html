@@ -364,47 +364,47 @@
                 @for (id of casted.mylist().value(); track id) {
                 @let music = id < 0 ? undefined : findMusic(id);
                   @if (music) {
-                    <div class="mylist-icon-box">
-                        <rb-music-icon [music]="music" [isImpact]="breakpointService.breakpointsToggled.mobile()" isVirtualized>
-                            <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylistSlot($index)">
-                                <bung-icon icon="delete">Remove</bung-icon>
-                            </button>
-                        </rb-music-icon>
-                    </div>
-                    } @else {
-                        <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates Slot {{ $index + 1 }}" [body]="mylistEditTemplate" [bodyContext]="$index | implicit" [options]="{}" #mylistModalTrigger>
-                            <rb-music-icon [isImpact]="breakpointService.breakpointsToggled.mobile()" isPlaceholder>
-                                <button class="button is-danger-accent mylist-remove-button is-small">
-                                    <bung-icon icon="delete">Remove</bung-icon>
-                                </button>
-                            </rb-music-icon>
-                            <div class="edit-button-content">
-                                <p>
-                                    <span class="icon is-large">
-                                        <i class="mdi mdi-pen mdi-36px"></i>
-                                    </span>
-                                </p>
-                                <p class="is-size-7">Edit Slot {{ $index + 1 }}</p>
-                            </div>
-                        </a>
-                    }
-                }
+                  <div class="mylist-icon-box">
+                    <rb-music-icon [music]="music" [isCompact]="breakpointService.breakpointsToggled.mobile()" isVirtualized>
+                        <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylistSlot($index)">
+                            <bung-icon icon="delete">Remove</bung-icon>
+                        </button>
+                    </rb-music-icon>
+            </div>
+            } @else {
+            <a class="button mylist-edit-button" bungModalTrigger isCard header="Edit Favorates Slot {{ $index + 1 }}" [body]="mylistEditTemplate" [bodyContext]="$index | implicit" [options]="{}" #mylistModalTrigger>
+                <rb-music-icon [isCompact]="breakpointService.breakpointsToggled.mobile()" isPlaceholder>
+                    <button class="button is-danger-accent mylist-remove-button is-small">
+                        <bung-icon icon="delete">Remove</bung-icon>
+                    </button>
+                </rb-music-icon>
+                <div class="edit-button-content">
+                    <p>
+                        <span class="icon is-large">
+                            <i class="mdi mdi-pen mdi-36px"></i>
+                        </span>
+                    </p>
+                    <p class="is-size-7">Edit Slot {{ $index + 1 }}</p>
+                </div>
+            </a>
+            }
+            }
             } @else if (version >= 3) {
-                @let casted = settingsService.cast(form, 3);
-                @for (id of filterMylist(casted.mylist().value()); track id) {
-                @let music = findMusic(id);
-                @if (music) {
-                    <div class="mylist-icon-box" animate.leave="leave">
-                        <rb-music-icon [music]="music" [isImpact]="breakpointService.breakpointsToggled.mobile()" isVirtualized>
-                            <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylist(id)">
-                                <bung-icon icon="delete">Remove</bung-icon>
-                            </button>
-                        </rb-music-icon>
-                    </div>
-                }
+            @let casted = settingsService.cast(form, 3);
+            @for (id of filterMylist(casted.mylist().value()); track id) {
+            @let music = findMusic(id);
+            @if (music) {
+            <div class="mylist-icon-box" animate.leave="leave">
+                <rb-music-icon [music]="music" [isCompact]="breakpointService.breakpointsToggled.mobile()" isVirtualized>
+                    <button class="button is-danger-accent mylist-remove-button is-small" (click)="onRemoveMylist(id)">
+                        <bung-icon icon="delete">Remove</bung-icon>
+                    </button>
+                </rb-music-icon>
+            </div>
+            }
             }
             <a class="button mylist-edit-button" bungModalTrigger isCard hasDelete header="Edit Favorates" [body]="mylistEditTemplate" [options]="{ values: { 'confirm': { value: 0, elementClass: 'is-success', content: 'Confirm' } } }">
-                <rb-music-icon [isImpact]="breakpointService.breakpointsToggled.mobile()" isPlaceholder>
+                <rb-music-icon [isCompact]="breakpointService.breakpointsToggled.mobile()" isPlaceholder>
                     <button class="button is-danger-accent mylist-remove-button is-small">
                         <bung-icon icon="delete">Remove</bung-icon>
                     </button>

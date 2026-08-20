@@ -9,13 +9,13 @@ import { BungIntersectionService } from "../../../../services/bung/intersection.
     styleUrl: "./rb-music-icon.component.sass",
     standalone: false,
     host: {
-        "[class.is-impact]": "isImpact()"
+        "[class.is-compact]": "isCompact()"
     }
 })
 export class RbMusicIconComponent {
     readonly music = input<RbMusicResponse<RbVersion>>()
     readonly chartType = input<RbChartType<RbVersion> | RbChartType<RbVersion>[] | undefined>(undefined)
-    readonly isImpact = input(false, { transform: toggleTransform })
+    readonly isCompact = input(false, { transform: toggleTransform })
     readonly isSelected = input(false, { transform: toggleTransform })
     readonly isVirtualized = input(false, { transform: toggleTransform })
     readonly isPlaceholder = input(false, { transform: toggleTransform })

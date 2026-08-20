@@ -23,8 +23,19 @@ bung-toggle
 
     &:hover:not(.is-disabled):not(:focus:not(.is-readonly))
         border-color: #b5b5b5
-    &:active:not(.is-disabled)
+
+    &:hover:not(.is-disabled):not(.is-readonly)
+        .toggle-thumb
+            transform: scale(1.1)
+        &.is-checked .toggle-thumb
+            transform: translateX(0.925em) scale(1.1)
+    &:active:not(.is-disabled):not(.is-readonly)
         border-color: #4a4a4a
+
+        .toggle-thumb
+            transform: scale(0.9)
+        &.is-checked .toggle-thumb
+            transform: translateX(0.925em) scale(0.9)
     &:focus:not(.is-disabled):not(:active):not(.is-readonly)
         border-color: var(--accent-color)
         box-shadow: 0 0 0 0.125em var(--accent-shadow-color)

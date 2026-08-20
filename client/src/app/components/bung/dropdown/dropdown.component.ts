@@ -69,6 +69,9 @@ export class BungDropdownComponent extends BungPopupComponent {
     protected readonly dropdownContentInitLeft = signal("0")
     protected readonly dropdownContentInitTop = signal("0")
 
+    protected readonly isContainerAlignBottom = signal(false)
+    protected readonly isContainerAlignRight = signal(false)
+
     protected readonly subDropdownFloat = computed(() => {
         const float = this.float()
         if (float === "left" || float === "right") return float
@@ -114,7 +117,7 @@ export class BungDropdownComponent extends BungPopupComponent {
         const items = this.items()
         this.itemsClass.set(items.map(i => i.element.nativeElement.classList.toString()))
     }
-    async updatePosition() {
+    updatePosition() {
         let float = this.float()
         const preferedFloats = this.preferedFloats()
         const floatSelectArray: ("left" | "top" | "right" | "bottom" | "covered")[] = []
@@ -191,6 +194,8 @@ export class BungDropdownComponent extends BungPopupComponent {
         let initH = 0
         let cT = "0"
         let cL = "0"
+        let cAlignBottom = false
+        let cAlignRight = false
         const clampX = (x: number) => Math.min(Math.max(x, padding[0]), viewportRect.right - padding[2])
         const clampY = (y: number) => Math.min(Math.max(y, padding[0]), viewportRect.bottom - padding[3])
         const align = (float === "left" || float === "right" ? tr.height > hr.height : w > hr.width) ? this.alignOverflowed() : this.align()
@@ -216,7 +221,8 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y + tr.height
                 initW = w
                 initH = 0
-                cT = `calc(${-h}px + 2em)`
+                cT = `2em`
+                cAlignBottom = true
                 break
             case "left":
                 switch (align) {
@@ -239,7 +245,8 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y
                 initW = 0
                 initH = h
-                cL = `calc(${-x}px + 2em)`
+                cL = `2em`
+                cAlignRight = true
                 break
             case "right":
                 switch (align) {
@@ -313,10 +320,27 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initH = 0
 
         }
+        if (w + padding[0] + padding[2] >= viewportRect.width) {
+            w = viewportRect.width - padding[0] - padding[2]
+            x = padding[0]
+            if (initW !== 0) initW = w
+        } else if (w + x + padding[2] > viewportRect.width) {
+            const newX = viewportRect.width - w - padding[2]
+            initX = newX - x + initX
+            x = newX
+        }
+        if (h + padding[1] + padding[3] >= viewportRect.height) {
+            h = viewportRect.height - padding[1] - padding[3]
+            y = padding[1]
+            if (initH !== 0) initH = h
+        } else if (h + y + padding[3] > viewportRect.height) {
+            const newY = viewportRect.height - h - padding[3]
+            initY = newY - y + initY
+            y = newY
+        }
+        
         this.dropdownLeft.set(x)
         this.dropdownTop.set(y)
-        if (w + padding[0] + padding[2] >= viewportRect.width) w = viewportRect.width - padding[0] - padding[2]
-        if (h + padding[1] + padding[3] >= viewportRect.height) h = viewportRect.height - padding[1] - padding[3]
         this.dropdownWidth.set(w)
         this.dropdownHeight.set(h)
         this.dropdownInitLeft.set(initX)
@@ -325,6 +349,8 @@ export class BungDropdownComponent extends BungPopupComponent {
         this.dropdownInitHeight.set(initH)
         this.dropdownContentInitLeft.set(cL)
         this.dropdownContentInitTop.set(cT)
+        this.isContainerAlignBottom.set(cAlignBottom)
+        this.isContainerAlignRight.set(cAlignRight)
     }
 
     protected onClick(item: BungMenuItemComponent, e: MouseEvent) {

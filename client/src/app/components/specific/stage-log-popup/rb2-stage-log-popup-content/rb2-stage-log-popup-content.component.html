@@ -57,7 +57,7 @@
     </div>
 </div>
 <div class="clear-info">
-    <bung-marquee [spacing]="0" [content]="marqueeContent" [context]="{ large: true }" />
+    <bung-marquee [spacing]="0" [content]="marqueeContent" [context]="{ large: true }" isDblClickCopyDisabled isLongTapCopyDisabled />
 </div>
 <div class="card your-result" [rbColor]="color">
     <div class="you-label card">YOU</div>
@@ -77,7 +77,7 @@
     <rb-rank [version]="2" [achievementRate]="stageLog().achievementRate" isVisible />
 </div>
 <div class="clear-info">
-    <bung-marquee [spacing]="0" [content]="marqueeContent" />
+    <bung-marquee [spacing]="0" [content]="marqueeContent" isDblClickCopyDisabled isLongTapCopyDisabled />
 </div>
 <div class="card rival-result" [rbColor]="color" isRival>
     <div class="rival-label card">RIVAL</div>

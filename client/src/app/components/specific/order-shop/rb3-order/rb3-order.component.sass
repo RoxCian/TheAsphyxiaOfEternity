@@ -68,24 +68,27 @@
     --background: #fffafa
     --accent-color: #e5676a
     --accent-text-color: white
-
-.order-content
+.order-card-inside
     position: relative
-    display: flex
-    justify-content: start
-    align-items: center
-    margin-bottom: 0
-    padding: 1.25em
-    gap: 1.25em
     height: 100%
     border-radius: 8px
     overflow: clip
+.order-content
+    display: flex
+    justify-content: start
+    align-items: center
+    height: 100%
+    margin-bottom: 0
+    gap: 1.25em
+    border-radius: 8px
+    overflow: auto
 
     .order-wrapper
         flex: 1
         display: grid
         grid-template: auto minmax(0, 1fr) / minmax(0, 1fr)
-        align-self: stretch
+        margin: 1.25em
+        align-self: start
         overflow-y: auto
     .order-info, .reward-info
         display: flex
@@ -209,13 +212,11 @@
         width: 100%
         justify-content: center
 @media screen and (width < 768px)
-    // :host .card.order-card, :host .placeholder
-    //     margin-bottom: 0.5em
-
     .order-content
-        padding: 0.75em
         gap: 0.75em
 
+        .order-wrapper
+            margin: 0.75em
         .order-info .order-name
             font-size: 1em !important
 

@@ -13,7 +13,7 @@
                 @if (stageLog) {
                     <div class="stage-log-info card">
                         <figure class="jacket">
-                            <img [src]="(stageLog.music.musicUid | rbJacket : stageLog.chartType)()" />
+                            <img [src]="(stageLog.music.musicUid | rbJacket : stageLog.chartType)()">
                         </figure>
                         <rb-music-title [music]="stageLog.music" [variation]="stageLog.chart.variation" />
                         <bung-marquee class="artist" [content]="stageLog.chart.variation?.artist ?? stageLog.music.artist" [delay]="1500" #artistMarquee />
@@ -38,11 +38,11 @@
                     </div>
                 } @else {
                     <div class="stage-log-info failed card">
-                        <i class="mdi mdi-emoticon-dead mdi-48px"></i>
+                        <i class="mdi mdi-emoticon-dead {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-36px' : 'mdi-48px' }}"></i>
                         <p class="is-size-7">Defeated<span class="defeated-part2"> by the charts</span></p>
                     </div>
                 }
-                <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [customizedText]="!stageLog ? 'FAILED' : undefined" />
+                <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [customizedText]="!stageLog ? 'FAILED' : undefined" [isVertical]="breakpointService.breakpointsToggled.mobile()" />
             </div>
         </div>
     </div>
@@ -124,3 +124,4 @@
         </div>
     </div>
 </div>
+<!-- <button class="modal-close is-large" (click)="close()" animate.enter="modal-close-enter" animate.leave="modal-close-leave"></button>     -->

@@ -57,6 +57,9 @@ export class BungTooltipDirective implements OnDestroy {
         this.close()
         e.stopImmediatePropagation()
     }
+    private readonly touchEventHandler = (e: TouchEvent) => {
+        if (e.target !== this.hostElement.nativeElement || e.target !== this.#component?.element.nativeElement) this.close()
+    }
     private readonly cleanEventHandler = () => {
         this.#componentCloseHandle?.unsubscribe()
         this.#componentCloseHandle = undefined
@@ -99,6 +102,8 @@ export class BungTooltipDirective implements OnDestroy {
         effect(() => {
             if (this.disabled()) this.close()
         })
+        document.addEventListener("touchstart", this.touchEventHandler)
+        document.addEventListener("touchend", this.touchEventHandler)
     }
     ngOnDestroy() {
         this.dispose()
@@ -150,6 +155,8 @@ export class BungTooltipDirective implements OnDestroy {
         this.hostElement.nativeElement.removeEventListener("mouseleave", this.mouseleaveEventHandler)
         document.removeEventListener("click", this.clickEventHandler)
         document.removeEventListener("scroll", this.scrollEventHandler)
+        document.removeEventListener("touchstart", this.touchEventHandler)
+        document.removeEventListener("touchend", this.touchEventHandler)
         this.close()
         this.cleanEventHandler()
     }

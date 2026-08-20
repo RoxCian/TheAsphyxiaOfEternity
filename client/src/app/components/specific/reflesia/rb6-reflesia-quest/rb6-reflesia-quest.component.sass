@@ -202,6 +202,9 @@
     .chart-score
         font-weight: bold
         margin-bottom: 0 // asphyxia fix
+    .hover-background
+        border-radius: 0 0 8px 8px
+    
 
     &.not-played
         cursor: not-allowed
@@ -228,10 +231,10 @@
     transition: opacity var(--animation-duration-lv3)
     border-radius: 8px
 
-    .card:hover:not(.not-played):not(.no-score) &
-        opacity: 0.3
-    .card:active:not(.not-played):not(.no-score) &
-        opacity: 0.6
+.card:hover:not(.not-played):not(.no-score) .hover-background
+    opacity: 0.3
+.card:active:not(.not-played):not(.no-score) .hover-background
+    opacity: 0.6
 @media screen and (width < 768px)
     .ranking-id span
         font-size: 2.5em

@@ -35,15 +35,19 @@ export function throttle<TSelf, TArgs extends any[], TReturn>(operation: (this: 
 }
 
 let fakeEl = document.createElement("div")
+fakeEl.classList.add("bung-measure-length-element")
 fakeEl.style.display = "none"
 fakeEl.style.position = "absolute"
 export function toPixelsLength(el: HTMLElement, cssLength: string): number {
     el.appendChild(fakeEl)
-    el.style.width = cssLength
-    const computedWidth = getComputedStyle(el).width
+    fakeEl.style.width = cssLength
+    const computedWidth = getComputedStyle(fakeEl).width
     const result = parseFloat(computedWidth.slice(0, computedWidth.length - 2))
     el.removeChild(fakeEl)
     return isNaN(result) ? 0 : result
+}
+export function isPixelMeasuringElement(n: Node): boolean {
+    return n instanceof HTMLElement && n.classList.contains("bung-measure-length-element")
 }
 
 type TryResult<TResult> = {
@@ -82,7 +86,7 @@ export function toRelativeTimeString(time: Date): string {
     if (distance >= 0 && distance <= 1000) return "Just now"
     if (distance < 0 && distance >= -1000) return "In no time"
     const distanceAbs = Math.abs(distance)
-    if (distanceAbs > 30 * 24 * 60 * 60 * 1000) return time.toLocaleDateString()
+    if (distanceAbs > 90 * 24 * 60 * 60 * 1000) return time.toLocaleDateString()
     const prefix = distance < 0 ? "In " : ""
     const suffix = distanceAbs < 60 * 1000 ? "s" : distanceAbs < 60 * 60 * 1000 ? "min" : distanceAbs < 24 * 60 * 60 * 1000 ? "h" : "d"
     const number = Math.floor(distanceAbs < 60 * 1000 ? distanceAbs / 1000 : distanceAbs < 60 * 60 * 1000 ? distanceAbs / 60 / 1000 : distanceAbs < 24 * 60 * 60 * 1000 ? distanceAbs / 60 / 60 / 1000 : distanceAbs / 24 / 60 / 60 / 1000)

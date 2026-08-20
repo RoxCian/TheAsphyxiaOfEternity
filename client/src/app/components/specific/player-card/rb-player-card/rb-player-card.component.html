@@ -11,32 +11,32 @@
                         <div class="user-icon">
                         </div>
                     } -->
-                    <div class="name-grid">
-                        <div class="user-id">RB-{{ p.userId.toString().substring(0, 4) }}-{{ p.userId.toString().substring(4, 8) }}</div>
-                        @if (p.bywords) {
-                            <rb-byword-tag [leftByword]="p.bywords!.left" [rightByword]="p.bywords!.right" />
+                    <div class="user-id">RB-{{ p.userId.toString().substring(0, 4) }}-{{ p.userId.toString().substring(4, 8) }}</div>
+                    @if (p.bywords) {
+                        <rb-byword-tag [leftByword]="p.bywords!.left" [rightByword]="p.bywords!.right" />
+                    }
+                    @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel(p.extraValues?.[1]) : 0;
+                    <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}" [class.claudia-abnormal]="p.version === 3 && verdetService.claudiaAbnormal() === 2">
+                        @if (p.version === 3 && verdetService.claudiaAbnormal() === 2) {
+                            <a class="claudia" (click)="verdetService.clickClaudia()" animate.leave="leave">ℂ𝕃𝔸𝕌𝔻𝕀𝔸</a>
                         }
-                        @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel(p.extraValues?.[1]) : 0;
-                        <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}" [class.claudia-abnormal]="p.version === 3 && verdetService.claudiaAbnormal() === 2">
-                            @if (p.version === 3 && verdetService.claudiaAbnormal() === 2) {
-                                <a class="claudia" (click)="verdetService.clickClaudia()" animate.leave="leave">ℂ𝕃𝔸𝕌𝔻𝕀𝔸</a>
-                            }
-                            <span>{{ p.name }}</span>
-                        </div>
-                        <div class="comment">
-                            <p>"{{ p.comment || (profile()?.version | rbDefaultComment) }}"</p>
-                        </div>
+                        <span>{{ p.name }}</span>
                     </div>
-                    <bung-divider [isVertical]="!breakpointService.breakpointsToggled.mobile()" />
+                    <div class="comment">
+                        <p>"{{ p.comment || (profile()?.version | rbDefaultComment) }}"</p>
+                    </div>
+                    <bung-divider isVertical />
                     <div class="player-badges">
                         @let cn = className();
-                        <div class="mg card player-badge has-text-centered">
-                            <div class="heading">Grade</div>
-                            <div class="title">
-                                <rb-matching-grade [version]="profile()!.version" [matchingGrade]="profile()!.matchingGrade" />
+                        @if (!breakpointService.breakpointsToggled.mobile() || !cn) {
+                            <div class="mg card player-badge has-text-centered">
+                                <div class="heading">Grade</div>
+                                <div class="title">
+                                    <rb-matching-grade [version]="profile()!.version" [matchingGrade]="profile()!.matchingGrade" />
+                                </div>
                             </div>
-                        </div>
-                        @if (cn) {
+                        }
+                        @if (!breakpointService.breakpointsToggled.mobile() && cn) {
                             <div class="class card player-badge has-text-centered">
                                 <div class="heading">
                                     @if (profile()?.version === 4) {
@@ -46,6 +46,17 @@
                                     }
                                 </div>
                                 <div class="title {{ profile()?.version === 4 ? `has-character-count-${cn.length}` : undefined }}">{{ cn }}</div>
+                            </div>
+                        }
+                        @if (breakpointService.breakpointsToggled.mobile() && cn) {
+                            <div class="mg-class card player-badge has-text-centered">
+                                <div class="title">
+                                    <rb-matching-grade class="has-tooltip" [version]="profile()!.version" [matchingGrade]="profile()!.matchingGrade" bungTooltip="Matching Grade" />
+                                    @if (cn) {
+                                        <bung-divider />
+                                        <span class="class has-tooltip {{ profile()?.version === 4 ? `has-character-count-${cn.length}` : undefined }}" [bungTooltip]="profile()?.version === 4 ? '道場' : 'Class'">{{ cn }}</span>
+                                    }
+                                </div>
                             </div>
                         }
                         @if ((sessionService.session.hasValue() && sessionService.session.value()) || sessionService.sessionKilled()) {
@@ -126,7 +137,7 @@
                             </button>
                             @if ((this.profile()?.version ?? 0) >= 2) {
                                 <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'progress'" (click)="onNavToSubpage('progress')">
-                                    <bung-icon iconUrl="static/assets/icons/pastel-trophy.svg">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Progress" }}</bung-icon>
+                                    <bung-icon iconUrl="static/assets/icons/pastel-trophy.svg">{{ breakpointService.breakpointsToggled.mobile() ? "" : "Events" }}</bung-icon>
                                 </button>
                             }
                             <button class="button rb-nav-item" [class.is-small]="breakpointService.breakpointsToggled.mobile()" [class.is-selected]="subpageIndex() === 'settings'" (click)="onNavToSubpage('settings')">

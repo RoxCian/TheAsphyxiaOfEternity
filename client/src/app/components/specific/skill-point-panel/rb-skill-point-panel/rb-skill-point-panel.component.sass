@@ -43,45 +43,49 @@
         padding: 1.25em
         gap: 1.25em
 
-        .jacket
-            flex: 0
-            margin: 0
-            min-width: 5em
-            min-height: 5em
-            width: 5em
-            height: 5em
-            border-radius: 8px
-            overflow: clip
-            user-select: none
-        .music-info
-            flex: 1
-            overflow-x: hidden
-        .music-title
-            font-weight: bold
-            margin-bottom: 0
-        rb-music-title
-            width: 100%
-        .music-artist
-            opacity: 0.7
-        .chart-name
-            color: var(--rb-chart-color)
-            margin-right: 0.5em
-            opacity: 0.7
-        rb-level
-            opacity: 0.7
+    .jacket
+        flex: 0
+        margin: 0
+        min-width: 5em
+        min-height: 5em
+        width: 5em
+        height: 5em
+        border-radius: 8px
+        overflow: clip
+        user-select: none
+    .music-info
+        flex: 1
+        overflow-x: hidden
+    .music-title
+        font-weight: bold
+        margin-bottom: 0
+    rb-music-title
+        width: 100%
+    .music-artist
+        opacity: 0.7
+    .chart-level
+        white-space: nowrap
+    .chart-name
+        color: var(--rb-chart-color)
+        margin-right: 0.5em
+        opacity: 0.7
+    rb-level
+        opacity: 0.7
 bung-divider
     height: 100%
 .skill-point-info
     display: grid
-    grid-template: auto 1.25em / 5em 5em
+    grid-template: auto 1.25em / 6em 6em
     z-index: 1
 
     .skill-point
         grid-area: 1 / span 2
-        justify-self: center
+        justify-self: stretch
+        text-align: center
         padding: 0 0.5em
         font-size: 2em
         font-weight: bold
+
     bung-icon
         padding: 0 0.5em
     .skill-point-score
@@ -109,7 +113,7 @@ bung-divider
             .chart-level
                 font-size: 0.75em !important
             .skill-point-info
-                grid-template: auto auto auto / 5em
+                grid-template: auto auto auto / 6em
             .skill-point-ar
                 grid-area: 3 / 1
                 // margin-left: calc(-0.375em - 1px)

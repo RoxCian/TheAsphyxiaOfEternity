@@ -2,6 +2,7 @@ import { Component, effect, inject, input, viewChild } from "@angular/core"
 import { Rb5YurukomeResponse } from "rbweb"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb5-yurukome-panel",
@@ -11,6 +12,9 @@ import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 })
 export class Rb5YurukomePanelComponent {
     readonly yurukome = input.required<Rb5YurukomeResponse>()
+
+    protected readonly breakpointService = inject(BungBreakpointService)
+
     private readonly langService = inject(RbLanguageService)
     private readonly titleMarquee = viewChild(BungMarqueeComponent)
     private langBackup?: "en" | "orig"
