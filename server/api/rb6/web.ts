@@ -101,6 +101,8 @@ const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = as
 const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
     const result: { [K in number]: RbMusicRecordResponse<V> } = {}
     const records = await DBH.find<Rb6MusicRecord>(data.rid, { collection: "rb.rb6.playData.musicRecord" })
+    const base = await DBH.findOne<Rb6PlayerBase>(data.rid, { collection: "rb.rb6.player.base" })
+    const sp = (base?.skillPointTimes10 ?? 0) * 0.1
     for (const record of records) {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version,
@@ -124,6 +126,7 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
                 blue: record.justCollectionRateTimes100Blue / 100
             },
             skillPoint: await computeSkillPoint(record),
+            potential: await computeSkillPointPotentialFactor(sp, record),
             lastPlay: new Date(record.time * 1000),
             update: new Date(Math.max(record.bestComboUpdateTime, record.bestScoreUpdateTime, record.bestMissCountUpdateTime, record.bestAchievementRateUpdateTime) * 1000)
         }
@@ -571,6 +574,20 @@ async function computeSkillPoint(record: Rb6MusicRecord): Promise<number> {
     const maxScore = (chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50
     const result = Math.min((record.score / maxScore) * (record.combo / chart.maxCombo) * chart.skillRate * 2, chart.skillRate * 2) // a very little charts can break up the max score limit like refrain (HARD). So cap it.
     return parseFloat(result.toFixed(2))
+}
+async function computeSkillPointPotentialFactor(currentSkillPoint: number, record: Rb6MusicRecord): Promise<number> {
+    const chart = findChartInfo(record.musicId, version, record.chartType)
+    if (!chart || chart.maxJustReflec < 0) return -1
+    const maxScore = (chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50
+    const ptsSr = currentSkillPoint / 100
+    const advRange = 10
+    const baseFactorAdvTop = 1.05
+    const baseFactorAdvBottom = 0.85
+    const baseFactor = -(baseFactorAdvTop - baseFactorAdvBottom) * (advRange ** -3) * Math.abs(chart.skillRate - ptsSr) ** 3 + baseFactorAdvTop
+    const computeFactor = (x: number, left: number, right: number) => Math.min(1, Math.log((Math.E - 1) / (left - right) * x + (left - right * Math.E) / (left - right)))
+    const scoreFactor = computeFactor((1 - (maxScore - record.score) / maxScore), 0.8, 1)
+    const comboFactor = computeFactor((1 - (maxScore - record.score) / maxScore), 0.5, 1)
+    return baseFactor * (scoreFactor * 0.5 + comboFactor * 0.5)
 }
 function computeMaxMissCount(score: number, combo: number, chart: RbChartInfo<V, Rb6ChartType>) {
     // formulae are come from bemaniwiki.com

@@ -60,7 +60,7 @@
                             </div>
                         }
                         @if ((sessionService.session.hasValue() && sessionService.session.value()) || sessionService.sessionKilled()) {
-                            <bung-divider class="session-badge-divider" isVertical />
+                            <bung-divider class="session-badge-divider" isVertical animate.enter="enter" animate.leave="leave" />
                             <ng-template #sessionIconTooltip>
                                 <div class="session-icon-tooltip content">
                                     <p class="is-size-6"><b>This icon means you just swiped your card and maybe playing now.</b></p>
@@ -75,8 +75,7 @@
                                     <p class="is-size-6"><b>Game session was ternimated.</b></p>
                                 </div>
                             </ng-template>
-                            <div class="session card player-badge has-text-centered" [class.is-killing]="sessionService.sessionKilling()" [bungTooltip]="sessionService.sessionKilled() ? sessionKilledIconTooltip : sessionIconTooltip" ]>
-                                <!-- <button class="delete" [disabled]="sessionService.sessionKilling() || sessionService.sessionKilled()" (click)="sessionService.killSession()"></button> -->
+                            <div class="session card player-badge has-text-centered" animate.enter="enter" animate.leave="leave" [class.is-killing]="sessionService.sessionKilling()" [bungTooltip]="sessionService.sessionKilled() ? sessionKilledIconTooltip : sessionIconTooltip" ]>
                                 <div class="title session-on" [class.show]="!sessionService.sessionKilled()">
                                     <i class="mdi mdi-gamepad-variant {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-24px' : 'mdi-36px' }}"></i>
                                 </div>
@@ -155,7 +154,8 @@
     </div>
     @if (p) {
         @for (v of [this.profile()?.version]; track v) {
-            <div class="bg-container" [class.is-loaded]="isImageLoaded()" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave">
+            <!-- <div class="bg-container" [class.is-loaded]="isImageLoaded()" [class.visible]="pageVisible()" animate.enter="enter" animate.leave="leave"> -->
+            <div class="bg-container visible" [class.is-loaded]="isImageLoaded()" animate.enter="enter" animate.leave="leave">
                 <img class="bg is-rb{{ p.version }}" [src]="`static/assets/images/bg/rb${p.version}.webp`" (load)="onImgLoaded()">
             </div>
         }

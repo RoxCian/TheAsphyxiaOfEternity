@@ -1,5 +1,6 @@
-import { Component, model } from "@angular/core"
+import { Component, input, model } from "@angular/core"
 import { FormValueControl } from "@angular/forms/signals"
+import { RbVersion } from "rbweb"
 
 @Component({
     selector: "rb-object-size-select",
@@ -12,6 +13,7 @@ import { FormValueControl } from "@angular/forms/signals"
 })
 export class RbObjectSizeSelectComponent implements FormValueControl<number> {
     value = model(0)
+    version = input.required<RbVersion>()
 
     protected toInt(v: unknown): number {
         if (typeof v === "string") return parseInt(v)

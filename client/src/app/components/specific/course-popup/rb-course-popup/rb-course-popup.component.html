@@ -33,13 +33,19 @@
                             @if (v === 6) {
                                 <bung-icon class="has-tooltip" iconUrl="static/assets/icons/combo.svg" isNoWrap bungTooltip="Max combo">{{ stageLog.combo }}</bung-icon>
                             }
-                            <bung-icon class="has-tooltip" icon="close" isNoWrap bungTooltip="Miss count">{{ stageLog.missCount | rbMissCount }}</bung-icon>
+                            <bung-icon class="has-tooltip" icon="close" isNoWrap bungTooltip="Miss count">
+                                @if (breakpointService.breakpointsToggled.mobile() && stageLog.missCount < 0) {
+                                    <i class="mdi mdi-emoticon-dead"></i>
+                                } @else {
+                                    {{ stageLog.missCount | rbMissCount }}
+                                }
+                            </bung-icon>
                         </div>
                     </div>
                 } @else {
                     <div class="stage-log-info failed card">
                         <i class="mdi mdi-emoticon-dead {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-36px' : 'mdi-48px' }}"></i>
-                        <p class="is-size-7">Defeated<span class="defeated-part2"> by the charts</span></p>
+                        <p class="is-size-7">Defeated by the charts</p>
                     </div>
                 }
                 <rb-chart-lamp [version]="v" [chartType]="stageLog?.chartType ?? 0" [clearType]="stageLog?.clearType ?? ''" [customizedText]="!stageLog ? 'FAILED' : undefined" [isVertical]="breakpointService.breakpointsToggled.mobile()" />

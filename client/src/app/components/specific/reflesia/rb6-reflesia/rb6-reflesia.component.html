@@ -29,14 +29,19 @@
     </div>
     <bung-divider class="section-divider" prompt="End of hunting quests" />
 } @else if (service.questRecords.value() && mode() === "challenge") {
-    @for (c of service.challengeQuestRecords() | key; track c) {
-        @if (`${c}` === "43") { <bung-divider class="section-divider" prompt="Tower of lament" /> }
-        @else if (`${c}` === "49") { <bung-divider class="section-divider" prompt="Tower of ruin" /> }
-        @for (group of service.challengeQuestRecords()[c]; track group.quest.questId) {
-            <rb6-reflesia-quest-group-card [group]="group" isExpanded />
+    @let keys = service.challengeQuestRecords() | key;
+    @if (keys.length === 0) {
+        <lets-play text="Advance the story to unlock" />
+    } @else {
+        @for (c of keys; track c) {
+            @if (`${c}` === "43") { <bung-divider class="section-divider" prompt="Tower of lament" /> }
+            @else if (`${c}` === "49") { <bung-divider class="section-divider" prompt="Tower of ruin" /> }
+            @for (group of service.challengeQuestRecords()[c]; track group.quest.questId) {
+                <rb6-reflesia-quest-group-card [group]="group" isExpanded />
+            }
         }
+        <bung-divider class="section-divider" prompt="End of challenge quests" />
     }
-    <bung-divider class="section-divider" prompt="End of challenge quests" />
 } @else if (service.questRecords.value() && mode() === "ranking") {
     <bung-divider class="section-divider" prompt="Ranking quests" />
     <div class="rb-list ranking-quests">

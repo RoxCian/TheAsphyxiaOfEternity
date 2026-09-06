@@ -9,7 +9,7 @@ import { Rb4Classcheck } from "../models/rb4/classcheck"
 import { Rb5Classcheck } from "../models/rb5/classcheck"
 import { Rb6Classcheck } from "../models/rb6/classcheck"
 import { Rb4PlayerStageLog } from "../models/rb4/profile"
-import { Rb5PlayerConfig, Rb5PlayerStageLog } from "../models/rb5/profile"
+import { Rb5Minigame, Rb5PlayerConfig, Rb5PlayerStageLog } from "../models/rb5/profile"
 import { Rb3OrderDetailsParamFlag, Rb4DojoIndex, RbVersionWithClasscheck } from "../models/shared/rb_types"
 import { rb3OrdersInfo } from "../data/tables/rb3_orders"
 import { ICollection } from "../utils/db/db_types"
@@ -251,6 +251,18 @@ export function initializeBatch() {
             delete (conf as any)["defaultNoteGrade"]
             t.update(rid, { collection: conf.collection }, conf)
         }
+        await t.commit()
+    })
+    Batch.register("batch#2.0.0.part5", "2.0.0", async () => {
+        // fix mini game ID for RB VOLZZA
+        const t = new DBH.T()
+        for (const mg of await t.find<Rb5Minigame>(undefined, { collection: "rb.rb5.playData.minigame", minigameId: -1 })) {
+            const rid: string | undefined = (mg as any).__refid
+            if (!rid) continue
+            mg.minigameId = 0
+            t.insert(rid, mg)
+        }
+        t.remove<Rb5Minigame>(undefined, { collection: "rb.rb5.playData.minigame", minigameId: -1})
         await t.commit()
     })
 }

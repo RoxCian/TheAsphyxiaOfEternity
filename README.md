@@ -1,8 +1,4 @@
-<img src="./icon.svg">
-
-<style>
-    .content tr td ul { margin: 0 }
-</style>
+<p align="center"><img src="./icon.svg" width="300" style="display:inline-block;"></p>
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
@@ -18,9 +14,9 @@ Features supported:
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
 | Profile saving | √ | √ | √ | √ | √ | √ |
 | Score saving | √ | √ | √ | √ | √ | √ |
-| Classcheck / Dojo | - | - | - | 〇<sup>*</sup> | √ | √ |
+| Classcheck / Dojo | √ | √ | 〇<sup>*</sup> | - | - | - |
 | Profile web UI | √ | √ | √ | √ | √ | √ |
-| Puzzle comment | √ | √ | √ | √ | √ | √ |
+| Puzzle comment | √ | √ | √ | √ | √ | - |
 | Ranking | × | × | × | × | × | × |
 | Friends | × | × | × | × | × | × |
 

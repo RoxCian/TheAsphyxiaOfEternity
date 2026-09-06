@@ -14,6 +14,7 @@ export class RbSessionService {
     private readonly sessionKilledInternal = signal(false)
     readonly sessionKilling = this.sessionKillingInternal.asReadonly()
     readonly sessionKilled = this.sessionKilledInternal.asReadonly()
+    private needUpdate = false
 
     constructor() {
         effect(() => {
@@ -22,6 +23,16 @@ export class RbSessionService {
                 this.sessionKilledInternal.set(false)
             }
         })
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && this.needUpdate) {
+                this.needUpdate = false
+                this.session.reload()
+            }
+        })
+        setInterval(() => {
+            if (document.hidden) this.needUpdate = true
+            else this.session.reload()
+        }, 10000)
     }
     
     async killSession() {

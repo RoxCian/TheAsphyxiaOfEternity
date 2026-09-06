@@ -48,14 +48,14 @@ export class Rb5PlayerBase implements ICollection<"rb.rb5.player.base"> {
     @XD.s32("tbs_5") totalBestScoreV2 = 0
     @XD.s32("tbgs_5") totalBestScoreEachChartTypeV2: number[] = [0, 0, 0, 0]
     @XD.str() name = ""
-    @XD.s32("mg") matchingGrade = 0 // <mg />
-    @XD.s32("ap") abilityPointTimes100 = 0 // <ap />
+    @XD.s32("mg") matchingGrade = 0
+    @XD.s32("ap") abilityPointTimes100 = 0
     @XD.s32() uattr = 0
     @XD.s32() money = 0
-    @XD.bool("ts_tut") isTutorialEnabled = true // <is_tut />
+    @XD.bool("is_tut") isTutorialEnabled = true
     @XD.s32() class = Rb5ClasscheckIndex.none
-    @XD.s32("class_ar") classAchievementRateTimes100 = 0 // <class_ar />
-    @XD.s32("skill_point") skillPointTimes10 = 0 // <skill_point />
+    @XD.s32("class_ar") classAchievementRateTimes100 = 0
+    @XD.s32("skill_point") skillPointTimes10 = 0
     @XD.s16() mlog: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 
@@ -176,6 +176,18 @@ export class Rb5Minigame implements ICollection<"rb.rb5.playData.minigame">, Rb5
     @XD.s8("mgid") minigameId = 0
     @XD.s32() sc = 0
     @XD.s32("pc") playCount = 0
+}
+
+export class Rb5MinigameRecordUpdate implements ICollection<"rb.rb5.playData.minigameRecordUpdate"> {
+    readonly collection = "rb.rb5.playData.minigameRecordUpdate"
+    minigameId = 0
+    sc = 0
+    time = 0
+    constructor(mg: Rb5Minigame) {
+        this.minigameId = mg.minigameId
+        this.sc = mg.sc
+        this.time = Math.trunc(Date.now() / 1000)
+    }
 }
 
 export class Rb5Derby implements ICollection<"rb.rb5.player.derby"> {

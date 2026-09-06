@@ -9,6 +9,7 @@ export type RbSkillPointEntry<TVersion extends RbVersion> = {
     chart: RbChartInfo<TVersion, RbChartType<TVersion>>
     score: RbScoreResponse<TVersion>
     skillPoint: number
+    potential?: number
 } | undefined
 
 @Service()
@@ -37,6 +38,8 @@ export class RbSkillPointService {
             score: r.scores[k]!,
             /** @ts-ignore */
             skillPoint: r.scores[k]!.skillPoint ?? -1,
+            /** @ts-ignore */
+            potential: r.scores[k]?.potential
         }))).flat()
         const newSongsEntry = spa.filter(el => el!.music?.musicUid.startsWith(`${version}`)).sort((l, r) => r!.skillPoint - l!.skillPoint)
         const oldSongsEntry = spa.filter(el => !el!.music?.musicUid.startsWith(`${version}`)).sort((l, r) => r!.skillPoint - l!.skillPoint)
@@ -47,8 +50,8 @@ export class RbSkillPointService {
         if (topNewSongsEntry.length < newOldMusicCounts.new) for (let i = topNewSongsEntry.length; i < newOldMusicCounts.new; i++) topNewSongsEntry.push(undefined)
         if (topOldSongsEntry.length < newOldMusicCounts.old) for (let i = topOldSongsEntry.length; i < newOldMusicCounts.old; i++) topOldSongsEntry.push(undefined)
         const skillPointMultiplier = version === 5 ? 100 : 2
-        const potentialNewSongsEntry = newSongsEntry.slice(newOldMusicCounts.new).filter(e => e!.chart && lastTopNew && (e!.chart.skillRate * skillPointMultiplier >= lastTopNew.skillPoint)).slice(0, 10)
-        const potentialOldSongsEntry = oldSongsEntry.slice(newOldMusicCounts.old).filter(e => e!.chart && lastTopOld && (e!.chart.skillRate * skillPointMultiplier >= lastTopOld.skillPoint)).slice(0, 10)
+        const potentialNewSongsEntry = newSongsEntry.slice(newOldMusicCounts.new).filter(e => e!.chart && lastTopNew && (e!.chart.skillRate * skillPointMultiplier >= lastTopNew.skillPoint)).sort((l, r) => (r?.potential != undefined && l?.potential != undefined) ? r.potential - l.potential : r!.skillPoint - l!.skillPoint).slice(0, 10)
+        const potentialOldSongsEntry = oldSongsEntry.slice(newOldMusicCounts.old).filter(e => e!.chart && lastTopOld && (e!.chart.skillRate * skillPointMultiplier >= lastTopOld.skillPoint)).sort((l, r) => (r?.potential != undefined && l?.potential != undefined) ? r.potential - l.potential : r!.skillPoint - l!.skillPoint).slice(0, 10)
         return {
             total: topNewSongsEntry.reduce((prev, next) => prev + (next?.skillPoint ?? 0), 0) + topOldSongsEntry.reduce((prev, next) => prev + (next?.skillPoint ?? 0), 0),
             newTop: topNewSongsEntry,

@@ -4,6 +4,7 @@ import { BungPopupService } from "../../../../services/bung/popup.service"
 import { RbRecordPopupComponent } from "../../record-popup/rb-record-popup/rb-record-popup.component"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { DomSanitizer } from "@angular/platform-browser"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 function hasChart<TVersion extends RbVersion, TChart extends RbChartType<TVersion>>(chart?: RbChartResponse<TVersion, TChart>) {
     return chart && chart.level > 0
@@ -45,6 +46,8 @@ export class RbRecordPanelComponent<TVersion extends RbVersion> {
         }
         return undefined
     })
+
+    protected readonly breakpointService = inject(BungBreakpointService)
 
     private readonly contentElement = viewChild<ElementRef<HTMLElement>>("contentElement")
     private readonly popupService = inject(BungPopupService)

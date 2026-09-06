@@ -211,7 +211,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
                 break
             case "top-right":
                 x = clampX(hr.x + hr.width + this.offset)
-                y = clampY(hr.y - tr.height + this.offset)
+                y = clampY(hr.y - tr.height - this.offset)
                 initX = x + animationOffset
                 initY = y
                 break
@@ -314,6 +314,7 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         }
         if ((w ?? tr.width) + padding[0] + padding[2] >= viewportRect.width) {
             w = viewportRect.width - padding[0] - padding[2]
+            initX = padding[0] - x + initX
             x = padding[0]
         } else if ((w ?? tr.width) + x + padding[2] > viewportRect.width) {
             const newX = viewportRect.width - (w ?? tr.width) - padding[2]
@@ -322,18 +323,17 @@ export class BungTooltipComponent<T = any> extends BungPopupComponent<T> {
         }
         if ((h ?? tr.height) + padding[1] + padding[3] >= viewportRect.height) {
             h = viewportRect.height - padding[1] - padding[3]
+            initY = padding[1] - y + initY
             y = padding[1]
         } else if ((h ?? tr.height) + y + padding[3] > viewportRect.height) {
             const newY = viewportRect.height - (h ?? tr.height) - padding[3]
             initY = newY - y + initY
             y = newY
         }
-        if (this.tooltipLeft() !== x) this.tooltipLeft.set(x)
-        if (this.tooltipTop() !== y) this.tooltipTop.set(y)
-        if ((w ?? tr.width) + padding[0] + padding[2] >= viewportRect.width) w = viewportRect.width - padding[0] - padding[2]
-        if ((h ?? tr.height) + padding[1] + padding[3] >= viewportRect.height) h = viewportRect.height - padding[1] - padding[3]
-        if (this.tooltipWidth() !== w) this.tooltipWidth.set(w)
-        if (this.tooltipHeight() !== h) this.tooltipHeight.set(h)
+        this.tooltipLeft.set(x)
+        this.tooltipTop.set(y)
+        this.tooltipWidth.set(w)
+        this.tooltipHeight.set(h)
         this.tooltipInitLeft.set(initX)
         this.tooltipInitTop.set(initY)
     }

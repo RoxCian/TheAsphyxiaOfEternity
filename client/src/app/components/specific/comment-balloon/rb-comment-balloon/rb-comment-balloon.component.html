@@ -12,21 +12,23 @@
     <span class="is-size-7 user-id">RB-{{ `${comment().userId}`.padStart(8, "0").substring(0, 4) }}-{{ `${comment().userId}`.padStart(8, "0").substring(4, 8) }}</span>
     <span class="is-size-7 time">{{ commentTime() | relativeTime }}</span>
     <span class="blank"></span>
-    @switch (comment().version) {
-        @case (2) {
-            <rb-limelight class="badge" isActive />
-        }
-        @case (3) {
-            <rb-colette class="badge" isActive />
-        }
-        @case (4) {
-            <rb-groovin class="badge" isActive />
-        }
-        @case (5) {
-            <rb-volzza class="badge" isActive />
-        }
-        @case (6) {
-            <rb-reflesia class="badge" isActive />
+    @if (!breakpointService.breakpointsToggled.mobile()) {
+        @switch (comment().version) {
+            @case (2) {
+                <rb-limelight class="badge" isActive />
+            }
+            @case (3) {
+                <rb-colette class="badge" isActive />
+            }
+            @case (4) {
+                <rb-groovin class="badge" isActive />
+            }
+            @case (5) {
+                <rb-volzza class="badge" isActive />
+            }
+            @case (6) {
+                <rb-reflesia class="badge" isActive />
+            }
         }
     }
 </div>
@@ -35,3 +37,25 @@
     @let hasMask = comment().balloon >= 2;
     <div class="balloon-background" [class.has-mask]="hasMask" [class.card]="!hasMask" [class.is-rounded]="comment().balloon === 0" [style.mask-image]="hasMask ? `url(./static/assets/images/balloon/${balloonMaskName()}.svg)` : undefined"></div>
 </div>
+@if (breakpointService.breakpointsToggled.mobile()) {
+    <div class="info-mobile">
+        <span class="is-size-7">from</span>
+        @switch (comment().version) {
+            @case (2) {
+                <rb-limelight class="badge" isActive />
+            }
+            @case (3) {
+                <rb-colette class="badge" isActive />
+            }
+            @case (4) {
+                <rb-groovin class="badge" isActive />
+            }
+            @case (5) {
+                <rb-volzza class="badge" isActive />
+            }
+            @case (6) {
+                <rb-reflesia class="badge" isActive />
+            }
+        }
+    </div>
+}

@@ -28,16 +28,16 @@
         opacity: 0.7
     .blank
         flex: 1
-    .badge
-        position: relative
-        width: 12em
-        height: 2em
-        padding: 1em
-        align-items: center
-        justify-content: center
-        font-size: 0.75em
-        border-radius: 9999px
-        overflow: clip
+.badge
+    position: relative
+    width: 12em
+    height: 2em
+    padding: 1em
+    align-items: center
+    justify-content: center
+    font-size: 0.75em
+    border-radius: 9999px
+    overflow: clip
 .balloon
     grid-area: 2 / 2
     position: relative
@@ -64,6 +64,8 @@
             top: -0.5em
             bottom: -0.5em
             mask-size: 100% 100%
+    span
+        overflow-wrap: anywhere
 
 .balloon-svg
     position: absolute
@@ -71,3 +73,13 @@
     width: 100%
     height: 100%
     object-fit: fill
+.info-mobile
+    grid-area: 3 / 2
+    display: flex
+    width: 100%
+    gap: 1em
+    align-items: center
+    justify-content: end
+@media screen and (width < 768px)
+    .balloon
+        padding: 1em 1em

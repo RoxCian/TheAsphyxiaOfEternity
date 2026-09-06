@@ -76,6 +76,7 @@ export interface RbScoreResponse<T extends RbVersion> {
     justCollectRate: T extends 6 ? Rb6JustCollectResponse : undefined
     battleStat: T extends 1 | 2 ? Rb1BattleStatResponse : undefined
     skillPoint?: T extends 5 | 6 ? number : undefined
+    potential?: T extends 5 | 6 ? number : undefined
 }
 
 export interface RbClasscheckResponse<T extends RbVersionWithClasscheck> {
@@ -293,7 +294,11 @@ export type Rb3OrderSlot = {
     slot: number
     isLocked: boolean
 }
-
+export type Rb5MinigameRecordUpdateResponse = {
+    minigameId: number
+    sc: number
+    time: Date
+}
 type Rb6RankingQuestChart = {
     musicId: number
     chartType: Rb6ChartType | -1

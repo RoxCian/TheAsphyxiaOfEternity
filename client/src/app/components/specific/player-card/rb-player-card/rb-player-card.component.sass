@@ -227,6 +227,12 @@ bung-divider
             opacity: 0
         .loader
             opacity: 1
+
+.session.enter, .session-badge-divider.enter
+    animation: session-enter-animation var(--animation-duration-lv3) var(--ease-in)
+.session.leave, .session-badge-divider.leave
+    animation: session-enter-animation var(--animation-duration-lv3) var(--ease-out) reverse
+    
 .session-icon-tooltip
     max-width: 20em
 .session-icon-killed-tooltip
@@ -372,3 +378,10 @@ rb-version
         transform: translateY(0.03em)
     to
         transform: translateY(-0.12em)
+@keyframes session-enter-animation
+    from
+        transform: translateY(-2em)
+        opacity: 0
+    to
+        transform: none
+        opacity: 1

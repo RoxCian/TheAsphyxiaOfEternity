@@ -10,5 +10,20 @@
             <div class="title">{{ (reftis.value()?.playCount ?? 0) === 0 ? (reftis.value()?.sc ?? 0) > 0 ? 1 : 0 : reftis.value()!.playCount }}</div>
         </div>
     </div>
+    @if (!reftisRecordUpdate.isLoading() && ((reftisRecordUpdate.value()?.length ?? 0) > 0)) {
+        <bung-divider class="section-divider" prompt="History Records" />
+        <div class="rb-list">
+            @for (u of reftisRecordUpdate.value(); let i = $index; track u) {
+                <div class="card record-update">
+                    <div class="inside-box">
+                        <span class="score"><b>{{ u.sc }}</b></span>
+                        <span class="time"><span class="part1">achieved at </span>{{ u.time | relativeTime }}</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
     <bung-divider class="section-divider" prompt="End of REFTIS Play Data" />
+} @else if (!reftis.isLoading() && !reftis.value()) {
+    <lets-play />
 }

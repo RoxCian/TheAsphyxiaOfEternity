@@ -2,8 +2,8 @@ import { C } from "../../utils/controller"
 import { DBH } from "../../utils/db/dbh"
 import { findChartInfo, findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
-import { Rb5Minigame, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse, Rb5MinigameType } from "../../models/shared/web"
+import { Rb5Minigame, Rb5MinigameRecordUpdate, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb4ChartType, RbColor, RbClasscheckResponse, RbVersion, Rb5ClasscheckIndex, RbPlayerPerformanceResponse, Rb5SettingsResponse, RbAvailableItemResponse, RbWriteSettingsResponse, Rb5YurukomeResponse, Rb5MinigameType, Rb5MinigameRecordUpdateResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
@@ -26,6 +26,7 @@ export function registerRb5Controllers() {
     C.route("rb5ReadClasschecks", readClasschecks, true)
     C.route("rb5ReadStageLogs", readStageLogs, true)
     C.route("rb5ReadReftis", readReftis, true)
+    C.route("rb5ReadReftisRecordUpdate", readReftisRecordUpdate, true)
     C.route("rb5ReadYurukome", readYurukome, true)
     C.route("rb5ReadAvailableItems", readAvailableItems, true)
     C.route("rb5ReadSettings", readSettings, true)
@@ -77,6 +78,8 @@ const readPlayerPerformance: C.C<RbRequest, RbPlayerPerformanceResponse<V>> = as
 const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
     const result: { [K in number]: RbMusicRecordResponse<V> } = {}
     const records = await DBH.find<Rb5MusicRecord>(data.rid, { collection: "rb.rb5.playData.musicRecord" })
+    const base = await DBH.findOne<Rb5PlayerBase>(data.rid, { collection: "rb.rb5.player.base" })
+    const sp = (base?.skillPointTimes10 ?? 0) * 0.1
     for (const record of records) {
         const el: RbMusicRecordResponse<V> = result[record.musicId] ?? {
             version: version,
@@ -97,6 +100,7 @@ const readRecords: C.C<RbRequest, RbMusicRecordResponse<V>[]> = async data => {
             battleStat: undefined,
             justCollectRate: undefined,
             skillPoint: await computeSkillPoint(record),
+            potential: await computeSkillPointPotentialFactor(sp, record),
             lastPlay: new Date(record.time * 1000),
             update: new Date(Math.max(record.bestComboUpdateTime, record.bestScoreUpdateTime, record.bestMissCountUpdateTime, record.bestAchievementRateUpdateTime) * 1000)
         }
@@ -128,7 +132,12 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
-const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: -1 })
+const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: 0 })
+const readReftisRecordUpdate: C.C<RbRequest, Rb5MinigameRecordUpdateResponse[]> = async data => (await DBH.find<Rb5MinigameRecordUpdate>(data.rid, { collection: "rb.rb5.playData.minigameRecordUpdate", minigameId: 0 })).sort((l, r) => r.time - l.time).slice(0, 10).map(u => ({
+    minigameId: u.minigameId,
+    sc: u.sc,
+    time: new Date(u.time * 1000)
+}))
 const readYurukome: C.C<RbRequest, Rb5YurukomeResponse[]> = async data => {
     const yurukome = await DBH.find<Rb5Yurukome>(data.rid, { collection: "rb.rb5.event.yurukome" })
     return rb5Yurukome.map(i => ({
@@ -249,4 +258,17 @@ async function computeSkillPoint(record: Rb5MusicRecord): Promise<number> {
     const maxScore = chart.maxCombo * 3 + chart.maxJustReflec * 10 + 50
     const result = Math.min((record.score / maxScore) * chart.skillRate * 100, chart.skillRate * 100)
     return parseFloat(result.toFixed(1))
+}
+async function computeSkillPointPotentialFactor(currentSkillPoint: number, record: Rb5MusicRecord): Promise<number> {
+    const chart = findChartInfo(record.musicId, version, record.chartType)
+    if (!chart || chart.maxJustReflec < 0) return -1
+    const maxScore = chart.maxCombo * 3 + chart.maxJustReflec * 10 + 50
+    const ptsSr = currentSkillPoint / 5000
+    const advRange = 10
+    const baseFactorAdvTop = 1.05
+    const baseFactorAdvBottom = 0.75
+    const baseFactor = -(baseFactorAdvTop - baseFactorAdvBottom) * (advRange ** -3) * Math.abs(chart.skillRate - ptsSr) ** 3 + baseFactorAdvTop
+    const computeFactor = (x: number, left: number, right: number) => Math.min(1, Math.log((Math.E - 1) / (left - right) * x + (left - right * Math.E) / (left - right)))
+    const scoreFactor = computeFactor((1 - (maxScore - record.score) / maxScore), 0.7, 1)
+    return baseFactor * scoreFactor
 }

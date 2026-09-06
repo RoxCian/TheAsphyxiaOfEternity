@@ -1,5 +1,6 @@
-import { Component, computed, input } from "@angular/core"
+import { Component, computed, inject, input } from "@angular/core"
 import { RbCommentBalloon, RbCommentResponse, RbVersion } from "rbweb"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 function toHalfWidth(s: string) {
     let resultCharCodes = []
@@ -30,4 +31,5 @@ export class RbCommentBalloonComponent<TVersion extends RbVersion> {
             default: return undefined
         }
     })
+    protected readonly breakpointService = inject(BungBreakpointService)
 }

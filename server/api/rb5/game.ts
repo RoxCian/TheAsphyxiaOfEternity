@@ -4,7 +4,7 @@ import { DBH } from "../../utils/db/dbh"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
 import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecords } from "../../models/rb5/music_record"
 import { Rb5Mylist } from "../../models/rb5/mylist"
-import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
+import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MinigameRecordUpdate, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
 import { Rb5ShopInfo } from "../../models/rb5/shop_info"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
@@ -234,7 +234,7 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean, session: R
             if (baseSaved.name) player.pdata.base.name = baseSaved.name
             player.pdata.base.comment = baseSaved.comment
             // VOLZZA 1 didn't have skill point feature, make sure it won't erase skill point saved by VOLZZA 2 when save VOLZZA 1 data.
-            if (!player.pdata.base.skillPointTimes10) player.pdata.base.skillPointTimes10 = baseSaved.skillPointTimes10
+            if (!isVolzza2) player.pdata.base.skillPointTimes10 = baseSaved.skillPointTimes10
             // special process for VOLZZA classcheck
             if (!isArrayWrapper(player.pdata.classcheck, "rec") && player.pdata.classcheck.class > Rb5ClasscheckIndex.none && hasAny(player.pdata.stageLogs?.log)) {
                 if (player.pdata.classcheck.clearType > RbClasscheckClearType.failed) {
@@ -278,9 +278,14 @@ async function writePlayerCore(player: Rb5Player, isVolzza2: boolean, session: R
     if (player.pdata.minigame) {
         const minigameQuery: Query<Rb5Minigame> = { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }
         const minigameSaved = await t.findOne(rid, minigameQuery)
-        if (!minigameSaved) t.upsert(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
-        else {
-            if (player.pdata.minigame.sc > minigameSaved.sc) minigameSaved.sc = player.pdata.minigame.sc
+        if (!minigameSaved) {
+            if (player.pdata.minigame.sc > 0) t.insert(rid, new Rb5MinigameRecordUpdate(player.pdata.minigame))
+            t.upsert(rid, { collection: "rb.rb5.playData.minigame", minigameId: player.pdata.minigame.minigameId }, player.pdata.minigame)
+        } else {
+            if (player.pdata.minigame.sc > minigameSaved.sc) {
+                minigameSaved.sc = player.pdata.minigame.sc
+                t.insert(rid, new Rb5MinigameRecordUpdate(player.pdata.minigame))
+            }
             minigameSaved.playCount += player.pdata.minigame.playCount
             t.update(rid, minigameQuery, minigameSaved)
         }

@@ -5,6 +5,7 @@ import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-pop
 import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { DomSanitizer } from "@angular/platform-browser"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb-stage-log-panel",
@@ -32,6 +33,9 @@ export class RbStageLogPanelComponent<T extends RbVersion, TChart extends RbChar
         }
         return undefined
     })
+
+    protected readonly breakpointService = inject(BungBreakpointService)
+    
     private readonly popupService = inject(BungPopupService)
     private readonly logService = inject(RbLogService)
     private readonly sanitizer = inject(DomSanitizer)

@@ -181,7 +181,7 @@ int,string,int,int,string,string?,boolean
 6,frame,3,3,Blue,,TRUE
 6,frame,3,4,Red,,TRUE
 6,frame,3,5,Black,,TRUE
-5,frame,3,0,VOLZZA 1,,TRUE
+5,frame,3,0,Default,,TRUE
 5,frame,3,1,Pink,,FALSE
 5,frame,3,2,Yellow,,FALSE
 5,frame,3,3,Green,,FALSE
@@ -190,7 +190,7 @@ int,string,int,int,string,string?,boolean
 5,frame,3,6,White,,FALSE
 5,frame,3,7,Black,,FALSE
 5,frame,3,8,Gold,,FALSE
-5,frame,3,9,VOLZZA 2,,TRUE
+5,frame,3,9,VOLZZA 1,,TRUE
 5,frame,3,10,DJ TOTTO,,TRUE
 4,frame,3,0,Default,,TRUE
 4,frame,3,1,REFLEC DOJO,リフレク道場,FALSE

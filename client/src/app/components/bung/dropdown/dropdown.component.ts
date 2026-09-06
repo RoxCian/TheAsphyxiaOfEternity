@@ -221,7 +221,7 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y + tr.height
                 initW = w
                 initH = 0
-                cT = `2em`
+                cT = `1em`
                 cAlignBottom = true
                 break
             case "left":
@@ -245,7 +245,7 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y
                 initW = 0
                 initH = h
-                cL = `2em`
+                cL = `1em`
                 cAlignRight = true
                 break
             case "right":
@@ -269,7 +269,7 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y
                 initW = 0
                 initH = h
-                cL = "-2em"
+                cL = "-1em"
                 break
             case "bottom":
                 switch (align) {
@@ -292,7 +292,7 @@ export class BungDropdownComponent extends BungPopupComponent {
                 initY = y
                 initW = w
                 initH = 0
-                cT = `-2em`
+                cT = `-1em`
                 break
             case "covered":
                 switch (align) {

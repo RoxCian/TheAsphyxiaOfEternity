@@ -2,6 +2,7 @@ import { Component, computed, inject, input } from "@angular/core"
 import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { RbSkillPointEntry } from "../../../../services/specified/rb-skill-point.service"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb-skill-point-panel",
@@ -26,5 +27,6 @@ export class RbSkillPointPanelComponent<TVersion extends 5 | 6> {
         return undefined
     })
 
+    protected readonly breakpointService = inject(BungBreakpointService)
     private readonly logService = inject(RbLogService)
 }

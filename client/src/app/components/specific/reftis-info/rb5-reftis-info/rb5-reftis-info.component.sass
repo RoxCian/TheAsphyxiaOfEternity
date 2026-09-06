@@ -1,0 +1,26 @@
+.rb-list
+    display: flex
+    flex-direction: column
+    gap: 2em
+.record-update
+    display: flex
+    padding: 1.25em
+    justify-content: center
+    .inside-box
+        display: flex
+        align-items: center
+        width: 100%
+        // max-width: 40rem
+    .score
+        flex: 1
+    .time
+        font-size: 0.75em
+        opacity: 0.7
+
+@media screen and (width < 768px)
+    .rb-list
+        gap: 0.75em
+    .record-update
+        padding: 0.75em
+    .record-update .time .part1
+        display: none

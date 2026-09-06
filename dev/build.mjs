@@ -47,9 +47,16 @@ mkdirSync(`./dist/${pluginNameProd}`)
 cloneServer()
 cloneClient()
 log("🔵 Working on README.md")
-const readme = readFileSync("./README.md", { encoding: "utf8" })
-const modifiedReadme = readme.replace(/(?<=<img src=")[^"]+/, `${pluginNameProd}/static/assets/icon.svg`)
-writeFileSync(`./dist/${pluginNameProd}/README.md`, modifiedReadme, { encoding: "utf8" })
+let readme = readFileSync("./README.md", { encoding: "utf8" })
+readme = readme.replace(/(?<=<img src=")[^"]+/, `${pluginNameProd}/static/assets/icon.svg`)
+// style fix for Asphyxia
+// cannot put it in readme directly, GitHub treats style tag as plain text
+readme += `
+<style>
+    .content tr td ul { margin: 0 }
+</style>
+`
+writeFileSync(`./dist/${pluginNameProd}/README.md`, readme, { encoding: "utf8" })
 log("🔵 Packing")
 const version = readFileSync("./dev/version", { encoding: "utf8" }).replaceAll(/[\r\n]/g, "")
 const distPack = `the-asphyxia-of-eternity-${version}.zip`

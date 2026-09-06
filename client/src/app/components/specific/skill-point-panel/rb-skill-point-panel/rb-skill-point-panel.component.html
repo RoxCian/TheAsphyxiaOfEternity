@@ -4,7 +4,7 @@
 <div class="rb-panel error-info card">
     <div class="error-icon">
         <span class="icon is-large">
-            <i class="mdi mdi-alert-circle mdi-48px"></i>
+            <i class="mdi mdi-alert-circle {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-36px': 'mdi-48px' }}"></i>
         </span>
     </div>
     <div class="error-text">
@@ -16,7 +16,7 @@
 <div class="rb-panel error-info no-entry card">
     <div class="error-icon">
         <span class="icon is-large">
-            <i class="mdi mdi-emoticon-happy mdi-48px"></i>
+            <i class="mdi mdi-emoticon-happy {{ breakpointService.breakpointsToggled.mobile() ? 'mdi-36px': 'mdi-48px' }}"></i>
         </span>
     </div>
     <div class="error-text">
@@ -47,7 +47,11 @@
         <div class="skill-point-info">
             <div class="skill-point has-tooltip" bungTooltip="Skill point">{{ e.skillPoint }}</div>
             <bung-icon class="skill-point-score has-tooltip" bungTooltip="Score" icon="counter">{{ e.score.score }}</bung-icon>
-            <bung-icon class="skill-point-ar has-tooltip" bungTooltip="Achievement rate" icon="percent">{{ e.score.achievementRate }}%</bung-icon>
+            @if (rank() == undefined && e.score.potential) {
+                <bung-icon class="skill-point-ar has-tooltip" bungTooltip="Potential factor" icon="lightbulb-on">{{ e.score.potential.toFixed(4) }}</bung-icon>
+            } @else {
+                <bung-icon class="skill-point-ar has-tooltip" bungTooltip="Achievement rate" icon="percent">{{ e.score.achievementRate }}%</bung-icon>
+            }
         </div>
     </div>
 </div>
