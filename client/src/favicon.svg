@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 194.349 228.176">
+  <defs>
+    <filter id="fav-drop-shadow" x="-15.092" y="-15.412" width="225" height="259" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="black" flood-opacity="0.5"/>
+    </filter>
+    <radialGradient id="fav-gradient" cx="166.604" cy="-56.825" fx="166.604" fy="-56.825" r="201.304" gradientTransform="translate(-58.606 63.06) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffff6f"/>
+      <stop offset=".192" stop-color="#fcfe71"/>
+      <stop offset=".326" stop-color="#f3fc76"/>
+      <stop offset=".442" stop-color="#e4f87e"/>
+      <stop offset=".547" stop-color="#cef38b"/>
+      <stop offset=".647" stop-color="#b1ec9b"/>
+      <stop offset=".741" stop-color="#8fe3ae"/>
+      <stop offset=".831" stop-color="#65d9c6"/>
+      <stop offset=".915" stop-color="#37cee0"/>
+      <stop offset=".997" stop-color="#02c1fe"/>
+      <stop offset="1" stop-color="#00c0ff"/>
+    </radialGradient>
+    <radialGradient id="fav-gradient1" cx="166.279" cy="-56.826" fx="166.279" fy="-56.826" r="201.909" href="#fav-gradient"/>
+    <radialGradient id="fav-gradient2" cx="166.687" cy="-56.826" fx="166.687" fy="-56.826" r="202.687" href="#fav-gradient"/>
+    <radialGradient id="fav-gradient3" cx="166.687" cy="-56.826" fx="166.687" fy="-56.826" r="202.687" href="#fav-gradient"/>
+    <radialGradient id="fav-gradient4" cx="122.438" cy="-34.46" fx="122.438" fy="-34.46" r="124.41" href="#fav-gradient"/>
+    <radialGradient id="fav-gradient5" cx="166.687" cy="-56.826" fx="166.687" fy="-56.826" r="202.687" href="#fav-gradient"/>
+    <radialGradient id="fav-gradient6" cx="-19.649" cy="-111.19" fx="-19.649" fy="-111.19" r="202.669" gradientTransform="translate(127.166 43.827) rotate(12.059) scale(.596 -.648) skewX(-2.139)" href="#fav-gradient"/>
+  </defs>
+  <g style="filter: url(#fav-drop-shadow);">
+    <path d="M102.206,42.792c104.504,1.936,104.261,157.407-.245,159.015-104.603-1.982-104.143-157.413.245-159.015M102.206,29.121c-122.867,2.098-122.847,184.86.004,186.941,122.863-2.098,122.843-184.86-.004-186.941Z" style="fill: url(#fav-gradient);"/>
+    <path d="M79.292,105.235c44.947.763,44.948,67.629.001,68.391-45.147-1.143-45.029-67.312,0-68.391M79.293,96.121c-56.929.972-56.921,85.654.002,86.617,56.929-.972,56.918-85.654-.003-86.617h.001Z" style="fill: url(#fav-gradient1);"/>
+    <path d="M102.694,138.035c-2.517,0-4.557-2.04-4.557-4.557-.008-7.46-6.054-13.505-13.514-13.514-2.517,0-4.557-2.04-4.557-4.557s2.04-4.557,4.557-4.557c12.491.014,22.613,10.137,22.627,22.628,0,2.517-2.04,4.557-4.557,4.557Z" style="fill: url(#fav-gradient2);"/>
+    <path d="M122.471,49.202c-10.354,0-18.747,8.393-18.747,18.747,0,10.354,8.393,18.747,18.747,18.747s18.747-8.393,18.747-18.747c0-10.354-8.393-18.747-18.747-18.747h0Z" style="fill: url(#fav-gradient3);"/>
+    <path d="M72.665,54.134c-6.355,0-11.506,5.151-11.506,11.506s5.151,11.506,11.506,11.506,11.506-5.151,11.506-11.506h0c0-6.355-5.151-11.506-11.506-11.506Z" style="fill: url(#fav-gradient4);"/>
+    <path d="M145.085,176.887c-11.095,0-20.089-8.995-20.089-20.09,0-11.095,8.995-20.089,20.09-20.089,6.548,0,12.685,3.192,16.445,8.552l-7.457,5.239c-3.479-4.964-10.323-6.169-15.287-2.69s-6.169,10.323-2.69,15.287c3.479,4.964,10.323,6.169,15.287,2.69.738-.517,1.41-1.124,2-1.805l6.887,5.969c-3.816,4.406-9.358,6.938-15.186,6.937Z" style="fill: url(#fav-gradient5);"/>
+    <path d="M189.05,3.095c-16.114-1.077-33.609,4.824-42.557,18.956-14.533,24.691-23.483,52.338-33.884,78.96-10.694,29.982-21.835,60.115-39.158,86.998-4.961,7.682-10.482,15.2-17.031,21.613-14.417,14.394-36.438,22.697-56.42,16.449,18.255.03,35.702-9.164,47.303-23.048,4.82-5.746,8.869-12.177,12.531-18.711,6.042-10.775,11.22-22.041,16.097-33.391,10.859-24.883,18.808-50.926,29.79-75.75,9.379-20.831,18.726-42.219,33.235-60.089C151.196.621,171.596-3.59,189.05,3.095Z" style="fill: url(#fav-gradient6);"/>
+  </g>
+</svg>

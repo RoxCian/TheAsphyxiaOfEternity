@@ -1,4 +1,4 @@
-RB uses a struct named "released" to control items / musics unlocking or distribute prizes. Its struct is like:
+RB uses a struct named "released" to control items / musics unlocking or distribute prizes.
 ```typescript
 type ReleasedInfo = {
     type: number
@@ -7,7 +7,7 @@ type ReleasedInfo = {
 }
 ```
 
-Here are something I have investigated of what `type` numbers are stand for:
+The investigation results regarding the meaning of `type` numbers are listed below:
 
 | **Released info `type`** | **REFLEC BEAT** | **limelight** | **colette** | **groovin'!!** | **VOLZZA** | **悠久のリフレシア** |
 | --- | --- | --- | --- | --- | --- | --- | 
@@ -28,10 +28,10 @@ Here are something I have investigated of what `type` numbers are stand for:
 | 14 | - | - | - | examination tickets | - | - |
 
 #### About bonus Refle (RB groovin'!!)
-You can specify amount of bonus Refle by the `param` field.
+You can specify amount of bonus Refle in the `param` field.
 
 #### About examination tickets (RB groovin'!!)
-Many examinations of REFLEC DOJO can only be accessed when you have a ticket. Here listed the correspondence of `id` and examinations:
+Some of REFLEC DOJO examinations can be accessed when you have a ticket. Here listed the correspondence of `id` and examinations:
 | **`id`** | **Examination** |
 | --- | --- |
 | 0 | BPM変化検定 / Examination "BPM Change" |

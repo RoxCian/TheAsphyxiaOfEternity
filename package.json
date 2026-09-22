@@ -8,7 +8,7 @@
     },
     "scripts": {
         "restore": "node ./dev/restore.mjs",
-        "update": "node ./dev/update.mjs",
+        "versioning": "node ./dev/versioning.mjs",
         "debug": "node ./dev/debug.mjs",
         "build": "node ./dev/build.mjs"
     },

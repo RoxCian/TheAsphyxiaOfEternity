@@ -39,7 +39,7 @@ This project used some data for web UI and game from several external websites/p
 - [BEMANIWiki](http://bemaniwiki.com) for web UI data.
 - [REFLEC BEAT @wiki](https://w.atwiki.jp/reflec_beat) for JUST REFLEC data and algorithm.
 - [RemyWiki](http://remywiki.com) for some missing jackets.
-- [Bemaniutils](https://github.com/DragonMinded/bemaniutils) for lobby structures/comment structures/RB colette event progress saving/RB groovin' episode data.<br/>
-- [Rb poor](https://github.com/cubele/rbsimulator) for .ply structures.
+- [Bemaniutils](https://github.com/DragonMinded/bemaniutils) for structures of some events.<br/>
+- [Rb poor](https://github.com/cubele/rbsimulator) for .ply data analyzing.
 
 I'm appreciated for their help.

@@ -76,7 +76,7 @@ function cloneServer() {
 function cloneClient() {
     const distDir = `./dist/${pluginNameProd}/webui`
     // clone builded client directory
-    cloneDir("./client/dist/webuiv2/browser", distDir, [/.html?$/, /asphyxia-styles.css$/, /media\//, /dev-.+/])
+    cloneDir("./client/dist/webuiv2/browser", distDir, [/\.html?$/, /asphyxia-styles\.css$/, /media\//, /dev-.+/, /favicon\..+/])
     // remove hash
     const hashMatching = /-[^\.]{8}\.js(?=$|")/g
     const fileRenameList = []

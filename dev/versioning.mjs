@@ -4,7 +4,7 @@ import "node:process"
 const log = console.log
 
 log("🔵 悠久のアスフィクシア -The Asphyxia of Eternity-")
-log("🔵 Version updating.")
+log("🔵 Versioning.")
 
 const version = readFileSync("./dev/version", { encoding: "utf8" })
 const versionParts = version.split("-")
