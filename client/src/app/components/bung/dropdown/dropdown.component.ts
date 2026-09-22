@@ -1,9 +1,9 @@
-import { Component, computed, ElementRef, inject, input, model, signal, ViewEncapsulation } from "@angular/core"
-import { BungPopupComponent } from "../popup/popup.component"
-import { BungMenuDef, BungMenuDefComponent } from "../menu-def/menu-def.component"
-import { BungMenuItemComponent } from "../menu-item/menu-item.component"
+import { Component, computed, ElementRef, inject, model, signal, ViewEncapsulation } from "@angular/core"
 import { BungDropdownService } from "../../../services/bung/dropdown.service"
 import { timeout, toPixelsLength } from "../../../utils/functions"
+import { BungMenuDef, BungMenuDefComponent } from "../menu-def/menu-def.component"
+import { BungMenuItemComponent } from "../menu-item/menu-item.component"
+import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungDropdownFloat = "left" | "top" | "right" | "bottom" | "covered" | "auto"
 export type BungDropdownFloatExtend = "left" | "top" | "right" | "bottom" | "horizontal" | "vertical" | "covered"

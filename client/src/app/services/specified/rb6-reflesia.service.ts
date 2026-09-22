@@ -1,10 +1,10 @@
 import { computed, inject, Service, signal } from "@angular/core"
-import { Rb6QuestInfo, Rb6QuestRecordResponseElement, Rb6QuestRecordResponse, Rb6QuestType, Rb6ReflesiaResponse } from "rbweb"
-import { RbActivatableServiceBase, RbPlayDataServiceBase } from "./rb.service"
+import { HttpResourceRef } from "@angular/common/http"
+import { Rb6QuestInfo, Rb6QuestRecordResponse, Rb6QuestType, Rb6ReflesiaResponse } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
 import { BungNotificationService } from "../bung/notification.service"
-import { HttpResourceRef } from "@angular/common/http"
+import { RbActivatableServiceBase, RbPlayDataServiceBase } from "./rb.service"
 
 type QuestGroup = { quest: Rb6QuestInfo, records: Rb6QuestRecordResponse[] }
 

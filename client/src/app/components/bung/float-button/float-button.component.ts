@@ -1,6 +1,5 @@
-import { AnimationCallbackEvent, Component, ElementRef, inject, input, OnDestroy, OnInit, output, signal, ViewEncapsulation } from "@angular/core"
+import { AnimationCallbackEvent, Component, ElementRef, inject, input, OnInit, signal, ViewEncapsulation } from "@angular/core"
 import { BungFloatButtonService } from "../../../services/bung/float-button.service"
-import { timeout } from "../../../utils/functions"
 
 @Component({
     selector: "button[bungFloatButton]",

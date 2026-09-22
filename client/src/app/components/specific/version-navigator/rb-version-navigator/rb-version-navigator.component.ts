@@ -1,8 +1,8 @@
 import { Component, computed, inject, output } from "@angular/core"
-import { RbVersionService } from "../../../../services/specified/rb-version.service"
-import { RbProfileService } from "../../../../services/specified/rb-profile.service"
-import { BungSelectComponent } from "../../../bung/select/select.component"
 import { RbVersion } from "rbweb"
+import { RbProfileService } from "../../../../services/specified/rb-profile.service"
+import { RbVersionService } from "../../../../services/specified/rb-version.service"
+import { BungSelectComponent } from "../../../bung/select/select.component"
 
 @Component({
     selector: "rb-version",

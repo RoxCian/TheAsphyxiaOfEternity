@@ -1,6 +1,6 @@
 import { Component, effect, ElementRef, input, model, signal, viewChild, ViewEncapsulation } from "@angular/core"
-import { FormValueControl } from "@angular/forms/signals";
-import { toggleTransform } from "../../../signals/transforms";
+import { FormValueControl } from "@angular/forms/signals"
+import { toggleTransform } from "../../../signals/transforms"
 
 @Component({
     selector: "bung-number-input",

@@ -1,8 +1,8 @@
-import { Directive, ElementRef, inject, input, inputBinding, output, OutputRefSubscription } from "@angular/core"
-import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
+import { Directive, ElementRef, inject, input, output, OutputRefSubscription } from "@angular/core"
 import { BungModalComponent } from "../../components/bung/modal/modal.component"
 import { BungModalService } from "../../services/bung/modal.service"
 import { toggleTransform } from "../../signals/transforms"
+import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
 
 @Directive({
     selector: "[bungModal], [bungModalTrigger]",

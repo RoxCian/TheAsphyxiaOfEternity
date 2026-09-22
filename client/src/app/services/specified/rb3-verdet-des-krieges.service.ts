@@ -1,11 +1,9 @@
 import { computed, effect, inject, Service, signal } from "@angular/core"
-import { RbVersionService } from "./rb-version.service"
-import { rbData } from "../../signals/rb-data"
-import { RbProfileService } from "./rb-profile.service"
-import { Rb3VerdetDesKriegesAppearance, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesUnlockRequestType, RbMusicResponse, RbRequest } from "rbweb"
-import { BungNotificationService } from "../bung/notification.service"
-import { rbEmitJSON } from "../../utils/rb-functions"
 import { HttpResourceRef } from "@angular/common/http"
+import { Rb3VerdetDesKriegesAppearance, Rb3VerdetDesKriegesContent, Rb3VerdetDesKriegesNote, Rb3VerdetDesKriegesResponse, Rb3VerdetDesKriegesUnlockRequestType, RbMusicResponse, RbRequest } from "rbweb"
+import { rbData } from "../../signals/rb-data"
+import { rbEmitJSON } from "../../utils/rb-functions"
+import { BungNotificationService } from "../bung/notification.service"
 import { RbActivatableServiceBase } from "./rb.service"
 
 enum ClaudiaAbnormalType {

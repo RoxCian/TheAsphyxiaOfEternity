@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, computed, inject, model, signal, viewChild } from "@angular/core"
+import { AfterViewInit, Component, ElementRef, inject, model, signal, viewChild } from "@angular/core"
 import { RbMusicRecordResponse, RbChartType, RbVersion } from "rbweb"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { timeout } from "../../../../utils/functions"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
 import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"
 import { RbRankBadgeComponent } from "../../rank-badge/rb-rank-badge/rb-rank-badge.component"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { timeout } from "../../../../utils/functions"
 
 type RbRecordPopupZoomInAnimationParams = { startX: number, startY: number, startWidth: number, endWidth: number }
 const DefaultZoomInAnimationParams: RbRecordPopupZoomInAnimationParams = { startX: 0, startY: 0, startWidth: 0, endWidth: 1 }

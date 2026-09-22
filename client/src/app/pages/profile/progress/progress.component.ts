@@ -1,14 +1,14 @@
 import { Component, inject, viewChild } from "@angular/core"
+import { BungTabsComponent } from "../../../components/bung/tabs/tabs.component"
+import { RbPlayDataServiceBase } from "../../../services/specified/rb.service"
 import { RbProfileService } from "../../../services/specified/rb-profile.service"
 import { RbVersionService } from "../../../services/specified/rb-version.service"
-import { BungTabsComponent } from "../../../components/bung/tabs/tabs.component"
+import { Rb2GlassesService } from "../../../services/specified/rb2-glasses.service"
 import { Rb3OrderShopService } from "../../../services/specified/rb3-order-shop.service"
 import { Rb3VerdetDesKriegesService } from "../../../services/specified/rb3-verdet-des-krieges.service"
 import { Rb5YurukomeService } from "../../../services/specified/rb5-yurukome.service"
-import { RbPlayDataServiceBase } from "../../../services/specified/rb.service"
-import { BungWaitableEvent } from "../../../utils/bung"
-import { Rb2GlassesService } from "../../../services/specified/rb2-glasses.service"
 import { Rb6ReflesiaService } from "../../../services/specified/rb6-reflesia.service"
+import { BungWaitableEvent } from "../../../utils/bung"
 
 @Component({
     selector: "rb-progress",

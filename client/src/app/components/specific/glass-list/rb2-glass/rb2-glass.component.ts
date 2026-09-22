@@ -1,11 +1,11 @@
 import { Component, computed, effect, inject, input, viewChild } from "@angular/core"
 import { DomSanitizer } from "@angular/platform-browser"
-import { iconUrlToSvg } from "../../../../utils/bung-svg-util"
 import { Rb2GlassResponse } from "rbweb"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { Rb2GlassesService } from "../../../../services/specified/rb2-glasses.service"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { iconUrlToSvg } from "../../../../utils/bung-svg-util"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb2-glass",

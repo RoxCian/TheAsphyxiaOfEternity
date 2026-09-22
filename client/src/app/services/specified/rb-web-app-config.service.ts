@@ -1,6 +1,6 @@
 import { Service } from "@angular/core"
-import { rbData } from "../../signals/rb-data"
 import { RbRequest, RbWebAppConfigResponse } from "rbweb"
+import { rbData } from "../../signals/rb-data"
 
 @Service()
 export class RbWebAppConfigService {

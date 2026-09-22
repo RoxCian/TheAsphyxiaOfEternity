@@ -1,8 +1,7 @@
-import { Service, computed, inject, output } from "@angular/core"
+import { Service, computed, inject, linkedSignal } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbVersion } from "rbweb"
 import { RbProfileService } from "./rb-profile.service"
-import { initiatedSignal } from "../../signals/initiated-signal"
 
 @Service()
 export class RbVersionService {
@@ -28,7 +27,7 @@ export class RbVersionService {
         for (const v of [6, 5, 4, 3, 2, 1] as RbVersion[]) if (this.validVersions()[v]) return v
         return 6
     })
-    private readonly versionInternal = initiatedSignal(this.defaultVersion)
+    private readonly versionInternal = linkedSignal(this.defaultVersion)
     readonly version = this.versionInternal.asReadonly()
     private readonly router = inject(Router)
 
@@ -36,7 +35,7 @@ export class RbVersionService {
         const updateVersionFromRoute = () => {
             const p: string = this.router.parseUrl(this.router.url).queryParams["v"]
             if (!p) {
-                this.versionInternal.reset()
+                this.versionInternal.set(this.defaultVersion())
                 return
             }
             const v = parseInt(p) as RbVersion

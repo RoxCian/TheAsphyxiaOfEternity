@@ -1,4 +1,3 @@
-import { Observable } from "rxjs"
 import { Signal, TemplateRef, Type } from "@angular/core"
 import { HttpResourceRef } from "@angular/common/http"
 
@@ -16,7 +15,7 @@ export type BungPalette = string | {
     invertColor: string
 }
 type PromiseCreator<T> = () => Promise<T>
-export type BungReturnValue<T> = T | Promise<T> | Observable<T> | PromiseCreator<T> | Signal<T> | Signal<Promise<T>>
+export type BungReturnValue<T> = T | Promise<T> | PromiseCreator<T> | Signal<T> | Signal<Promise<T>>
 export type BungReturnContext<T> = {
     [K in string]: {
         value: BungReturnValue<T>

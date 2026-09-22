@@ -1,8 +1,8 @@
 import { Component, computed, inject, input } from "@angular/core"
-import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { RbSkillPointEntry } from "../../../../services/specified/rb-skill-point.service"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
 
 @Component({
     selector: "rb-skill-point-panel",

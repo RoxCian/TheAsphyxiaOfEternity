@@ -1,7 +1,6 @@
 import { Component, input } from "@angular/core"
 import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 
-
 @Component({
     selector: "rb-stage-log-judge-grid",
     standalone: false,

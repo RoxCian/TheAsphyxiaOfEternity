@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewEncapsulation, computed, effect, inject, input, signal, viewChild } from "@angular/core"
-import { BungInsertionComponent } from "../insertion/insertion.component"
+import { BungTooltipService } from "../../../services/bung/tooltip.service"
+import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent } from "../../../utils/bung"
 import { throttle } from "../../../utils/functions"
-import { linkedToggle, toggleTransform } from "../../../signals/transforms"
-import { BungTooltipService } from "../../../services/bung/tooltip.service"
+import { BungInsertionComponent } from "../insertion/insertion.component"
 
 @Component({
     selector: "bung-marquee",

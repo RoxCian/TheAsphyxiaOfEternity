@@ -1,12 +1,12 @@
-import { Component, inject, OnDestroy, viewChild } from '@angular/core'
-import { RbLevelDisplayService } from '../../../../services/specified/rb-level-display.service'
-import { BungBreakpointService } from '../../../../services/bung/breakpoint.service'
-import { BungFloatButtonComponent } from '../../../bung/float-button/float-button.component'
+import { Component, inject, OnDestroy, viewChild } from "@angular/core"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { RbLevelDisplayService } from "../../../../services/specified/rb-level-display.service"
+import { BungFloatButtonComponent } from "../../../bung/float-button/float-button.component"
 
 @Component({
-    selector: 'rb-level-display-switch',
+    selector: "rb-level-display-switch",
     styleUrls: ["./rb-level-display-switch.component.sass"],
-    templateUrl: './rb-level-display-switch.component.html',
+    templateUrl: "./rb-level-display-switch.component.html",
     standalone: false
 })
 export class RbLevelDisplaySwitchComponent implements OnDestroy {

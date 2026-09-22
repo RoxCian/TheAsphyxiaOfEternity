@@ -1,11 +1,11 @@
-import { Component, ElementRef, inject, inputBinding, signal, TemplateRef, viewChild } from "@angular/core"
-import { RbVersionService } from "../../../services/specified/rb-version.service"
-import { RbProfileService } from "../../../services/specified/rb-profile.service"
-import { BungModalService } from "../../../services/bung/modal.service"
+import { Component, ElementRef, inject, signal, TemplateRef, viewChild } from "@angular/core"
 import { BungModalComponent } from "../../../components/bung/modal/modal.component"
-import { ImportAsphyxiaData } from "./save-data.type"
-import { rbEmit, rbEmitJSON } from "../../../utils/rb-functions"
+import { BungModalService } from "../../../services/bung/modal.service"
+import { RbProfileService } from "../../../services/specified/rb-profile.service"
+import { RbVersionService } from "../../../services/specified/rb-version.service"
 import { inverted } from "../../../signals/inverted"
+import { rbEmit, rbEmitJSON } from "../../../utils/rb-functions"
+import { ImportAsphyxiaData } from "./save-data.type"
 
 @Component({
     selector: "rb-save-data-subpage",

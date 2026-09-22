@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, input } from "@angular/core"
 import { RbByword, RbBywordRarity } from "rbweb"
-import { toggleTransform } from "../../../../signals/transforms"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { toggleTransform } from "../../../../signals/transforms"
 
 @Component({
     selector: "rb-byword-tag",

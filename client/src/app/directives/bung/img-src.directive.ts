@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, input, SecurityContext } from "@angular/core"
+import { Directive, effect, ElementRef, inject, input } from "@angular/core"
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"
 import { BungIntersectionService } from "../../services/bung/intersection.service"
 

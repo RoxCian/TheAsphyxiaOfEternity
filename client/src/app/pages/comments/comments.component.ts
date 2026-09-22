@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common"
-import { IngameCommentsModule } from "../../modules/ingame-comments.module"
 import { Component } from "@angular/core"
+import { RbCommentResponse, RbRequest, RbVersion } from "rbweb"
+import { IngameCommentsModule } from "../../modules/ingame-comments.module"
 import { rbData } from "../../signals/rb-data"
-import { RbComment, RbCommentBalloon, RbCommentResponse, RbRequest, RbVersion } from "rbweb"
 
 @Component({
     selector: "app-comments",

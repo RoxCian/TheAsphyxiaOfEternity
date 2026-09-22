@@ -1,8 +1,8 @@
 import { ElementRef, Service } from "@angular/core"
-import { BungPopupService } from "./popup.service"
-import { BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungDropdownComponent } from "../../components/bung/dropdown/dropdown.component"
 import { BungMenuDef, BungMenuDefOrComputation } from "../../components/bung/menu-def/menu-def.component"
+import { BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
+import { BungPopupService } from "./popup.service"
 
 @Service()
 export class BungDropdownService extends BungPopupService {

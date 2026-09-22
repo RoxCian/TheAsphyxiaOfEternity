@@ -1,10 +1,10 @@
 import { Component, inject, viewChild } from "@angular/core"
-import { RbSettingsService } from "../../../services/specified/rb-settings.service"
-import { RbVersionService } from "../../../services/specified/rb-version.service"
 import { Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6EquipmentPart, RbByword, RbColor, RbItemResponse, RbMusicResponse, RbVersion } from "rbweb"
-import { BungIntersectionService } from "../../../services/bung/intersection.service"
 import { BungModalDirective } from "../../../directives/bung/modal.directive"
 import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
+import { BungIntersectionService } from "../../../services/bung/intersection.service"
+import { RbSettingsService } from "../../../services/specified/rb-settings.service"
+import { RbVersionService } from "../../../services/specified/rb-version.service"
 
 @Component({
     selector: "rb-settings",

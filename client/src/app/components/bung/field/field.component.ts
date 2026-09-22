@@ -1,7 +1,7 @@
-import { Component, input, InputSignal, ViewEncapsulation } from "@angular/core"
-import { BungInsertionContent } from "../../../utils/bung"
+import { Component, input, ViewEncapsulation } from "@angular/core"
 import { FieldTree } from "@angular/forms/signals"
 import { toggleTransform } from "../../../signals/transforms"
+import { BungInsertionContent } from "../../../utils/bung"
 
 @Component({
     selector: "bung-field",

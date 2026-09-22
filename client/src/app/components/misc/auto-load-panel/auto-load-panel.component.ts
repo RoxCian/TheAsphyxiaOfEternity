@@ -1,5 +1,4 @@
-import { AfterContentInit, Component, contentChildren, effect, ElementRef, inject, input, output, signal, viewChild } from "@angular/core"
-import { BungInsertionComponent } from "../../bung/insertion/insertion.component"
+import { AfterContentInit, Component, effect, ElementRef, inject, input, output, signal, viewChild } from "@angular/core"
 
 export type AutoLoadEvent = {
     result?: "failed" | "finished" | Promise<"failed" | "finished" | undefined>

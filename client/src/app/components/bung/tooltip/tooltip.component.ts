@@ -1,6 +1,6 @@
 import { Component, computed, effect, ElementRef, model, signal, ViewEncapsulation } from "@angular/core"
-import { BungPopupComponent } from "../popup/popup.component"
 import { isPixelMeasuringElement, toPixelsLength } from "../../../utils/functions"
+import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungTooltipFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "covered" | "auto"
 // diagonal1: <\>, diagonal2: </>

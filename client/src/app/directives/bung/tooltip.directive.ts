@@ -1,9 +1,9 @@
 import { Directive, effect, ElementRef, inject, input, OnDestroy, output, OutputRefSubscription, signal } from "@angular/core"
-import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
 import { BungTooltipAlign, BungTooltipComponent, BungTooltipFloat, BungTooltipFloatExtend } from "../../components/bung/tooltip/tooltip.component"
 import { BungTooltipService } from "../../services/bung/tooltip.service"
-import { throttle } from "../../utils/functions"
 import { toggleTransform } from "../../signals/transforms"
+import { BungInsertionContent, BungPopupOptions } from "../../utils/bung"
+import { throttle } from "../../utils/functions"
 
 @Directive({
     selector: "[bungTooltip]",

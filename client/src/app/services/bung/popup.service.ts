@@ -1,7 +1,7 @@
 import { ApplicationRef, Binding, ComponentRef, createComponent, EnvironmentInjector, inject, Service, Injector, inputBinding, isSignal, Signal, Type, ViewContainerRef } from "@angular/core"
+import { BungPopupComponent } from "../../components/bung/popup/popup.component"
 import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 import { BungBackdropOptions, BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase, BungReturnContext, DefaultBackdropOptions } from "../../utils/bung"
-import { BungPopupComponent } from "../../components/bung/popup/popup.component"
 import { timeout, tryAction } from "../../utils/functions"
 
 type PopupLayer = {

@@ -1,7 +1,7 @@
 import { Component, input, isSignal, model, ViewEncapsulation } from "@angular/core"
 import { toggleTransform } from "../../../signals/transforms"
-import { BungPopupComponent } from "../popup/popup.component"
 import { BungInsertionContent, BungInsertionContentOrComputation } from "../../../utils/bung"
+import { BungPopupComponent } from "../popup/popup.component"
 
 @Component({
     selector: "bung-modal",

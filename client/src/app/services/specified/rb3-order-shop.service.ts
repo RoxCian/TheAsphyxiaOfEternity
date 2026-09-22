@@ -1,11 +1,11 @@
 import { computed, inject, Service, signal } from "@angular/core"
+import { HttpResourceRef } from "@angular/common/http"
 import { Rb3OrderDetailsParamFlag, Rb3OrderType, Rb3OrderResponse, Rb3OrderShopResponse, Rb3OrderSlot } from "rbweb"
-import { RbActivatableServiceBase } from "./rb.service"
 import { rbData } from "../../signals/rb-data"
+import { hasFlag } from "../../utils/functions"
 import { rbEmitJSON } from "../../utils/rb-functions"
 import { BungNotificationService } from "../bung/notification.service"
-import { HttpResourceRef } from "@angular/common/http"
-import { hasFlag } from "../../utils/functions"
+import { RbActivatableServiceBase } from "./rb.service"
 
 @Service()
 export class Rb3OrderShopService extends RbActivatableServiceBase<Rb3OrderShopResponse> {

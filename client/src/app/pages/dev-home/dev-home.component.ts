@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common"
-import { BungModule } from "../../modules/bung.module"
-import { Component, computed, signal } from "@angular/core"
 import { httpResource } from "@angular/common/http"
+import { Component, computed, signal } from "@angular/core"
 import { RouterLink } from "@angular/router"
+import { BungModule } from "../../modules/bung.module"
 
 @Component({
     selector: "dev-home",

@@ -1,7 +1,7 @@
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injector, Service } from "@angular/core"
 import { BungFloatButtonComponent } from "../../components/bung/float-button/float-button.component"
-import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 import { BungInsertionComponent } from "../../components/bung/insertion/insertion.component"
+import { BungPopupContainerComponent } from "../../components/bung/popup-container/popup-container.component"
 
 type ButtonRecord = {
     button: BungFloatButtonComponent

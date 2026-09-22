@@ -1,10 +1,9 @@
 import { NgModule, provideZonelessChangeDetection } from "@angular/core"
-import { AppComponent } from "./app.component"
 import { APP_BASE_HREF } from "@angular/common"
 import { BrowserModule } from "@angular/platform-browser"
+import { provideHttpClient } from "@angular/common/http"
+import { AppComponent } from "./app.component"
 import { AppRoutingModule } from "./app-routing.module"
-import { provideHttpClient } from "@angular/common/http";
-
 
 @NgModule({
     declarations: [

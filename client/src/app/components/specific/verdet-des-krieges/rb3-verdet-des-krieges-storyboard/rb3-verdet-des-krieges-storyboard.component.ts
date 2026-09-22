@@ -1,11 +1,11 @@
 import { AnimationCallbackEvent, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked } from "@angular/core"
-import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
 import { Rb3VerdetDesKriegesPhrasePart, Rb3VerdetDesKriegesUnlockRequestType } from "rbweb"
-import { timeout } from "../../../../utils/functions"
 import { BungPopupService } from "../../../../services/bung/popup.service"
-import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
-import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 import { ReturnToTopService } from "../../../../services/misc/return-to-top.service"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
+import { timeout } from "../../../../utils/functions"
+import { RbMusicUnlockPopupComponent } from "../../music-unlock-modal-content/rb-music-unlock-modal-content/rb-music-unlock-popup.component"
 
 @Component({
     selector: "rb3-verdet-des-krieges-storyboard",

@@ -1,11 +1,11 @@
-import { Component, computed, inject, model, viewChild } from "@angular/core"
+import { CommonModule, NgComponentOutlet } from "@angular/common"
+import { Component, computed, inject, viewChild } from "@angular/core"
+import { BungModule } from "../../modules/bung.module"
 import { ProfileDetailModule } from "../../modules/profile-detail.module"
 import { RbProfileService } from "../../services/specified/rb-profile.service"
-import { BungModule } from "../../modules/bung.module"
-import { RbVersionService } from "../../services/specified/rb-version.service"
 import { RbSubpageService } from "../../services/specified/rb-subpage.service"
+import { RbVersionService } from "../../services/specified/rb-version.service"
 import { RbPlayDataSubpage } from "./play-data/play-data.component"
-import { CommonModule, NgComponentOutlet } from "@angular/common"
 
 @Component({
     selector: "profile-page",

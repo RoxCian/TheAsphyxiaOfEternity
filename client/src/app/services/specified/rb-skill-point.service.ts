@@ -1,4 +1,4 @@
-import { computed, inject, Service, signal } from "@angular/core"
+import { computed, inject, Service } from "@angular/core"
 import { RbChartInfo, RbChartType, RbMusicInfo, RbMusicRecordResponse, RbScoreResponse, RbVersion } from "rbweb"
 import { RbMusicRecordService } from "./rb-music-record.service"
 

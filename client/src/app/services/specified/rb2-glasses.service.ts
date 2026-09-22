@@ -1,9 +1,9 @@
 import { computed, inject, Service, signal } from "@angular/core"
 import { Rb2GlassResponse, Rb2GlassSettings } from "rbweb"
-import { RbPlayDataServiceBase } from "./rb.service"
 import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
 import { BungNotificationService } from "../bung/notification.service"
+import { RbPlayDataServiceBase } from "./rb.service"
 
 @Service()
 export class Rb2GlassesService extends RbPlayDataServiceBase<Rb2GlassResponse> {

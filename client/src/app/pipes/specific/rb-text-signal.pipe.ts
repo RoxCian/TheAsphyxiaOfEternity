@@ -1,4 +1,4 @@
-import { computed, inject, Injector, Pipe, PipeTransform, Signal } from "@angular/core"
+import { computed, inject, Pipe, PipeTransform, Signal } from "@angular/core"
 import { RbLanguageService } from "../../services/specified/rb-language.service"
 
 type KeysOfOrig<T extends object> = {

@@ -1,6 +1,6 @@
 import { Component, ElementRef, TemplateRef, ViewEncapsulation, contentChild, inject, input, output } from "@angular/core"
-import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
+import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
 
 @Component({
     selector: "bung-tab",

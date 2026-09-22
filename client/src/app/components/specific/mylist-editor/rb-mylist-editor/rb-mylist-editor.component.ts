@@ -1,9 +1,9 @@
 import { Component, computed, effect, inject, input, output, signal } from "@angular/core"
 import { RbMusicResponse, RbVersion } from "rbweb"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { BungIntersectionService } from "../../../../services/bung/intersection.service"
 import { RbSettingsService } from "../../../../services/specified/rb-settings.service"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
-import { BungIntersectionService } from "../../../../services/bung/intersection.service"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb-mylist-editor",

@@ -1,10 +1,10 @@
-import { Directive, ElementRef, OnDestroy, OutputRefSubscription, computed, effect, inject, input, inputBinding, model, output, signal } from "@angular/core"
-import { BungMenuDef } from "../../components/bung/menu-def/menu-def.component"
-import { BungPopupOptions } from "../../utils/bung"
+import { Directive, ElementRef, OnDestroy, OutputRefSubscription, computed, effect, inject, input, model, output, signal } from "@angular/core"
 import { BungDropdownAlign, BungDropdownComponent, BungDropdownFloat, BungDropdownFloatExtend } from "../../components/bung/dropdown/dropdown.component"
+import { BungMenuDef } from "../../components/bung/menu-def/menu-def.component"
 import { BungDropdownService } from "../../services/bung/dropdown.service"
-import { throttle } from "../../utils/functions"
 import { toggleTransform } from "../../signals/transforms"
+import { BungPopupOptions } from "../../utils/bung"
+import { throttle } from "../../utils/functions"
 
 @Directive({
     selector: "[bungDropdown]",

@@ -1,8 +1,8 @@
 import { Component, computed, inject } from "@angular/core"
+import { Rb5MinigameRecordUpdateResponse, Rb5MinigameType } from "rbweb"
 import { RbProfileService } from "../../../../services/specified/rb-profile.service"
 import { RbVersionService } from "../../../../services/specified/rb-version.service"
 import { rbData } from "../../../../signals/rb-data"
-import { Rb5MinigameRecordUpdateResponse, Rb5MinigameType } from "rbweb"
 
 @Component({
     selector: "rb5-reftis-info",

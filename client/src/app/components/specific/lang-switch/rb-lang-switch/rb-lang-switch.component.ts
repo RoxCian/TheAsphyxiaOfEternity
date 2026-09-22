@@ -1,7 +1,7 @@
 import { Component, inject, viewChild } from "@angular/core"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { BungFloatButtonComponent } from "../../../bung/float-button/float-button.component"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { BungFloatButtonComponent } from "../../../bung/float-button/float-button.component"
 
 @Component({
   selector: "rb-lang-switch",

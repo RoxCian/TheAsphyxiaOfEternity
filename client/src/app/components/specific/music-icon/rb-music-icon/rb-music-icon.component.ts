@@ -1,7 +1,7 @@
 import { Component, input } from "@angular/core"
 import { RbChartType, RbMusicResponse, RbVersion } from "rbweb"
-import { toggleTransform } from "../../../../signals/transforms"
 import { BungIntersectionService } from "../../../../services/bung/intersection.service"
+import { toggleTransform } from "../../../../signals/transforms"
 
 @Component({
     selector: "rb-music-icon",

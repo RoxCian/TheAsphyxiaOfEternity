@@ -1,8 +1,8 @@
 import { computed, effect, inject, Service, signal } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbPlayerResponse, RbRequest, RbVersion } from "rbweb"
-import { rbData } from "../../signals/rb-data"
 import { env } from "../../../env/env"
+import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
 
 @Service()

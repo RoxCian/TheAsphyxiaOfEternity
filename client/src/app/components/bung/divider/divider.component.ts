@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, input } from "@angular/core"
-import { BungInsertionContent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
+import { BungInsertionContent } from "../../../utils/bung"
 
 @Component({
     selector: "bung-divider",

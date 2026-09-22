@@ -1,6 +1,6 @@
 import { Component, SecurityContext, ViewEncapsulation, computed, inject, input } from "@angular/core"
-import { toggleTransform } from "../../../signals/transforms"
 import { DomSanitizer } from "@angular/platform-browser"
+import { toggleTransform } from "../../../signals/transforms"
 import { iconUrlToSvg } from "../../../utils/bung-svg-util"
 
 @Component({

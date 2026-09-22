@@ -1,5 +1,5 @@
-import { HttpResourceRef } from "@angular/common/http"
 import { effect, Injector, OutputRef, runInInjectionContext } from "@angular/core"
+import { HttpResourceRef } from "@angular/common/http"
 
 export function asPromise<T>(httpResource: HttpResourceRef<T>, injector: Injector): Promise<T> {
     let resolve: ((result: T) => void) | undefined = undefined

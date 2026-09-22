@@ -1,6 +1,6 @@
 import { inject, Service } from "@angular/core"
-import { RbVersionService } from "./rb-version.service"
 import { RbVersion } from "rbweb"
+import { RbVersionService } from "./rb-version.service"
 
 @Service()
 export class RbLogService {

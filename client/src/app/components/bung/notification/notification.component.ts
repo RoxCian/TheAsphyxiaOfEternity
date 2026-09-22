@@ -1,6 +1,6 @@
-import { Component, Signal, ViewEncapsulation, computed, isSignal, model } from "@angular/core"
-import { BungPopupComponent } from "../popup/popup.component"
+import { Component, Signal, ViewEncapsulation, isSignal, model } from "@angular/core"
 import { BulmaColor } from "../../../utils/bung"
+import { BungPopupComponent } from "../popup/popup.component"
 
 export type BungNotificationFloat = "left" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "none"
 

@@ -1,7 +1,7 @@
 import { Service, Signal } from "@angular/core"
-import { BungPopupService } from "./popup.service"
-import { BulmaColor, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungNotificationComponent } from "../../components/bung/notification/notification.component"
+import { BulmaColor, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
+import { BungPopupService } from "./popup.service"
 
 @Service()
 export class BungNotificationService extends BungPopupService {

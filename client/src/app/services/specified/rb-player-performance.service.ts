@@ -1,8 +1,8 @@
 import { inject, Service } from "@angular/core"
-import { RbVersionService } from "./rb-version.service"
 import { RbPlayerPerformanceResponse, RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbProfileService } from "./rb-profile.service"
+import { RbVersionService } from "./rb-version.service"
 
 @Service()
 export abstract class RbPlayerPerformanceService {

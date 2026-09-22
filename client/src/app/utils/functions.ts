@@ -1,4 +1,4 @@
-import { Injector, runInInjectionContext, Type } from "@angular/core"
+import { Type } from "@angular/core"
 
 export function isUnloaded(element?: HTMLElement): boolean {
     let parent: HTMLElement | null | undefined = element

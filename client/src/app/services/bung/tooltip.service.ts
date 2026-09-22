@@ -1,7 +1,7 @@
 import { ElementRef, Service, Signal } from "@angular/core"
-import { BungPopupService } from "./popup.service"
-import { BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
 import { BungTooltipComponent } from "../../components/bung/tooltip/tooltip.component"
+import { BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
+import { BungPopupService } from "./popup.service"
 
 @Service()
 export class BungTooltipService extends BungPopupService {

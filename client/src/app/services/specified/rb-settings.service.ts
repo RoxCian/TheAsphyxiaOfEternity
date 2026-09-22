@@ -1,11 +1,11 @@
 import { computed, effect, inject, Service, linkedSignal, signal } from "@angular/core"
+import { FieldTree, form, max, maxLength, min, PathKind, required, SchemaPathTree, validate } from "@angular/forms/signals"
 import { createRbSettingsResponse, Rb6CharacterCardInfo, Rb6EquipmentInfo, Rb6RankingQuestResponse, RbAvailableItemResponse, RbByword, RbItemResponse, RbMusicResponse, RbRequest, RbSettingsResponse, RbVersion, RbWriteSettingsResponse } from "rbweb"
 import { rbData } from "../../signals/rb-data"
-import { RbVersionService } from "./rb-version.service"
-import { RbProfileService } from "./rb-profile.service"
-import { FieldTree, form, max, maxLength, min, minLength, PathKind, required, SchemaPathTree, validate } from "@angular/forms/signals"
 import { isInShiftJISCharset } from "../../utils/functions"
 import { rbEmitJSON } from "../../utils/rb-functions"
+import { RbProfileService } from "./rb-profile.service"
+import { RbVersionService } from "./rb-version.service"
 
 @Service()
 export class RbSettingsService {

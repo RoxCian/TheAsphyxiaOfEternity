@@ -1,12 +1,11 @@
 import { Component, computed, effect, inject, input, viewChild } from "@angular/core"
-import { Rb3OrderResponse } from "rbweb"
-import { toggleTransform } from "../../../../signals/transforms"
+import { Rb3OrderDetailsParamFlag, Rb3OrderResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { Rb3OrderDetailsParamFlag } from "rbweb"
-import { Rb3OrderShopService } from "../../../../services/specified/rb3-order-shop.service"
-import { hasFlag, timeout } from "../../../../utils/functions"
-import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { Rb3OrderShopService } from "../../../../services/specified/rb3-order-shop.service"
+import { toggleTransform } from "../../../../signals/transforms"
+import { hasFlag } from "../../../../utils/functions"
+import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
 
 @Component({
     selector: "rb3-order",

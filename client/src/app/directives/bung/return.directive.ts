@@ -1,7 +1,6 @@
 import { Directive, ElementRef, computed, input, isSignal, output, signal } from "@angular/core"
-import { Observable, firstValueFrom } from "rxjs"
-import { BungReturnValue } from "../../utils/bung"
 import { toggleTransform } from "../../signals/transforms"
+import { BungReturnValue } from "../../utils/bung"
 
 @Directive({
     selector: "[bungReturn]",
@@ -18,7 +17,7 @@ export class BungReturnDirective<T> {
     readonly isLoading = signal(false)
     readonly isWaitable = computed(() => {
         const returnValue = this.returnValue()
-        return returnValue instanceof Promise || returnValue instanceof Observable || isSignal(returnValue) || returnValue instanceof Function
+        return returnValue instanceof Promise || isSignal(returnValue) || returnValue instanceof Function
     })
     readonly returned = output()
 
@@ -27,7 +26,6 @@ export class BungReturnDirective<T> {
     asPromise(): Promise<T> {
         const returnValue = this.returnValue()
         if (returnValue instanceof Promise) return returnValue
-        else if (returnValue instanceof Observable) return firstValueFrom(returnValue)
         else if (isSignal(returnValue)) {
             const signalValue = returnValue()
             if (signalValue instanceof Promise) return signalValue

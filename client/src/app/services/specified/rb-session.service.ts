@@ -1,9 +1,9 @@
 import { computed, effect, inject, Service, signal } from "@angular/core"
 import { RbSession } from "rbweb"
-import { RbVersionService } from "./rb-version.service"
-import { RbProfileService } from "./rb-profile.service"
 import { rbData } from "../../signals/rb-data"
 import { rbEmitJSON } from "../../utils/rb-functions"
+import { RbProfileService } from "./rb-profile.service"
+import { RbVersionService } from "./rb-version.service"
 
 @Service()
 export class RbSessionService {

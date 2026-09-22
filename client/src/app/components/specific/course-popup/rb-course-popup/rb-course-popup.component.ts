@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, computed, ElementRef, inject, input, signal, viewChild, viewChildren } from "@angular/core"
 import { RbVersionWithClasscheck, RbChartType, RbStageLogResponse } from "rbweb"
-import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
-import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
-import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"
-import { BungPopupComponent } from "../../../bung/popup/popup.component"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { timeout } from "../../../../utils/functions"
 import { toggleTransform } from "../../../../signals/transforms"
+import { timeout } from "../../../../utils/functions"
+import { BungPopupComponent } from "../../../bung/popup/popup.component"
+import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
+import { RbChartLampComponent } from "../../chart-lamp/rb-chart-lamp/rb-chart-lamp.component"
+import { RbMusicTitleComponent } from "../../music-title/rb-music-title/rb-music-title.component"
 
 @Component({
     selector: "rb-course-popup",

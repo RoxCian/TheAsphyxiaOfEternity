@@ -1,12 +1,12 @@
-import { Component, computed, contentChildren, effect, ElementRef, inject, Injector, input, model, output, Renderer2, signal, viewChild, ViewEncapsulation } from "@angular/core"
-import { BungOptionComponent } from "../option/option.component"
+import { Component, contentChildren, ElementRef, inject, Injector, input, model, output, signal, viewChild, ViewEncapsulation } from "@angular/core"
+import { FormValueControl } from "@angular/forms/signals"
+import { BungDropdownDirective } from "../../../directives/bung/dropdown.directive"
+import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
+import { asPromise } from "../../../signals/functions"
 import { toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent, BungWaitableEvent } from "../../../utils/bung"
-import { BungDropdownDirective } from "../../../directives/bung/dropdown.directive"
-import { FormValueControl } from "@angular/forms/signals"
-import { asPromise } from "../../../signals/functions"
 import { BungDropdownAlign } from "../dropdown/dropdown.component"
-import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
+import { BungOptionComponent } from "../option/option.component"
 
 @Component({
     selector: "bung-select",

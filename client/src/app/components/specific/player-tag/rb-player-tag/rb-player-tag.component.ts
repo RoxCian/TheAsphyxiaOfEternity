@@ -1,10 +1,10 @@
 import { Component, computed, inject, input } from "@angular/core"
 import { RbVersion, RbColor } from "rbweb"
-import { getPlayerEntry, playerEntryEquals } from "./rb-player-name-helper"
-import { toggleTransform } from "../../../../signals/transforms"
-import { RbProfileService } from "../../../../services/specified/rb-profile.service"
-import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { RbLanguageService } from "../../../../services/specified/rb-language.service"
+import { RbProfileService } from "../../../../services/specified/rb-profile.service"
+import { toggleTransform } from "../../../../signals/transforms"
+import { getPlayerEntry, playerEntryEquals } from "./rb-player-name-helper"
 
 @Component({
     selector: "rb-player",

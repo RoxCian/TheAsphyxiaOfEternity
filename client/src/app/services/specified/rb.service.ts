@@ -1,9 +1,9 @@
 import { effect, inject, Signal, signal } from "@angular/core"
-import { RbVersionService } from "./rb-version.service"
+import { HttpResourceRef } from "@angular/common/http"
 import { RbVersion } from "rbweb"
 import { rbData } from "../../signals/rb-data"
 import { RbProfileService } from "./rb-profile.service"
-import { HttpResourceRef } from "@angular/common/http"
+import { RbVersionService } from "./rb-version.service"
 
 export abstract class RbActivatableServiceBase<T> {
     private readonly isActivatedInternal = signal(false)

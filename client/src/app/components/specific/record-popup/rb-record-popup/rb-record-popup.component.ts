@@ -1,6 +1,6 @@
 import { Component, ElementRef, model, signal } from "@angular/core"
-import { BungPopupComponent } from "../../../bung/popup/popup.component"
 import { RbVersion, RbMusicRecordResponse, RbChartType } from "rbweb"
+import { BungPopupComponent } from "../../../bung/popup/popup.component"
 
 @Component({
     selector: "rb-record-popup",

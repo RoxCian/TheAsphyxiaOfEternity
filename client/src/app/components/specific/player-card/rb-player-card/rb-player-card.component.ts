@@ -1,14 +1,14 @@
 import { Component, computed, inject, input, OnInit, output, signal } from "@angular/core"
 import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbPlayerResponse } from "rbweb"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
-import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
 import { RbPlayDataSubpage } from "../../../../pages/profile/play-data/play-data.component"
 import { RbSettingsSubpage } from "../../../../pages/profile/settings/settings.component"
 import { RbSaveDataSubpage } from "../../../../pages/profile/save-data/save-data.component"
 import { RbProgressSubpage } from "../../../../pages/profile/progress/progress.component"
-import { toggleTransform } from "../../../../signals/transforms"
-import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbSessionService } from "../../../../services/specified/rb-session.service"
+import { RbSubpageService } from "../../../../services/specified/rb-subpage.service"
+import { Rb3VerdetDesKriegesService } from "../../../../services/specified/rb3-verdet-des-krieges.service"
+import { toggleTransform } from "../../../../signals/transforms"
 
 const profileSubpages = {
     playData: RbPlayDataSubpage,

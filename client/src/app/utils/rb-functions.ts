@@ -1,5 +1,4 @@
-import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbChartType, RbClasscheckIndex, RbVersion, RbVersionLiteral, RbVersionWithClasscheck } from "rbweb"
-import { RbClasscheckResponse } from "rbweb"
+import { Rb4DojoIndex, Rb5ClasscheckIndex, Rb6ClasscheckIndex, RbChartType, RbClasscheckResponse, RbVersion, RbVersionLiteral, RbVersionWithClasscheck } from "rbweb"
 
 export function toRbTitleLiteral(version: RbVersion): RbVersionLiteral {
     switch (version) {

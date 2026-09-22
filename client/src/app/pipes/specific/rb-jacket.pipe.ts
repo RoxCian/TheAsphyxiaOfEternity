@@ -1,4 +1,4 @@
-import { computed, Pipe, PipeTransform, SecurityContext, Signal } from "@angular/core"
+import { computed, Pipe, PipeTransform, Signal } from "@angular/core"
 import { RbChartType, RbVersion } from "rbweb"
 import { RbJacketsService } from "../../services/specified/rb-jackets.service"
 

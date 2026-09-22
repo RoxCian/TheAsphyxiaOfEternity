@@ -1,10 +1,10 @@
 import { Component, computed, ElementRef, inject, input, SecurityContext, viewChild } from "@angular/core"
-import { RbMusicRecordResponse, RbChartType, RbVersion, RbChartResponse } from "rbweb"
-import { BungPopupService } from "../../../../services/bung/popup.service"
-import { RbRecordPopupComponent } from "../../record-popup/rb-record-popup/rb-record-popup.component"
-import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { DomSanitizer } from "@angular/platform-browser"
+import { RbMusicRecordResponse, RbChartType, RbVersion, RbChartResponse } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { BungPopupService } from "../../../../services/bung/popup.service"
+import { RbLogService } from "../../../../services/specified/rb-log.service"
+import { RbRecordPopupComponent } from "../../record-popup/rb-record-popup/rb-record-popup.component"
 
 function hasChart<TVersion extends RbVersion, TChart extends RbChartType<TVersion>>(chart?: RbChartResponse<TVersion, TChart>) {
     return chart && chart.level > 0

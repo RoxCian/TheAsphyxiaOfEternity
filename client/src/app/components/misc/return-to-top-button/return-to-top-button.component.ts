@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, viewChild } from "@angular/core"
-import { ReturnToTopService } from "../../../services/misc/return-to-top.service"
 import { BungBreakpointService } from "../../../services/bung/breakpoint.service"
+import { ReturnToTopService } from "../../../services/misc/return-to-top.service"
 import { BungFloatButtonComponent } from "../../bung/float-button/float-button.component"
 
 @Component({

@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, TemplateRef, Type, ViewEncapsulation, computed, effect, inject, input, model, output, signal } from "@angular/core"
-import { BungInsertionContent } from "../../../utils/bung"
-import { toggleTransform } from "../../../signals/transforms"
 import { BungIntersectionService } from "../../../services/bung/intersection.service"
+import { toggleTransform } from "../../../signals/transforms"
+import { BungInsertionContent } from "../../../utils/bung"
 
 @Component({
     selector: "bung-insertion",

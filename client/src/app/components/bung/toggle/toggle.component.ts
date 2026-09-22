@@ -1,4 +1,4 @@
-import { Component, effect, input, linkedSignal, model, ViewEncapsulation } from "@angular/core"
+import { Component, input, model, ViewEncapsulation } from "@angular/core"
 import { FormCheckboxControl } from "@angular/forms/signals"
 import { toggleTransform } from "../../../signals/transforms"
 

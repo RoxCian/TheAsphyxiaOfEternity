@@ -1,8 +1,8 @@
 import { Component, effect, inject, input, viewChild } from "@angular/core"
 import { Rb5YurukomeResponse } from "rbweb"
+import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 import { RbLanguageService } from "../../../../services/specified/rb-language.service"
 import { BungMarqueeComponent } from "../../../bung/marquee/marquee.component"
-import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
 
 @Component({
     selector: "rb5-yurukome-panel",

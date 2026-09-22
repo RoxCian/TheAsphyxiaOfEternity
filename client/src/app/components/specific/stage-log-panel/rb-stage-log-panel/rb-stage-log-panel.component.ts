@@ -1,11 +1,11 @@
 import { Component, computed, inject, input, SecurityContext } from "@angular/core"
-import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
-import { BungPopupService } from "../../../../services/bung/popup.service"
-import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-popup/rb-stage-log-popup.component"
-import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
-import { RbLogService } from "../../../../services/specified/rb-log.service"
 import { DomSanitizer } from "@angular/platform-browser"
+import { RbStageLogResponse, RbChartType, RbVersion } from "rbweb"
 import { BungBreakpointService } from "../../../../services/bung/breakpoint.service"
+import { BungPopupService } from "../../../../services/bung/popup.service"
+import { RbLogService } from "../../../../services/specified/rb-log.service"
+import { toRbChartTypeLiteral } from "../../../../utils/rb-functions"
+import { RbStageLogPopupComponent } from "../../stage-log-popup/rb-stage-log-popup/rb-stage-log-popup.component"
 
 @Component({
     selector: "rb-stage-log-panel",

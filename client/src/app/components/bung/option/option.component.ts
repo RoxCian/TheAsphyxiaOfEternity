@@ -1,6 +1,7 @@
 import { Component, ElementRef, inject, input, ViewEncapsulation } from "@angular/core"
 import { linkedToggle, toggleTransform } from "../../../signals/transforms"
 import { BungInsertionContent } from "../../../utils/bung"
+
 @Component({
     selector: "bung-option",
     template: "<ng-content />",

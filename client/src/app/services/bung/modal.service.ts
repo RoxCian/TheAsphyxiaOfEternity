@@ -1,7 +1,7 @@
-import { Service, inputBinding, isSignal, Signal } from "@angular/core"
-import { BungPopupService } from "./popup.service"
-import { BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
+import { Service, isSignal, Signal } from "@angular/core"
 import { BungModalComponent } from "../../components/bung/modal/modal.component"
+import { BungInsertionContent, BungInsertionContentOrComputation, BungPopupOptions, BungPopupOptionsBase } from "../../utils/bung"
+import { BungPopupService } from "./popup.service"
 
 @Service()
 export class BungModalService extends BungPopupService {

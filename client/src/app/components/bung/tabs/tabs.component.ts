@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, OutputRefSubscription, ViewEncapsulation, computed, contentChildren, effect, inject, input, linkedSignal, output, signal, untracked, viewChild, viewChildren } from "@angular/core"
-import { BungTabComponent } from "../tab/tab.component"
-import { BungInsertionComponent } from "../insertion/insertion.component"
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, ViewEncapsulation, computed, contentChildren, effect, inject, input, linkedSignal, output, signal, untracked, viewChild, viewChildren } from "@angular/core"
 import { isUnloaded } from "../../../utils/functions"
 import { asPromise } from "../../../signals/functions"
-import { BungWaitableEvent } from "../../../utils/bung"
 import { toggleTransform } from "../../../signals/transforms"
+import { BungWaitableEvent } from "../../../utils/bung"
+import { BungInsertionComponent } from "../insertion/insertion.component"
+import { BungTabComponent } from "../tab/tab.component"
 
 @Component({
     selector: "bung-tabs",
