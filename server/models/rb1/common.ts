@@ -1,6 +1,6 @@
+import { XD, XM, XMap } from "../../utils/x"
 import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD, XM, XMap } from "../../utils/x"
 import { Rb1EventControl } from "./event"
 
 export class Rb1PlayerStart {

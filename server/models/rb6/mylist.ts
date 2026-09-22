@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 
 export class Rb6Mylist implements ICollection<"rb.rb6.player.mylist"> {
     readonly collection = "rb.rb6.player.mylist"

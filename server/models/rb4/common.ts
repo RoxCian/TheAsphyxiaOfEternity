@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb4EventControl } from "./event"
 import { Rb4MusicRecord } from "./music_record"
 import { Rb4PlayerReleasedInfo } from "./profile"

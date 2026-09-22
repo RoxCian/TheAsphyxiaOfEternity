@@ -1,12 +1,12 @@
+import { DBH } from "../../utils/db/dbh"
+import { findChartInfo } from "../../data/tables/rb_chart_info"
+import { convertMusicId, getMusicId } from "../../data/tables/rb_music_id"
 import { Rb1MusicRecord } from "../../models/rb1/profile"
 import { Rb2MusicRecord } from "../../models/rb2/profile"
 import { Rb3MusicRecord } from "../../models/rb3/music_record"
 import { Rb4MusicRecord } from "../../models/rb4/music_record"
 import { Rb5MusicRecord } from "../../models/rb5/music_record"
 import { Rb1ChartType, Rb1ClearType, Rb2ClearType, Rb3ClearType, Rb4ChartType, Rb4ClearType, RbChartType, RbVersion } from "../../models/shared/rb_types"
-import { convertMusicId, getMusicId } from "../../data/tables/rb_music_id"
-import { findChartInfo } from "../../data/tables/rb_chart_info"
-import { DBH } from "../../utils/db/dbh"
 
 type RbMusicRecord = Rb1MusicRecord | Rb2MusicRecord | Rb3MusicRecord | Rb4MusicRecord | Rb5MusicRecord
 

@@ -1,11 +1,11 @@
 import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
+import { rbPlayerIcon } from "../../data/tables/rb_player_icon"
 import { Rb2EventStatus } from "../../models/rb2/event"
-import { getRbCommentType, Rb2Comment, Rb2Comments, Rb3Comment, Rb6Comment, RbCommentBase, RbComments, rbCommentTypeToken, RbReadCommentParam } from "../../models/shared/comment"
+import { getRbCommentType, Rb2Comment, Rb2Comments, Rb6Comment, RbCommentBase, RbComments, rbCommentTypeToken, RbReadCommentParam } from "../../models/shared/comment"
 import { RbVersion } from "../../models/shared/rb_types"
 import { injectorSymbol, TypeInjector } from "../../utils/types"
-import { rbPlayerIcon } from "../../data/tables/rb_player_icon"
 
 export function createReadCommentHandler<TVersion extends RbVersion>(version: TVersion): H.H<RbReadCommentParam> {
     if (!U.GetConfig("comment_feature")) return () => H.deny

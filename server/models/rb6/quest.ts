@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { rb6Quests } from "../../data/tables/rb6_quests"
 import { rb6RankingQuests } from "../../data/tables/rb6_ranking_quests"
-import { XD } from "../../utils/x"
 import { Rb6ChartType, Rb6QuestType } from "../shared/rb_types"
 
 export class Rb6Quest {

@@ -1,6 +1,6 @@
+import { XD, XM } from "../../utils/x"
 import { ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper, Type, TypeToken } from "../../utils/types"
-import { XD, XM } from "../../utils/x"
 import { Rb2EventStatus } from "../rb2/event"
 import { RbComment, RbCommentBalloon, RbVersion } from "./rb_types"
 

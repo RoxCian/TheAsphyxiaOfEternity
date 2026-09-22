@@ -1,10 +1,10 @@
 import { XD } from "../../utils/x"
+import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
+import { Rb2LincleLink } from "../rb2/profile"
 import { Rb3EventControl, Rb3JubeatCollaboration } from "./event"
 import { Rb3MusicRecord } from "./music_record"
 import { Rb3PlayerReleasedInfo, Rb3TricolettePark } from "./profile"
-import { DBBigInt } from "../../utils/db/db_types"
-import { Rb2LincleLink } from "../rb2/profile"
 
 export class Rb3ItemLockCtrl {
     @XD.u8() type = 0

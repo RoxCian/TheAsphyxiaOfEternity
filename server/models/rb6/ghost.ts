@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { ICollection } from "../../utils/db/db_types"
 import { base64ToBuffer, bufferToBase64 } from "../../utils/utility_functions"
-import { XD } from "../../utils/x"
 import { Rb6ChartType } from "../shared/rb_types"
 
 export class Rb6Ghost implements ICollection<"rb.rb6.playData.ghost#userId"> {

@@ -1,6 +1,6 @@
+import { C } from "../../utils/controller"
 import { rbPlayerIcon } from "../../data/tables/rb_player_icon"
 import { RbPlayerIcon, RbVersion } from "../../models/shared/rb_types"
-import { C } from "../../utils/controller"
 
 export function registerPlayerIconController() {
     C.route("rbGetPlayerIcon", getPlayerIcon)

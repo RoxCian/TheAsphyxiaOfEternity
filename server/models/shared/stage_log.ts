@@ -1,6 +1,6 @@
+import { XD, XM } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { ICollection } from "../../utils/db/db_types"
-import { XD, XM } from "../../utils/x"
 
 export class RbStageLogStandaloneElement {
     @XD.s16("idx") stageIndex = 0

@@ -1,7 +1,6 @@
-import { ICollection } from "./db_types"
 import { GetType, isType, Type } from "../types"
-import { getPropertyDescriptor, instantiate } from "../utility_functions"
-import { isDeepStrictEqual } from "util"
+import { getPropertyDescriptor } from "../utility_functions"
+import { ICollection } from "./db_types"
 
 export namespace DBH {
     // DB operation serialization

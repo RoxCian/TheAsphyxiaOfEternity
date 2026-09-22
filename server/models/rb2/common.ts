@@ -1,9 +1,8 @@
+import { XD } from "../../utils/x"
 import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb2ClearType } from "../shared/rb_types"
-import { Rb2EventControl } from "./event"
-import { Rb2LincleLink, Rb2MusicRecord, Rb2MusicRecordElement, Rb2PlayerReleasedInfo } from "./profile"
+import { Rb2LincleLink, Rb2MusicRecord, Rb2PlayerReleasedInfo } from "./profile"
 
 class Rb2PlayerStartData {
     @XD.s32() type = 0

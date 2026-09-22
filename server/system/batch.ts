@@ -1,5 +1,5 @@
-import { DBH } from "../utils/db/dbh"
 import { IBatchResult } from "../models/system/batch"
+import { DBH } from "../utils/db/dbh"
 import { isHigherVersion } from "../utils/utility_functions"
 
 export namespace Batch {

@@ -1,17 +1,17 @@
 import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
-import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { Rb1PlayerStart } from "../../models/rb1/common"
 import { Rb1MusicRecord, Rb1Player, Rb1PlayerBase, Rb1PlayerCustom, Rb1PlayerReleasedInfo, Rb1PlayerStat } from "../../models/rb1/profile"
+import { RbPlayerRead } from "../../models/shared/common"
 import { RbStageLogStandalone } from "../../models/shared/stage_log"
+import { hasAny } from "../../utils/utility_functions"
 import { findPlayerFromOtherVersion } from "../shared_game/find_player"
 import { generateUserId } from "../shared_game/generate_user_id"
-import { StageLogManager } from "../shared_game/stage_log_manager"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
-import { RbPlayerRead } from "../../models/shared/common"
 import { createSession, getSession, removeSession } from "../shared_game/session"
-import { hasAny } from "../../utils/utility_functions"
+import { StageLogManager } from "../shared_game/stage_log_manager"
+import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 
 export function registerRb1Handlers() {
     H.route("player.start?model=KBR", startPlayer)

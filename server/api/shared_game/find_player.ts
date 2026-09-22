@@ -1,3 +1,4 @@
+import { DBH } from "../../utils/db/dbh"
 import { Rb1PlayerBase } from "../../models/rb1/profile"
 import { Rb2PlayerBase } from "../../models/rb2/profile"
 import { Rb3PlayerAccount, Rb3PlayerBase } from "../../models/rb3/profile"
@@ -5,7 +6,6 @@ import { Rb4PlayerAccount, Rb4PlayerBase } from "../../models/rb4/profile"
 import { Rb5PlayerAccount, Rb5PlayerBase } from "../../models/rb5/profile"
 import { Rb6PlayerAccount, Rb6PlayerBase } from "../../models/rb6/profile"
 import { RbVersion } from "../../models/shared/rb_types"
-import { DBH } from "../../utils/db/dbh"
 
 type RbPlayerAccount = Rb6PlayerAccount | Rb5PlayerAccount | Rb4PlayerAccount | Rb3PlayerAccount
 type RbPlayerBase = Rb6PlayerBase | Rb5PlayerBase | Rb4PlayerBase | Rb3PlayerBase | Rb2PlayerBase | Rb1PlayerBase

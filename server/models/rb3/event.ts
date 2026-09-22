@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 import { Rb3VerdetDesKriegesResponse } from "./types"
 
 export class Rb3EventControl {

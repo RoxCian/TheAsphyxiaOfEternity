@@ -1,7 +1,7 @@
+import { DBH } from "../../utils/db/dbh"
 import { Rb6MiscSettings } from "../../models/rb6/misc_settings"
 import { RbVersion } from "../../models/shared/rb_types"
 import { RbSessionStorage } from "../../models/shared/session"
-import { DBH } from "../../utils/db/dbh"
 
 const sessionTimeout = 30 * 60 * 1000 // ms
 

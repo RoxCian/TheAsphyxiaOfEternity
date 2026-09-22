@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb4ChartType, Rb4ClearType } from "../shared/rb_types"
 
 export class Rb5MusicOldRecord {

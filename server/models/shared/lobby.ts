@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 import { RbChartType, RbColor, RbVersion } from "./rb_types"
 
 export class RbLobbyEntryElement<TVersion extends RbVersion> implements ICollection<`rb.rb${TVersion}.temporary.lobbyEntry`> {

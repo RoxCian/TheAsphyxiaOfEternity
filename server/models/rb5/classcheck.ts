@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 import { Rb5ClasscheckIndex, RbClasscheckClearType } from "../shared/rb_types"
 import { Rb5PlayerStageLog } from "./profile"
 

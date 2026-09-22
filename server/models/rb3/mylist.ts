@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD, XM, XSubMap } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 
 type Rb3MylistSlot = {
     slotId: number

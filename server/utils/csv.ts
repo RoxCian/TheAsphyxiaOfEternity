@@ -1,8 +1,8 @@
-import { resolve } from "path"
 import { readdirSync, readFileSync, statSync } from "fs"
+import { readFile } from "fs/promises"
+import { resolve } from "path"
 import { pluginDir } from "../system/const"
 import { Type } from "./types"
-import { readFile } from "fs/promises"
 
 export type CsvFile = {
     readonly path: string

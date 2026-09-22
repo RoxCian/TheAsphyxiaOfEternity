@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 import { Rb1ChartType } from "../shared/rb_types"
 
 export class Rb2EventControl {

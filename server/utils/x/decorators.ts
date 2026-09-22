@@ -1,8 +1,8 @@
+import { DBBigInt, Vector, Vector2, Vector2B, Vector3, Vector3B, Vector4, Vector4B, VectorB } from "../db/db_types"
+import { ArrayWrapper, isType, isTypeOrToken, Type, TypeToken } from "../types"
 import { XF } from "./functions"
 import { XM } from "./map_builder"
-import { DBBigInt, Vector, Vector2, Vector2B, Vector3, Vector3B, Vector4, Vector4B, VectorB } from "../db/db_types"
 import { XTypeExtended, XMap, XSubMap } from "./types"
-import { ArrayWrapper, isType, isTypeOrToken, Type, TypeToken } from "../types"
 
 export namespace XD {
     type PropertyDecorator<T = any> = (target: any, propKey: keyof T) => void

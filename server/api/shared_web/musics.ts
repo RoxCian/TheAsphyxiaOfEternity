@@ -1,8 +1,8 @@
 import { C } from "../../utils/controller"
-import { RbChartsInfo, RbMusicResponse, RbVersion } from "../../models/shared/web"
 import { rbMusicId } from "../../data/tables/rb_music_id"
 import { rbMusicInfo } from "../../data/tables/rb_music_info"
 import { rbChartInfo } from "../../data/tables/rb_chart_info"
+import { RbChartsInfo, RbMusicResponse, RbVersion } from "../../models/shared/web"
 
 export function registerMusicsController() {
     C.route("rbReadMusic", readMusic)

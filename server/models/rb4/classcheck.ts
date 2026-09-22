@@ -1,5 +1,5 @@
-import { ICollection } from "../../utils/db/db_types"
 import { XD } from "../../utils/x"
+import { ICollection } from "../../utils/db/db_types"
 import { Rb4DojoIndex, RbClasscheckClearType } from "../shared/rb_types"
 import { Rb4PlayerStageLog } from "./profile"
 

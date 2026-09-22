@@ -1,11 +1,11 @@
-import { DBH } from "../utils/db/dbh"
-import { initializeBatch } from "./batch_initialize"
-import { IPluginVersion } from "../models/system/plugin_version"
-import { isHigherVersion } from "../utils/utility_functions"
-import { Batch } from "./batch"
-import { pluginVersion } from "./const"
 import { removeAllLobbies } from "../api/shared_game/lobby"
 import { removeAllSessions } from "../api/shared_game/session"
+import { IPluginVersion } from "../models/system/plugin_version"
+import { DBH } from "../utils/db/dbh"
+import { isHigherVersion } from "../utils/utility_functions"
+import { Batch } from "./batch"
+import { initializeBatch } from "./batch_initialize"
+import { pluginVersion } from "./const"
 
 let initialized = false
 export async function initialize() {

@@ -1,9 +1,9 @@
+import { C } from "../../utils/controller"
+import { DBH } from "../../utils/db/dbh"
 import { rbPlayerIcon } from "../../data/tables/rb_player_icon"
 import { RbCommentBase } from "../../models/shared/comment"
 import { RbVersion } from "../../models/shared/rb_types"
 import { RbCommentResponse } from "../../models/shared/web"
-import { C } from "../../utils/controller"
-import { DBH } from "../../utils/db/dbh"
 
 export function registerCommentsController() {
     C.route("rbGetComments", getComments)

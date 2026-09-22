@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb6ChartType, Rb6ClearType } from "../shared/rb_types"
 
 export class Rb6MusicRecord implements ICollection<"rb.rb6.playData.musicRecord"> {

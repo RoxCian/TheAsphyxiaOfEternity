@@ -1,7 +1,7 @@
 import { XD } from "../../utils/x"
-import { Rb4ChartType, Rb4ClearType } from "../shared/rb_types"
-import { ArrayWrapper } from "../../utils/types"
 import { ICollection } from "../../utils/db/db_types"
+import { ArrayWrapper } from "../../utils/types"
+import { Rb4ChartType, Rb4ClearType } from "../shared/rb_types"
 
 export class Rb4MusicOldRecord {
     @XD.s16("mid") musicId: number

@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { DBBigInt } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb6EventControl } from "./event"
 import { Rb6ItemControl } from "./item"
 import { Rb6MusicRecord } from "./music_record"

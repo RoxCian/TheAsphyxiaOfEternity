@@ -3,13 +3,13 @@ import { DBH } from "../../utils/db/dbh"
 import { findChartInfoResponse, findCharts } from "../../data/tables/rb_chart_info"
 import { findMusicInfo } from "../../data/tables/rb_music_info"
 import { Rb1MusicRecord, Rb1PlayerBase, Rb1PlayerCustom, Rb1PlayerReleasedInfo, Rb1StageLog } from "../../models/rb1/profile"
+import { RbLobbySettings } from "../../models/shared/lobby"
 import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb1ChartType, RbColor, Rb1SettingsResponse, RbPlayerPerformanceResponse, RbAvailableItemResponse, RbWriteSettingsResponse } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { hasLeapDay } from "../../utils/utility_functions"
-import { RbLobbySettings } from "../../models/shared/lobby"
-import { RbSettingsFactory, contextQueryElement, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 import { readAvailableItemsShared } from "../shared_web/available_items"
 import { computeQuickPerformanceScore } from "../shared_web/performance"
+import { RbSettingsFactory, contextQueryElement, readSettingsUsingFactory, writeSettingsUsingFactory } from "../shared_web/settings"
 
 type V = 1
 const version = 1 as const

@@ -1,10 +1,10 @@
 import { XD } from "../../utils/x"
 import { DBBigInt, ICollection } from "../../utils/db/db_types"
-import { Rb3Mylist } from "./mylist"
-import { Rb3MusicOldRecord, Rb3MusicRecord } from "./music_record"
-import { Rb2LincleLink } from "../rb2/profile"
 import { ArrayWrapper } from "../../utils/types"
+import { Rb2LincleLink } from "../rb2/profile"
 import { Rb1ChartType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbColor } from "../shared/rb_types"
+import { Rb3MusicOldRecord, Rb3MusicRecord } from "./music_record"
+import { Rb3Mylist } from "./mylist"
 
 export class Rb3PlayerAccount implements ICollection<"rb.rb3.player.account"> {
     readonly collection = "rb.rb3.player.account"

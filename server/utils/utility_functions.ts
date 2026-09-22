@@ -1,4 +1,4 @@
-import { GetType, isType, Type } from "./types"
+import { isType, Type } from "./types"
 
 export function toFullWidth(s: string): string {
     const resultCode: number[] = []

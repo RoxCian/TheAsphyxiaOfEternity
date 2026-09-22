@@ -1,6 +1,6 @@
+import { XD } from "../../utils/x"
 import { DBBigInt, ICollection } from "../../utils/db/db_types"
 import { ArrayWrapper } from "../../utils/types"
-import { XD } from "../../utils/x"
 import { Rb4ChartType, Rb4ClearType, Rb5ClasscheckIndex, Rb5MinigameType, RbClasscheckClearType, RbColor } from "../shared/rb_types"
 import { Rb5Classcheck } from "./classcheck"
 import { Rb5Mylist } from "./mylist"
