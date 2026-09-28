@@ -41,5 +41,6 @@ This project used some data for web UI and game from several external websites/p
 - [RemyWiki](http://remywiki.com) for some missing jackets.
 - [Bemaniutils](https://github.com/DragonMinded/bemaniutils) for structures of some events.<br/>
 - [Rb poor](https://github.com/cubele/rbsimulator) for .ply data analyzing.
+- Translated text of Verdet des Krieges provided by Google Gemini.
 
 I'm appreciated for their help.

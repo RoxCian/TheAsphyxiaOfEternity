@@ -1,29 +1,41 @@
 id,name,nameOrig,note,noteOrig
 ,,,,
 int,string,string,string?,string
-0,Count Vanessa de Verdet,ヴァネッサ・ド・ヴェルデ伯爵,,"とある領国を治める伯爵家に生まれ、壮年期に先代が没すると爵位を継承した。
+0,Count Vanessa de Verdet,ヴァネッサ・ド・ヴェルデ伯爵,"Born into a family of counts ruling over a certain territory, he inherited the title upon the death of his predecessor during his prime.
+Before long, a silver mine was discovered within the realm; a protracted conflict over mining rights ensued, leaving the land devastated.
+However, he eventually unleashed incredible power, personally taking to the battlefield to end the strife and leading his now-peaceful territory to prosperity.
+For a time thereafter, he was revered as an enlightened ruler who deeply cared for his people, but...","とある領国を治める伯爵家に生まれ、壮年期に先代が没すると爵位を継承した。
 ほどなく領内に銀鉱山が発見され、採掘権を巡る争いが長く続き領国は荒廃。
 しかしある時、信じがたい力を発揮し、自ら戦って紛争を終結させ、平和が訪れた領国を繁栄に導く。
 その後しばらくの間、領民を思いやる名君として慕われていたのだが……"
-1,Viscount Reinhard,ラインハルト子爵,,"ヴェルデ伯爵と共に戦い、領国平定に貢献した伯爵の親戚。
+1,Viscount Reinhard,ラインハルト子爵,"A relative of Count Verdet who fought alongside him and contributed to the pacification of the territory.
+Lacking a high enough rank to hold a domain of his own, he remained in the Count's territory after the conflict ended, assisting with administration —
+only to find himself harboring a forbidden love for the breathtakingly beautiful Claudia.
+Where will his feelings ultimately lead him...?","ヴェルデ伯爵と共に戦い、領国平定に貢献した伯爵の親戚。
 爵位が低いので自分の領国は持っておらず、そのため紛争が終わった後も伯爵領で執政の補佐を務めていたのだが、
 あまりにも美しいクラウディアに道ならぬ恋慕を抱いてしまう。
 彼の想いが行き着く先は……？"
-2,Feuerrote Phönix,朱雀,,"伝説の神獣。
+2,Feuerrote Phönix,朱雀,"A legendary divine beast.
+Through a pact, it grants a human the ""power to shape the era"" — not to improve the world of men, but simply to observe human nature.
+As a divine beast, its true form remains invisible to human eyes.
+With but a single exception...","伝説の神獣。
 契約によって“時代を動かす力”を人間に与えるのだが、それは人の世を善くするためではなく、ただ単に人間の本性を観察するためである。
 神獣ゆえに、人間はその真の姿を見ることはできない。
 ただひとつの例外を除いて……"
 3,Claudia,クラウディア,"A young gorgeous girl shown at earldom in sudden of uncertain time before or after the end of the conflict.
 She is rumored to be either a survivor of a fallen noble family or the illegitimate child of royalty, but neither has been confirmed.
 She fell in love with and married the then-bachelor Count Verdet, becoming the Countess.
-After the marriage, she rarely left the castle, and the people of the domain had no way of knowing her situation.","正確な時期は不明だが紛争終結の前後、突如として伯爵領に現れた若く美しい女性。
+After the marriage, she rarely left the castle, and the people of the realm had no way of knowing her situation.","正確な時期は不明だが紛争終結の前後、突如として伯爵領に現れた若く美しい女性。
 没落貴族の生き残りとも王族の隠し子とも噂されるが、いずれも定かではない。
 独身だったヴェルデ伯爵と恋に落ち結婚、伯爵夫人となる。
 結婚後はほとんど城から出ず、領民はその様子を知る由も無い。"
-4,Maquire,マクイヤ,,"“最後のアサシン”と呼ばれている凄腕の暗殺者。
+4,Maquire,マクイヤ,"A highly skilled assassin known as ""Final Assassin.""
+Though unaware of it himself, he possesses a mysterious power — a gift that has helped him survive countless perilous assignments.
+He had once walked away from the assassination trade, but now he desperately needs a large sum of money to cure his younger sister, who has been struck by a cruel and inexplicable illness.
+And so, he takes on assassination contracts once more...","“最後のアサシン”と呼ばれている凄腕の暗殺者。
 本人は気付いていないが不思議な力を持っており、今まで危険な依頼を生き延びてこられたのは、その力のおかげでもある。
 一度は暗殺の仕事から足を洗ったのだが、理不尽な病に冒された妹を治すため、今は大金を必要としている。
 そしてふたたび暗殺依頼を請け負うのだが……"
-5,Power of Red,赤の力,,"感情の起伏やその心の振れ幅で炎を操ることができる。"
-6,Power of White,白の力,,"赤の力に対抗できる力。"
-7,Ash of Regret,懺悔の灰,,"赤い力に焼かれたすべての灰は異常に黒く、吸い込むと病を患うことから、人々に懺悔の灰と恐れられた。"
+5,Red Power,赤の力,"A force that can manipulate flames through the fluctuations of one's emotions and the intensity of their inner turmoil.","感情の起伏やその心の振れ幅で炎を操ることができる。"
+6,White Power,白の力,"A power capable of countering the Red Power.","赤の力に対抗できる力。"
+7,Ash of Atonement,懺悔の灰,"All the ash scorched by the red power was unnaturally black; because inhaling it caused illness, people feared it as the ""Ash of Atonement.""","赤い力に焼かれたすべての灰は異常に黒く、吸い込むと病を患うことから、人々に懺悔の灰と恐れられた。"

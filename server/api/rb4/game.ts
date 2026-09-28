@@ -132,8 +132,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         if (isNewMusic(s.musicId, 4)) base.totalBestScoreNewMusics += s.score
     }
 
-    classcheck.find(c => c.class === Rb4DojoIndex.shihandai)!.clearType = RbClasscheckClearType.clear
-
     const p = result.pdata
     p.account = account
     p.base = base
@@ -319,10 +317,14 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
         (classRecord.stageLogs[classRecord.stageLogs.length - 1].clearType ?? Rb4ClearType.failed) >= Rb4ClearType.clear ?
             RbClasscheckClearType.clear :
             RbClasscheckClearType.failed
-    if (isInitial || (clearTypeCurrent > clearTypeSaved && log.class < Rb4DojoIndex.examination)) {
+    if (isInitial || !classRecord.stageLogs) {
         isNeedUpdate = true
-        classRecord.clearType = log.clearType
-        classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
+        classRecord.stageLogs = stageLogs 
+    }
+    if (isInitial || clearTypeCurrent > clearTypeSaved) {
+        isNeedUpdate = true
+        classRecord.clearType = clearTypeCurrent
+        classRecord.stageLogs = stageLogs 
     }
     if (isInitial || (log.rank > classRecord.rank)) {
         isNeedUpdate = true
@@ -338,6 +340,7 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
     if (isInitial || (log.averageCompletionRateTimes100 > classRecord.averageCompletionRateTimes100)) {
         isNeedUpdate = true
         classRecord.averageCompletionRateTimes100 = log.averageCompletionRateTimes100
+        if (!classRecord.stageLogs || clearTypeCurrent >= clearTypeSaved || log.class < Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // same as VOLZZA and Reflesia
     }
     const time = stageLogs[stageLogs.length - 1]?.time ?? 0
     classRecord.lastPlayTime = time

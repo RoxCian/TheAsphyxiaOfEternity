@@ -10,7 +10,10 @@ export const rb3VerdetDesKriegesContents = loadCsv<Rb3VerdetDesKriegesContentRaw
     const phraseOrigParts = el.phraseOrig.split("$")
     if ((phraseParts?.length ?? 0) <= 1) {
         try {
-            if (el.phrase) result.phrase = [JSON.parse(el.phrase)]
+            if (el.phrase) {
+                if (el.phrase.startsWith("\"") && el.phrase.endsWith("\"")) result.phrase = el.phrase
+                else result.phrase = [JSON.parse(el.phrase)]
+            }
         } catch {
             result.phrase = el.phrase
         }
@@ -18,7 +21,8 @@ export const rb3VerdetDesKriegesContents = loadCsv<Rb3VerdetDesKriegesContentRaw
         result.phrase = []
         for (const ph of phraseParts!) {
             try {
-                result.phrase.push(JSON.parse(ph))
+                if (ph.startsWith("\"") && ph.endsWith("\"")) result.phrase.push(ph)
+                else result.phrase.push(JSON.parse(ph))
             } catch {
                 result.phrase.push(ph)
             }
@@ -26,7 +30,8 @@ export const rb3VerdetDesKriegesContents = loadCsv<Rb3VerdetDesKriegesContentRaw
     }
     if (phraseOrigParts.length <= 1) {
         try {
-            result.phraseOrig = [JSON.parse(el.phraseOrig)]
+            if (el.phraseOrig.startsWith("\"") && el.phraseOrig.endsWith("\"")) result.phraseOrig = el.phraseOrig
+            else result.phraseOrig = [JSON.parse(el.phraseOrig)]
         } catch {
             result.phraseOrig = el.phraseOrig
         }
@@ -34,7 +39,8 @@ export const rb3VerdetDesKriegesContents = loadCsv<Rb3VerdetDesKriegesContentRaw
         result.phraseOrig = []
         for (const ph of phraseOrigParts) {
             try {
-                result.phraseOrig.push(JSON.parse(ph))
+                if (ph.startsWith("\"") && ph.endsWith("\"")) result.phraseOrig.push(ph)
+                else result.phraseOrig.push(JSON.parse(ph))
             } catch {
                 result.phraseOrig.push(ph)
             }
