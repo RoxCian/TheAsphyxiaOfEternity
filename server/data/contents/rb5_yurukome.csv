@@ -1,137 +1,190 @@
 id,titleOrig,title,relatedMusicUid,relatedMusicId,comment,commentOrig,isRare
 ,,,,,,,
 int,string,string?,string,int,string?,string,boolean
-0,CODE:1,,5k01,707,,"スライドオブジェクトが特徴的でカッコイイ楽曲だよね～！
+0,CODE:1,,5k01,707,"The slide objects in this track are so distinctive and cool, right?!
+I wonder who HEXA really is...?!","スライドオブジェクトが特徴的でカッコイイ楽曲だよね～！
 HEXAさんって一体何者！？",FALSE
-1,Ghost Hunters,,5k02,708,,"うんててっててっー、ててっ！ギターの音がやっぱりいいよね！
+1,Ghost Hunters,,5k02,708,"Dun-te-te-te-te-te! Guitar sounds really are the best, aren't they!
+If I could play the guitar like that, it'd feel so awesome~","うんててっててっー、ててっ！ギターの音がやっぱりいいよね！
 ぼくもあんな風にギター弾けたら気持ちいいだろうな～",FALSE
-2,ヴェニスの慕情,,5k03,709,,"この曲を遊ぶとヴェニス行きたくなっちゃう！
+2,ヴェニスの慕情,,5k03,709,"Playing this song makes me want to go to Venice!
+I wonder if anyone will take me to Venice~?","この曲を遊ぶとヴェニス行きたくなっちゃう！
 ぼくをヴェニスに連れて行ってくれる人いないかな～？",FALSE
-3,Palma Lunae,,5k04,710,,Akhutaさんの不思議なメロディーが、ぼくを遠いところへ連れて行ってくれるよ～,FALSE
-4,幻影ノ消失,,5k05,711,,"たま～に幻影をみちゃうんだよね～。無いはずのモンブランとかいないはずのクリスピーさんとか…？
+3,Palma Lunae,,5k04,710,"Akhuta-san's mysterious melody carries me away to somewhere far, far away~",Akhutaさんの不思議なメロディーが、ぼくを遠いところへ連れて行ってくれるよ～,FALSE
+4,幻影ノ消失,,5k05,711,"Sometime~s I see illusions~. Like a Mont Blanc cake that shouldn't be there, or Qrispy-san when he isn't around...?
+Ah, wait, Qrispy-san is always with me, so that's not an illusion after all!","たま～に幻影をみちゃうんだよね～。無いはずのモンブランとかいないはずのクリスピーさんとか…？
 あ、クリスピーさんはいつも一緒にいるから幻影じゃないか！",FALSE
-5,雪月夜,,5k06,712,,Ryu☆さんの☆が今回は＊だったの、みんな気づいてたかな～？？,FALSE
-6,Follow the path,,5k07,713,,sotaさんのシンセってクリアでかっこいいよね～！ぼくも弾けるようになりたいな～♪,FALSE
-7,私をディスコに連れてって TOKYO,,5k08,714,,ちょっと前まで「CLUB」じゃなくて、「ディスコ」って言ってたんだよね～！,FALSE
-8,神よ、ニャンコを与えたまえ！,,5k10,715,,ULTIMATE SURVIVALで一番人気のあった楽曲だよ～！ニャンニャン！,FALSE
-9,Raving Fantasy,,5k11,716,,テンションアゲアゲで、ぼく、どこまでもいける感じがしたよ！カモンッ！,FALSE
-10,Storm Buster,,5k12,717,,"ULTIMATE SURVIVALで大人気だったこの楽曲、ノリノリって、この曲のためにあるって感じだよね～！
+5,雪月夜,,5k06,712,"Did everyone notice that Ryu☆-san's ""☆"" turned into a ""＊"" this time~??",Ryu☆さんの☆が今回は＊だったの、みんな気づいてたかな～？？,FALSE
+6,Follow the path,,5k07,713,Sota-san's synths are so clear and cool~! I wish I could play like that too~♪,sotaさんのシンセってクリアでかっこいいよね～！ぼくも弾けるようになりたいな～♪,FALSE
+7,私をディスコに連れてって TOKYO,,5k08,714,"Until a little while ago, people used to call it ""disco"" instead of ""CLUB"", right~!",ちょっと前まで「CLUB」じゃなくて、「ディスコ」って言ってたんだよね～！,FALSE
+8,神よ、ニャンコを与えたまえ！,,5k10,715,This was the most popular song in ULTIMATE SURVIVAL~! Meow meow!,ULTIMATE SURVIVALで一番人気のあった楽曲だよ～！ニャンニャン！,FALSE
+9,Raving Fantasy,,5k11,716,"The hype got me so pumped up, I felt like I could go anywhere! Come on!",テンションアゲアゲで、ぼく、どこまでもいける感じがしたよ！カモンッ！,FALSE
+10,Storm Buster,,5k12,717,"This song was super popular in ULTIMATE SURVIVAL! It feels like the word ""groovin'"" was made just for this song~!
+Let's shake our heads and wiggle our tails and dance~!","ULTIMATE SURVIVALで大人気だったこの楽曲、ノリノリって、この曲のためにあるって感じだよね～！
 頭フリフリおしりフリフリして踊っちゃおう～！",FALSE
-11,Viden,,5k13,718,,とっても神秘的な曲だよね～。ふか～い闇に吸い込まれそうな気持ちになっちゃうよ～,FALSE
-12,God bless you,,5k14,719,,と～ってもカッコいい曲だよね！曲名の通り、みんなに幸あれ～♪,FALSE
-13,SERVI,,5k15,720,,"曲名を直前で変えちゃったんだって～！前の曲名はジャケットの目がヒントらしいんだけど教えてくれないんだよね～。
+11,Viden,,5k13,718,It's such a mysterious song~. It makes me feel like I'm being sucked into a dee~p darkness~,とっても神秘的な曲だよね～。ふか～い闇に吸い込まれそうな気持ちになっちゃうよ～,FALSE
+12,God bless you,,5k14,719,"It's a ve~ry cool song! Just like the song title says, blessings to everyone~♪",と～ってもカッコいい曲だよね！曲名の通り、みんなに幸あれ～♪,FALSE
+13,SERVI,,5k15,720,"I heard they changed the song title at the last minute~! Apparently the jacket art's eyes give a hint about the old title, but nobody will tell me~.
+They said it took 5 years to finish this masterpiece, but I wonder if that's really true~!?","曲名を直前で変えちゃったんだって～！前の曲名はジャケットの目がヒントらしいんだけど教えてくれないんだよね～。
 5年がかりで仕上げた大作だって言ってたけど、ほんとかな～！？",FALSE
-14,True Blue [DJ Command Mix],,5k16,721,,"TAKAさんの名曲がさらにテンションアゲアゲになって、ぼくもテンションアゲアゲだよ！
+14,True Blue [DJ Command Mix],,5k16,721,"TAKA-san's classic song got even more hyped up, and now I'm super hyped up too!
+Ah, now I really want to eat fried chicken together with TOTTO-san!","TAKAさんの名曲がさらにテンションアゲアゲになって、ぼくもテンションアゲアゲだよ！
 あ、TOTTOさんとからあげを一緒に食べたくなってきたなぁ",FALSE
-15,XiNX,,5k17,722,,"cosMoさんのメロディーと96さんのギターがマッチして、とっても楽しい曲だね～♪
+15,XiNX,,5k17,722,"cosMo-san's melody and 96-san's guitar match so well, it's such a fun song~♪
+It really brightens up my mood!","cosMoさんのメロディーと96さんのギターがマッチして、とっても楽しい曲だね～♪
 明るい気分になってきたよ！",FALSE
-16,Sapphire,,5k18,723,,"深いエコーみたいなのがとっても気持ちいいんだ～。きれいな光が見えるような曲だね！
+16,Sapphire,,5k18,723,"That deep echo effect feels so good~. It's like a song where you can see a beautiful light!
+I get so excited whenever I play this song!","深いエコーみたいなのがとっても気持ちいいんだ～。きれいな光が見えるような曲だね！
 ぼくこの曲遊ぶとウキウキしちゃう！",FALSE
-17,JUST AFTER DARK -零-,,5k19,724,,"ぼく、じつは暗いところが苦手なんだよね～。
+17,JUST AFTER DARK -零-,,5k19,724,"To be honest, I'm actually not very good with dark places~.
+Eh, you already knew that!? Where did you hear that from~?","ぼく、じつは暗いところが苦手なんだよね～。
 え、知ってるって！？どこで知ったの～？",FALSE
-18,いただき! 桃色ゾンビにあん,,5k20,725,,ゾンビさんって怖いイメージがあるけど、桃色のゾンビさんならお友達になれそうな気がするよ！,FALSE
-19,リフレクラジカル,,5k21,726,,"りふれ、くらじかる？？って読んじゃった。りふれく、らじかるだからね～！
+18,いただき! 桃色ゾンビにあん,,5k20,725,"Zombies usually seem scary, but if it's a pink zombie, I feel like we could become friends!",ゾンビさんって怖いイメージがあるけど、桃色のゾンビさんならお友達になれそうな気がするよ！,FALSE
+19,リフレクラジカル,,5k21,726,"I accidentally read it as ""Refle, Classical??"" It's actually ""Reflec, Radical""!
+Don't get it wrong, everyone~!!","りふれ、くらじかる？？って読んじゃった。りふれく、らじかるだからね～！
 みんな間違えないでね～！！",FALSE
-20,Jungle Jungle,,5k22,727,,"ジャングルに行けば、ぼくもわいるどになれるかなぁ？
+20,Jungle Jungle,,5k22,727,"If I go to the jungle, I wonder if I can become wild too?
+Call me Wild Pastel-kun! Ehehe~ pretty cool, right!?","ジャングルに行けば、ぼくもわいるどになれるかなぁ？
 名付けてわいるどパステルくん！えへへ～かっこいいでしょ！？",FALSE
-21,Crazy Jackpot,,5k23,762,,"曲中のきれいなボイスはmayumi morinagaさんだってみんな知ってたかな～？
+21,Crazy Jackpot,,5k23,762,"Did everyone know that the beautiful vocals in this song belong to Mayumi Morinaga-san~?
+Crazy crazy jackpot!","曲中のきれいなボイスはmayumi morinagaさんだってみんな知ってたかな～？
 Crazy crazy jackpot！",FALSE
-22,アイリス,,5k24,763,,みてみて～、ぼくのアイリスはどんな色かなぁ～？,FALSE
-23,DixieLand a la mode,,5k25,764,,"アラモード！おいしいの！？
+22,アイリス,,5k24,763,"Look, look~, I wonder what color my irises are~?",みてみて～、ぼくのアイリスはどんな色かなぁ～？,FALSE
+23,DixieLand a la mode,,5k25,764,"À la mode! Is it delicious!?
+Eh? It's not food... (;o;)","アラモード！おいしいの！？
 え？違うの…(;o;)",FALSE
-24,Get Future,,5k26,765,,"未来があるから今を大事にするんだよね！
+24,Get Future,,5k26,765,"Because there's a future, we have to cherish the present!
+Wait, did I just say something totally cool~?","未来があるから今を大事にするんだよね！
 あれ、今ぼくなんかかっこいいこと言ったかな～？",FALSE
-25,F/E/D/R(I Don't Care),,5k27,766,,"F/E/D/Rってなにかの略なのかなぁ？
+25,F/E/D/R(I Don't Care),,5k27,766,"Is F/E/D/R short for something?
+French Fries / Eclair / Dorayaki / Ramen? Oh man, now I'm getting hungry!","F/E/D/Rってなにかの略なのかなぁ？
 フライドポテト/エクレア/どら焼き/ラーメン？おなかすいてきちゃった！",FALSE
-26,Hastur,,5k28,767,,ブイブイ低音の効いたカッコいい曲だよね～！ブイブイブイブイ～！,FALSE
-27,I Am No One,,5k29,768,,"おなかに響く重低音がたまらないよね！
+26,Hastur,,5k28,767,It's such a cool track with awesome booming bass~! Vroom vroom~!,ブイブイ低音の効いたカッコいい曲だよね～！ブイブイブイブイ～！,FALSE
+27,I Am No One,,5k29,768,"That heavy bass resonating in my tummy is irresistible!
+Somehow, it's making me hungry again~","おなかに響く重低音がたまらないよね！
 なんだかおなかが空いてきたな～",FALSE
-28,MOON DUST,,5k30,769,,お月様の月屑は、少し寂しげに舞い落ちるんだね～,FALSE
-29,SEITEN NO TERIYAKI,,5k31,770,,照り焼きっておいしいよね！みんなは食べたことある～？,FALSE
-30,RAIN,,5k32,728,,雨の日ってなんだか切ない気持ちで一杯になるんだ～。みんなも心当たりないかな～？,FALSE
-31,THE LYCANTHROPE,,5k33,729,,"ガオーッ！おおかみ男だぞ～！！
+28,MOON DUST,,5k30,769,The moon dust from the moon flutters down so gently and sadly~,お月様の月屑は、少し寂しげに舞い落ちるんだね～,FALSE
+29,SEITEN NO TERIYAKI,,5k31,770,"Teriyaki is so tasty, isn't it! Has everyone tried it before~?",照り焼きっておいしいよね！みんなは食べたことある～？,FALSE
+30,RAIN,,5k32,728,"On rainy days, I get filled with a nostalgic, melancholic feeling~.
+Does anyone else feel the same way~?",雨の日ってなんだか切ない気持ちで一杯になるんだ～。みんなも心当たりないかな～？,FALSE
+31,THE LYCANTHROPE,,5k33,729,"RAWR! I'm a werewolf~!!
+Just kidding☆ Did I scare you?","ガオーッ！おおかみ男だぞ～！！
 な～んちゃって☆びっくりした？",FALSE
-32,NIRVANA,,5k34,730,,"いつものあさきさんとちょっと違う感じの曲だね！
+32,NIRVANA,,5k34,730,"This song feels a bit different from Asaki-san's usual style!
+Like a ""Hello Asaki-San!"" kind of vibe☆","いつものあさきさんとちょっと違う感じの曲だね！
 Hello Asaki-San！みたいな☆",FALSE
-33,FIRE 2,,5k36,731,,"泉さんのギターはいつもかっこよくて、ぼくシビレちゃう！ギュィィィ～ン！
+33,FIRE 2,,5k36,731,"Izumi-san's guitar play is always so cool, it gives me shivers! Gyoowwwwn!
+I hope he can teach me how to play someday~","泉さんのギターはいつもかっこよくて、ぼくシビレちゃう！ギュィィィ～ン！
 いつか教えてもらいたいな～",FALSE
-34,Crystalia,,5k37,732,,"TOTTOさんに聞いたんだけど実はこの曲イラストが先に出来上がっていたんだって！
+34,Crystalia,,5k37,732,"TOTTO-san told me that the artwork for this song was actually finished first!
+It's such a dreamlike song, feels like stepping into another world~!","TOTTOさんに聞いたんだけど実はこの曲イラストが先に出来上がっていたんだって！
 とても幻想的な曲で、違う世界に入りこんだみたいだね～！",FALSE
-35,Journey,,5k39,734,,"猫叉Masterさんの世界にぼくも遊びに行ってみたいな～。
+35,Journey,,5k39,734,"I'd love to visit Nekomata Master-san's world too~.
+I feel like I could make so many friends there, like deers, sheep, and cats~!","猫叉Masterさんの世界にぼくも遊びに行ってみたいな～。
 鹿さんとか、ひつじさんとか、ねこさんとか、たくさんお友達できそうだよね～！",FALSE
-35,Winter Gift ～クリスピーからの贈りもの～,,5k38,733,,キラキラ輝くクリスピーさんからの贈り物、ぼくとみんなで一生懸命ラッピングしたよ！,FALSE
-37,ORIENTAL MESIA,,5k40,795,,オリエンタルな料理を食べたくなったよ～。今夜のごはんはそうしよう！,FALSE
-38,CODE:2,,5k42,771,,"だからHEXAさんって一体何者なの！？
+36,Winter Gift ～クリスピーからの贈りもの～,,5k38,733,Qrispy-san's sparkling gift—everyone and I worked really hard to wrap it up!,キラキラ輝くクリスピーさんからの贈り物、ぼくとみんなで一生懸命ラッピングしたよ！,FALSE
+37,ORIENTAL MESIA,,5k40,795,Now I really craving some oriental food~. Let's have that for dinner tonight!,オリエンタルな料理を食べたくなったよ～。今夜のごはんはそうしよう！,FALSE
+38,CODE:2,,5k42,771,"Seriously, who in the world IS HEXA-san!?
+That thumping bass is vibrating right through my tummy~!","だからHEXAさんって一体何者なの！？
 ドスドス低音がおなかに響いてくる～！",FALSE
-39,斬刀鬼,,5k43,735,,"鬼を斬るための刀があるって、Des-ROWさんが言ってたんだよね！
+39,斬刀鬼,,5k43,735,"Des-ROW-san told me there's a katana made specifically for slaying demons!
+He also said there's a katana that only a demon can unsheath... I wonder if it's related to this song~!?","鬼を斬るための刀があるって、Des-ROWさんが言ってたんだよね！
 鬼しか鞘から抜くことができない刀もあるって言ってた…。この曲と関係あるのかな～！？",FALSE
-40,Like a nameless flower,,5k44,796,,"名前の無い花に名前をつけて歩く、そんな旅に出てみようかな～。
+40,Like a nameless flower,,5k44,796,"Maybe I'll go on a journey to give names to nameless flowers~.
+Doesn't that sound lovely?","名前の無い花に名前をつけて歩く、そんな旅に出てみようかな～。
 なんだか素敵じゃない？",FALSE
-41,Rebellio,,5k45,775,,"どっひゃ～！リフレクビート史上初めての【難易度13】だよ～！
+41,Rebellio,,5k45,775,"Whoa-oh! It's the very first [Difficulty Level 13] in REFLEC BEAT history~!
+I heard ""Rebellio"" means rebel! The groaning sounds, the violin, and the tolling bells... I can't stop shivering!","どっひゃ～！リフレクビート史上初めての【難易度13】だよ～！
 Rebellioって反逆者って意味があるんだって！誰かのうめき声みたいな音とバイオリン、鐘の音、ゾクゾクが止まらないよ～！",FALSE
-42,SAMBA de 恋心,,5k46,782,,"サンバのリズムに合わせてぼくも踊っちゃうよ～♪
+42,SAMBA de 恋心,,5k46,782,"I'm dancing along to the samba rhythm too~♪
+Come on, don't be shy, Let's Samba!","サンバのリズムに合わせてぼくも踊っちゃうよ～♪
 ほらっ、キミも恥ずかしがらずに、レッツサンバ！",FALSE
-43,Precious ☆ Star,,5k47,797,,"ボーカルのえなこさんはとても人気のこすぷれいやーでもあるんだって！
+43,Precious ☆ Star,,5k47,797,"I heard the vocalist Enako-san is also a super popular cosplayer!
+She probably owns way more clothes than I do~!","ボーカルのえなこさんはとても人気のこすぷれいやーでもあるんだって！
 ぼくよりたくさんお洋服もってそうだよね～！",FALSE
-44,Disable Mark,,5k48,798,,"すごくトガッてるのに、なんか哀愁！
+44,Disable Mark,,5k48,798,"It's super edgy, yet somehow so sorrowful!
+These two make such a perfect pair! And wow, those drum sounds are sharp~!","すごくトガッてるのに、なんか哀愁！
 この2人の相性はバッチリだね！それにしても、ドラムの音がするどいね～！",FALSE
-45,ruin of opals,,5k49,799,,"こんなにピアノが弾けたなら、ぼくもきっと違った人生を歩んでいたんだろうなぁ。
+45,ruin of opals,,5k49,799,"If I could play the piano like this, I bet I'd be living a completely different life.
+Appearing in REFLEC BEAT as Pianist Pastel-kun! ...Just kidding☆","こんなにピアノが弾けたなら、ぼくもきっと違った人生を歩んでいたんだろうなぁ。
 ピアニストパステルくんとしてリフレクビートに登場！なんてね☆",FALSE
-46,EXOTICA,,5k50,800,,エキゾチックとサイバーが融合したまさに3rd seasonな一曲だよね！,FALSE
-47,The 5th KAC DJ TOTTO's SELECTION,,5k51,776,,"すごく懐かしい曲も入ってて思い出がよみがえってくるね！
+46,EXOTICA,,5k50,800,"It's truly a 3rd season track, fusing exotic vibes with cyber sounds!",エキゾチックとサイバーが融合したまさに3rd seasonな一曲だよね！,FALSE
+47,The 5th KAC DJ TOTTO's SELECTION,,5k51,776,"It includes some really nostalgic tracks, so many memories are coming back!
+If there's a next time, which songs will be added? There are too many masterpieces to choose from~","すごく懐かしい曲も入ってて思い出がよみがえってくるね！
 次があったらどの曲が入るかなあ？名曲が多すぎて選びきれないよ～",FALSE
-48,Black or Red?,,5k53,802,,"う～ん、なんかいろいろ考えさせられるいい歌詞だね～！
+48,Black or Red?,,5k53,802,"Hmm, these lyrics really make you think about a lot of things~!
+By the way, I like both black and red~","う～ん、なんかいろいろ考えさせられるいい歌詞だね～！
 ちなみにぼくは黒も赤も好きだよ～",FALSE
-49,Dreaming,,5k52,801,,"この曲を遊ぶと、どこにでも飛んでいけちゃいそうな気がするな～！
+49,Dreaming,,5k52,801,"Playing this song makes me feel like I could fly anywhere!
+Yay~, I'm Dreaming Pastel-kun~!","この曲を遊ぶと、どこにでも飛んでいけちゃいそうな気がするな～！
 わ～い、ゆめみるパステルくんだよ～！",FALSE
-50,黒髪乱れし修羅となりて～凛 edition～,,5t20,810,,"凛ちゃん！ちくわ姫決定おめでと～！
+50,黒髪乱れし修羅となりて～凛 edition～,,5t20,810,"Rin-chan! Congrats on becoming the Chikuwa Princess~!
+Chikuwa is super handy for soaking up oden broth, right~! Everyone should try it~★","凛ちゃん！ちくわ姫決定おめでと～！
 ちくわっておでんの汁を吸うときべんりだよね～！みんなもやってみてね～★",FALSE
-51,去る金合戦,,5t18,774,,ぼくもこんなヘアスタイルしてみたいなぁ～！似合うとおもうんだよね～！,FALSE
-52,加油!元気猿!,,5t16,772,,今年は申年だね～！ぼくもおさるさんみたいに高い木の上をとび回れたらなぁ～,FALSE
-53,Monkey Business,,5t17,773,,おさるでビジネスってどうやるの？ぼくにもできる？,FALSE
-54,カラフルミニッツ,,1k01,13,,"ぼくがはじめて登場した楽曲なんだよ！
+51,去る金合戦,,5t18,774,I wanna try out a hairstyle like this too~! I think it would look great on me~!,ぼくもこんなヘアスタイルしてみたいなぁ～！似合うとおもうんだよね～！,FALSE
+52,加油!元気猿!,,5t16,772,This year (2016) is the Year of the Monkey~! I wish I could swing around high up in the trees like a monkey too~,今年（2016）は申年だね～！ぼくもおさるさんみたいに高い木の上をとび回れたらなぁ～,FALSE
+53,Monkey Business,,5t17,773,How do you do business as a monkey? Can I do it too?,おさるでビジネスってどうやるの？ぼくにもできる？,FALSE
+54,カラフルミニッツ,,1k01,13,"This is the very first song where I ever appeared!
+If I fix the clock, even the deep darkness will be dyed in bright colors♪","ぼくがはじめて登場した楽曲なんだよ！
 ぼくが時計を直せば、深い闇もカラフルに染まるよ♪",FALSE
-55,Twinkle Wonderland,,2k02,94,,ぼくのお友達、ぶたみたいなネコさんが、Twinkle Worldに素敵な音色を届けてくれた曲だよ♪,FALSE
-56,空色コンチェルト,,2k05,97,,"お空で演奏会を開いたときに、ぼくのお友達のひよこみたいなことりさんが指揮者をやったんだ～♪
+55,Twinkle Wonderland,,2k02,94,"This is the track where my friend, a cat that looks like a pig, brought wonderful melodies to Twinkle World♪",ぼくのお友達、ぶたみたいなネコさんが、Twinkle Worldに素敵な音色を届けてくれた曲だよ♪,FALSE
+56,空色コンチェルト,,2k05,97,"When we held a concert up in the sky, my friend—a little bird that looks like a chick—was the conductor~♪
+Everyone played so well, I was so moved~★","お空で演奏会を開いたときに、ぼくのお友達のひよこみたいなことりさんが指揮者をやったんだ～♪
 みんな上手で感動しちゃった～★",FALSE
-57,Fly to Next World,,2k30,122,,進む勇気さえあれば、新しい世界へ続く扉はいつも近くにあるんだよ～,FALSE
-58,Starry ☆ night,,2t19,141,,サントラ特典でついてきたクリスピーさんのミニアルバムに収録された楽曲だよ！みんな覚えてるかな？？,FALSE
-59,cloche,,2t27,149,,"ぼくのお友達のボブくんは、決まった時間に鐘を鳴らすお仕事しているんだよ！もちろんおやつの時間もね！
+57,Fly to Next World,,2k30,122,"As long as you have the courage to step forward, the door to a new world is always close by~",進む勇気さえあれば、新しい世界へ続く扉はいつも近くにあるんだよ～,FALSE
+58,Starry ☆ night,,2t19,141,This song was included in Qrispy-san's mini-album that came with the soundtrack bonus! Does everyone remember it??,サントラ特典でついてきたクリスピーさんのミニアルバムに収録された楽曲だよ！みんな覚えてるかな？？,FALSE
+59,cloche,,2t27,149,"My friend Bob-kun's job is to ring the bell at set times! Of course, that includes snack time too!
+That's why whenever I see Bob-kun's face, I always think of snacks~★","ぼくのお友達のボブくんは、決まった時間に鐘を鳴らすお仕事しているんだよ！もちろんおやつの時間もね！
 だからぼくはボブくんのお顔をみるといつもおやつ思い出しちゃうんだよね～★",FALSE
-60,snow prism,,3k01,188,,"つぎドカっていうイベントで披露した楽曲だよ！
+60,snow prism,,3k01,188,"This song was revealed during the Tsugidoka event!
+I cheered for Qrispy-san together with Hiumi-chan~★","つぎドカっていうイベントで披露した楽曲だよ！
 ぼくは氷海ちゃんと一緒にクリスピーさんを応援したんだ～★",FALSE
-61,Almace - HI SPEED EDITION -,,3k17,204,,"ぼくが時計の修理をしてるときに撮影された楽曲なんだよ！
+61,Almace - HI SPEED EDITION -,,3k17,204,"This song was filmed while I was repairing the clock!
+When I popped out from the middle of the clock, I was so surprised to see so many cameras~★","ぼくが時計の修理をしてるときに撮影された楽曲なんだよ！
 時計の真ん中から飛び出したらカメラがいっぱいあってビックリしちゃった～★",FALSE
-62,printemps,,3k35,250,,"暖かい春の日にふわふわした綿毛がたっくさん飛んできたんだ～。
+62,printemps,,3k35,250,"On a warm spring day, a whole lot of fluffy dandelion seeds came floating by~.
+They looked so delicious that I reached out my hand, but I got blown away along with them instead~. Ehehe~","暖かい春の日にふわふわした綿毛がたっくさん飛んできたんだ～。
 おいしそうだったから手を伸ばしてみたんだけど、一緒に飛ばされちゃったんだよね～。えへへ～",FALSE
-63,anemone,,3k37,267,,"クリスピーさんとS-C-Uさんのコラボ楽曲！きつねさんと一緒にティータイムしたんだ～！
+63,anemone,,3k37,267,"A collaboration track between Qrispy-san and S-C-U-san! We had tea time together with a fox!
+I brought black tea and Mont Blanc cakes, but it turned out the fox preferred Japanese sweets~!","クリスピーさんとS-C-Uさんのコラボ楽曲！きつねさんと一緒にティータイムしたんだ～！
 ぼくは、紅茶とモンブランを持ち寄ったんだけど、きつねさんは和菓子派だったんだよね～！",FALSE
-64,ロボット☆ライフ,,3k67,349,,クリスピーさん締め切りが近かったのかなぁ？ちょっと心配しちゃう、そんな歌詞だよね～！,FALSE
-65,カーテンコール・メモリーズ,,4k86,688,,"みんなREFLEC BEAT groovin'!!をたくさんプレーしてくれてどうもありがとう！！
+64,ロボット☆ライフ,,3k67,349,Was Qrispy-san running close to his deadline? The lyrics really make you worry a little~!,クリスピーさん締め切りが近かったのかなぁ？ちょっと心配しちゃう、そんな歌詞だよね～！,FALSE
+65,カーテンコール・メモリーズ,,4k86,688,"Thank you so much to everyone for playing REFLEC BEAT groovin'!! so much!!
+Ah, memories~. It's a wonderful ending track created by Qrispy-san and DJ TOTTO-san~!","みんなREFLEC BEAT groovin'!!をたくさんプレーしてくれてどうもありがとう！！
 なつかしいな～。クリスピーさんとDJ TOTTOさんが作ってくれた素敵なエンディング曲だよ～！",FALSE
-66,夏色DIARY 懐色DIEARY,,4m12,687,,"夏休みにね、知らない街をたっくさん歩いたんだ～。
+66,夏色DIARY 懐色DIEARY,,4m12,687,"During summer vacation, I walked around so many unfamiliar towns~.
+Eating hiyashi chuka (chilled noodles), drinking Ramune, packing tons of snacks in my backpack... It was so much fun~★","夏休みにね、知らない街をたっくさん歩いたんだ～。
 冷やし中華を食べたり、ラムネ飲んだり、おかしをリュックに沢山つめて…。楽しかったな～★",FALSE
-67,CODE:1 [revision 0.9.8],,5k54,815,,0.9.8っていうことは、これがCODE:1のプロトタイプみたいなものなのかな～？,FALSE
-68,Mathematical Love,,5k55,816,,数学って難しくてよくわからないよ。おにぎりの数なら数えられるんだけどな～。えへへ,FALSE
-69,とっと　トット　TOTTO,𝕋𝕆𝕋𝕋𝕆 𝑻𝑶𝑻𝑻𝑶 TOTTO,-,-1,,"どっひゃ～！
+67,CODE:1 [revision 0.9.8],,5k54,815,"Since it says 0.9.8, does that mean this is like a prototype for CODE:1~?",0.9.8っていうことは、これがCODE:1のプロトタイプみたいなものなのかな～？,FALSE
+68,Mathematical Love,,5k55,816,"Math is so difficult, I don't really get it. If it's counting rice balls, I can do that though~. Ehehe",数学って難しくてよくわからないよ。おにぎりの数なら数えられるんだけどな～。えへへ,FALSE
+69,とっと　トット　TOTTO,𝕋𝕆𝕋𝕋𝕆 𝑻𝑶𝑻𝑻𝑶 TOTTO,-,-1,"\ *Squeak* /
+TOTTO-san over there, TOTTO-san over here! The world is overflowing with TOTTO-sans~♪","どっひゃ～！
 あっちもTOTTOさん、こっちもTOTTOさん！世界がTOTTOさんで溢れてるよ～♪",TRUE
-70,WE ARE YOU ARE VENUS!!,,-,-1,,"VENUSの楽曲を3回もプレーしたの？
+70,WE ARE YOU ARE VENUS!!,,-,-1,"You played VENUS songs 3 times?
+I like VENUS too, but you must really love them! Nfufu~","VENUSの楽曲を3回もプレーしたの？
 ぼくもVENUS好きだけど君も結構すきなんだねぇ～！んふふ",TRUE
-71,絶望と背徳のゆるコメ,Casual comment about despair and immoral,-,-1,,"どっひゃ～！
+71,絶望と背徳のゆるコメ,Casual comment about despair and immoral,-,-1,"\ *Squeak* /
+Maximizer-san three times in a row!! Despair everywhere!","どっひゃ～！
 マキシマイザーさん3連発！！絶望がいっぱいだよ！",TRUE
-72,Pleasure with VOLZZA,,5k56,820,,"この音どこかで聴いたことある気がするなぁ～？あ！VOLZZAで使われてた曲がつながってる～！
+72,Pleasure with VOLZZA,,5k56,820,"I feel like I've heard this sound somewhere before~? Ah! Songs used in VOLZZA are connected together~!
+I wonder why it feels even more intense now~!?","この音どこかで聴いたことある気がするなぁ～？あ！VOLZZAで使われてた曲がつながってる～！
 なんだかさらに激しいような気がするのはなんでだろう～！？",FALSE
-73,在るが儘に,,5k57,821,,"バンドのみんなで作ったんだって！
+73,在るが儘に,,5k57,821,"I heard everyone in the band made this together!
+I was actually planning to join with my guitar too, but my schedule didn't work out~♪","バンドのみんなで作ったんだって！
 ぼくもギター弾いて参加する予定だったんだけど、予定が合わなかったんだ～♪",FALSE
-74,Crafty Savior,,5k58,822,,「HuΣeR」ってなんて読むのかなぁ？Σは首を横にして読むのかなぁ？,FALSE
-75,H@ppy Choice,,5t21,823,,ヒョウ柄のふんどしだって～。ぼくにも似合うかな？,FALSE
-76,O JIYA,,5t22,824,,カレーが食べたくなっちゃう曲だよね～！え？ぼくだけ？,FALSE
-77,Little Prayer,,5t23,825,,"ドラムのリズムが印象的だよね～。
+74,Crafty Savior,,5k58,822,"I wonder how you pronounce ""HuΣeR""? Do you tilt your head sideways to read the ""Σ""?",「HuΣeR」ってなんて読むのかなぁ？Σは首を横にして読むのかなぁ？,FALSE
+75,H@ppy Choice,,5t21,823,A leopard-print loincloth~. I wonder if it would look good on me too?,ヒョウ柄のふんどしだって～。ぼくにも似合うかな？,FALSE
+76,O JIYA,,5t22,824,"This song really makes you crave curry, doesn't it~! Eh? Is it just me?",カレーが食べたくなっちゃう曲だよね～！え？ぼくだけ？,FALSE
+77,Little Prayer,,5t23,825,"The drum rhythm is so catchy~.
+Zutan-tan-tan♪ Zutan-tan-tan♪ This repeating rhythm is making me feel kinda sleepy~ zzz","ドラムのリズムが印象的だよね～。
 ズタンタンタン♪ズタンタンタン♪繰り返しのリズムに、なんだか眠くなっちゃうよ～zzz",FALSE
-78,カモミール・バスルーム,,5t24,826,,"バスルームをカモミールの香りでいっぱいにしてゆっくりあったまろうかな♪
+78,カモミール・バスルーム,,5t24,826,"Maybe I'll fill the bathroom with the scent of chamomile and take a nice, warm soak♪
+Hmm? What does ""normie"" (riajuu) mean?","バスルームをカモミールの香りでいっぱいにしてゆっくりあったまろうかな♪
 ん？リア充ってなぁに？",FALSE
-79,El Dorado,,5t25,827,,"ぼくにとってのエルドラドは…あそこかな～。
+79,El Dorado,,5t25,827,"My El Dorado would be... over there, I guess~.
+Eh, where's ""there""? That's a secret~☆","ぼくにとってのエルドラドは…あそこかな～。
 え、どこだって？内緒だよ～☆",FALSE
-80,under control,,5t26,828,,"あたまをフリフリしたくなっちゃう曲だよね～！
+80,under control,,5t26,828,"This song makes you want to bob your head~!
+How do people make voices like that? I wonder if I can do it too?","あたまをフリフリしたくなっちゃう曲だよね～！
 こういう声ってどうやってだすのかなぁ？ぼくにもできるかなぁ？",FALSE
-81,"Good bye, Summer～さよならは言わない～",,5m02,829,,軽音部廃部寸前なの～？ぼく入部しようか～？,FALSE
+81,"Good bye, Summer～さよならは言わない～",,5m02,829,Is the light music club about to be disbanded~? Should I join the club~,軽音部廃部寸前なの～？ぼく入部しようか～？,FALSE
