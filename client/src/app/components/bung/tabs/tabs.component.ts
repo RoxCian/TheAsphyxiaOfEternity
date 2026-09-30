@@ -180,8 +180,10 @@ export class BungTabsComponent implements AfterViewInit, OnDestroy {
             this.direction.set(undefined)
             this.animateWrapper()?.nativeElement.removeEventListener("animationend", onAnimationEnd)
             this.animateWrapper()?.nativeElement.removeEventListener("animationcancel", onAnimationEnd)
-            this.animateWrapper()?.nativeElement.classList.remove("transit")
             requestAnimationFrame(() => {
+                // remove class here to make all things end in this frame
+                // it should resolve tab contents flickering
+                this.animateWrapper()?.nativeElement.classList.remove("transit")
                 this.checkStyle()
                 this.checkObserver()
                 this.#currentAnimation?.cancel()

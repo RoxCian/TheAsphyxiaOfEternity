@@ -56,6 +56,7 @@ export type Rb3VerdetDesKriegesPhrasePart = {
     clueId?: number
     highlight?: boolean
     annotation?: number
+    textStyle?: "italic" | "bold" | "bolditalic"
 }
 
 export type Rb3VerdetDesKriegesAppearance = {

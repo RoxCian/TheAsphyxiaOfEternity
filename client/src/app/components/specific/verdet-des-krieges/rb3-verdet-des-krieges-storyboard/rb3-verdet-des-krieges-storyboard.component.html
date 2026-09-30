@@ -9,6 +9,8 @@
                 @let clueAppearrance = part.clueId != undefined ? service.appearances.value()?.[part.clueId] : undefined;
                 <span [class.has-emphasis]="part.clueId != undefined"
                     [class.has-note]="part.annotation != undefined"
+                    [class.is-italic]="part.textStyle === 'italic' || part.textStyle === 'bolditalic'"
+                    [class.is-bold]="part.textStyle === 'bold' || part.textStyle === 'bolditalic'"
                     [style.--emphasis-color]="clueAppearrance?.textColor"
                     [style.--emphasis-background]="clueAppearrance?.background"
                     [style.--emphasis-color-dark]="clueAppearrance?.textColorDark"
@@ -42,6 +44,8 @@
                 @let clueAppearrance = part.clueId != undefined ? service.appearances.value()?.[part.clueId] : undefined;
                 <span [class.has-emphasis]="part.clueId != undefined"
                     [class.has-note]="part.annotation != undefined"
+                    [class.is-italic]="part.textStyle === 'italic' || part.textStyle === 'bolditalic'"
+                    [class.is-bold]="part.textStyle === 'bold' || part.textStyle === 'bolditalic'"
                     [style.--emphasis-color]="clueAppearrance?.textColor"
                     [style.--emphasis-background]="clueAppearrance?.background"
                     [style.--emphasis-color-dark]="clueAppearrance?.textColorDark"

@@ -53,12 +53,12 @@ number,number,string?,string
 1,1,"A figure whose features were far too symmetrical to belong to a human, wearing a subtle smile.",人としてはあまりに均整が取れすぎた容貌の何者かが、微笑みを浮かべつつ立っていた。
 1,1,"{""text"":""The Count"",""annotation"":0}$ had never seen such a being before. He had no inkling of how this entity had entered the castle.","{""text"":""伯爵"",""annotation"":0}$はこのような者を見たことがない。どうやって城に入ったのか見当も付かない。"
 1,1,"They appeared both male and female. They looked young, yet possessed a composure no youth could harbor.",男にも見えるし女にも見える。若者に見えるが若者には持ち得ない落ち着きも感じる。
-1,1,"{""text"":""\""Form a contract with me. I shall grant thee power.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「我と契約せよ。力を与えてやる」"",""highlight"":true}"
+1,1,"{""text"":""\""Form a contract with me. I shall grant thee power.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「我と契約せよ。力を与えてやる」"",""highlight"":true,""textStyle"":""bold""}"
 1,1,"It was an inscrutable entity. No price was requested, either. It was a suspicious contract with not a single point worthy of trust.",得体の知れない存在である。代償も不要という。信ずるに値する点などひとつもない、怪しげな契約である。
 1,1,And yet—the Count accepted instantly.,しかし――伯爵は即座に了承した。
 1,1,Was he drawn in by the speech and bearing of the figure before him?,眼前に立つ者の言葉と立ち居振る舞いに吸い込まれたのか、
 1,1,Or did he accept out of a desperate attempt to cling to any straw in his earnest desire to bring peace to his land? Or perhaps both?,あるいは領国に安寧をもたらしたい一心で、藁にもすがる思いで契約を受け入れたのか、その両方なのか。
-1,1,"{""text"":""\""The contract is forged. Use this power as thou seest fit.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「契約は成った。この力、汝の思うままに使うかよい」"",""highlight"":true}"
+1,1,"{""text"":""\""The contract is forged. Use this power as thou seest fit.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「契約は成った。この力、汝の思うままに使うかよい」"",""highlight"":true,""textStyle"":""bold""}"
 1,1,"Leaving those words behind, the unidentified figure faded like smoke and vanished.",そう言い残し、どこの誰ともわからぬ人物は煙のように薄れて消えた。
 1,1,"In its place, a mark resembling a ring surfaced upon the ring finger of the Count's left hand.",それと入れ替わるように、伯爵の左手の薬指に、まるで指輪のようなアザが浮かび上がった。
 1,1,"Upon seeing the mark, the Count lost consciousness. When he next awoke, he was in his bedroom the ${""text"":""following morning"",""clueId"":1}$.","アザを見た伯爵は意識を失い、次に目覚めるとそこは${""text"":""翌朝"",""clueId"":1}$の寝室だった。"
@@ -220,21 +220,21 @@ number,number,string?,string
 3,4,It repelled the crimson hellfire—!,紅蓮の業火を跳ね返した――！
 3,4,"""...What is the meaning of this?""",「……どういうことだ？」
 3,4,"Now, the Count's complexion held not just shock, but a faint trace of anxiety. And the white light enveloping Maquire expanded even further, swallowing both the Count and ${""text"":""Claudia"",""annotation"":3}$, filling the grand hall with radiance before finally subsiding.","今や伯爵の顔色は驚きのみではなく、微かな不安が含まれている。そしてマクイヤを包む白い光はさらに大きく拡がり、伯爵と${""text"":""クラウディア"",""annotation"":3}$を呑み込み、大広間を輝きで満たした後、ようやく収まった。"
-3,4,"{""text"":[""\""Hehehe... Thanks to hovering between life and death, you awakened to the "",{""text"":""White Power"",""annotation"":6},"", didn't you?\""""],""highlight"":true,""textStyle"":""italic""}","{""text"":[""「フフフ……君、生死を彷徨ったおかげで、"",{""text"":""白の力"",""annotation"":6},""に目覚めたんだね」""],""highlight"":true}"
+3,4,"{""text"":[""\""Hehehe... Thanks to hovering between life and death, you awakened to the "",{""text"":""White Power"",""annotation"":6},"", didn't you?\""""],""highlight"":true,""textStyle"":""bolditalic""}","{""text"":[""「フフフ……君、生死を彷徨ったおかげで、"",{""text"":""白の力"",""annotation"":6},""に目覚めたんだね」""],""highlight"":true,""textStyle"":""bold""}"
 3,4,The owner of the voice belonged to neither the Count nor Claudia.,声の主は伯爵でもクラウティアでもなかった。
 3,4,"""Y-You are... from that time?!""",「そ、そなたは……あの時の！？」
 3,4,"The Count recognized the figure. They appeared both male and female. They looked young, yet possessed a composure no youth could harbor.",伯爵には見覚えがあった。男にも見えるし女にも見える。若者に見えるが若者には持ち得ぬ落ち着きかある。
 3,4,"The inscrutable entity who had granted the ""Red Power"" to Count Verdet three years ago—",３年前、ウェルデ伯爵に「赤の力」を与えた、得体の知れぬ者――
-3,4,"{""text"":[""\""My name is "",{""text"":""Feuerrote Phönix"",""annotation"":2},"". Because I received the White Power, my incarnation has broken.\""""],""clueId"":4,""highlight"":true,""textStyle"":""italic""}","{""text"":[""「私の名は"",{""text"":""朱雀"",""annotation"":2},""。白の力を受けたせいで、化身が解けてしまったよ」""],""clueId"":4,""highlight"":true}"
+3,4,"{""text"":[""\""My name is "",{""text"":""Feuerrote Phönix"",""annotation"":2},"". Because I received the White Power, my incarnation has broken.\""""],""clueId"":4,""highlight"":true,""textStyle"":""bolditalic""}","{""text"":[""「私の名は"",{""text"":""朱雀"",""annotation"":2},""。白の力を受けたせいで、化身が解けてしまったよ」""],""clueId"":4,""highlight"":true,""textStyle"":""bold""}"
 3,4,"Countess Claudia's true form—was the legendary divine beast, Phönix.",伯爵夫人クラウティアの真の姿は――伝説の神獣、朱雀だった。
 3,4,"""White Power? I don't understand it. All I know is that if you hadn't been here, none of this would have happened!""",「白の力？俺にはわからない。たたわかるのは、お前がいなければこんなことにはなっていなかった！」
 3,4,"Maquire shouted, glaring at Phönix with eyes full of rage. As if responding to Maquire's fury, his body began to emit a faint white light once more.",怒りを込めた目で朱雀を睨み叫ぶマクイヤ。その身体はマクイヤの激昂に呼応するかのごとく、再びうっすらと白い光を帯びつつある。
-3,4,"{""text"":""\""The White Power illuminates the truth...\nBut your interpretation is wrong. Incorrect.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「白の力は真実を照らす……\nたが君の解釈は違うな。間違っている」"",""highlight"":true}"
+3,4,"{""text"":""\""The White Power illuminates the truth...\nBut your interpretation is wrong. Incorrect.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「白の力は真実を照らす……\nたが君の解釈は違うな。間違っている」"",""highlight"":true,""textStyle"":""bold""}"
 3,4,"Wearing a faint smile, Phönix replied:",薄笑いを浮かべながら朱雀はこう答えた。
-3,4,"{""text"":""\""I merely granted the power. The one who decided how to use that power was that man.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「私は力を与えただけたよ。力の使い方を決めたのはその男さ」"",""highlight"":true}"
+3,4,"{""text"":""\""I merely granted the power. The one who decided how to use that power was that man.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「私は力を与えただけたよ。力の使い方を決めたのはその男さ」"",""highlight"":true}"
 3,4,"It was Phönix who had incarnated as the beauty named Claudia and proposed the invasion of neighboring lands. Yet it was neither coercion nor hypnosis. Ultimately, it had been the Count's own will.",クラウディアという美女に化身し、隣国への侵攻を提案したのは朱雀である。しかしそれは強制でも無く、催眠でも無い。あくまで伯爵の意志であった
 3,4,"Similarly, it was Phönix who had incited ${""text"":""Reinhard"",""annotation"":1}$ to rebel. Yet it was still Reinhard's own will to give up on persuading the Count and invite an assassin instead.","同様に、${""text"":""ラインハルト"",""annotation"":1}$に謀反を唆したのも朱雀である。しかし伯爵に対する説得を諦め暗殺者を招き入れたのは、やはりラインハルトの意志であった。"
-3,5,"{""text"":""\""Humans are truly fascinating.\nIf granted excessive power, they are swallowed by it and reveal their true natures.\nOr, to gain what they desire, they will try to bury even those with whom they have held hands for years.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「人間というものは実に面白い。\n過きた力を与えればそれに呑まれ、本性を露わにする。\nあるいは欲しいものを手に入れるためなら、何年も手を取り合ってきた人間すら葬り去ろうとする」"",""highlight"":true}"
+3,5,"{""text"":""\""Humans are truly fascinating.\nIf granted excessive power, they are swallowed by it and reveal their true natures.\nOr, to gain what they desire, they will try to bury even those with whom they have held hands for years.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「人間というものは実に面白い。\n過きた力を与えればそれに呑まれ、本性を露わにする。\nあるいは欲しいものを手に入れるためなら、何年も手を取り合ってきた人間すら葬り去ろうとする」"",""highlight"":true,""textStyle"":""bold""}"
 3,5,"The former alluded to ${""text"":""Count Verdet"",""annotation"":0}$, the latter to ${""text"":""Reinhard"",""annotation"":1}$. ${""text"":""Phönix"",""annotation"":2}$ leaked a chuckle, as if immersed in delight.","前者は${""text"":""ヴェルテ伯爵"",""annotation"":0}$を、後者は${""text"":""ラインハルト"",""annotation"":1}$を示唆しているのであろう。${""text"":""朱雀"",""annotation"":2}$は愉悦に浸るかのごとく、含み笑いを漏らす。"
 3,5,"""...I see. I was intoxicated by power, and lost sight of what was truly important.""",「……そうか。余は力に溺れ、大切なものを見失っていたというのか」
 3,5,,
@@ -242,7 +242,7 @@ number,number,string?,string
 3,5,"""I must atone... for the sins I have committed.""",「償わねばならぬな、犯した過ちを」
 3,5,,
 3,5,"Along with flames that burned with exceptional intensity, the Count embraced Phönix in his arms. He likely intended to burn Phönix while consuming himself in the flames. However—",一際激しく燃えさかる炎とともに、伯爵は朱雀をかき抱いた。自らの身を燃やしながら、朱雀をも燃やすつもりであったのたろう。ところが――
-3,5,"{""text"":""\""That was a wonderful distraction from boredom.\nI doubt I will meet you again, but someday I shall return to observe human nature once more.\nHahaha...\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「いい退屈しのぎだった。\n君らと会うことはもうないだろうが、またいつか人間の本性を見に来るよ。\nハハハハッ……」"",""highlight"":true}"
+3,5,"{""text"":""\""That was a wonderful distraction from boredom.\nI doubt I will meet you again, but someday I shall return to observe human nature once more.\nHahaha...\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「いい退屈しのぎだった。\n君らと会うことはもうないだろうが、またいつか人間の本性を見に来るよ。\nハハハハッ……」"",""highlight"":true,""textStyle"":""bold""}"
 3,5,,
 3,5,"With a loud laugh, Phönix vanished from the spot. The Count breathed his last within the flames he himself had created.",高笑いとともに朱雀はその場から消えてゆく。伯爵は自らが生み出した炎の中で息絶えた。
 3,5,,
