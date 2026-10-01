@@ -1,4 +1,4 @@
-import { Service, computed, inject, linkedSignal } from "@angular/core"
+import { Service, computed, effect, inject, linkedSignal, signal } from "@angular/core"
 import { Router } from "@angular/router"
 import { RbVersion } from "rbweb"
 import { RbProfileService } from "./rb-profile.service"
@@ -27,23 +27,30 @@ export class RbVersionService {
         for (const v of [6, 5, 4, 3, 2, 1] as RbVersion[]) if (this.validVersions()[v]) return v
         return 6
     })
-    private readonly versionInternal = linkedSignal(this.defaultVersion)
-    readonly version = this.versionInternal.asReadonly()
+    private readonly versionInRoute = signal<RbVersion | undefined>(undefined)
+    readonly version = computed(() => this.versionInRoute() ?? this.defaultVersion())
     private readonly router = inject(Router)
+
+    #initiated = false
 
     constructor() {
         const updateVersionFromRoute = () => {
             const p: string = this.router.parseUrl(this.router.url).queryParams["v"]
             if (!p) {
-                this.versionInternal.set(this.defaultVersion())
+                this.updateVersion(undefined)
                 return
             }
             const v = parseInt(p) as RbVersion
             if (!(v >= 1 && v <= 6)) return
             this.updateVersion(v)
         }
-        this.router.events.subscribe(updateVersionFromRoute)
-        updateVersionFromRoute()
+        this.router.events.subscribe(() => this.#initiated ? updateVersionFromRoute() : undefined)
+        effect(() => {
+            if (!this.isLoading() && !this.#initiated) {
+                this.#initiated = true
+                updateVersionFromRoute()
+            } 
+        })
     }
 
     changeVersion(version?: RbVersion) {
@@ -53,7 +60,7 @@ export class RbVersionService {
         this.router.navigateByUrl(urlTree)
     }
 
-    private updateVersion(version: RbVersion) {
-        this.versionInternal.set(version)
+    private updateVersion(version: RbVersion | undefined) {
+        this.versionInRoute.set(version)
     }
 }

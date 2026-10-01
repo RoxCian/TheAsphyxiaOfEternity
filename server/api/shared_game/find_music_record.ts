@@ -370,10 +370,10 @@ export function convertToRb3ClearType(clearType: RbBestMusicRecordClearType): Rb
         case RbBestMusicRecordClearType.failed: return Rb3ClearType.failed
         case RbBestMusicRecordClearType.clear:
         case RbBestMusicRecordClearType.hardClear:
-        case RbBestMusicRecordClearType.sHardClear:
+        case RbBestMusicRecordClearType.sHardClear: return Rb3ClearType.clear
         case RbBestMusicRecordClearType.fullCombo:
         case RbBestMusicRecordClearType.excellent:
-        case RbBestMusicRecordClearType.allJustReflecFullCombo: return Rb3ClearType.clear
+        case RbBestMusicRecordClearType.allJustReflecFullCombo: return Rb3ClearType.fullCombo
         default: return Rb3ClearType.none
     }
 }

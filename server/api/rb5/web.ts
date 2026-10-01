@@ -132,8 +132,8 @@ const readStageLogs: C.C<RbRequest, RbStageLogResponse<V, Rb4ChartType>[]> = asy
     .sort((l, r) => r.time - l.time || r.stageIndex - l.stageIndex)
     .map(toStageLogResponse))
 
-const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: 0 })
-const readReftisRecordUpdate: C.C<RbRequest, Rb5MinigameRecordUpdateResponse[]> = async data => (await DBH.find<Rb5MinigameRecordUpdate>(data.rid, { collection: "rb.rb5.playData.minigameRecordUpdate", minigameId: 0 })).sort((l, r) => r.time - l.time).slice(0, 10).map(u => ({
+const readReftis: C.C<RbRequest, Rb5MinigameType> = data => DBH.findOne<Rb5Minigame>(data.rid, { collection: "rb.rb5.playData.minigame", minigameId: { $in: [0, -1] } })
+const readReftisRecordUpdate: C.C<RbRequest, Rb5MinigameRecordUpdateResponse[]> = async data => (await DBH.find<Rb5MinigameRecordUpdate>(data.rid, { collection: "rb.rb5.playData.minigameRecordUpdate", minigameId: { $in: [0, -1] } })).sort((l, r) => r.time - l.time).slice(0, 10).map(u => ({
     minigameId: u.minigameId,
     sc: u.sc,
     time: new Date(u.time * 1000)

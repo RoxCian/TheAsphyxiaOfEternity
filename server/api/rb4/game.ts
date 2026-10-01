@@ -43,22 +43,10 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    const account = await DBH.findOne(rid, Rb4PlayerAccount, { collection: "rb.rb4.player.account" })
     const result = new Rb4PlayerSucceed()
-    if (!account) return XF.x(result)
-
-    const base = await DBH.findOne(rid, Rb4PlayerBase, { collection: "rb.rb4.player.base" }, true)
-    const released = await DBH.find(rid, Rb4PlayerReleasedInfo, { collection: "rb.rb4.player.releasedInfo" })
-    const record = await DBH.find(rid, Rb4MusicRecord, { collection: "rb.rb4.playData.musicRecord" })
-    result.name = base.name
-
-    result.lv = base.level
-    result.exp = base.experience
-    result.grd = base.matchingGrade
-    result.ap = base.abilityPointTimes100
-    result.money = base.money
-    if (released.length > 0) result.released.i = released
-    if (record.length > 0) result.mrecord.mrec = record
+    const player = await findPlayerFromOtherVersion(rid, 4)
+    if (!player) return XF.x(result)
+    result.name = player.name
     return XF.x(result)
 }
 const startPlayer: H.H = async data => {

@@ -4,60 +4,60 @@
     <button class="button is-info" type="button" (click)="onDownloadSaveFile()" [class.is-loading]="isDownloading()" [disabled]="isDownloading() || isUploading() || isDeleting()"><bung-icon icon="download">Download</bung-icon></button>
 </rb-settings-section>
 @if (versionService.version() === 6) {
-<rb-settings-section name="Import Asphyxia file">
-    <p><b>IMPORTANT: This feature is end of life and will be completely removed after v2.1</b></p>
-    <p>You can import play data from Asphyxia (version ~0.1 and ~0.2).</p>
-    <div class="asphyxia-import">
-        <div class="asphyxia-import-input-grid">
-            @let p = uploadingProfileData();
-            @let s = uploadingScoresData();
-            <input class="file-input profile-input" type="file" accept=".json" (change)="onChangeProfileDataToUpload($event)" #profileInput>
-            <button class="button file-cta profile-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
-                <bung-icon iconUrl="assets/icons/asphyxia-import.svg">Select rb.json ...</bung-icon>
-            </button>
-            <span class="file-name profile-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
-                @if (p) {
-                <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
-                    <span class="file-name-span">{{ p.name }}</span>
-                    <span class="file-size">{{ p.size | friendlyFileSize }}</span>
-                    <button class="delete" type="button" (click)="onClearProfileDataToUpload($event)"></button>
-                </div>
-                } @else {
-                <span class="is-size-7" style="opacity: 0.5" animate.enter="enter" animate.leave="leave">Click to select rb.json.</span>
-                }
-            </span>
+    <rb-settings-section name="Import Asphyxia file">
+        <p><b>IMPORTANT: This feature is end of life and will be completely removed after v2.1</b></p>
+        <p>You can import play data from Asphyxia (version ~0.1 and ~0.2).</p>
+        <div class="asphyxia-import">
+            <div class="asphyxia-import-input-grid">
+                @let p = uploadingProfileData();
+                @let s = uploadingScoresData();
+                <input class="file-input profile-input" type="file" accept=".json" (change)="onChangeProfileDataToUpload($event)" #profileInput>
+                <button class="button file-cta profile-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
+                    <bung-icon icon="file-document-plus">Select rb.json ...</bung-icon>
+                </button>
+                <span class="file-name profile-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : profileInput.click()">
+                    @if (p) {
+                        <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
+                            <span class="file-name-span">{{ p.name }}</span>
+                            <span class="file-size">{{ p.size | friendlyFileSize }}</span>
+                            <button class="delete" type="button" (click)="onClearProfileDataToUpload($event)"></button>
+                        </div>
+                    } @else {
+                        <span class="file-name-placeholder is-size-7" animate.enter="enter" animate.leave="leave">Click to select rb.json.</span>
+                    }
+                </span>
 
-            <input class="file-input scores-input" type="file" accept=".json" (change)="onChangeScoresDataToUpload($event)" #scoresInput>
-            <button class="button file-cta scores-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
-                <bung-icon iconUrl="assets/icons/asphyxia-import.svg">Select rb_scores.json ...</bung-icon>
-            </button>
-            <span class="file-name scores-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
-                @if (s) {
-                <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
-                    <span class="file-name-span">{{ s.name }}</span>
-                    <span class="file-size">{{ s.size | friendlyFileSize }}</span>
-                    <button class="delete" type="button" (click)="onClearScoresDataToUpload($event)"></button>
-                </div>
-                } @else {
-                <span class="is-size-7" style="opacity: 0.5" animate.enter="enter" animate.leave="leave">Click to select rb_scores.json.</span>
+                <input class="file-input scores-input" type="file" accept=".json" (change)="onChangeScoresDataToUpload($event)" #scoresInput>
+                <button class="button file-cta scores-button" type="button" [disabled]="isDownloading() || isUploading() || isDeleting()" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
+                    <bung-icon icon="file-document-plus">Select rb_scores.json ...</bung-icon>
+                </button>
+                <span class="file-name scores-info file-info" (click)="(isDownloading() || isUploading() || isDeleting()) ? undefined : scoresInput.click()">
+                    @if (s) {
+                        <div class="file-name-inner is-size-7" animate.enter="enter" animate.leave="leave">
+                            <span class="file-name-span">{{ s.name }}</span>
+                            <span class="file-size">{{ s.size | friendlyFileSize }}</span>
+                            <button class="delete" type="button" (click)="onClearScoresDataToUpload($event)"></button>
+                        </div>
+                    } @else {
+                        <span class="file-name-placeholder is-size-7" animate.enter="enter" animate.leave="leave">Click to select rb_scores.json.</span>
+                    }
+                </span>
+            </div>
+            <div class="button-and-notification">
+                <button class="button import-asphyxia-button" type="button" [disabled]="!p || !s || isDownloading() || isUploading() || isDeleting()" [class.is-loading]="isUploading()" (click)="onUploadAsphyxia()">
+                    <bung-icon iconUrl="static/assets/icons/asphyxia-import.svg">Upload</bung-icon>
+                </button>
+                @if (isUploaded()) {
+                    <span class="saved is-success" animate.enter="enter" animate.leave="leave"><bung-icon icon="check">Imported</bung-icon></span>
+                } @else if (uploadResult()) {
+                    <span class="failed is-danger" animate.enter="enter" animate.leave="leave">
+                        <bung-icon icon="emoticon-confused">Failed to import Asphyxia data.</bung-icon>
+                        <span class="is-size-7">({{ uploadResult() }})</span>
+                    </span>
                 }
-            </span>
+            </div>
         </div>
-        <div class="button-and-notification">
-            <button class="button import-asphyxia-button" type="button" [disabled]="!p || !s || isDownloading() || isUploading() || isDeleting()" [class.is-loading]="isUploading()" (click)="onUploadAsphyxia()">
-                <bung-icon icon="upload">Upload</bung-icon>
-            </button>
-            @if (isUploaded()) {
-            <span class="saved is-success" animate.enter="enter" animate.leave="leave"><bung-icon icon="check">Imported.</bung-icon></span>
-            } @else if (uploadResult()) {
-            <span class="failed is-danger" animate.enter="enter" animate.leave="leave">
-                <bung-icon icon="emoticon-confused">Failed to import Asphyxia data.</bung-icon>
-                <span class="is-size-7">({{ uploadResult() }})</span>
-            </span>
-            }
-        </div>
-    </div>
-</rb-settings-section>
+    </rb-settings-section>
 }
 
 <rb-settings-section name="Delete save data">

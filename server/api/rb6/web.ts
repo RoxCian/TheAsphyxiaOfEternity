@@ -15,7 +15,7 @@ import { Rb6MusicRecord } from "../../models/rb6/music_record"
 import { Rb6Mylist } from "../../models/rb6/mylist"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerCustom, Rb6PlayerReleasedInfo, Rb6PlayerStageLog, Rb6QuestRecord } from "../../models/rb6/profile"
 import { RbLobbySettings } from "../../models/shared/lobby"
-import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse, RbChartInfo, Rb6QuestRecordResponse, Rb6QuestType, Rb6QuestRecordResponseElement, Rb6ReflesiaResponse, Rb6ReflesiaStoryProgress } from "../../models/shared/web"
+import { RbPlayerResponse, RbRequest, RbMusicRecordResponse, RbStageLogResponse, Rb6ChartType, RbColor, RbClasscheckResponse, RbPlayerPerformanceResponse, Rb6SettingsResponse, RbAvailableItemResponse, Rb6RankingQuestResponse, Rb6EquipmentInfo, Rb6CharacterCardInfo, RbWriteSettingsResponse, RbChartInfo, Rb6QuestRecordResponse, Rb6QuestType, Rb6QuestRecordResponseElement, Rb6ReflesiaResponse, Rb6ReflesiaStoryProgress, Rb6ClearType } from "../../models/shared/web"
 import { toLiteralClearType } from "../../utils/rb_functions"
 import { hasLeapDay } from "../../utils/utility_functions"
 import { readAvailableItemsShared } from "../shared_web/available_items"
@@ -277,7 +277,6 @@ const uploadAsphyxia: C.C<RbRequest & { file: "profile" | "scores", chunk: strin
     return `""`
 }
 const importAsphyxia: C.C<RbRequest> = async data => {
-    // TODO: TEST!
     const rid = data.rid
     const sessionContent = asphyxiaUploadSessionsContent[rid]
     if (!sessionContent) return C.error(401, "Asphyxia upload session is not requested.")
@@ -364,14 +363,22 @@ const importAsphyxia: C.C<RbRequest> = async data => {
         }
     }
     for (const k in scores) {
-        const match = k.match(/^(?<mid>\d{1-4}):(?<ct>[0-3])/)
-        if (!match?.groups) continue
+        const match = k.match(/^(?<mid>\d{1,4}):(?<ct>[0-3])/)
+        if (!match?.groups) {
+            console.warn(`Invalid score data key "${k}"`)
+            continue
+        }
         const mid = parseInt(match.groups.mid)
         const ct: Rb6ChartType = parseInt(match.groups.ct)
         const s = scores[k]
 
         const validCheckKeys2 = ["ar", "ct", "scr", "ms", "combo", "param", "time"]
-        for (let k of validCheckKeys2) if (s[k] == undefined) continue
+        const missingKeys: string[] = []
+        for (const vk of validCheckKeys2) if (s[vk] == undefined) missingKeys.push(vk)
+        if (missingKeys.length > 0) {
+            console.warn(`Some fields are missing (${missingKeys.join(", ")}) in score data (${k})`)
+            continue
+        }
 
         const query: Query<Rb6MusicRecord> = { collection: "rb.rb6.playData.musicRecord", musicId: mid, chartType: ct }
         const chartInfo = findChartInfo(mid, version, ct)
@@ -383,7 +390,7 @@ const importAsphyxia: C.C<RbRequest> = async data => {
             musicRecord.clearType = s.ct
             musicRecord.score = s.scr
             musicRecord.combo = s.combo
-            musicRecord.missCount = !chartInfo ? -1 : (s.combo === chartInfo.maxCombo) ? 0 : (s.ms <= 0) ? ((s.ct >= 3) ? computeMaxMissCount(s.scr, s.combo, chartInfo) : -1) : s.ms
+            musicRecord.missCount = !chartInfo ? -1 : (s.combo === chartInfo.maxCombo) ? 0 : (s.ms <= 0) ? ((s.ct >= 3) ? computeMaxMissCount(s.scr, s.ar / 100, s.combo, s.ct >= Rb6ClearType.hardClear, chartInfo) : -1) : s.ms
             musicRecord.param = (s.combo === chartInfo?.maxCombo) ? (s.param === 0) ? 1 : s.param : s.param
             musicRecord.playCount = s.pc
             musicRecord.time = s.time
@@ -589,11 +596,15 @@ async function computeSkillPointPotentialFactor(currentSkillPoint: number, recor
     const comboFactor = computeFactor((1 - (maxScore - record.score) / maxScore), 0.5, 1)
     return baseFactor * (scoreFactor * 0.5 + comboFactor * 0.5)
 }
-function computeMaxMissCount(score: number, combo: number, chart: RbChartInfo<V, Rb6ChartType>) {
+function computeMaxMissCount(score: number, ar: number, combo: number, isHardCleared: boolean, chart: RbChartInfo<V, Rb6ChartType>) {
     // formulae are come from bemaniwiki.com
-    const maxScoreAtCurrentComboRate = Math.trunc((chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50 * (combo / chart.maxCombo))
     const maxMissCombo = chart.maxCombo - combo
+    const arTick = 100 / ((chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount)
+    const allKeepAr = arTick * chart.maxKeepCount
+    const maxMissAr = 100 - ar < allKeepAr ? Math.trunc((100 - ar) / arTick) : (chart.maxKeepCount + Math.trunc((100 - ar - allKeepAr) / 6 / arTick))
+    const maxScoreAtCurrentComboRate = Math.trunc((chart.maxCombo - chart.maxKeepCount) * 6 + chart.maxKeepCount + chart.maxJustReflec * 10 + 50 * (combo / chart.maxCombo))
     const maxKeepMissScore = Math.min(maxScoreAtCurrentComboRate - score, chart.maxKeepCount)
     const maxMissScore = maxKeepMissScore < maxScoreAtCurrentComboRate - score ? Math.trunc((maxScoreAtCurrentComboRate - score - maxKeepMissScore) / 6) + maxKeepMissScore : maxKeepMissScore
-    return Math.min(maxMissCombo, maxMissScore)
+    const maxMissHC = isHardCleared ? Math.round(chart.maxCombo / 100) + 6 : Infinity // you cannot have too much misses when you cleared music in hard mode
+    return Math.min(Math.min(Math.min(maxMissCombo, maxMissAr), maxMissScore), maxMissHC)
 }

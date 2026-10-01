@@ -20,7 +20,7 @@
             <div class="day" [style.--row]="rc.row" [style.--column]="rc.column" [bungTooltip]="playCountLabel" [context]="{ date, playCount, id: d }">
                 <div class="day-bg {{ activityLevel > 0 ? `activity-level${activityLevel}` : '' }}"></div>
                 @if (date.getDate() === 1) {
-                    <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">{{ date.getMonth() + 1 }}</span>
+                    <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}" [class.today]="d === 0">{{ date.getMonth() + 1 }}</span>
                 } @else if (d === 0) {
                     <span class="{{ activityLevel === 0 ? 'no-activity' : '' }}">⁕</span>
                 }

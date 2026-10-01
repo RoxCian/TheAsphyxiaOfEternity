@@ -2,6 +2,8 @@ import { DBH } from "../../utils/db/dbh"
 import { ICollection } from "../../utils/db/db_types"
 import { RbWriteSettingsResponse } from "../../models/shared/web"
 
+// This library is created for symmety of operations for read / write fields of settings
+
 type ContextQueryCreator<T, K extends keyof T> = (context: T) => Query<T[K]>
 type RbSettingsContextQueryElementDetails<T, K extends keyof T> = {
     isContextQueryElement: true

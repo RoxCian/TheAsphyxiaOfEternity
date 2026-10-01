@@ -51,19 +51,9 @@ const readHitChartInfo: H.H = () => ({ ver: {} })
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
     const result = new Rb6PlayerSucceed()
-    const account = await DB.FindOne<Rb6PlayerAccount>(rid, { collection: "rb.rb6.player.account" })
-    if (account) {
-        const base = await DB.FindOne<Rb6PlayerBase>(rid, { collection: "rb.rb6.player.base" })
-        const released = await DBH.find(rid, Rb6PlayerReleasedInfo, { collection: "rb.rb6.player.releasedInfo" })
-        const record = await DBH.find(rid, Rb6MusicRecord, { collection: "rb.rb6.playData.musicRecord" })
-        result.name = base.name
-        result.lv = 0
-        result.exp = 0
-        result.grd = base.matchingGrade
-        result.ap = base.abilityPointTimes100
-        if (released.length > 0) result.released.i = released
-        if (record.length > 0) result.mrecord.mrec = record
-    }
+    const player = await findPlayerFromOtherVersion(rid, 6)
+    if (!player) return XF.x(result)
+    result.name = player.name
     return XF.x(result)
 }
 
@@ -146,6 +136,8 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     }
 
     const scores = await DBH.find<Rb6MusicRecord>(read.rid, { collection: "rb.rb6.playData.musicRecord" })
+
+    characterCards.forEach(c => (c.level = 0) && (c.experience = U.GetConfig("debug_rb6_character_card_exp") as number))
 
     for (const s of scores) {
         base.totalBestScore += s.score

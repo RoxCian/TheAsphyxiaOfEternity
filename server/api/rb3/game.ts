@@ -4,7 +4,7 @@ import { DBH } from "../../utils/db/dbh"
 import { Rb2LincleLink } from "../../models/rb2/profile"
 import { Rb3PlayerStart, Rb3PlayerSucceed } from "../../models/rb3/common"
 import { Rb3VerdetDesKrieges } from "../../models/rb3/event"
-import { Rb3MusicRecord } from "../../models/rb3/music_record"
+import { Rb3MusicOldRecord, Rb3MusicRecord } from "../../models/rb3/music_record"
 import { Rb3Mylist } from "../../models/rb3/mylist"
 import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
@@ -19,6 +19,7 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
+import { rb3OrdersInfo } from "../../data/tables/rb3_orders"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -53,20 +54,10 @@ const startPlayer: H.H = async data => {
 
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    const account = await DBH.findOne(rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" })
     const result = new Rb3PlayerSucceed()
-    if (!account) return XF.x(result)
-
-    const base = await DBH.findOne(rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }, true)
-    const released = await DBH.find(rid, Rb3PlayerReleasedInfo, { collection: "rb.rb3.player.releasedInfo" })
-    const record = await DBH.find(rid, Rb3MusicRecord, { collection: "rb.rb3.playData.musicRecord" })
-    result.name = base.name
-    result.lv = base.level
-    result.exp = base.onigiriTimes10
-    result.grd = base.matchingGrade
-    result.ap = base.abilityPointTimes100
-    if (released.length > 0) result.released = { i: released }
-    if (record.length > 0) result.mrecord = { mrec: record }
+    const player = await findPlayerFromOtherVersion(rid, 3)
+    if (!player) return XF.x(result)
+    result.name = player.name
     return XF.x(result)
 }
 const readPlayer: H.H<RbPlayerRead> = async data => {
@@ -74,7 +65,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     const result = new Rb3Player(read.rid)
     const session = await getSession(read.rid, 3)
     if (!session) return H.deny
-    const account = await DBH.findOne(read.rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" }) ?? new Rb3PlayerAccount()
+    const account = await DBH.findOne(read.rid, Rb3PlayerAccount, { collection: "rb.rb3.player.account" })
     if (!account) {
         const player = await findPlayerFromOtherVersion(read.rid, 3)
         if (!player) return H.deny
@@ -82,6 +73,7 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
         result.pdata.account.isFirstFree = true
         result.pdata.account.userId = player.userId
         result.pdata.base.name = player.name
+        await appendOldMusicRecord(read.rid, result)
         return XF.x(result)
     }
     const base = await DBH.findOne(read.rid, Rb3PlayerBase, { collection: "rb.rb3.player.base" }, true)
@@ -115,24 +107,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     for (const s of scores) base.totalBestScore += s.score
     base.totalBestScoreRival = 0
 
-    const bestRecords = await findAllBestMusicRecord(read.rid, 3)
-    const oldRecords: Rb3MusicRecord[] = []
-    for (const b of bestRecords) {
-        const o = new Rb3MusicRecord(b.musicId, b.chartType as Rb1ChartType)
-        o.playCount = b.playCount
-        o.clearType = convertToRb3ClearType(b.clearType)
-        o.achievementRateTimes100 = b.achievementRateTimes100
-        o.score = b.score
-        o.combo = b.combo
-        o.missCount = b.missCount
-        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime ?? 0
-        o.bestComboUpdateTime = b.comboUpdateTime ?? 0
-        o.bestScoreUpdateTime = b.scoreUpdateTime ?? 0
-        o.bestMissCountUpdateTime = b.missCountUpdateTime ?? 0
-        o.version = (b.scoreVersion ?? 3 >= 3) ? 3 : b.scoreVersion
-        o.time = b.comboUpdateTime ?? 0
-        oldRecords.push(o)
-    }
     config.randomEntryWork ??= DBBigInt(Math.trunc(Math.random() * 99999999))
     config.customFolderWork ??= DBBigInt(Math.trunc(Math.random() * 9999999999999))
 
@@ -159,17 +133,16 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     if (eventProgress.length > 0) p.eventProgress.data = eventProgress
     if (equip.length > 0) p.equip.data = equip
     if (seedPod.length > 0) p.seedPod.data = seedPod
+    if (scores.length > 0) p.record = { rec: scores }
     p.order = order
     p.mylist = mylist
-    if (scores.length > 0) p.record = { rec: scores }
-    if (oldRecords.length > 0) p.recordOld = { rec: oldRecords }
+    await appendOldMusicRecord(read.rid, result)
 
     await readPlayerPostProcess(result)
     return XF.x(result)
 }
 const writePlayer: H.H<Rb3Player> = async data => {
     const player = XF.o(data, Rb3Player)
-
     const session = await getSession(player.pdata.account.rid, 3)
     if (!session || session.sessionId !== player.pdata.account.sessionId) return H.deny
     await writePlayerPreProcess(player)
@@ -192,6 +165,28 @@ const deletePlayer: H.H = async data => {
     }
 }
 
+async function appendOldMusicRecord(rid: string, player: Rb3Player) {
+    const bestRecords = await findAllBestMusicRecord(rid, 3)
+    const oldRecords: Rb3MusicRecord[] = []
+    for (const b of bestRecords) {
+        const o = new Rb3MusicRecord(b.musicId, b.chartType as Rb1ChartType)
+        o.playCount = b.playCount
+        o.clearType = convertToRb3ClearType(b.clearType)
+        o.achievementRateTimes100 = b.achievementRateTimes100
+        o.score = b.score
+        o.combo = b.combo
+        o.missCount = b.missCount
+        o.bestAchievementRateUpdateTime = b.achievementRateUpdateTime ?? 0
+        o.bestComboUpdateTime = b.comboUpdateTime ?? 0
+        o.bestScoreUpdateTime = b.scoreUpdateTime ?? 0
+        o.bestMissCountUpdateTime = b.missCountUpdateTime ?? 0
+        o.version = (b.scoreVersion ?? 3 >= 3) ? 3 : b.scoreVersion
+        o.time = b.comboUpdateTime ?? 0
+        oldRecords.push(o)
+    }
+
+    if (oldRecords.length > 0) player.pdata.recordOld = { rec: oldRecords }
+}
 async function writePlayerCore(player: Rb3Player, session: RbSession) {
     const rid = player.pdata.account.rid
     if (!rid) throw new Error("rid is empty")
@@ -249,7 +244,7 @@ async function writePlayerCore(player: Rb3Player, session: RbSession) {
     }
     if (hasAny(player.pdata.seedPod?.data)) for (const s of player.pdata.seedPod.data) t.upsert(rid, { collection: "rb.rb3.player.event.seedPod", index: s.index }, s)
     await updateVerdetDesKrieges(rid, player.pdata.order, player.pdata.stageLogs?.log, session, t)
-    if (player.pdata.order) await updateOrder(rid, player.pdata.order, player.pdata.account.version, player.pdata.stageLogs?.log, t)
+    if (player.pdata.order) await updateOrder(rid, player.pdata.order, player.pdata.account.version, player.pdata.stageLogs?.log, player.pdata.base, player.pdata.stamp, t)
     if (player.pdata.stamp) t.upsert(rid, { collection: "rb.rb3.player.stamp" }, player.pdata.stamp)
 
     await t.commit()
@@ -453,276 +448,276 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
     if (modified) t.upsert(rid, { collection: "rb.rb3.event.verdetDesKrieges" }, data)
 }
 
-async function updateOrder(rid: string, order: Rb3Order, currentVersion: number, stageLogs: Rb3PlayerStageLog[] | undefined, t: DBH.T) {
+async function updateOrder(rid: string, order: Rb3Order, currentVersion: number, stageLogs: Rb3PlayerStageLog[] | undefined, base: Rb3PlayerBase, stamp: Rb3Stamp, t: DBH.T) {
     const ordersSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
 
-    const playerBase = await t.findOne<Rb3PlayerBase>(rid, { collection: "rb.rb3.player.base" })
-    const stamp = await t.findOne<Rb3Stamp>(rid, { collection: "rb.rb3.player.stamp" })
     const equips = await t.find<Rb3Equip>(rid, { collection: "rb.rb3.player.equip" })
     const changedEquips: Rb3Equip[] = []
     const newReleases: Rb3PlayerReleasedInfo[] = []
-    if (!playerBase || !stamp) {
-        console.warn("Data not found when update order.")
+    if (!ordersSaved) {
+        t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
         return
     }
-    if (!ordersSaved) t.upsert(rid, { collection: "rb.rb3.player.order" }, order)
-    else {
-        ordersSaved.experience = Math.min(order.experience, 120_000_000) // max exp is 1.2e8 (lv 999), don't think anyone can achieve that
+    ordersSaved.experience = Math.min(order.experience, 120_000_000) // max exp is 1.2e8 (lv 999), don't think anyone can achieve that
 
-        function isCleared(orderIndex: number): boolean {
-            return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
-        }
-        function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: Rb3OrderDetailsParamFlag = Rb3OrderDetailsParamFlag.unlocked): void {
-            if (slot >= 0) {
-                for (const o of ordersSaved!.details ?? []) if (o.slot === slot) {
-                    o.slot = -1
-                    break
-                }
-            }
-            let order = ordersSaved!.details?.find(o => o.index == orderIndex)
-            if (!order) {
-                order = {
-                    index: orderIndex,
-                    clearedCount: clearedCount,
-                    fragmentsCount0: fragmentsCount,
-                    fragmentsCount1: fragmentsCount1,
-                    slot,
-                    param
-                }
-                if (!ordersSaved!.details) ordersSaved!.details = []
-                ordersSaved!.details.push(order)
-            } else {
-                order.clearedCount += clearedCount
-                order.fragmentsCount0 += fragmentsCount
-                order.fragmentsCount1 += fragmentsCount1
-                order.slot = slot
-                order.param = param
+    function isCleared(orderIndex: number): boolean {
+        return (ordersSaved!.details?.find(o => o.index == orderIndex)?.clearedCount ?? 0) > 0
+    }
+    function addClearedCount(orderIndex: number, clearedCount: number, fragmentsCount: number, fragmentsCount1: number = 0, slot: number = -1, param: Rb3OrderDetailsParamFlag = Rb3OrderDetailsParamFlag.unlocked): void {
+        if (slot >= 0) {
+            for (const o of ordersSaved!.details ?? []) if (o.slot === slot) {
+                o.slot = -1
+                break
             }
         }
-        function setEquipExp(index: number, season: number, experience: number): void {
-            const e = equips.find(e => e.index === index && e.stype === season) ?? {
-                collection: "rb.rb3.player.equip",
-                index: index,
-                stype: season,
-                experience: 0
+        let order = ordersSaved!.details?.find(o => o.index == orderIndex)
+        if (!order) {
+            order = {
+                index: orderIndex,
+                clearedCount: clearedCount,
+                fragmentsCount0: fragmentsCount,
+                fragmentsCount1: fragmentsCount1,
+                slot,
+                param
             }
-            if (e && e.experience < experience) {
-                e.experience = experience
-                changedEquips.push(e)
-            }
-        }
-
-        if (order.details) {
-            for (const o of order.details) {
-                ordersSaved.experience += 2788 // amount of order complete experience
-                switch (o.index) { // mark online matching orders as completed
-                    case 2:
-                        if (!isCleared(o.index)) {
-                            stamp.ticketCount[currentVersion - 1] += 3
-                            addClearedCount(o.index, 1, 1, 0, -1)
-                        }
-                        // the first matching order cannot be accepted again
-                        break
-                    case 34:
-                        if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 5
-                        else stamp.ticketCount[currentVersion - 1] += 2
-                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
-                        break
-                    case 35:
-                        if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 6
-                        else stamp.ticketCount[currentVersion - 1] += 3
-                        addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
-                        break
-                    case 36:
-                        if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 7
-                        else stamp.ticketCount[currentVersion - 1] += 4
-                        addClearedCount(o.index, 1, 14, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
-                        break
-                    case 135: case 136: case 137: case 138: case 139: case 140: case 141:
-                        if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 3
-                        else stamp.ticketCount[currentVersion - 1] += 2
-                        addClearedCount(o.index, 1, 15, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
-                        break
-                    case 174: // 二人の英雄
-                        if (isCleared(o.index)) break
-                        if (o.slot >= 0) {
-                            const fragsBase = countHeroesOfTwo(o, stageLogs)
-                            let orderSaved = ordersSaved!.details?.find(os => os.index == o.index)
-                            if (!orderSaved) {
-                                if (fragsBase >= 20) stamp.ticketCount[currentVersion - 1] += 4
-                                else ordersSaved.experience -= 2788
-                                orderSaved = {
-                                    index: o.index,
-                                    clearedCount: fragsBase >= 20 ? 1 : 0,
-                                    fragmentsCount0: fragsBase,
-                                    fragmentsCount1: 0,
-                                    slot: o.slot,
-                                    param: o.param
-                                }
-                                if (!ordersSaved!.details) ordersSaved!.details = []
-                                ordersSaved!.details.push(orderSaved)
-                            } else {
-                                const frags = fragsBase + orderSaved.fragmentsCount0
-                                if (frags >= 20) {
-                                    orderSaved.clearedCount = 1
-                                    orderSaved.slot = -1
-                                    orderSaved.fragmentsCount0 = 0
-                                    stamp.ticketCount[currentVersion - 1] += 4
-                                } else {
-                                    orderSaved.slot = o.slot
-                                    orderSaved.fragmentsCount0 = frags
-                                    ordersSaved.experience -= 2788
-                                }
-                            }
-                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
-                        break
-                    case 176: // 朱雀の姿
-                        if (isCleared(o.index)) break
-                        if (o.slot >= 0) {
-                            const fragsBase = countPhonix(o, stageLogs)
-                            let orderSaved = ordersSaved!.details?.find(os => os.index === o.index)
-                            if (!orderSaved) {
-                                if (fragsBase >= 20) {
-                                    newReleases.push({
-                                        collection: "rb.rb3.player.releasedInfo",
-                                        type: 7,
-                                        id: 82, // left byword "Red"
-                                        param: 0,
-                                    })
-                                }
-                                orderSaved = {
-                                    index: o.index,
-                                    clearedCount: fragsBase >= 20 ? 1 : 0,
-                                    fragmentsCount0: fragsBase,
-                                    fragmentsCount1: 0,
-                                    slot: o.slot,
-                                    param: o.param
-                                }
-                                if (!ordersSaved!.details) ordersSaved!.details = []
-                                ordersSaved!.details.push(orderSaved)
-                            } else {
-                                const frags = fragsBase + orderSaved.fragmentsCount0
-                                if (frags >= 20) {
-                                    orderSaved.clearedCount = 1
-                                    orderSaved.slot = -1
-                                    orderSaved.fragmentsCount0 = 0
-                                    newReleases.push({
-                                        collection: "rb.rb3.player.releasedInfo",
-                                        type: 7,
-                                        id: 82,
-                                        param: 0,
-                                        // insertTime: Date.now()
-                                    })
-                                } else {
-                                    orderSaved.slot = o.slot
-                                    orderSaved.fragmentsCount0 = frags
-                                    ordersSaved.experience -= 2788
-                                }
-                            }
-                        } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
-                        break
-                    // start of seasonal equips / inventories
-                    // winter ver.
-                    case 42:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(0, 0, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        // orders about equipments cannot be accepted again
-                        break
-                    case 48:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(1, 0, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 54:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(2, 0, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    // spring ver.
-                    case 105:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(0, 1, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 111:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(1, 1, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 117:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(2, 1, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    // summer ver.
-                    case 119:
-                        if (!isCleared(o.index) && stageLogs?.some(l => l.musicId >= 314 && l.musicId <= 364)) playerBase.hiddenParam[14] += 3 // summer ver. inventory: golden lure
-                        else playerBase.hiddenParam[14] += 1
-                        addClearedCount(o.index, 1, 15)
-                        break
-                    case 161:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(0, 2, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 167:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(1, 2, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 173:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(2, 2, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    // autumn ver.
-                    case 186:
-                        if (!isCleared(o.index)) playerBase.hiddenParam[18] += 2 // autumn ver. inventory: magical clock
-                        else playerBase.hiddenParam[18] += 1
-                        addClearedCount(o.index, 1, 25)
-                        break
-                    case 206:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(0, 3, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 212:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(1, 3, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    case 218:
-                        if (!isCleared(o.index)) {
-                            setEquipExp(2, 3, 12)
-                            addClearedCount(o.index, 1, 14)
-                        }
-                        break
-                    // end of seasonal equips / inventories
-                    default:
-                        addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot, o.param)
-                        ordersSaved.experience -= 2788
-                        break
-                }
-            }
-            t.upsert(rid, { collection: "rb.rb3.player.order" }, ordersSaved)
-            t.upsert(rid, { collection: "rb.rb3.player.stamp" }, stamp)
-            t.update(rid, { collection: "rb.rb3.player.base" }, playerBase)
-            for (const e of changedEquips) t.upsert(rid, { collection: "rb.rb3.player.equip", index: e.index, stype: e.stype }, e)
-            for (const r of newReleases) t.upsert(rid, { collection: "rb.rb3.player.releasedInfo", id: r.id, type: r.type }, r)
+            if (!ordersSaved!.details) ordersSaved!.details = []
+            ordersSaved!.details.push(order)
+        } else {
+            order.clearedCount += clearedCount
+            order.fragmentsCount0 += fragmentsCount
+            order.fragmentsCount1 += fragmentsCount1
+            order.slot = slot
+            order.param = param
         }
     }
+    function setEquipExp(index: number, season: number, experience: number): void {
+        const e = equips.find(e => e.index === index && e.stype === season) ?? {
+            collection: "rb.rb3.player.equip",
+            index: index,
+            stype: season,
+            experience: 0
+        }
+        if (e && e.experience < experience) {
+            e.experience = experience
+            changedEquips.push(e)
+        }
+    }
+
+    if (!order.details) return
+    for (const o of order.details) {
+        // check order
+        const orderInfo = rb3OrdersInfo.find(i => i.id === o.index)
+        if (!orderInfo) continue
+        if (o.clearedCount > 0 && !orderInfo.reacceptable) o.slot = -1
+        // amount of order complete experience is 2788
+        // add exp ahead. If order is no need to process specifically, deduct that later
+        ordersSaved.experience += 2788
+        switch (o.index) { // mark online matching orders as completed
+            case 2:
+                if (!isCleared(o.index)) {
+                    stamp.ticketCount[currentVersion - 1] += 3
+                    addClearedCount(o.index, 1, 1, 0, -1)
+                }
+                // the first matching order cannot be accepted again
+                break
+            case 34:
+                if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 5
+                else stamp.ticketCount[currentVersion - 1] += 2
+                addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
+                break
+            case 35:
+                if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 6
+                else stamp.ticketCount[currentVersion - 1] += 3
+                addClearedCount(o.index, 1, 12, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
+                break
+            case 36:
+                if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 7
+                else stamp.ticketCount[currentVersion - 1] += 4
+                addClearedCount(o.index, 1, 14, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
+                break
+            case 135: case 136: case 137: case 138: case 139: case 140: case 141:
+                if (!isCleared(o.index)) stamp.ticketCount[currentVersion - 1] += 3
+                else stamp.ticketCount[currentVersion - 1] += 2
+                addClearedCount(o.index, 1, 15, 0, hasFlag(o.param, Rb3OrderDetailsParamFlag.lockedToSlot) ? o.slot : -1, o.param)
+                break
+            case 174: // 二人の英雄
+                if (isCleared(o.index)) break
+                if (o.slot >= 0) {
+                    const fragsBase = countHeroesOfTwo(o, stageLogs)
+                    let orderSaved = ordersSaved!.details?.find(os => os.index == o.index)
+                    if (!orderSaved) {
+                        if (fragsBase >= 20) stamp.ticketCount[currentVersion - 1] += 4
+                        else ordersSaved.experience -= 2788
+                        orderSaved = {
+                            index: o.index,
+                            clearedCount: fragsBase >= 20 ? 1 : 0,
+                            fragmentsCount0: fragsBase,
+                            fragmentsCount1: 0,
+                            slot: o.slot,
+                            param: o.param
+                        }
+                        if (!ordersSaved!.details) ordersSaved!.details = []
+                        ordersSaved!.details.push(orderSaved)
+                    } else {
+                        const frags = fragsBase + orderSaved.fragmentsCount0
+                        if (frags >= 20) {
+                            orderSaved.clearedCount = 1
+                            orderSaved.slot = -1
+                            orderSaved.fragmentsCount0 = 0
+                            stamp.ticketCount[currentVersion - 1] += 4
+                        } else {
+                            orderSaved.slot = o.slot
+                            orderSaved.fragmentsCount0 = frags
+                            ordersSaved.experience -= 2788
+                        }
+                    }
+                } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                break
+            case 176: // 朱雀の姿
+                if (isCleared(o.index)) break
+                if (o.slot >= 0) {
+                    const fragsBase = countPhonix(o, stageLogs)
+                    let orderSaved = ordersSaved!.details?.find(os => os.index === o.index)
+                    if (!orderSaved) {
+                        if (fragsBase >= 20) {
+                            newReleases.push({
+                                collection: "rb.rb3.player.releasedInfo",
+                                type: 7,
+                                id: 82, // left byword "Red"
+                                param: 0,
+                            })
+                        }
+                        orderSaved = {
+                            index: o.index,
+                            clearedCount: fragsBase >= 20 ? 1 : 0,
+                            fragmentsCount0: fragsBase,
+                            fragmentsCount1: 0,
+                            slot: o.slot,
+                            param: o.param
+                        }
+                        if (!ordersSaved!.details) ordersSaved!.details = []
+                        ordersSaved!.details.push(orderSaved)
+                    } else {
+                        const frags = fragsBase + orderSaved.fragmentsCount0
+                        if (frags >= 20) {
+                            orderSaved.clearedCount = 1
+                            orderSaved.slot = -1
+                            orderSaved.fragmentsCount0 = 0
+                            newReleases.push({
+                                collection: "rb.rb3.player.releasedInfo",
+                                type: 7,
+                                id: 82,
+                                param: 0,
+                                // insertTime: Date.now()
+                            })
+                        } else {
+                            orderSaved.slot = o.slot
+                            orderSaved.fragmentsCount0 = frags
+                            ordersSaved.experience -= 2788
+                        }
+                    }
+                } else addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot)
+                break
+            // start of seasonal equips / inventories
+            // winter ver.
+            case 42:
+                if (!isCleared(o.index)) {
+                    setEquipExp(0, 0, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                // orders about equipments cannot be accepted again
+                break
+            case 48:
+                if (!isCleared(o.index)) {
+                    setEquipExp(1, 0, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 54:
+                if (!isCleared(o.index)) {
+                    setEquipExp(2, 0, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            // spring ver.
+            case 105:
+                if (!isCleared(o.index)) {
+                    setEquipExp(0, 1, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 111:
+                if (!isCleared(o.index)) {
+                    setEquipExp(1, 1, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 117:
+                if (!isCleared(o.index)) {
+                    setEquipExp(2, 1, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            // summer ver.
+            case 119:
+                if (!isCleared(o.index) && stageLogs?.some(l => l.musicId >= 314 && l.musicId <= 364)) base.hiddenParam[14] += 3 // summer ver. inventory: golden lure
+                else base.hiddenParam[14] += 1
+                addClearedCount(o.index, 1, 15)
+                break
+            case 161:
+                if (!isCleared(o.index)) {
+                    setEquipExp(0, 2, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 167:
+                if (!isCleared(o.index)) {
+                    setEquipExp(1, 2, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 173:
+                if (!isCleared(o.index)) {
+                    setEquipExp(2, 2, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            // autumn ver.
+            case 186:
+                if (!isCleared(o.index)) base.hiddenParam[18] += 2 // autumn ver. inventory: magical clock
+                else base.hiddenParam[18] += 1
+                addClearedCount(o.index, 1, 25)
+                break
+            case 206:
+                if (!isCleared(o.index)) {
+                    setEquipExp(0, 3, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 212:
+                if (!isCleared(o.index)) {
+                    setEquipExp(1, 3, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            case 218:
+                if (!isCleared(o.index)) {
+                    setEquipExp(2, 3, 12)
+                    addClearedCount(o.index, 1, 14)
+                }
+                break
+            // end of seasonal equips / inventories
+            default:
+                addClearedCount(o.index, o.clearedCount, o.fragmentsCount0, o.fragmentsCount1, o.slot, o.param)
+                ordersSaved.experience -= 2788
+                break
+        }
+    }
+    t.upsert(rid, { collection: "rb.rb3.player.order" }, ordersSaved)
+    t.upsert(rid, { collection: "rb.rb3.player.stamp" }, stamp)
+    t.update(rid, { collection: "rb.rb3.player.base" }, base)
+    for (const e of changedEquips) t.upsert(rid, { collection: "rb.rb3.player.equip", index: e.index, stype: e.stype }, e)
+    for (const r of newReleases) t.upsert(rid, { collection: "rb.rb3.player.releasedInfo", id: r.id, type: r.type }, r)
 }
 
 function countHeroesOfTwo(order: Rb3OrderDetails | undefined, stageLogs: Rb3PlayerStageLog[] | undefined): number {

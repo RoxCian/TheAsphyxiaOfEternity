@@ -5,8 +5,8 @@ number,number,string?,string
 0,0,"Only a ruined castle remains, resting silently in the depths of the dark forest.",ただ朽ちた城だけが、深く暗い森の中、静かに在る。
 0,0,,
 0,0,"Once, there was a silver mine in this land.",かつてここには銀の鉱山があった。
-0,0,Conflict over the silver was endless., and countless lives scattered like dew upon these grounds—,銀を巡って争いは絶えず、数多の命がこの地で露と化した。
-0,0,Until a Count possessing the "Red Power" appeared.,「赤の力」を持つ伯爵が現れるまでは――
+0,0,"Conflict over the silver was endless., and countless lives scattered like dew upon these grounds—",銀を巡って争いは絶えず、数多の命がこの地で露と化した。
+0,0,"Until a Count possessing the ""Red Power"" appeared.",「赤の力」を持つ伯爵が現れるまでは――
 0,0,,
 0,0,Those who visit the castle standing in that distant realm will see it:,彼の地に立つ城を訪れるものは見るだろう。
 0,0,The portrait of the Count who ruled this land and brought it a fleeting era of prosperity.,この地を統べ、刹那の繁栄をもたらした伯爵の肖像を。
@@ -47,7 +47,7 @@ number,number,string?,string
 1,0,How could tranquility be restored to his domain?,どうすれば再び領国を安寧させられるのか。
 1,0,"Count Verdet's torment boiled down to this single question, yet he remained unable to find a solution.",ヴェルデ伯爵の悩みはこれに尽き、そして解決策を見つけることがてきずにいる。
 1,0,"At that moment, a voice echoed inside the Count's mind.",その時、伯爵の脳裏に声が響いた。
-1,0,"{""text"":""\""If thou desirest the power to subdue power... come to the castle's subterranean depths.\"""",""highlight"":true,""textStyle"":""italic""}","{""text"":""「力を制する力が欲しくは　城の地下に来い」"",""highlight"":true}"
+1,0,"{""text"":""\""If thou desirest the power to subdue power... come to the castle's subterranean depths.\"""",""highlight"":true,""textStyle"":""bolditalic""}","{""text"":""「力を制する力が欲しくは　城の地下に来い」"",""highlight"":true,""textStyle"":""bold""}"
 1,1,"An auditory hallucination? Yet the exhausted Count, as if possessed, descended into the basement of his castle.",幻聴か。しかし憔悴していた伯爵は、まるで憑かれたように居城の地下室へと降りてゆく。
 1,1,There stood—,するとそこには――
 1,1,"A figure whose features were far too symmetrical to belong to a human, wearing a subtle smile.",人としてはあまりに均整が取れすぎた容貌の何者かが、微笑みを浮かべつつ立っていた。

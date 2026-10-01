@@ -14,7 +14,7 @@ import { generateUserId } from "../shared_game/generate_user_id"
 import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler } from "../shared_game/lobby"
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { StageLogManager } from "../shared_game/stage_log_manager"
-import { hasAny, toFullWidth } from "../../utils/utility_functions"
+import { hasAny } from "../../utils/utility_functions"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 
 export function registerRb2Handlers() {
@@ -52,36 +52,25 @@ const startPlayer: H.H = async data => {
 
 const succeedPlayer: H.H = async data => {
     const rid = $(data).str("rid")
-    const base = await DBH.findOne(rid, Rb2PlayerBase, { collection: "rb.rb2.player.base" }, true)
     const result = new Rb2PlayerSucceed()
-    if (!base) return XF.x(result)
-
-    const released = await DBH.find(rid, Rb2PlayerReleasedInfo, { collection: "rb.rb2.player.releasedInfo" })
-    const record = await DBH.find(rid, Rb2MusicRecord, { collection: "rb.rb2.playData.musicRecord" })
-    result.name = toFullWidth(base.name.toUpperCase())
-    result.lv = base.level
-    result.exp = base.experience
-    result.grd = base.matchingGrade
-    result.ap = base.abilityPointTimes100
-    if (released.length > 0) result.released = { i: released }
-    result.addMusicRecords(record)
+    const player = await findPlayerFromOtherVersion(rid, 2)
+    if (!player) return XF.x(result)
+    result.name = player.name
     return XF.x(result)
 }
 
 const readPlayer: H.H<RbPlayerRead> = async data => {
     const read = XF.o(data, RbPlayerRead)
     const result = new Rb2Player(read.rid)
-    const base = await DBH.findOne(read.rid, Rb2PlayerBase, { collection: "rb.rb2.player.base" }, true)
     result.rid = read.rid
+    const base = await DBH.findOne(read.rid, Rb2PlayerBase, { collection: "rb.rb2.player.base" }, true)
     if (!base) {
         const player = await findPlayerFromOtherVersion(read.rid, 2)
         if (!player) return H.deny
         result.pdata.base.userId = player.userId
         result.pdata.base.name = player.name
-        if (player) {
-            const scores = await pullMusicRecords(read.rid, true)
-            if (scores.length > 0) result.pdata.record.rec = scores
-        }
+        const scores = await pullMusicRecords(read.rid, true)
+        if (scores.length > 0) result.pdata.record.rec = scores
         return XF.x(result)
     }
     const stat = await DBH.findOne(read.rid, Rb2PlayerStat, { collection: "rb.rb2.player.stat" }, true)

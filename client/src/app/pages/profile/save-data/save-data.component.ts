@@ -6,6 +6,8 @@ import { RbVersionService } from "../../../services/specified/rb-version.service
 import { inverted } from "../../../signals/inverted"
 import { rbEmit, rbEmitJSON } from "../../../utils/rb-functions"
 import { ImportAsphyxiaData } from "./save-data.type"
+import { RbMusicRecordService } from "../../../services/specified/rb-music-record.service"
+import { RbStageLogService } from "../../../services/specified/rb-stagelog.service"
 
 @Component({
     selector: "rb-save-data-subpage",
@@ -16,6 +18,8 @@ import { ImportAsphyxiaData } from "./save-data.type"
 export class RbSaveDataSubpage {
     protected readonly versionService = inject(RbVersionService)
     protected readonly profileService = inject(RbProfileService)
+    protected readonly recordService = inject(RbMusicRecordService)
+    protected readonly stageLogService = inject(RbStageLogService)
     protected readonly modalService = inject(BungModalService)
     protected readonly isDownloading = signal(false)
     protected readonly isUploading = signal(false)
@@ -32,6 +36,7 @@ export class RbSaveDataSubpage {
 
     protected readonly profileInput = viewChild<ElementRef<HTMLInputElement>>("profileInput")
     protected readonly scoresInput = viewChild<ElementRef<HTMLInputElement>>("scoresInput")
+
     #confirmDeleteModal?: BungModalComponent<void>
     #finalConfirmDeleteModal?: BungModalComponent<void>
 
@@ -111,6 +116,9 @@ export class RbSaveDataSubpage {
             this.onClearProfileDataToUpload()
             this.onClearScoresDataToUpload()
             this.isUploaded.set(true)
+            this.profileService.rb6Profile.reload()
+            this.recordService.data.reload()
+            this.stageLogService.data.reload()
         }
     }
     protected async onOpenConfirmDeleteSaveFile() {

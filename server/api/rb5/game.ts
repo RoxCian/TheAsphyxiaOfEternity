@@ -2,7 +2,7 @@ import { H } from "../../utils/handler"
 import { XF } from "../../utils/x"
 import { DBH } from "../../utils/db/dbh"
 import { Rb5Classcheck } from "../../models/rb5/classcheck"
-import { Rb5PlayerStart } from "../../models/rb5/common"
+import { Rb5PlayerStart, Rb5PlayerSucceed } from "../../models/rb5/common"
 import { Rb5MusicOldRecord, Rb5MusicRecord, Rb5MusicRecords } from "../../models/rb5/music_record"
 import { Rb5Mylist } from "../../models/rb5/mylist"
 import { Rb5BattleRoyale, Rb5Derby, Rb5Minigame, Rb5MinigameRecordUpdate, Rb5MyCourseLog, Rb5Player, Rb5PlayerAccount, Rb5PlayerBase, Rb5PlayerConfig, Rb5PlayerCustom, Rb5PlayerParameters, Rb5PlayerReleasedInfo, Rb5PlayerStageLog, Rb5Yurukome } from "../../models/rb5/profile"
@@ -23,6 +23,7 @@ import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 export function registerRb5Handlers() {
     H.route("pcb.rb5_pcb_boot", bootPcb)
     H.route("player.rb5_player_start", startPlayer)
+    H.route("player.rb5_player_succeed", succeedPlayer)
     H.route("player.rb5_player_read", readPlayer)
     H.route("player.rb5_player_read_5", readPlayer) // VOLZZA 2
     H.route("player.rb5_player_write", writePlayer)
@@ -47,6 +48,15 @@ const startPlayer: H.H = async data => {
     const session = await createSession(rid, 5)
     if (!session) return H.deny
     const result = new Rb5PlayerStart(session.sessionId)
+    return XF.x(result)
+}
+
+const succeedPlayer: H.H = async data => {
+    const rid = $(data).str("rid")
+    const result = new Rb5PlayerSucceed()
+    const player = await findPlayerFromOtherVersion(rid, 5)
+    if (!player) return XF.x(result)
+    result.name = player.name
     return XF.x(result)
 }
 
