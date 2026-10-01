@@ -11,39 +11,35 @@ const versionParts = version.split("-")
 const versionNumeric = versionParts[0].split(".").map(c => parseInt(c))
 let versionLabel = undefined
 
-let ai = 0
+let ai = 2
 let maxLevel = "no"
 while (ai < process.argv.length) {
     const arg = process.argv[ai]
-    if (!arg.startsWith("-") && !arg.startsWith("/") && !arg.startsWith("\\")) {
-        ai++
-        continue
-    }
     switch (arg.substring(1)) {
         case "M":
         case "maj":
         case "MAJ":
-        case "-major":
-        case "-MAJOR":
+        case "major":
+        case "MAJOR":
             if (maxLevel !== "major") maxLevel = "major"
             break
         case "m":
         case "min":
         case "MIN":
-        case "-minor":
-        case "-MINOR":
+        case "minor":
+        case "MINOR":
             if (maxLevel !== "major" && maxLevel !== "minor") maxLevel = "minor"
             break
         case "p":
         case "P":
-        case "-patch":
-        case "-PATCH":
+        case "patch":
+        case "PATCH":
             if (maxLevel === "no") maxLevel = "patch"
             break
         case "l":
         case "L":
-        case "-label":
-        case "-LABEL":
+        case "label":
+        case "LABEL":
             ai++
             versionLabel = process.argv[ai]
             break

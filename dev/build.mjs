@@ -2,11 +2,11 @@ import { copyFileSync, existsSync, statSync, lstatSync, mkdirSync, readdirSync, 
 import "node:process"
 import { execSync as run, spawn } from "node:child_process"
 import { relative } from "node:path"
-import { argv0 } from "node:process"
+import { argv } from "node:process"
 
 const log = console.log
 const cd = process.chdir
-const ci = argv0.toLowerCase() === "-ghci"
+const ci = argv[2]?.toLowerCase() === "ghci"
 
 log("🔵 悠久のアスフィクシア -The Asphyxia of Eternity-")
 log("🔵 Building...")
@@ -17,10 +17,6 @@ if (existsSync("./dist")) rmSync(`./dist/${pluginNameProd}`, { recursive: true, 
 else mkdirSync("./dist")
 log("🔵 Fixing csv files.")
 csvRemoveBom()
-if (ci) {
-    log("🔵 Installing Angular CLI.")
-    run("npm install -g @angular/cli")
-}
 log("🔵 Building client.")
 cd("./client")
 const buildProcess = spawn("ng b -c production", {
