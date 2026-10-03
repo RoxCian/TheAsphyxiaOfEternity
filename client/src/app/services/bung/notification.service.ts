@@ -23,6 +23,6 @@ export class BungNotificationService extends BungPopupService {
                 setter?.(popup)
             }
         }
-        return super.popup(data, context, BungNotificationComponent, options)
+        return super.popup<BungNotificationComponent<TReturn>, TReturn>(data, context, BungNotificationComponent, options)
     }
 }

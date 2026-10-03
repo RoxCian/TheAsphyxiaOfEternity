@@ -307,12 +307,12 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
             RbClasscheckClearType.failed
     if (isInitial || !classRecord.stageLogs) {
         isNeedUpdate = true
-        classRecord.stageLogs = stageLogs 
+        classRecord.stageLogs = stageLogs
     }
     if (isInitial || clearTypeCurrent > clearTypeSaved) {
         isNeedUpdate = true
         classRecord.clearType = clearTypeCurrent
-        classRecord.stageLogs = stageLogs 
+        classRecord.stageLogs = stageLogs
     }
     if (isInitial || (log.rank > classRecord.rank)) {
         isNeedUpdate = true
@@ -322,12 +322,12 @@ async function updateClasscheck(rid: string, log: Rb4Classcheck, stageLogs: Rb4P
         isNeedUpdate = true
         classRecord.totalCompletionScore = log.totalCompletionScore
         classRecord.separateCompletionScore = log.separateCompletionScore
-        classRecord.separateCompletionRateTimes100 = log.separateCompletionRateTimes100
+        classRecord.separateAchievementRateTimes100 = log.separateAchievementRateTimes100
         if (!classRecord.stageLogs || clearTypeCurrent >= clearTypeSaved || log.class >= Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // different from VOLZZA and Reflesia
     }
-    if (isInitial || (log.averageCompletionRateTimes100 > classRecord.averageCompletionRateTimes100)) {
+    if (isInitial || (log.averageAchievementRateTimes100 > classRecord.averageAchievementRateTimes100)) {
         isNeedUpdate = true
-        classRecord.averageCompletionRateTimes100 = log.averageCompletionRateTimes100
+        classRecord.averageAchievementRateTimes100 = log.averageAchievementRateTimes100
         if (!classRecord.stageLogs || clearTypeCurrent >= clearTypeSaved || log.class < Rb4DojoIndex.examination) classRecord.stageLogs = stageLogs // same as VOLZZA and Reflesia
     }
     const time = stageLogs[stageLogs.length - 1]?.time ?? 0

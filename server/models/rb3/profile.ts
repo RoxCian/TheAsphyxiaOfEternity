@@ -70,10 +70,10 @@ export class Rb3PlayerBase implements ICollection<"rb.rb3.player.base"> {
     //   0x1B: challenged flag
     //   0x1C: boss down flag
     //   0x1D: you have a gem or not. You'll get a gem when you cleared a boss.
-    //         If you fought with Joker but not beat it down, gems will return to their bosses.
+    //         If you fought with Joker but did not beat it down, your gems will return to their bosses.
     //   0x1E: you have a plate or not. If this bit is 1, it means you have cleared
     //         a seasonal Pastel Adventure event.
-    //   0x1F: show or not
+    //   0x1F: shown or not
     //
     // - hiddenParam[27]: player name color
     @XD.s32() hiddenParam = new Array(50).fill(0)

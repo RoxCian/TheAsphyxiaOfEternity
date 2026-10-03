@@ -1,4 +1,4 @@
-import { Signal, TemplateRef, Type } from "@angular/core"
+import { InputSignal, InputSignalWithTransform, ModelSignal, Signal, TemplateRef, Type, WritableSignal } from "@angular/core"
 import { HttpResourceRef } from "@angular/common/http"
 
 export type BulmaColor = "primary" | "success" | "info" | "link" | "warning" | "danger" | undefined
@@ -46,10 +46,15 @@ export type BungPopupOptionsBase = {
     backdropOptions?: BungBackdropOptions
     isManual?: boolean
 }
-type InputBindingRecord = Record<string, (() => unknown) | unknown>
+type InputBindingOf<T> = {
+    -readonly [K in keyof T]?: T[K] extends WritableSignal<infer TKS> |
+        InputSignal<infer TKS> |
+        InputSignalWithTransform<infer _, infer TKS>
+    ? (() => TKS) | TKS : never
+}
 export type BungPopupOptions<T, TReturn = any> = {
     values?: BungReturnContext<TReturn> | (() => BungReturnContext<TReturn>)
-    bindings?: InputBindingRecord
+    bindings?: InputBindingOf<T>
     setter?: (popup: T) => void
 } & BungPopupOptionsBase
 

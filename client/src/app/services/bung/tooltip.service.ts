@@ -26,6 +26,6 @@ export class BungTooltipService extends BungPopupService {
             popup.hostElement.set(hostElement)
             setter?.(popup)
         }
-        return super.popup(data, context, BungTooltipComponent, options)
+        return super.popup<BungTooltipComponent<TReturn>, TReturn>(data, context, BungTooltipComponent, options)
     }
 }

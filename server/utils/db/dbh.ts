@@ -382,7 +382,7 @@ export namespace DBH {
             if (entry == undefined) return query == undefined
             if (query.$where && !query.$where.apply(entry)) return false
             let $orResult: boolean | undefined = undefined
-            const skipKeys = ["$where", "_id"]
+            const skipKeys = ["$where"]
             for (let qk in query) {
                 if (skipKeys.includes(qk)) continue
                 switch (qk) {

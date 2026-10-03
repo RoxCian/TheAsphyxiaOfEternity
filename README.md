@@ -6,11 +6,13 @@ Plugin Version: **v2.0.0-beta**
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
----
+**After v2 update, the project needs to be build and not able to work properly by clone the project directory to plugins folder of Asphyxia CORE. Please download the plugin from the release page.**
+
+## Features and events
 
 Features supported:
 
-| **Feature** | **悠久のリフレシア** | **VOLZZA / VOLZZA 2** | **groovin'!! Upper** | **colette -All Seasons-** | **limelight** | **REFLEC BEAT**
+| **Feature** | **悠久のリフレシア** | **VOLZZA / VOLZZA 2** | **groovin'!! & Upper** | **colette -All Seasons-** | **limelight** | **REFLEC BEAT**
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
 | Profile saving | √ | √ | √ | √ | √ | √ |
 | Score saving | √ | √ | √ | √ | √ | √ |
@@ -28,11 +30,23 @@ Events supported:
 | :-- | :-- |
 | **悠久のリフレシア** | <ul><li>REFLESIA MODE (Game & Web UI)</li><li>JUST COLLECTION (Game only)</li></ul> |
 | **VOLZZA / VOLZZA 2** | <ul><li>パステルくんからゆるゆるコメント / Pastel-kun's casual comments (Game & Web UI)</li><li>どきどきリズム研究所 / Heartbeating Rhythm Lab. (Game only)</li><li>REFTIS (Game & Web UI)</li></ul>
-| **groovin'!! Upper** | <ul><li>Pastel Wonder Quest (Game only)</li><li>Mystical Strike (Game only)</li></ul> |
+| **groovin'!! & Upper** | <ul><li>Pastel Wonder Quest (Game only)</li><li>Mystical Strike (Game only)</li></ul> |
 | **colette -All Seasons-** | <ul><li>Order shop (Game & Web UI)</li><li>Pastel Adventure (Game only)</li><li>Pastel Wonder Traveller (Game only)</li><li>戦乱のVerdet / Verdet des Krieges (Game & Web UI)</li></ul> |
 | **limelight** | <ul><li>Lime glasses (Game & Web UI)</li></ul> |
 
----
+## To do list
+
+- Implement web UI for these events:
+  - Pastel Wonder Adventure
+  - Pastel Wonder Traveller
+  - Pastel Wonder Quest
+  - Trophy system for RB groovin'
+  - Mystical Strike
+- Filter features for music records and play history page
+- Musics wiki system
+- Ranking feature and friend feature
+
+## Credits
 
 This project used some data for web UI and game from several external websites/project, listed as follows:
 

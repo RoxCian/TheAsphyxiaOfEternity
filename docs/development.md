@@ -1,6 +1,6 @@
 # Development Reference
 ## Getting Started
-Since the project needs to be build, it will do nothing if you copy the project directory to plugins folder of Asphyxia CORE. You can follow these steps to build the project:
+After v2 update, the project needs to be build, it will do nothing if you copy the project directory to plugins folder of Asphyxia CORE. You can follow these steps to build the project:
 ### Prerequisite
 - node.js (^22.22.3 or ^24.15.0 or ^26.0.0)
 - Asphyxia CORE (^1.50a)

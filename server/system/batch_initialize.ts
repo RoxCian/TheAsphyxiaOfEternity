@@ -88,17 +88,13 @@ export function initializeBatch() {
                         $set: {
                             stageLogs: stageLogs.splice(i) as Rb4PlayerStageLog[],
                             totalCompletionScore: (classcheck as any)["totalScore"],
-                            averageCompletionRateTimes100: (classcheck as any)["averageAchievementRateTimes100"],
                             separateCompletionScore: (classcheck as any)["seperateScore"],
-                            separateCompletionRateTimes100: (classcheck as any)["seperateAchievementRateTimes100"]
                         },
                         $unset: {
                             musicsId: true,
                             chartsType: true,
                             totalScore: true,
-                            averageAchievementRateTimes100: true,
                             seperateScore: true,
-                            seperateAchievementRateTimes100: true
                         }
                     })
                 } else {
@@ -252,18 +248,6 @@ export function initializeBatch() {
             delete (conf as any)["defaultNoteGrade"]
             t.update(rid, { collection: conf.collection }, conf)
         }
-        await t.commit()
-    })
-    Batch.register("batch#2.0.0.part5", "2.0.0", async () => {
-        // fix mini game ID for RB VOLZZA
-        const t = new DBH.T()
-        for (const mg of await t.find<Rb5Minigame>(undefined, { collection: "rb.rb5.playData.minigame", minigameId: -1 })) {
-            const rid: string | undefined = (mg as any).__refid
-            if (!rid) continue
-            mg.minigameId = 0
-            t.insert(rid, mg)
-        }
-        t.remove<Rb5Minigame>(undefined, { collection: "rb.rb5.playData.minigame", minigameId: -1})
         await t.commit()
     })
 }

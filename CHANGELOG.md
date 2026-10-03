@@ -1,6 +1,32 @@
 - v2.0.0-beta
 
-  _TODO: Discription to be added._
+  Backend refactored.
+    - KBinJSON mapping now replaced by library X.
+    - Models are now class based for decorators marking of library X and DBH.
+    - Game data rechecked and reorganized into csv format.
+
+  Web UI *RENEWAL*ed, powered by Angular, aimed at providing richer content and higher performance.
+    - Visual concept redesigned.
+    - Frontend data are now API based.
+    - Added pages to check your progress of game events.
+
+  Added support of new events:
+    - 戦乱のVerdet / Verdet des Krieges
+    - パステルくんからゆるゆるコメント / Pastel-kun's casual comments
+    - Stamp boost event for RB colette
+
+  Introduced automation and GitHub CI workflow.
+
+  Fixed issues of equipment experiences and progress of related orders of RB colette.
+
+  Max combo of music record should be saved correctly now for RB colette.
+
+  Database entry/data structure changes:
+    - `musicsId, chartsType -> property get from stageLogs field` (RB groovin' dojo, breaking change)
+    - `totalScore -> totalCompletionScore` (RB groovin', dojo, breaking change)
+    - `seperateScore -> separateCompletionScore` (RB groovin', dojo, breaking change)
+    - `lastNoteGrade -> lastChartType` (RB VOLZZA -> RB Reflesia, player configs, breaking change)
+    - `defaultNoteGrade -> defaultChartType` (RB VOLZZA -> RB Reflesia, player configs, breaking change)
 
 - v1.3.3
 

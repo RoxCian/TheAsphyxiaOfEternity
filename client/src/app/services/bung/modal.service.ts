@@ -17,11 +17,11 @@ export class BungModalService extends BungPopupService {
         let bindingsHasAdded = false
         if (typeof header === "function" && !header.toString().startsWith("class ")) {
             bindingsHasAdded = true
-            bindings["header"] = header as () => BungInsertionContent
+            bindings.header = header as () => BungInsertionContent
         }
         if (isSignal(headerContext)) {
             bindingsHasAdded = true
-            bindings["headerContext"] = headerContext
+            bindings.headerContext = headerContext
         }
         if (bindingsHasAdded) {
             options.bindings = bindings
@@ -35,12 +35,12 @@ export class BungModalService extends BungPopupService {
                 setter?.(popup)
             }
         }
-        return super.popup(body, bodyContext, BungModalComponent, options)
+        return super.popup<BungModalComponent<TReturn>, TReturn>(body, bodyContext, BungModalComponent, options)
     }
     modalCard<TReturn = any>(header: BungInsertionContentOrComputation, body: BungInsertionContentOrComputation, headerContext: any | Signal<any>, bodyContext: any | Signal<any>, options?: BungPopupOptions<BungModalComponent<TReturn>, TReturn>): BungModalComponent<TReturn> {
         options = Object.assign({}, options)
         const bindings = Object.assign({}, options?.bindings)
-        bindings["isCard"] = true
+        bindings.isCard = true
         options.bindings = bindings
         return this.modal(header, body, headerContext, bodyContext, options)
     }

@@ -104,17 +104,16 @@ const readClasschecks: C.C<RbRequest, RbClasscheckResponse<V>[]> = async data =>
     const classchecks = await DBH.find<Rb4Classcheck>(data.rid, { collection: "rb.rb4.playData.classcheck" })
     classchecks.sort((l, r) => r.class - l.class)
     for (const c of classchecks) {
-        const examination = c.class >= Rb4DojoIndex.examination ? (await rb4Examination).find(e => e.id === c.class) : undefined
+        const examination = c.class >= Rb4DojoIndex.examination ? rb4Examination.find(e => e.id === c.class) : undefined
         const stageLogs = c.stageLogs ? await Promise.all(c.stageLogs.map(toStageLogResponse)) : undefined
         const r: RbClasscheckResponse<V> = {
             version,
             class: c.class,
             clearType: c.clearType,
             totalScore: c.stageLogs?.reduce((prev, next) => prev + next.score, 0) ?? 0,
-            averageAchievementRate: (c.stageLogs?.reduce((prev, next) => prev + next.achievementRateTimes100, 0) ?? 0) / 100 / (c.stageLogs?.length ?? 3),
+            averageAchievementRate: c.averageAchievementRateTimes100 / 100,
             totalCompletionScore: c.totalCompletionScore,
-            averageCompletionRate: c.averageCompletionRateTimes100 / 100,
-            separateCompletionRate: c.separateCompletionRateTimes100?.map(r => r / 100),
+            separateAchievementRate: c.separateAchievementRateTimes100?.map(r => r / 100),
             separateCompletionScore: c.separateCompletionScore,
             playCount: c.playCount,
             lastPlay: new Date(c.lastPlayTime * 1000),

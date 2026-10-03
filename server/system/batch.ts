@@ -15,6 +15,6 @@ export namespace Batch {
         }
     }
     export function register(id: string, version: string, batch: () => Promise<any>) {
-        registeredBatch.push({ id: id, version: version, batch: batch })
+        registeredBatch.push({ id, version, batch })
     }
 }
