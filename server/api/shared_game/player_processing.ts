@@ -1,4 +1,4 @@
-import { RbVersion } from "../../models/shared/rb_types"
+import { Range, RbVersion } from "../../models/shared/rb_types"
 import { Type } from "../../utils/types"
 import { toFullWidth, toHalfWidth } from "../../utils/utility_functions"
 import { getSession } from "./session"
@@ -33,14 +33,20 @@ export type SpecialUnlockControlOptions = {
 const songReleaseInfoBackup = new Map<Type<IRbReleasedInfo>, IRbReleasedInfo[]>()
 const itemReleaseInfoBackup = new Map<Type<IRbReleasedInfo>, IRbReleasedInfo[][]>()
 
-export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo extends IRbReleasedInfo>(version: RbVersion, player: T, releasedInfoType: Type<TReleasedInfo>, ctrlArray: number[], onAttachItems?: Function) {
+function countCtrlElements(ctrl: number | Range[]): number {
+    if (!Array.isArray(ctrl)) return ctrl
+    return ctrl.reduce<number>((prev, next) => {
+        return prev + (Array.isArray(next) ? next[1] - next[0] : 1)
+    }, 0)
+}
+export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo extends IRbReleasedInfo>(version: RbVersion, player: T, releasedInfoType: Type<TReleasedInfo>, ctrlArray: (number | Range[])[], onAttachItems?: Function) {
     const rid = player.rid ?? player.pdata.account?.rid
     if (!rid) return
     const session = await getSession(rid, version)
     if (!session) return
-    const unlockAllSongs: boolean = session.unlockSettings.unlockAllSongs
-    const unlockAllItems: boolean = session.unlockSettings.unlockAllItems
-    if (!unlockAllSongs && !unlockAllSongs) return
+    const unlockAllSongs = session.unlockSettings.unlockAllSongs
+    const unlockAllItems = session.unlockSettings.unlockAllItems
+    if (!unlockAllSongs && !unlockAllItems) return
 
     if (unlockAllSongs) {
         let songReleaseInfoArray = songReleaseInfoBackup.get(releasedInfoType)
@@ -48,8 +54,8 @@ export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo exten
             songReleaseInfoArray = []
             songReleaseInfoBackup.set(releasedInfoType, songReleaseInfoArray)
         }
-        if (songReleaseInfoArray.length < ctrlArray[0]) addReleaseInfo(releasedInfoType, songReleaseInfoArray, ctrlArray[0])
-        else if (songReleaseInfoArray.length > ctrlArray[0]) songReleaseInfoArray = songReleaseInfoArray.slice(0, ctrlArray[0])
+        const count = countCtrlElements(ctrlArray[0])
+        if (songReleaseInfoArray.length !== count) setReleaseInfo(releasedInfoType, songReleaseInfoArray, 0, ctrlArray[0])
         if (player.pdata.released.info) player.pdata.released.info.push(...songReleaseInfoArray)
         else player.pdata.released.info = [...songReleaseInfoArray]
     }
@@ -62,8 +68,8 @@ export async function attachReleaseInfo<T extends IRbPlayer, TReleasedInfo exten
         for (let i = 1; i < ctrlArray.length; i++) {
             let subArray = itemReleaseInfoArray[i] ?? []
             itemReleaseInfoArray[i] = subArray
-            if (subArray.length < ctrlArray[i]) addReleaseInfo(releasedInfoType, subArray, ctrlArray[i])
-            else if (subArray.length > ctrlArray[i]) subArray = subArray.slice(0, ctrlArray[i])
+            const count = countCtrlElements(ctrlArray[0])
+            if (subArray.length !== count) setReleaseInfo(releasedInfoType, subArray, i, ctrlArray[i])
             if (player.pdata.released.info) player.pdata.released.info.push(...subArray)
             else player.pdata.released.info = [...subArray]
         }
@@ -100,13 +106,27 @@ export function toHalfWidthPlayerName(player: IRbPlayer) {
     if (player.pdata.base?.name) player.pdata.base.name = toHalfWidth(player.pdata.base.name.toUpperCase())
 }
 
-function addReleaseInfo<TReleaseInfo extends IRbReleasedInfo>(releaseInfoType: Type<TReleaseInfo>, releaseInfoArray: TReleaseInfo[], count: number) {
-    for (let i = releaseInfoArray.length; i < count; i++) {
+function setReleaseInfo<TReleaseInfo extends IRbReleasedInfo>(releaseInfoType: Type<TReleaseInfo>, releaseInfoArray: TReleaseInfo[], typeId: number, count: number | Range[]) {
+    releaseInfoArray.splice(0, releaseInfoArray.length)
+    if (!Array.isArray(count)) for (let i = 0; i < count; i++) {
         const ri = new releaseInfoType()
-        ri.type = 0
+        ri.type = typeId
         ri.id = i
         ri.param = 31
         ri.insertTime = Date.parse("April 30, 2010")
         releaseInfoArray.push(ri)
+    } else {
+        for (const el of count) {
+            const left = Array.isArray(el) ? el[0] : el
+            const right = Array.isArray(el) ? el[1] : el + 1
+            for (let i = left; i < right; i++) {
+                const ri = new releaseInfoType()
+                ri.type = typeId
+                ri.id = i
+                ri.param = 31
+                ri.insertTime = Date.parse("April 30, 2010")
+                releaseInfoArray.push(ri)
+            }
+        }
     }
 }

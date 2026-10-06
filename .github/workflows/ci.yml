@@ -43,7 +43,7 @@ jobs:
             env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             run: |
-                echo "**Please remove old version of this plugin and backup your Asphyxia CORE database files before install this update.**" > release-notes.md
+                echo "**If you have installed plugin version below v2, please remove that old version before install the plugin.**" > release-notes.md
                 echo "" >> release-notes.md
                 echo "**Since v2 update includes many breaking changes, we strongly recommend you to create a backup of Asphyxia CORE save file or you cannot scroll back to old version with your save data.**" >> release-notes.md
                 echo "" >> release-notes.md

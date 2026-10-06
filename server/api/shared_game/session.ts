@@ -10,7 +10,7 @@ export async function createSession(rid: string, version: RbVersion): Promise<Rb
     if (oldSession) {
         const time = Date.now()
         if (time - oldSession.time < sessionTimeout && oldSession.read) {
-            oldSession.regenerateSessionId()
+            oldSession.updateSession()
             if (version === 6) oldSession.rb6RankingQuestIndex = (await DBH.findOne<Rb6MiscSettings>(rid, { collection: "rb.rb6.player.misc" }))?.rankingQuestIndex ?? 0
             await DBH.update(rid, { collection: "rb.session", version }, oldSession)
             return oldSession
