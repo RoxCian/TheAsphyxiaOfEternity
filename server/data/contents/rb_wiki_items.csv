@@ -1,0 +1,3 @@
+wikiId,name,wikiType,themeColor,url,parentWiki
+,,,,,
+number,string,wikipedia|wikipediajp|remywiki|bemaniwiki|youtube|none,string?,string,int?

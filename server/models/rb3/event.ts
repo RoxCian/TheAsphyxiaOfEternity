@@ -57,7 +57,7 @@ export class Rb3VerdetDesKrieges implements ICollection<"rb.rb3.event.verdetDesK
     page = 0
     lastReadChapter = 1
     lastReadPage = 0
-    progress: [number, number, number, number, number] = [0, 0, 0, 0, 0] // max is 15
+    progress: [number, number, number, number, number] = [0, 0, 0, 0, 0] // max is 60
 }
 
 export class Rb3JubeatCollaboration implements ICollection<"rb.rb3.event.jubeatCollaboration"> {

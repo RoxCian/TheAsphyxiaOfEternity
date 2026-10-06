@@ -24,7 +24,11 @@ export class RbSessionStorage implements ICollection<"rb.session">, RbSession {
         this.rb6RankingQuestIndex = 0
     }
 
-    regenerateSessionId() {
+    updateSession() {
         this.sessionId = Math.round(Math.random() * 99999999) + 1
+        this.unlockSettings = {
+            unlockAllSongs: U.GetConfig("unlock_all_songs"),
+            unlockAllItems: U.GetConfig("unlock_all_items")
+        }
     }
 }

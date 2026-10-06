@@ -1,0 +1,4 @@
+musicUid,musicWikiId,artistWikiId,eventWikiId,category,tags
+,,,,,
+string,number[],number[],number[],string,string[]
+

@@ -1,3 +1,9 @@
+- v2.0.1-beta
+
+  Fixed an issue of unlock configurations.
+
+  Completed the missing charts info for RB colette.
+
 - v2.0.0-beta
 
   Backend refactored.
