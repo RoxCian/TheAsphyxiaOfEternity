@@ -2,7 +2,7 @@
 
 # 悠久のアスフィクシア -The Asphyxia of Eternity-
 
-Plugin Version: **v2.0.1-beta** 
+Plugin Version: **v2.0.2-beta** 
 
 A plugin for RB supporting run on <a href="https://asphyxia-core.github.io">Asphyxia CORE</a>.
 
@@ -45,6 +45,11 @@ Events supported:
 - Filter features for music records and play history page
 - Musics wiki system
 - Ranking feature and friend feature
+
+## Notes
+
+- If you turn on items / musics unlock features, progress of some events will not be saved.
+- It's hard to find a friend to play local match, so we altered clear condition of almost all matching orders in RB colette. If you accept an matching order during play, it will be marked to completed on data saving.
 
 ## Credits
 

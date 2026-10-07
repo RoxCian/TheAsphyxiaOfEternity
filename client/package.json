@@ -1,6 +1,6 @@
 {
     "name": "rb-webuiv2",
-    "version": "v2.0.1-beta",
+    "version": "v2.0.2-beta",
     "scripts": {
         "ng": "ng",
         "debug": "ng serve webuiv2",

@@ -85,7 +85,7 @@ export async function detachReleaseInfo<T extends IRbPlayer>(version: RbVersion,
     const unlockAllSongs: boolean = session?.unlockSettings.unlockAllSongs ?? true
     const unlockAllItems: boolean = session?.unlockSettings.unlockAllItems ?? true
 
-    if (unlockAllSongs || unlockAllItems) await onDetachSongsOrItems?.(unlockAllItems, unlockAllSongs)
+    if (unlockAllSongs || unlockAllItems) await onDetachSongsOrItems?.(unlockAllSongs, unlockAllItems)
 
     if (!player.pdata.released.info) return
 
