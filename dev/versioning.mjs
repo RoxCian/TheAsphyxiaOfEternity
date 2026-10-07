@@ -14,6 +14,7 @@ let versionLabel = undefined
 let ai = 2
 let maxLevel = "no"
 while (ai < process.argv.length) {
+    const arg = process.argv[ai]
     switch (arg) {
         case "M":
         case "maj":

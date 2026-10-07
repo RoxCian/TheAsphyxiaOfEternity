@@ -33,7 +33,7 @@ export class Rb3EventControl {
     static init() {
         if (this.initialized) return
         this.initialized = true
-        const limit = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
+        const limit = [100, 100, 100, 100, 100, 0, 0, 0, 0, 1, 1]
         for (let i = 0; i < limit.length; i++) {
             for (let j = 0; j < limit[i]; j++) {
                 const e = new Rb3EventControl(i, j)

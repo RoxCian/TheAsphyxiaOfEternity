@@ -1,3 +1,9 @@
+- v2.0.2-beta
+
+  Fix items unlock feature.
+  
+  Fix an issue of new seed plot didn't show up in RB colette.
+
 - v2.0.1-beta
 
   Fixed an issue of unlock configurations.
