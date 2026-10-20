@@ -9,7 +9,7 @@ import { Rb3Mylist } from "../../models/rb3/mylist"
 import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3Player, Rb3PlayerAccount, Rb3PlayerBase, Rb3PlayerConfig, Rb3PlayerCustom, Rb3PlayerReleasedInfo, Rb3PlayerStageLog, Rb3SeedPod, Rb3Stamp, Rb3TricolettePark } from "../../models/rb3/profile"
 import { Rb3ShopInfo } from "../../models/rb3/shop_info"
 import { RbPlayerRead } from "../../models/shared/common"
-import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, RbSession } from "../../models/shared/rb_types"
+import { Rb1ChartType, Rb1ClearType, Rb3ClearType, Rb3OrderDetailsParamFlag, Rb3PastelAdventureEventType, RbSession } from "../../models/shared/rb_types"
 import { DBBigInt, toBigInt } from "../../utils/db/db_types"
 import { hasAny, hasFlag, isToday } from "../../utils/utility_functions"
 import { createReadCommentHandler, createWriteCommentHandler } from "../shared_game/comment"
@@ -20,6 +20,7 @@ import { createAddLobbyHandler, createReadLobbyHandler, createDeleteLobbyHandler
 import { createSession, getSession, removeSession } from "../shared_game/session"
 import { readPlayerPostProcess, writePlayerPreProcess } from "./processing"
 import { rb3OrdersInfo } from "../../data/tables/rb3_orders"
+import { rb3PastelAdventureFinalEvents, rb3PastelAdventureNormalEvents } from "../../data/tables/rb3_pastel_adventure"
 
 export function registerRb3Handlers() {
     H.route("read.info?model=MBR", readInfo)
@@ -127,9 +128,17 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     p.config = config
     p.custom = custom
     if (released.length > 0) p.released.info = released
+    for (let i = 0; i < 60; i++) {
+        if (!eventProgress.find(e => e.index === i)) {
+            const newInfo = new Rb3EventProgress()
+            newInfo.index = i
+            eventProgress.push(newInfo)
+        }
+    }
     p.lincleLink = lincleLink
     p.tricolettePark = tricolettePark
     p.stamp = stamp
+
     if (eventProgress.length > 0) p.eventProgress.data = eventProgress
     if (equip.length > 0) p.equip.data = equip
     if (seedPod.length > 0) p.seedPod.data = seedPod
@@ -254,8 +263,7 @@ async function updateMusicRecordFromStageLog(rid: string, stageLog: Rb3PlayerSta
     const query: Query<Rb3MusicRecord> = { collection: "rb.rb3.playData.musicRecord", musicId: stageLog.musicId, chartType: stageLog.chartType }
     let musicRecord = await t.findOne<Rb3MusicRecord>(rid, query)
 
-    const newFlag = getClearTypeIndex(stageLog)
-    if (newFlag < 0) return
+    if (!checkRecord(stageLog)) return
 
     if (!musicRecord) {
         musicRecord = new Rb3MusicRecord(stageLog.musicId, stageLog.chartType)
@@ -730,21 +738,22 @@ function countPhonix(order: Rb3OrderDetails | undefined, stageLogs: Rb3PlayerSta
 }
 
 async function updateEventProgress(rid: string, e: Rb3EventProgress, t: DBH.T) {
-    const progressSaved = await t.findOne<Rb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index })
-    if (!progressSaved) t.upsert(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index }, e)
-    else {
-        progressSaved.experience += e.experience
-        t.update(rid, { collection: "rb.rb3.player.event.eventProgress", index: progressSaved.index }, progressSaved)
+    const query: Query<Rb3EventProgress> = { collection: "rb.rb3.player.event.eventProgress", index: e.index }
+    const progressSaved = await t.findOne<Rb3EventProgress>(rid, query) ?? new Rb3EventProgress(e.index)
+    progressSaved.experience += e.experience
+    const ei = rb3PastelAdventureFinalEvents.find(e => e.eventId === progressSaved.index)
+    if (ei?.eventType === Rb3PastelAdventureEventType.final && progressSaved.experience >= ei.experiences[ei.experiences.length - 1]) {
+        const normalEventsInfo = rb3PastelAdventureNormalEvents.filter(nei => nei.season === ei.season && nei.eventType === Rb3PastelAdventureEventType.normal)
+        if ((await Promise.all(normalEventsInfo.map(async nei => ((await t.findOne<Rb3EventProgress>(rid, { collection: "rb.rb3.player.event.eventProgress", index: nei.eventId }))?.experience ?? 0) < nei.experiences[nei.experiences.length - 1]))).some(f => f)) {
+            progressSaved.experience = ei.experiences[ei.experiences.length - 1] - 1
+        }
     }
+    t.upsert(rid, query, progressSaved)
 }
 
-function getClearTypeIndex(record: Rb3PlayerStageLog | Rb3MusicRecord): number {
-    const excFlag = record.achievementRateTimes100 == 10000
-    const fcFlag = record.missCount == 0
-    if (excFlag && !fcFlag) return -1
-    else if (excFlag) return 0
-    else if (fcFlag) return 1
-    else if (record.clearType == 4) return 2
-    else if (record.clearType == 3) return 3
-    else return 4
+function checkRecord(record: Rb3PlayerStageLog | Rb3MusicRecord): boolean {
+    const excFlag = record.achievementRateTimes100 === 10000
+    const fcFlag = record.missCount === 0
+    if (excFlag && !fcFlag) return false
+    return true
 }

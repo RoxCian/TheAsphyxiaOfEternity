@@ -91,15 +91,6 @@ export class RbPlayerCardComponent implements OnInit {
             this.pageVisible.set(!document.hidden)
         })
     }
-    protected toRb3PlayerEventLevel(value?: number) {
-        if (value == undefined) return 0
-        if ((value | 1) !== value) return 0
-        if ((value | 2) !== value) return 1
-        if ((value | 4) !== value) return 2
-        if ((value | 8) !== value) return 3
-        if ((value | 16) !== value) return 4
-        return 5
-    }
     protected onImgLoaded() {
         this.isImageLoaded.set(true)
     }

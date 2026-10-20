@@ -50,7 +50,7 @@ export function bufferToBase64(buffer: Buffer, isTrimZero: boolean = true): stri
     if (isTrimZero) for (let i = buffer.length - 1; i >= 0; i--) if (buffer.readInt8(i) !== 0) return buffer.toString("base64", 0, i + 1)
     return buffer.toString("base64", 0, buffer.length)
 }
-export function isHigherVersion(left: string, right: string): boolean {
+export function isVersionLessThan(left: string, right: string): boolean {
     const splitedLeft = left.split(".")
     const splitedRight = right.split(".")
 

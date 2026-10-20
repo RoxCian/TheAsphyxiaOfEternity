@@ -3,17 +3,18 @@ import { ICollection } from "../utils/db/db_types"
 import { Batch } from "./batch"
 
 import { rb3OrdersInfo } from "../data/tables/rb3_orders"
-import { Rb3Equip, Rb3Order, Rb3OrderDetails, Rb3PlayerAccount } from "../models/rb3/profile"
+import { Rb3Equip, Rb3EventProgress, Rb3Order, Rb3OrderDetails, Rb3PlayerAccount } from "../models/rb3/profile"
 import { Rb4Classcheck } from "../models/rb4/classcheck"
 import { Rb4PlayerStageLog } from "../models/rb4/profile"
 import { Rb5Classcheck } from "../models/rb5/classcheck"
-import { Rb5Minigame, Rb5PlayerConfig, Rb5PlayerStageLog } from "../models/rb5/profile"
+import { Rb5PlayerConfig, Rb5PlayerStageLog } from "../models/rb5/profile"
 import { Rb6Classcheck } from "../models/rb6/classcheck"
 import { Rb6Ghost } from "../models/rb6/ghost"
 import { Rb6JustCollection } from "../models/rb6/just_collection"
 import { Rb6MusicRecord } from "../models/rb6/music_record"
 import { Rb6PlayerAccount, Rb6PlayerBase, Rb6PlayerConfig, Rb6PlayerStageLog, Rb6QuestRecord } from "../models/rb6/profile"
-import { Rb3OrderDetailsParamFlag, Rb4DojoIndex, RbVersionWithClasscheck } from "../models/shared/rb_types"
+import { Rb3OrderDetailsParamFlag, Rb3PastelAdventureEventType, Rb4DojoIndex, RbVersionWithClasscheck } from "../models/shared/rb_types"
+import { rb3PastelAdventureFinalEvents, rb3PastelAdventureNormalEvents } from "../data/tables/rb3_pastel_adventure"
 
 export function initializeBatch() {
     Batch.register("batch#0.11.11.part2", "2.0.0", async () => {
@@ -247,6 +248,34 @@ export function initializeBatch() {
             delete (conf as any)["lastNoteGrade"]
             delete (conf as any)["defaultNoteGrade"]
             t.update(rid, { collection: conf.collection }, conf)
+        }
+        await t.commit()
+    })
+    Batch.register("batch#2.0.3", "2.0.3", async () => {
+        // fix Pastel Adventure data to avoid game keep crashing if you accidentally
+        // completed the final event of any season without complete all of previous events
+        const t = new DBH.T()
+        const allEvents = await DBH.find<Rb3EventProgress>(undefined, { collection: "rb.rb3.player.event.eventProgress" })
+        const grouped = allEvents.reduce<Record<string, Rb3EventProgress[]>>((prev, next) => {
+            const rid = (next as any).__refid as string
+            prev[rid] ??= []
+            prev[rid].push(next)
+            return prev
+        }, {})
+        for (const rid in grouped) {
+            const events = grouped[rid]
+            for (const e of events) {
+                const ei = rb3PastelAdventureFinalEvents.find(fei => fei.eventId === e.index)
+                if (ei?.eventType !== Rb3PastelAdventureEventType.final || e.experience < ei.experiences[ei.experiences.length - 1]) continue
+                const normalEventsInfo = rb3PastelAdventureNormalEvents.filter(nei => nei.season === ei.season && nei.eventType === Rb3PastelAdventureEventType.normal)
+                for (const nei of normalEventsInfo) {
+                    const ne = events.find(e => e.index === nei.eventId)
+                    if (ne && ne.experience >= nei.experiences.length[nei.experiences.length - 1]) continue
+                    e.experience = ei.experiences[ei.experiences.length - 1] - 1
+                    t.update(rid, { collection: "rb.rb3.player.event.eventProgress", index: e.index }, e)
+                    break
+                }
+            }
         }
         await t.commit()
     })

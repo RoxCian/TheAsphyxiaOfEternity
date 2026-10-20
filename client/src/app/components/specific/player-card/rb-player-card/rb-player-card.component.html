@@ -15,7 +15,7 @@
                     @if (p.bywords) {
                         <rb-byword-tag [leftByword]="p.bywords!.left" [rightByword]="p.bywords!.right" />
                     }
-                    @let rb3EventLevel = p.version === 3 ? toRb3PlayerEventLevel(p.extraValues?.[1]) : 0;
+                    @let rb3EventLevel = p.version === 3 ? (p.extraValues?.[1] ?? 0) : 0;
                     <div class="name is-size-2 {{ p.version === 3 ? `rb3-player-event-level${rb3EventLevel}` : ''}}" [class.claudia-abnormal]="p.version === 3 && verdetService.claudiaAbnormal() === 2">
                         @if (p.version === 3 && verdetService.claudiaAbnormal() === 2) {
                             <a class="claudia" (click)="verdetService.clickClaudia()" animate.leave="leave">ℂ𝕃𝔸𝕌𝔻𝕀𝔸</a>
@@ -66,8 +66,6 @@
                                     <p class="is-size-6"><b>This icon means you just swiped your card and maybe playing now.</b></p>
                                     <p>PS: It is not forbidden to swipe your card on two different cabinets running same game title, but we only accept save data sent by the last one you logged into.</p>
                                     <p>Swipe your card on two cabinets running different titles is totally fine.</p>
-                                    <!-- <p>If you terminated your game or Asphyxia CORE by accident, and you failed log into the game now, please click the close button on the top right corner of the icon.</p>
-                                    <p>Note that if you are really playing now and you clicked the close button, your session in the game won't be terminated. However any play data sent from this session will not able to be saved.</p> -->
                                 </div>
                             </ng-template>
                             <ng-template #sessionKilledIconTooltip>

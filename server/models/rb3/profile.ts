@@ -169,8 +169,12 @@ export class Rb3PlayerStageLog implements ICollection<"rb.rb3.playData.stageLog"
 
 export class Rb3EventProgress implements ICollection<"rb.rb3.player.event.eventProgress"> {
     readonly collection = "rb.rb3.player.event.eventProgress"
-    @XD.s16("id") index = 0
+    @XD.s16("id") index: number
     @XD.s32("exp") experience = 0
+
+    constructor(index: number = 0) {
+        this.index = index
+    }
 }
 
 export class Rb3Equip implements ICollection<"rb.rb3.player.equip"> {
