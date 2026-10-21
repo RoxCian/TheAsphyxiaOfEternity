@@ -51,6 +51,24 @@ export enum Rb3OrderClearRewardType {
     ticket, winter, spring, summer, autumn, head, body, hand, bywordLeft, bywordRight
 }
 
+export type Rb3PastelAdventureEvent = {
+    eventId: number
+    season: Rb3Season
+    name: string
+    nameOrig: string
+    relatedMusicsId: number[]
+    experiences: number[]
+    eventType: Rb3PastelAdventureEventType
+}
+
+export enum Rb3Season {
+    winter, spring, summer, autumn
+}
+
+export enum Rb3PastelAdventureEventType {
+    normal, final, collab
+}
+
 export type Rb3VerdetDesKriegesPhrasePart = {
     text: string | (Rb3VerdetDesKriegesPhrasePart | string)[]
     clueId?: number
@@ -76,6 +94,7 @@ export type Rb3VerdetDesKriegesContentRaw = {
     phrase?: string
     phraseOrig: string
 }
+
 export type Rb3VerdetDesKriegesResponse = {
     completed: boolean
     chapter: number

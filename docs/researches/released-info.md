@@ -21,7 +21,7 @@ The investigation results regarding the meaning of `type` numbers are listed bel
 |  7 | - | byword left part | byword | byword | byword | byword |
 |  8 | - | byword right part | _\<unknown\>_ | _\<unknown\>_ | voice chat sets | _\<unknown\>_ |
 |  9 | - | - | _\<unknown\>_ | _\<unknown\>_ | - | Pastel-kun's equips (head) |
-| 10 | - | - | seeds for Pastel Garden | shop items | - | Pastel-kun's equips (body) |
+| 10 | - | - | unlockable items for Pastel Adventure | shop items | - | Pastel-kun's equips (body) |
 | 11 | - | - | - | _\<unknown\>_ | - | Pastel-kun's equips (leg) |
 | 12 | - | - | - | _\<unknown\>_ | - | Pastel-kun's equips (arms) |
 | 13 | - | - | - | bonus Refle | - | music fragments |

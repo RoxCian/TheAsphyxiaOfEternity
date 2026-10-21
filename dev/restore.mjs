@@ -51,10 +51,13 @@ const asphyxiaRegex =
 let asphyxia = existsSync(envConfig.asphyxiaDirectory) ? readdirSync(envConfig.asphyxiaDirectory, { withFileTypes: true }).find(f => f.name.match(asphyxiaRegex)) : undefined
 
 if (!existsSync("./dev/config/")) mkdirSync("./dev/config/")
-while (!envConfig.asphyxiaDirectory || !existsSync(envConfig.asphyxiaDirectory) || !asphyxia) {
+while (true) {
     envConfig.asphyxiaDirectory = await input(!envConfig.asphyxiaDirectory ? "➡️ Please specify the directory of Asphyxia CORE: " : "💡 Cannot find Asphyxia CORE or its config, please specify the directory of Asphyxia CORE again: ")
-    asphyxia = existsSync(envConfig.asphyxiaDirectory) ? readdirSync(envConfig.asphyxiaDirectory, { withFileTypes: true }).find(f => f.name.match(asphyxiaRegex)) : undefined
+    if (!envConfig.asphyxiaDirectory || !existsSync(envConfig.asphyxiaDirectory)) continue
+    asphyxia = readdirSync(envConfig.asphyxiaDirectory, { withFileTypes: true }).find(f => f.name.match(asphyxiaRegex))
+    if (!asphyxia) continue
     changed = true
+    break
 }
 if (changed) writeFileSync(envPath, JSON.stringify(envConfig))
 changed = false
@@ -71,7 +74,7 @@ while (!envConfig.debugRid || !envConfig.debugRid.match(/^[A-Z0-9]{16}$/)) {
 if (changed) writeFileSync(envPath, JSON.stringify(envConfig))
 
 if (resolve("..") !== resolve(envConfig.asphyxiaDirectory) && !existsSync("asphyxia-core.d.ts")) {
-    if (!existsSync(`${envConfig.asphyxiaDirectory}/asphyxia-core.d.ts`)) {
+    if (!existsSync(`${envConfig.asphyxiaDirectory}/plugins/asphyxia-core.d.ts`)) {
         log("💡 Not able to find the type definitions file of Asphyxia CORE (asphyxia-core.d.ts), you may want to manually copy it into the root folder of the repository.")
     } else {
         copyFileSync(`${envConfig.asphyxiaDirectory}/asphyxia-core.d.ts`, "asphyxia-core.d.ts")
@@ -98,9 +101,9 @@ const home = resolve("./")
 cd(`${envConfig.asphyxiaDirectory}/plugins`)
 await run("npm install", "😟 Failed to install packages.")
 try {
-    const tsConfig = JSON.parse(readFileSync(`${envConfig.asphyxiaDirectory}/plugins/tsconfig.json`))
+    const tsConfig = JSON.parse(readFileSync(`${envConfig.asphyxiaDirectory}/plugins/tsconfig.json`, "utf8"))
     tsConfig.compilerOptions.experimentalDecorators = true
-    writeFileSync(JSON.stringify(tsConfig), `${envConfig.asphyxiaDirectory}/plugins/tsconfig.json`)
+    writeFileSync(JSON.stringify(tsConfig), `${envConfig.asphyxiaDirectory}/plugins/tsconfig.json`, "utf8")
 } catch { }
 cd(home)
 

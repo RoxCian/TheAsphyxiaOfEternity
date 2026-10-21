@@ -52,27 +52,7 @@ const readPlayer: C.C<RbRequest, RbPlayerResponse> = async data => {
     result.abilityPoint = base.abilityPointTimes100 / 100
     result.matchingGrade = base.matchingGrade
     result.playCount = account.playCount
-    const eventUnlocked = await DBH.find<Rb3PlayerReleasedInfo>(data.rid, { collection: "rb.rb3.player.releasedInfo", type: 0, id: { $in: [217, 265, 336, 380, 416] } })
-    let eventProgressFlag = 0
-    for (const u of eventUnlocked) {
-        switch (u.id) {
-            case 217:
-                eventProgressFlag += 1 // Valanga
-                break
-            case 265:
-                eventProgressFlag += 2 // ストレイ・マーチ
-                break
-            case 336:
-                eventProgressFlag += 4 // 海神
-                break
-            case 380:
-                eventProgressFlag += 8 // fallen leaves
-                break
-            case 416:
-                eventProgressFlag += 16 // CLAMARE
-                break
-        }
-    }
+    const eventProgressFlag = base.hiddenParam[27]
     result.extraValues = [base.onigiriTimes10 / 10, eventProgressFlag]
     result.bywords = {
         left: getRbByword(version, RbColor.red, config.bywordLeft),
