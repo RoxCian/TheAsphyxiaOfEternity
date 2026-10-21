@@ -1,3 +1,7 @@
+- v2.0.3-beta
+
+  _TODO: Discription to be added._
+
 - v2.0.2-beta
 
   Fix items unlock feature.
