@@ -65,12 +65,12 @@ number,number,string?,string
 1,1,His mind was strangely clear.,妙に頭が冴えている。
 1,2,"How to deal with a realm ravaged by war—an unanswered question that had plagued him for days and months.",戦いで荒れた領国をどう処するか、
 1,2,"Yet now, for some reason, he felt as though everything could be solved...",答えの出ない問いに幾日幾月も悩み続けていたというのに、今はなぜかすべてが解決できるような……
-1,2,"No, a conviction filled the ${""text"":""Count"",""annotation"":0}$'s consciousness that it had ${""text"":""already"",""textStyle"":""italic""}$ been solved.","いや、既に解決したかのような確信が、${""text"":""伯爵"",""annotation"":0}$の意識を満たしている。"
+1,2,"No, a conviction filled ${""text"":""the Count"",""annotation"":0}$'s consciousness that it had ${""text"":""already"",""textStyle"":""italic""}$ been solved.","いや、既に解決したかのような確信が、${""text"":""伯爵"",""annotation"":0}$の意識を満たしている。"
 1,2,"It was an utterly illogical feeling, yet the Count harbored no doubts; rather, he felt a ""power"" overflowing from his entire body. Then, he vividly recalled the contract from the previous night. Looking at his left ring finger, there was the mark shaped like a ring.",全く理屈の通らぬ自覚たが、伯爵はそれを疑問に感じることはなく、むしろ己が全身からあふれ出すような“力”を感じていた。そして、昨夜の契約を鮮明に想起した。左手の薬指を見ると、指輪のようなアザがある。
 1,2,So—it had not been a dream after all.,やはり――夢では無かったのか。
 1,2,,
 1,2,"""My Lord! Terrible news!""","「${""text"":""伯爵"",""annotation"":0}$！大変です！」"
-1,2,"The young man who burst into the bedroom was ${""text"":""the Count"",""annotation"":0}$'s cousin, ${""text"":""Viscount Reinhard"",""annotation"":1}$.","寝室に飛び込んできた若者は伯爵の従兄弟、${""text"":""ラインハルト子爵"",""annotation"":1}$であった。"
+1,2,"The young man who burst into the bedroom was the Count's cousin, ${""text"":""Viscount Reinhard"",""annotation"":1}$.","寝室に飛び込んできた若者は伯爵の従兄弟、${""text"":""ラインハルト子爵"",""annotation"":1}$であった。"
 1,2,"""The conflict among the silver merchants has expanded, turning the castle town itself into a battlefield! At this rate, the citizens will...!""",「銀商人の争いが拡大し、城下町まで戦場になっています。このままでは領民が！」
 1,2,"Reinhard, who regularly assisted Count Verdet in governance, had likely rushed straight to the bedroom sensing the urgency of the situation.",ウェルデ伯爵の政務を常々補佐しているラインハルトは、事態を急とみて寝室にまで駆け込んだのであろう。
 1,2,"Yet the Count, entirely composed, spoke:",しかし伯爵は落ち着き払った様子で、こう言った。

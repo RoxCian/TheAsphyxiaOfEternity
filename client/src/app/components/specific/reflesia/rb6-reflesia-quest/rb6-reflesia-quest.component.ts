@@ -39,7 +39,7 @@ export class Rb6ReflesiaQuestComponent {
                 clearInfoSub: undefined,
                 clearInfoMain: dungeonRecord.isCleared ? "QUEST CLEARED" : "QUEST FAILED",
                 emphasisScore: true,
-                averageAchievementRate: dungeonRecord.stageLogs.reduce((prev, next) => prev + next.achievementRate, 0) / (dungeonRecord.stageLogs.length <= 3 ? 3 : dungeonRecord.stageLogs.length),
+                averageAchievementRate: Math.round(dungeonRecord.stageLogs.reduce((prev, next) => prev + next.achievementRate, 0) / (dungeonRecord.stageLogs.length <= 3 ? 3 : dungeonRecord.stageLogs.length) * 100) / 100,
                 playCount: dungeonRecord.playCount,
                 update: dungeonRecord.updateTime,
                 lastPlay: dungeonRecord.lastPlayTime,

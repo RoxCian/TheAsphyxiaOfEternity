@@ -211,7 +211,6 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
     opacity: 0
     pointer-events: none
     cursor: pointer
-    animation: pastel-kun-enter-animation 3s 5s var(--ease-in) forwards
     z-index: 2000
 
     &.is-left
@@ -249,8 +248,6 @@ $pastel-fixed-top: calc(calc(var(--position) * 100vh) - calc(var(--position) * #
         --width: #{$pastel-width}
         --height: #{$pastel-height}
         top: 100vh
-    &.leave
-        animation: pastel-kun-leave-animation 0.4s var(--ease-in) forwards
     img
         rotate: var(--rotation)
         width: var(--width)
