@@ -1,10 +1,16 @@
+- v2.0.4-beta
+
+  Fix some animations on webui.
+
+  Fix number rounding of achievement rate on webui for Reflesia mode.
+
 - v2.0.3-beta
 
   (Special thanks: [Confiserie1](https://github.com/Confiserie1))
-  
+
   New mechanics introduced to make sure you will not complete the final event before all other events be filled up of RB colette Pastel Adventure. 
 
-  <small>&nbsp;&nbsp;_If you accidentally complete the final event of Pastel Skiing / Pastel Garden / Pastel Fishing / Pastel Harvest and leave some events to be completed, game will crash when you enter that season next time._</small>
+  <small>&nbsp;&nbsp;_If you accidentally complete the final event of Pastel Climbing / Pastel Garden / Pastel Fishing / Pastel Harvest and leave some events to be completed, game will crash when you enter that season next time._</small>
 
   Change data source of player name color for RB colette.
 
