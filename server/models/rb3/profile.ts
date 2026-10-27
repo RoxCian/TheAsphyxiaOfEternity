@@ -58,6 +58,7 @@ export class Rb3PlayerBase implements ICollection<"rb.rb3.player.base"> {
     // - Pastel Fishing
     // Silver lure count is stored at hiddenParam[13]
     // Golden lure count is stored at hiddenParam[14]
+    // ID of the island you mooring at is stored at hiddenParam[15]
     // - Pastel Harvest
     // Magical clock count is stored at hiddenParam[18]
     // - Pastel Wonder Traveller

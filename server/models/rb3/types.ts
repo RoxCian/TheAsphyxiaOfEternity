@@ -59,6 +59,16 @@ export type Rb3PastelAdventureEvent = {
     relatedMusicsId: number[]
     experiences: number[]
     eventType: Rb3PastelAdventureEventType
+    unlockCondition: {
+        allEventsCompleted?: number[]
+        allEventsCompletedPhase?: number[]
+        anyEventsCompleted?: number[]
+        anyEventsCompletedPhase?: number
+        anyEventsCompletedCount?: number
+        allOrdersCleared?: number[]
+        anyOrdersCleared?: number[]
+        anyOrdersClearedCount?: number
+    }
 }
 
 export enum Rb3Season {
@@ -66,7 +76,7 @@ export enum Rb3Season {
 }
 
 export enum Rb3PastelAdventureEventType {
-    normal, final, collab
+    normal, final, extra
 }
 
 export type Rb3VerdetDesKriegesPhrasePart = {
