@@ -140,7 +140,7 @@ number,number,string?,string
 2,3,"They were merely a few words of entreaty from Claudia, yet they were more than enough to shake Reinhard's heart.",クラウディアによるわずか二言三言の願いであったが、ラインハルトの心を揺さぶるには余りある。
 2,3,"Of course, at this time, Reinhard had no way of knowing that Claudia herself was the very person who had asked the Count to conquer the neighboring lands.",無論この時ラインハルトは、クラウディアこそが伯爵に隣国制圧を願った張本人であるとは知る由も無い。
 2,3,"Thus, the resolve for rebellion was forged.",こうして、謀反の決意は固まった。
-2,3,"However, the means remained a problem. Contending directly against the Count's ""${""text"":""Red Power"",""annotation"":5}$Red Power"" was utterly unthinkable.","ただし手段が問題である。伯爵の「${""text"":""赤の力"",""annotation"":5}$」と渡り合うなど、到底考えられぬ。"
+2,3,"However, the means remained a problem. Contending directly against the Count's ""${""text"":""Red Power"",""annotation"":5}$"" was utterly unthinkable.","ただし手段が問題である。伯爵の「${""text"":""赤の力"",""annotation"":5}$」と渡り合うなど、到底考えられぬ。"
 2,3,"Head-on, no one could match him. In that case, he had no choice but to rely on someone whose profession was assassination—an top-tier, highly skilled master.",正面からでは誰一人かなわないのだ。ならば暗殺を専業とする者、それも超一流の手練れにやらせるしかない。
 2,3,"Thinking thus, Reinhard relied on connections in the city, had an assassin renowned in the underworld ${""text"":""recommended"",""clueId"":3}$ to him, and successfully made contact.","そう考えたラインハルトは市井のつてを頼り、裏社会で名を馳せた暗殺者を${""text"":""推薦"",""clueId"":3}$され、接触に成功した。"
 2,3,"The people of the underworld referred to that assassin as the ""Final ${""text"":""Assassin"",""clueId"":3}$""—","裏社会の人々はその暗殺者を「最後の${""text"":""アサシン"",""clueId"":3}$」と呼んでいる、という――"

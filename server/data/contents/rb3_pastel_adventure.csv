@@ -1,50 +1,55 @@
 eventId,season,name,nameOrig,relatedMusicsId,experiences,eventType,unlockCondition
 ,,,,,,,
-number,winter|spring|summer|autumn,string,string,int[],int[],normal|final|collab,json
-0,winter,,,,94000,normal,{}
-1,winter,,,,66000,normal,{}
-2,winter,,,,30400,normal,{}
-3,winter,,,,36600,normal,{}
-4,winter,,,,38800,normal,{}
-5,winter,,,,58000,normal,{}
-6,winter,,,,34400,final,{}
-8,spring,,,,1200,normal,{}
-9,spring,,,,1200,normal,{}
-10,spring,,,,1200,normal,{}
-19,spring,,,,12200,normal,{}
-20,spring,,,,12200,normal,{}
-21,spring,,,,12200,normal,{}
-22,spring,,,,20800,normal,{}
-23,spring,,,,30400,normal,{}
-24,spring,,,,30400,normal,{}
-25,spring,,,,30400,normal,{}
-26,spring,,,,41000,normal,{}
-27,spring,,,,52800,normal,{}
-28,spring,,,,30400,normal,{}
-29,spring,,,,30400,normal,{}
-30,spring,,,,41000,normal,{}
-31,spring,,,,66000,normal,{}
-32,spring,,,,94000,final,{}
-33,summer,,,,10600,normal,{}
-34,summer,,,,10600,normal,{}
-35,summer,,,,10600,normal,{}
-36,summer,,,,12200,normal,{}
-37,summer,,,,19000,normal,{}
-38,summer,,,,19000,normal,{}
-39,summer,,,,22600,normal,{}
-40,summer,,,,9000,normal,{}
-41,summer,,,,91200,final,{}
-42,autumn,,,,3200,normal,{}
-43,autumn,,,,6800,normal,{}
-44,autumn,,,,10400,normal,{}
-45,autumn,,,,5600,normal,{}
-46,autumn,,,,9200,normal,{}
-47,autumn,,,,14000,normal,{}
-48,autumn,,,,9200,normal,{}
-49,autumn,,,,8000,normal,{}
-50,autumn,,,,9200,normal,{}
-51,autumn,,,,16400,normal,{}
-52,autumn,,,,10800,normal,{}
-53,autumn,,,,9200,normal,{}
-54,autumn,,,,9200,normal,{}
-55,autumn,,,,20400,final,{}
+number,winter|spring|summer|autumn,string,string,int[],int[],normal|final|extra,json
+0,winter,Mount. colette I,colette山脈 第一,,94000,normal,{}
+1,winter,Mount. colette II,colette山脈 第二,,66000,normal,{}
+2,winter,Mount. jubeat,jubeat山,,30400,normal,{}
+3,winter,Mount. REFLEC BEAT,初代リフレク山,,36600,normal,{}
+4,winter,Mount. limelight,limelight山,,38800,normal,{}
+5,winter,Mount. colette III,colette山脈 第三,,58000,normal,"{""allEventsCompleted"":[0,1]}"
+6,winter,The legendary mountain,伝説の山,,34400,final,"{""allEventsCompleted"":[0,1,6]}"
+8,spring,Seed pod (red) desk Lv.2,植木鉢（赤）専用台Lv.2,,1200,normal,{}
+9,spring,Seed pod (green) desk Lv.2,植木鉢（緑）専用台Lv.2,,1200,normal,{}
+10,spring,Seed pod (blue) desk Lv.2,植木鉢（青）専用台Lv.2,,1200,normal,{}
+11,spring,Seed pod (red) desk Lv.3,植木鉢（赤）専用台Lv.3,,1200,normal,"{""allEventsCompleted"":[8,9,10]}"
+12,spring,Seed pod (green) desk Lv.3,植木鉢（緑）専用台Lv.3,,1200,normal,"{""allEventsCompleted"":[8,9,10]}"
+13,spring,Seed pod (blue) desk Lv.3,植木鉢（青）専用台Lv.3,,1200,normal,"{""allEventsCompleted"":[8,9,10]}"
+14,spring,Seed pod (violet) desk Lv.4,植木鉢（紫）専用台Lv.4,,1500,normal,"{""allEventsCompleted"":[8,9,10,11,12,13]}"
+15,spring,Seed pod (violet) desk Lv.4,植木鉢（紫）専用台Lv.4,,1500,normal,"{""allEventsCompleted"":[8,9,10,11,12,13]}"
+19,spring,The first seed,はじまりのたね,,12200,normal,{}
+20,spring,Seed of VENUS,VENUSのたね,,12200,normal,{}
+21,spring,Cherry bloosm shaped seed,桜形のたね,,12200,normal,"{""allOrdersCleared"":[55]}"
+22,spring,Pointed seed,とがったたね,,20800,normal,"{""allOrdersCleared"":[56]}"
+23,spring,Fairy seed,妖精のたね,,30400,normal,"{""allOrdersCleared"":[57],""anyOrdersCleared"":[37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],""anyOrdersClearedCount"":3}"
+24,spring,Jagged seed,ぎざぎざのたね,,30400,normal,"{""allEventsCompleted"":[19,20]}"
+25,spring,Blazing seed,燃えさかるたね,,30400,normal,"{""anyEventsCompleted"":[21,22,23],""anyEventsCompletedCount"":2}"
+26,spring,Puppy shaped seed,イヌに似たたね,,41000,normal,"{""allEventsCompleted"":[24,25]}"
+27,spring,Ominus seed,禍々しいたね,,52800,normal,"{""allEventsCompleted"":[26]}"
+28,spring,Mirror shaped seed,鏡のたね,,30400,normal,{}
+29,spring,Dandelion seed,たんぽぽのたね,,30400,normal,{}
+30,spring,Star shaped seed,星形のたね,,41000,normal,"{""allEventsCompleted"":[28,29]}"
+31,spring,Rose-like seed,バラに似たたね,,66000,normal,"{""allEventsCompleted"":[30]}"
+32,spring,The legendary seed,伝説のたね,,94000,final,"{""allEventsCompleted"":[27,31]}"
+33,summer,Mackerel,サバ,,"4600,10600",normal,{}
+34,summer,Octopus,タコ,,"4600,10600",normal,{}
+35,summer,Pufferfish,ハリセンボン,,"4600,10600",normal,{}
+36,summer,Sea bream,タイ,,"6000,12200",normal,"{""anyEventsCompleted"":[33,34,35],""anyEventsCompletedPhase"":[0,0,0]}"
+37,summer,Swordfish,カジキマグロ,,"9000,19000",normal,"{""allEventsCompleted"":[33,34,35,36],""allEventsCompletedPhase"":[0,0,0,0]}"
+38,summer,Anglerfish,アンコウ,,"9000,19000",normal,"{""allEventsCompleted"":[33,34]}"
+39,summer,Stingray,エイ,,"10600,22600",normal,"{""allEventsCompleted"":[35,36]}"
+40,summer,The legendary fish,伝説の魚,,9000,final,"{""allEventsCompleted"":[33,34,35,36,37,38,39]}"
+41,summer,Enviornment protection,環境保護,,"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,74400,80000,91200,,,,114000,2147483648",extra,{}
+42,autumn,The first basket,はじまりのかご,,3200,normal,{}
+43,autumn,Treats basket,おかしなかご,,6800,normal,"{""allEventsCompleted"":[42]}"
+44,autumn,Dark basket,漆黒のかご,,10400,normal,"{""allEventsCompleted"":[43]}"
+45,autumn,Soft basket,やわらかいかご,,5600,normal,"{""allEventsCompleted"":[42]}"
+46,autumn,Beautiful basket,美しいかご,,9200,normal,"{""allEventsCompleted"":[45]}"
+47,autumn,Favorate basket,お気に入りのかご,,14000,normal,"{""allEventsCompleted"":[42,43,44,45,46]}"
+48,autumn,Philosopher's basket,賢者のかご,,9200,normal,"{""allEventsCompleted"":[42]}"
+49,autumn,White cat's basket,白猫のかご,,8000,normal,"{""allEventsCompleted"":[45]}"
+50,autumn,Calico cat's basket,三毛猫のかご,,9200,normal,"{""anyEventsCompleted"":[46,49]}"
+51,autumn,Large basket,大容量のかご,,16400,normal,"{""allEventsCompleted"":[44,48]}"
+52,autumn,Basket of sky,空のかご,,10800,normal,"{""allEventsCompleted"":[42]}"
+53,autumn,Basket of youth,少年のかご,,9200,normal,"{""allEventsCompleted"":[49]}"
+54,autumn,Angular basket,かくかくのかご,,9200,normal,"{""allEventsCompleted"":[50,53]}"
+55,autumn,The legendary basket,伝説のかご,,20400,final,"{""allEventsCompleted"":[42,43,44,45,46,47,48,49,50,51,52,53,54]}"
