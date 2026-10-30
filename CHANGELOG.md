@@ -1,3 +1,11 @@
+- v2.0.5-beta
+
+  Fix an issue of Verdet des Krieges.
+  
+  Fix an issue of item name data for RB groovin'.
+
+  Prepare data for Pastel Adventure.
+
 - v2.0.4-beta
 
   Fix some animations on webui.
