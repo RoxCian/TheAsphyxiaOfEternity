@@ -128,13 +128,6 @@ const readPlayer: H.H<RbPlayerRead> = async data => {
     p.config = config
     p.custom = custom
     if (released.length > 0) p.released.info = released
-    for (let i = 0; i < 60; i++) {
-        if (!eventProgress.find(e => e.index === i)) {
-            const newInfo = new Rb3EventProgress()
-            newInfo.index = i
-            eventProgress.push(newInfo)
-        }
-    }
     p.lincleLink = lincleLink
     p.tricolettePark = tricolettePark
     p.stamp = stamp
@@ -437,7 +430,7 @@ async function updateVerdetDesKrieges(rid: string, order: Rb3Order, stageLogs: R
                 }
             } else {
                 const orderSaved = await t.findOne<Rb3Order>(rid, { collection: "rb.rb3.player.order" })
-                const orderPhonixSaved = orderSaved?.details?.find(o => o.index === 174)
+                const orderPhonixSaved = orderSaved?.details?.find(o => o.index === 176)
                 if (orderPhonixSaved && orderPhonixSaved.slot >= 0) {
                     const count = countPhonix(undefined, stageLogs)
                     if (count > 0) {

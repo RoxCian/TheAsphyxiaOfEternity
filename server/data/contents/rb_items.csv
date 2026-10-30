@@ -132,8 +132,8 @@ int,string,int,int,string,string?,boolean
 4,backgroundMusic,2,0,Default,,TRUE
 4,backgroundMusic,2,1,REFLEC DOJO,リフレク道場,FALSE
 4,backgroundMusic,2,2,DJ TOTTO,,FALSE
-4,backgroundMusic,2,3,Sota Fujimori,Sota Fujimori "A",FALSE
-4,backgroundMusic,2,4,Qrispy Joybox,Sota Fujimori "Um",FALSE
+4,backgroundMusic,2,3,Sota Fujimori,,FALSE
+4,backgroundMusic,2,4,Qrispy Joybox,,FALSE
 4,backgroundMusic,2,5,Sota Fujimori "A",藤森崇多 阿,FALSE
 4,backgroundMusic,2,6,Sota Fujimori "Um",藤森崇多 吽,FALSE
 4,backgroundMusic,2,7,Classic,,FALSE
