@@ -202,7 +202,7 @@
                                 @if (data?.completed && service.chapter() === 3 && service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
                                     The end
                                 } @else if (service.page() === (service.pageCount.value()?.pageCount ?? 0) - 1) {
-                                    @if (service.chapter() === data?.chapter && service.canUnlockMusic()) {
+                                    @if (service.chapter() === data?.chapter) {
                                         Unlock...<i class="mdi mdi-chevron-right"></i>
                                     } @else {
                                         Next chapter...<i class="mdi mdi-chevron-right"></i>

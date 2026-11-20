@@ -24,7 +24,7 @@
         <input class="input" type="input" [class.is-danger]="!isRidInputValid()" [placeholder]="debugRid.value() ?? ''" (input)="rid.set($event.target.value)" maxlength="16">
     </p>
     <p>
-        <a class="button router-link" routerLink="profile" [queryParams]="rid() ? { rid: rid() } : undefined" [class.is-disabled]="!isRidInputValid()">Go to profile page</a>
+        <a class="button router-link" routerLink="profile" [queryParams]="rid() ? { refid: rid() } : undefined" [class.is-disabled]="!isRidInputValid()">Go to profile page</a>
     </p>
 </section>
 <bung-divider prompt="Ingame Comments" />
